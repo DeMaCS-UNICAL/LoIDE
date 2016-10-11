@@ -1,0 +1,9 @@
+[[
+   "blocktag",
+  ["text","TODO "],
+  ["string","add"],
+  ["text"," a nice demo!"]
+],[
+   "blocktag",
+  ["text","Try to keep it short!"]
+]]

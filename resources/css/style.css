@@ -2,3 +2,9 @@
     position: absolute;
     height: 40%;
 }
+
+ul.nav.navbar-nav.navbar-right{
+    width: 40%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}

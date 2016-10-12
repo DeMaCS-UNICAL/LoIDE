@@ -26,4 +26,31 @@ $(document).ready(function () {
         reader.readAsText(fileToLoad, "UTF-8");
 
     });
+    $('#download-button').click(function (e) {
+        require(["ace/ace"], function (ace, text) {
+            var editor = ace.edit("editor");
+            text = editor.getValue();
+
+            var textFileAsBlob = new Blob([text], {
+                type: 'text/plain'
+            });
+            var fileNameToSaveAs = "myFile.txt";
+            var downloadLink = document.createElement("a");
+            downloadLink.download = fileNameToSaveAs;
+            window.URL = window.URL || window.webkitURL;
+            downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+            downloadLink.onclick = destroyClickedElement;
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        });
+
+
+
+    });
+
+    function destroyClickedElement(event) {
+        // remove the link from the DOM
+        document.body.removeChild(event.target);
+    }
 });

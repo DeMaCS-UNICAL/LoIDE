@@ -3,8 +3,17 @@
     height: 40%;
 }
 
-ul.nav.navbar-nav.navbar-right{
-    width: 40%;
+@media screen and (min-width:768px) {
+    ul.nav.navbar-nav.navbar-right {
+        width: 40%;
+    }
+}
+
+.nav {
     padding-top: 1%;
     padding-bottom: 1%;
+}
+
+.navbar-brand {
+    padding-right: 50%;
 }

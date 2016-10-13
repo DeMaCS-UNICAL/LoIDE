@@ -30,7 +30,7 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav navbar-left">
-				<li><button id="download-button" type="button" class="btn btn-info pull-right">Download</button></li>
+				<li><button id="download-button" type="button" class="btn btn-info">Download</button></li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
@@ -42,9 +42,55 @@
 	</nav>
 
 	<div class="container">
-		<section id="editor" class=" col-xs-10 col-xs-offset-1 col-md-9 col-md-offset-1 col-lg-9 col-lg-offset-1">
+		<div id="editor" class=" col-xs-10 col-xs-offset-1 col-md-9 col-md-offset-1 col-lg-9 col-lg-offset-1">
 
-		</section>
+		</div>
+		<form id="input">
+			<div class="row">
+				<div class="col-sm-2">
+					<div class="form-group">
+
+						<select name="language" id="inputengine" class="form-control">
+						<option value="dlv">ASP</option>
+					</select>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+
+						<select name="engine" id="inputengine" class="form-control">
+						<option value="dlv">DLV</option>
+					</select>
+					</div>
+				</div>
+				<div class="col-sm-2 div-c">
+
+					<div class="form-group input-group opname">
+						
+						<select name="option[0][opname]" class="form-control sel" required="required">
+						<option value="asp">Option</option>
+					</select>
+
+						<span class="input-group-btn option"><button type="button" class="btn btn-default">+
+						</button></span>
+
+					</div>
+					<div class="row option-value">
+						<div class="form-group input-group">
+							<input type="text" class="form-control in" name="option[0][opvalue][]"> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+
+						</button></span>
+						</div>
+					</div>
+				</div>
+				
+
+				<button type="submit" class="btn btn-primary">Run</button>
+
+			</div>
+		</form>
+
+
+
 
 
 	</div>

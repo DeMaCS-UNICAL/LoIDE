@@ -51,7 +51,19 @@ Web-based IDE for Logic Programming
 - **Function**: Desplayed the result of the solver 
   - **Description**: Will appear in the right container, the answer set of the problem and maybe some debugging information
   - **Outputs**: Visualization of the result of the problem 
-  - **Destination**: Gui               
+  - **Destination**: Gui
+
+## Running LoIDE
+You need to install node.js and run `npm install` in this directory.
+Then run 
+```
+node server.js
+```
+And you can run _LoIDE_ in your browser by serving:
+```
+http://localhost:8084/index.html
+```
+
 
 ## IMPORTANT NOTE
 

@@ -46,46 +46,52 @@
 
 		</div>
 		<form id="input">
-			<div class="row">
-				<div class="col-sm-2">
-					<div class="form-group">
+			<input type="hidden" name="program" id="program" value="">
+			<div class="row con">
+				<div class="col-xs-offset-0 col-md-offset-1 col-sm-offset-1">
 
-						<select name="language" id="inputengine" class="form-control">
-						<option value="dlv">ASP</option>
+					<div class="col-sm-2 col-xs-4">
+						<div class="form-group">
+
+							<select name="language" id="inputasp" class="form-control">
+						<option value="asp">ASP</option>
 					</select>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="form-group">
-
-						<select name="engine" id="inputengine" class="form-control">
-						<option value="dlv">DLV</option>
-					</select>
-					</div>
-				</div>
-				<div class="col-sm-2 div-c">
-
-					<div class="form-group input-group opname">
-						
-						<select name="option[0][opname]" class="form-control sel" required="required">
-						<option value="asp">Option</option>
-					</select>
-
-						<span class="input-group-btn option"><button type="button" class="btn btn-default">+
-						</button></span>
-
-					</div>
-					<div class="row option-value">
-						<div class="form-group input-group">
-							<input type="text" class="form-control in" name="option[0][opvalue][]"> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+
-						</button></span>
 						</div>
 					</div>
+					<div class="col-sm-2 col-xs-4">
+						<div class="form-group">
+
+							<select name="engine" id="inputengine" class="form-control">
+						<option value="dlv">DLV</option>
+					</select>
+						</div>
+					</div>
+					<div class="col-sm-2 col-xs-5 div-c">
+
+						<div class="form-group input-group opname">
+
+							<select name="option[0][name]" class="form-control sel" required="required">
+								<option value="option">Option</option>
+								<option value="filter">Filter</option>
+								<option value="nofacts">Nofacts</option>
+							</select>
+
+							<span class="input-group-btn option"><button type="button" class="btn btn-default">+
+						</button></span>
+
+						</div>
+						<div class="row option-value">
+							<div class="form-group input-group">
+								<input type="text" class="form-control in" name="option[0][value][]"> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+
+						</button></span>
+							</div>
+						</div>
+					</div>
+
+
+					<button type="submit" class="btn btn-primary">Run</button>
+
 				</div>
-				
-
-				<button type="submit" class="btn btn-primary">Run</button>
-
 			</div>
 		</form>
 

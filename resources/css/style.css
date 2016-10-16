@@ -18,5 +18,26 @@
     padding-right: 50%;
 }
 #input{
-    margin-top: 30%;
+    margin-top: 20%;
+}
+
+@media screen and (min-width:736px) {
+    .con {
+        margin-top: 30%;
+    }
+}
+@media screen and (max-width:768px) {
+    .con {
+        margin-top: 90%;
+    }
+}
+/*@media screen and (min-width:1080px) {
+    .con {
+        margin-top: 90%;
+    }
+}*/
+@media screen and (min-width:1366px) {
+    .con {
+        margin-top: 40%;
+    }
 }

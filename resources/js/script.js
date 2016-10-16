@@ -1,35 +1,35 @@
 (function ($) {
-     
+
 
     $.fn.serializeFormJSON = function () {
-         var self = this,
+        var self = this,
             json = {},
             push_counters = {},
             patterns = {
                 "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
-                "key":      /[a-zA-Z0-9_]+|(?=\[\])/g,
-                "push":     /^$/,
-                "fixed":    /^\d+$/,
-                "named":    /^[a-zA-Z0-9_]+$/
+                "key": /[a-zA-Z0-9_]+|(?=\[\])/g,
+                "push": /^$/,
+                "fixed": /^\d+$/,
+                "named": /^[a-zA-Z0-9_]+$/
             };
 
 
-        this.build = function(base, key, value){
+        this.build = function (base, key, value) {
             base[key] = value;
             return base;
         };
 
-        this.push_counter = function(key){
-            if(push_counters[key] === undefined){
+        this.push_counter = function (key) {
+            if (push_counters[key] === undefined) {
                 push_counters[key] = 0;
             }
             return push_counters[key]++;
         };
 
-        $.each($(this).serializeArray(), function(){
+        $.each($(this).serializeArray(), function () {
 
             // skip invalid keys
-            if(!patterns.validate.test(this.name)){
+            if (!patterns.validate.test(this.name)) {
                 return;
             }
 
@@ -38,23 +38,23 @@
                 merge = this.value,
                 reverse_key = this.name;
 
-            while((k = keys.pop()) !== undefined){
+            while ((k = keys.pop()) !== undefined) {
 
                 // adjust reverse_key
                 reverse_key = reverse_key.replace(new RegExp("\\[" + k + "\\]$"), '');
 
                 // push
-                if(k.match(patterns.push)){
+                if (k.match(patterns.push)) {
                     merge = self.build([], self.push_counter(reverse_key), merge);
                 }
 
                 // fixed
-                else if(k.match(patterns.fixed)){
+                else if (k.match(patterns.fixed)) {
                     merge = self.build([], k, merge);
                 }
 
                 // named
-                else if(k.match(patterns.named)){
+                else if (k.match(patterns.named)) {
                     merge = self.build({}, k, merge);
                 }
             }
@@ -74,6 +74,7 @@ require.config({
 require(["ace/ace"], function (ace) {
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/tomorrow");
+    editor.setValue("");
     editor.getSession().setMode("ace/mode/Asp");
 
 });
@@ -120,39 +121,68 @@ $(document).ready(function () {
         document.body.removeChild(event.target);
     }
 
-    $('#input').submit(function (e) { 
+    $('#input').submit(function (e) {
         e.preventDefault();
-        var form= $(this).serializeFormJSON();
-        console.log(form);
-        
+
+        require(["ace/ace"], function (ace) {
+            var editor = ace.edit("editor");
+            var text = editor.getValue();
+            $('#program').val(text);
+            console.log(text);
+            var form = $('#input').serializeFormJSON();
+            $.ajax({
+                type: "POST",
+                url: "/run",
+                data: form,
+                dataType: "JSON",
+                crossDomain: true,
+                // headers: {
+                //    data: JSON.stringify(form),
+                //     'Content-Type': 'application/json'
+                // },
+                // xhrFields: {
+                //     withCredentials: true
+                // },
+                useDefaultXhrHeader: false,
+                success: function (response) {
+                    console.log(response);
+                }
+            });
+
+        });
+
+
+
+
     });
-   
+
 });
 
 
-$(document).on('click','.option',function (e) { 
-        var c=$(this).closest('.div-c');
-        var clone=c.clone();
-        var n=$('.opname').length;
-        $(clone).insertAfter(c);
-        console.log(n);
-        $(clone).find('.sel').attr('name','option['+n+'][opname]');
-                $(clone).find('.in').attr('name','option['+n+'][opvalue][]');
+$(document).on('click', '.option', function (e) {
+    var c = $(this).closest('.div-c');
+    var clone = c.clone();
+    var n = $('.opname').length;
+    $(clone).insertAfter(c);
+    console.log(n);
+    $(clone).find('.sel').attr('name', 'option[' + n + '][name]');
+    $(clone).find('.in').attr('name', 'option[' + n + '][value][]');
 
 
 
-    });
-    $(document).on('click','.btn-add',function (e) { 
-         
-        var c=$(this).closest('.option-value');
-        var clone=c.clone();
-                var n=$('.opname').length;
-        a=n-1;
-        $(clone).insertAfter(c);
-        $(clone).find('.in').attr('name','option['+a+'][opvalue][]');
+});
+$(document).on('click', '.btn-add', function (e) {
+
+    var c = $(this).closest('.option-value');
+    var clone = c.clone();
+    var n = $('.opname').length;
+    a = n - 1;
+    $(clone).insertAfter(c);
+    $(clone).find('.in').attr('name', 'option[' + a + '][value][]');
 
 
-        
-       
 
-    });
+
+
+
+});

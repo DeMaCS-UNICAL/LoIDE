@@ -95,9 +95,25 @@ $(document).ready(function () {
 
     });
     $('#download-button').click(function (e) {
+        var chose = $('#chose').text();
+        console.log(chose);
+       if (chose !== ""){ 
         require(["ace/ace"], function (ace, text) {
+            var chose = $('#chose').text();
             var editor = ace.edit("editor");
-            text = editor.getValue();
+            if (chose === "Input") {
+                text = editor.getValue();
+
+            } else if (chose === "Output") {
+                text = $('#output').val();
+            } else if (chose === "Both") {
+                text = editor.getValue();
+                text += '\n';
+                text += '\n';
+                text+='Output\n';
+                text+='\n';
+                text += text = $('#output').val();
+            }
 
             var textFileAsBlob = new Blob([text], {
                 type: 'text/plain'
@@ -113,6 +129,11 @@ $(document).ready(function () {
             downloadLink.click();
         });
 
+       }
+    });
+    $('.btn-download .dropdown-menu').find('a').click(function (e) {
+        var concept = $(this).text();
+        $('#chose').text(concept);
 
 
     });
@@ -136,13 +157,6 @@ $(document).ready(function () {
                 data: form,
                 dataType: "JSON",
                 crossDomain: true,
-                // headers: {
-                //    data: JSON.stringify(form),
-                //     'Content-Type': 'application/json'
-                // },
-                // xhrFields: {
-                //     withCredentials: true
-                // },
                 useDefaultXhrHeader: false,
                 success: function (response) {
                     console.log(response);

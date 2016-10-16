@@ -30,7 +30,15 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav navbar-left">
-				<li><button id="download-button" type="button" class="btn btn-info">Download</button></li>
+				<div class="btn-group btn-group-info btn-download">
+					<button id="download-button" class="btn btn-info" type="button">Download</button>
+					<button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button"> <span id="chose"></span> <span class="caret"></span> </button>
+					<ul class="dropdown-menu">
+						<li><a href="#">Input</a></li>
+						<li><a href="#">Output</a></li>
+						<li><a href="#">Both</a></li>
+					</ul>
+				</div>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
@@ -94,6 +102,11 @@
 				</div>
 			</div>
 		</form>
+		<div>
+
+			<textarea readonly name="" id="output" class="form-control" rows="9"></textarea>
+
+		</div>
 
 
 

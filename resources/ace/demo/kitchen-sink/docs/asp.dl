@@ -1,2 +1,0 @@
-gatta(X).
-#count {gatta(X): gatta(X)}=1.

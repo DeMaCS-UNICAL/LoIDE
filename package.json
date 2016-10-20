@@ -1,0 +1,23 @@
+{
+  "name": "LoIDE",
+  "version": "0.0.1",
+  "description": "Web-based IDE for Logic Programming",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DeMaCS-UNICAL/LoIDE.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DeMaCS-UNICAL/LoIDE/issues"
+  },
+  "dependencies": {
+    "express": "~4.14.0",
+    "body-parser": "~1.15.2"
+  }
+}

@@ -1,6 +1,15 @@
 #editor {
     position: absolute;
-    height: 40%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+#output{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 @media screen and (min-width:768px) {
@@ -17,27 +26,34 @@
 .navbar-brand {
     padding-right: 50%;
 }
-#input{
-    margin-top: 20%;
+
+.container {
+    padding: 0;
+    margin: 0;
+    padding-right: 1%;
+    width: 100%;
 }
 
-@media screen and (min-width:736px) {
-    .con {
-        margin-top: 30%;
-    }
+.left-panel {
+    height: 900px;
+    width: 5%;
+    z-index: 1;
+    overflow-x: hidden;
+    float: left;
+    background:seashell;
+    transition: 0.5s;
 }
-@media screen and (max-width:768px) {
-    .con {
-        margin-top: 90%;
-    }
+
+.panel-right {
+    transition: margin-left .5s;
+    padding: 16px;
 }
-/*@media screen and (min-width:1080px) {
-    .con {
-        margin-top: 90%;
-    }
-}*/
-@media screen and (min-width:1366px) {
-    .con {
-        margin-top: 40%;
-    }
+
+.left-panel-show {
+    width: 19%;
+}
+
+.layout{
+    height: 900px;
+    padding-left: 1%;
 }

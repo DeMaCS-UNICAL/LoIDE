@@ -9,121 +9,120 @@
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<link href="js/fileUpload/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="css/layout-default-latest.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 
 </head>
 
 <body>
-
-	<nav class="navbar navbar-default" role="navigation">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+	<form id="input">
+		<nav class="navbar navbar-default" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-			<a class="navbar-brand" href="#">LoIDE</a>
-		</div>
+				<a class="navbar-brand" href="#">LoIDE</a>
+			</div>
 
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse navbar-ex1-collapse">
-			<ul class="nav navbar-nav navbar-left">
-				<div class="btn-group btn-group-info btn-download">
-					<button id="download-button" class="btn btn-info" type="button">Download</button>
-					<button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button"> <span id="chose"></span> <span class="caret"></span> </button>
-					<ul class="dropdown-menu">
-						<li><a href="#">Input</a></li>
-						<li><a href="#">Output</a></li>
-						<li><a href="#">Both</a></li>
-					</ul>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav navbar-left">
+					<div class="btn-group btn-group-info">
+						<button id="btn-download" class="btn btn-info" type="button">Download</button>
+						<button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button"> <span id="choise"></span> <span class="caret"></span> </button>
+						<ul class="dropdown-menu dropdown-menu-choise">
+							<li><a href="#">Input</a></li>
+							<li><a href="#">Output</a></li>
+							<li><a href="#">Input & Output</a></li>
+						</ul>
+					</div>
+					<button type="submit" class="btn btn-success navbar-btn" id="run">Run!</button>
+				</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+					<li><input id="upload-file" type="file" accept="text/plain" class="file" data-show-preview="false"></li>
+				</ul>
+
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+
+		<div class="container">
+			<div class="left-panel">
+				<div class="text-center">
+					<a href="#" role="button" id="slide" data-toggle="tooltip" data-placement="top" title="Options solver"><i class="glyphicon glyphicon-cog"></i></a>
 				</div>
-			</ul>
-
-			<ul class="nav navbar-nav navbar-right">
-				<li><input id="vvv" type="file" accept="text/plain" class="file" data-show-preview="false"></li>
-			</ul>
-
-		</div>
-		<!-- /.navbar-collapse -->
-	</nav>
-
-	<div class="container">
-		<div id="editor" class=" col-xs-10 col-xs-offset-1 col-md-9 col-md-offset-1 col-lg-9 col-lg-offset-1">
-
-		</div>
-		<form id="input">
-			<input type="hidden" name="program" id="program" value="">
-			<div class="row con">
-				<div class="col-xs-offset-0 col-md-offset-1 col-sm-offset-1">
-
-					<div class="col-sm-2 col-xs-4">
-						<div class="form-group">
-
-							<select name="language" id="inputasp" class="form-control">
-						<option value="asp">ASP</option>
-					</select>
-						</div>
-					</div>
-					<div class="col-sm-2 col-xs-4">
-						<div class="form-group">
-
-							<select name="engine" id="inputengine" class="form-control">
+				<div class="option-solver">
+					<div class="hidden">
+						<label for="inputLanguage" class="col-sm-12 text-center">Language</label>
+						<select name="language" id="inputLanguage" class="form-control">
+					<option value="asp">Asp</option>
+				</select>
+						<label for="inputLanguage" class="col-sm-12 text-center">Solver</label>
+						<select name="engine" id="inputengine" class="form-control">
 						<option value="dlv">DLV</option>
-					</select>
-						</div>
-					</div>
-					<div class="col-sm-2 col-xs-5 div-c">
+						</select>
+						<div class="row row-option">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="option" class="col-sm-12 text-center">Options</label>
+									<div class="input-group opname">
 
-						<div class="form-group input-group opname">
+										<select name="option[0][name]" class="form-control form-control-option">
+											<option value="option">Option</option>
+											<option value="filter">Filter</option>
+											<option value="nofacts">Nofacts</option>
+											<option value="silent">Silent</option>
+										</select>
 
-							<select name="option[0][name]" class="form-control sel" required="required">
-								<option value="option">Option</option>
-								<option value="filter">Filter</option>
-								<option value="nofacts">Nofacts</option>
-							</select>
+										<span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span>
 
-							<span class="input-group-btn option"><button type="button" class="btn btn-default">+
-						</button></span>
+									</div>
 
-						</div>
-						<div class="row option-value">
-							<div class="form-group input-group">
-								<input type="text" class="form-control in" name="option[0][value][]"> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+
-						</button></span>
+								</div>
+								<div class="option-value">
+									<div class="form-group input-group input-group-value">
+										<span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span>
+										<input
+											type="text" class="form-control form-control-value" name="option[0][value][]"> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-
-
-					<button type="submit" class="btn btn-primary">Run</button>
-
 				</div>
 			</div>
-		</form>
-		<div>
+			<div class="layout">
+				<input type="hidden" name="program" id="program" value="">
+				<div class="pane ui-layout-center">
+					<div id="editor" class=" ">
 
-			<textarea readonly name="" id="output" class="form-control" rows="9"></textarea>
-
+					</div>
+				</div>
+				<div class="pane ui-layout-east">Output
+					<textarea readonly name="" id="output" class="form-control"></textarea>
+				</div>
+			</div>
 		</div>
 
 
-
-
-
-	</div>
-
-
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
-	<!-- Bootstrap JavaScript -->
-	<script src="js/fileUpload/js/plugins/canvas-to-blob.min.js" type="text/javascript"></script>
-	<script src="js/fileUpload/js/plugins/sortable.min.js" type="text/javascript"></script>
-	<script src="js/fileUpload/js/fileinput.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="ace/lib/require.js" type="text/javascript"></script>
-	<script src="js/script.js" type="text/javascript"></script>
+		<!-- jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<!-- Bootstrap JavaScript -->
+		` <script src="js/jquery.layout-latest.js" type="text/javascript"></script>
+		<script src="js/fileUpload/js/plugins/canvas-to-blob.min.js" type="text/javascript"></script>
+		<script src="js/fileUpload/js/plugins/sortable.min.js" type="text/javascript"></script>
+		<script src="js/fileUpload/js/fileinput.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="ace/lib/require.js" type="text/javascript"></script>
+		<script src="js/script.js" type="text/javascript"></script>
+	</form>
 </body>
 
 </html>

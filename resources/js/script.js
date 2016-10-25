@@ -1,7 +1,7 @@
 (function ($) {
 
 
-    $.fn.serializeFormJSON = function () {
+    $.fn.serializeFormJSON = function () { //pattern to serialize form as json object 
         var self = this,
             json = {},
             push_counters = {},
@@ -65,138 +65,164 @@
         return json;
     };
 })(jQuery);
+
+$('[data-toggle="tooltip"]').tooltip(); //active tooltip bootstrap
+
 require.config({
     baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
     paths: {
         ace: "ace/lib/ace"
     }
 });
-require(["ace/ace"], function (ace) {
+require(["ace/ace"], function (ace) { //inizialize ace editor
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/tomorrow");
     editor.setValue("");
     editor.getSession().setMode("ace/mode/Asp");
+    editor.setAutoScrollEditorIntoView(true);
+    editor.resize();
 
 });
 $(document).ready(function () {
+    var a = $('body > form > .container > .layout').layout({ //fix minWidth layout
+        center__minWidth: 600,
+        east__minSize: 250
+    });
+
     $('.fileinput-upload-button').click(function (e) {
-        var fileToLoad = document.getElementById("vvv").files[0];
-        var reader = new FileReader();
+        var fileToLoad = document.getElementById("upload-file").files[0]; //takes the uploaded file
+        var reader = new FileReader(); // constructed FileReader
         reader.onload = function (event) {
-            var text = event.target.result;
+            var text = event.target.result; //takes content of the file
             require(["ace/ace"], function (ace) {
                 var editor = ace.edit("editor");
-                editor.setValue(text);
+                editor.setValue(text);  //set value of the file in text editor
 
             });
 
         };
-        reader.readAsText(fileToLoad, "UTF-8");
+        reader.readAsText(fileToLoad, "UTF-8"); //access to the file as text
 
     });
-    $('#download-button').click(function (e) {
-        var chose = $('#chose').text();
-        console.log(chose);
-       if (chose !== ""){ 
-        require(["ace/ace"], function (ace, text) {
-            var chose = $('#chose').text();
-            var editor = ace.edit("editor");
-            if (chose === "Input") {
-                text = editor.getValue();
+    $('#btn-download').click(function (e) {
+        var chose = $('#choise').text(); //returns the value of what to download and place the value of the text editor into a 'text' variable 
+        if (chose !== "") {
+            require(["ace/ace"], function (ace, text) {
+                var chose = $('#choise').text();
+                var editor = ace.edit("editor");
+                if (chose === "Input") { 
+                    text = editor.getValue();
 
-            } else if (chose === "Output") {
-                text = $('#output').val();
-            } else if (chose === "Both") {
-                text = editor.getValue();
-                text += '\n';
-                text += '\n';
-                text+='Output\n';
-                text+='\n';
-                text += text = $('#output').val();
-            }
+                } else if (chose === "Output") {
+                    text = $('#output').val();
+                } else if (chose === "Input & Output") {
+                    text = editor.getValue();
+                    text += '\n';
+                    text += '\n';
+                    text += 'Output\n';
+                    text += '\n';
+                    text += text = $('#output').val();
+                }
 
-            var textFileAsBlob = new Blob([text], {
-                type: 'text/plain'
+                var textFileAsBlob = new Blob([text], { // create a new Blob (html5 magic) that conatins the data from your form feild
+
+                    type: 'text/plain'
+                });
+                var fileNameToSaveAs = "myFile.txt"; // Specify the name of the file to be saved
+                var downloadLink = document.createElement("a"); // create a link for our script to 'click'
+                downloadLink.download = fileNameToSaveAs; //  supply the name of the file
+                window.URL = window.URL || window.webkitURL; // allow code to work in webkit & Gecko based browsers without the need for a if / else block.
+                downloadLink.href = window.URL.createObjectURL(textFileAsBlob); // Create the link Object.
+                downloadLink.onclick = destroyClickedElement; // when link is clicked call a function to remove it from the DOM in case user wants to save a second file.
+                downloadLink.style.display = "none"; // make sure the link is hidden.
+                document.body.appendChild(downloadLink); // add the link to the DOM
+                downloadLink.click(); // click the new link
             });
-            var fileNameToSaveAs = "myFile.txt";
-            var downloadLink = document.createElement("a");
-            downloadLink.download = fileNameToSaveAs;
-            window.URL = window.URL || window.webkitURL;
-            downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-            downloadLink.onclick = destroyClickedElement;
-            downloadLink.style.display = "none";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-        });
 
-       }
-    });
-    $('.btn-download .dropdown-menu').find('a').click(function (e) {
-        var concept = $(this).text();
-        $('#chose').text(concept);
-
-
+        }
     });
 
     function destroyClickedElement(event) {
-        document.body.removeChild(event.target);
+        document.body.removeChild(event.target); // remove the link from the DOM
     }
+    $('.dropdown-menu-choise').find('a').click(function (e) {
+        var concept = $(this).text();
+        $('#choise').text(concept); //append to the DOM the choise for download
+    });
 
     $('#input').submit(function (e) {
         e.preventDefault();
-
         require(["ace/ace"], function (ace) {
             var editor = ace.edit("editor");
             var text = editor.getValue();
-            $('#program').val(text);
-            console.log(text);
+             $('#program').val(text); //insert the content of text editor in a hidden input text to serailize
+
             var form = $('#input').serializeFormJSON();
             $.ajax({
                 type: "POST",
                 url: "/run",
                 data: form,
                 dataType: "JSON",
-                crossDomain: true,
-                useDefaultXhrHeader: false,
                 success: function (response) {
-                    console.log(response);
+                    $('#output').val(response.model); //append the response in the textarea 
                 }
             });
 
         });
 
-
-
-
+    });
+    $("#slide").click(function (e) {
+        $('.left-panel').toggleClass('left-panel-show'); //add class 'left-panel-show' to increase the width of the left panel 
+        $('.option-solver > div').toggleClass("hidden show"); //add class to show option components
     });
 
 });
 
 
-$(document).on('click', '.option', function (e) {
-    var c = $(this).closest('.div-c');
-    var clone = c.clone();
-    var n = $('.opname').length;
-    $(clone).insertAfter(c);
-    console.log(n);
-    $(clone).find('.sel').attr('name', 'option[' + n + '][name]');
-    $(clone).find('.in').attr('name', 'option[' + n + '][value][]');
-
-
+$(document).on('click', '.btn-add-option', function () {
+    var row = $(this).closest('.row-option');
+    var clone = row.clone(); //clone div .row-option to add another option
+    var lenghtClass = $('.opname').length; //count number of classes to correct json format 
+    $(clone).insertAfter(row);
+    var cloneOpname = $(clone).find('.opname');
+    if (lenghtClass === 1) {
+        $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>'); //append button delete after first options block
+    }
+    $(clone).find('.form-control-option').attr('name', 'option[' + lenghtClass + '][name]');
+    var inputValueClone = $(clone).find('.input-group-value');
+    $(inputValueClone).remove(); //remove all input value forms
+    inputValueClone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name="option['+lenghtClass+'][value][]"> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+    $(clone).find('.option-value').append(inputValueClone); //append only one input value in the new options block
 
 });
+
+$(document).on('click', '.btn-del-option', function () {
+    var row = $(this).closest('.row-option');
+    row.empty();    //delete option container
+    $('.form-control-option').each(function (index) {   //iterate over '.form-control-option' classes to change the number of the object options for correct json format   
+        $(this).attr('name', 'option[' + index + '][name]');
+
+        $(this).closest('.row-option').find('.form-control-value').each(function (index2) { //iterate over '.form-control-value' classes to change the number of the objects value for correct json format   
+            $(this).attr('name', 'option[' + index + '][value][]');
+
+        });
+    });
+
+});
+
+$(document).on('click', '.btn-del-value', function () {     //delete input value
+    var inputValue = $(this).closest('.input-group-value');
+    inputValue.empty();
+
+});
+
 $(document).on('click', '.btn-add', function (e) {
 
-    var c = $(this).closest('.option-value');
-    var clone = c.clone();
-    var n = $('.opname').length;
-    a = n - 1;
-    $(clone).insertAfter(c);
-    $(clone).find('.in').attr('name', 'option[' + a + '][value][]');
-
-
-
-
-
+    var optionValue = $(this).closest('.option-value');
+    var tmpName=$(this).closest('.row-option').find('.form-control-option').attr('name');
+    var replaceName=tmpName.replace('name','value');    //replace 'name' in 'value' for correct json format   
+    replaceName+='[]';
+    var clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name='+replaceName+'> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+    $(optionValue).append(clone);   //append form input value to the DOM
 
 });

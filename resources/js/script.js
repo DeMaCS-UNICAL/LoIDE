@@ -96,7 +96,7 @@ $(document).ready(function () {
             var text = event.target.result; //takes content of the file
             require(["ace/ace"], function (ace) {
                 var editor = ace.edit("editor");
-                editor.setValue(text);  //set value of the file in text editor
+                editor.setValue(text); //set value of the file in text editor
 
             });
 
@@ -110,7 +110,7 @@ $(document).ready(function () {
             require(["ace/ace"], function (ace, text) {
                 var chose = $('#choise').text();
                 var editor = ace.edit("editor");
-                if (chose === "Input") { 
+                if (chose === "Input") {
                     text = editor.getValue();
 
                 } else if (chose === "Output") {
@@ -155,9 +155,10 @@ $(document).ready(function () {
         require(["ace/ace"], function (ace) {
             var editor = ace.edit("editor");
             var text = editor.getValue();
-             $('#program').val(text); //insert the content of text editor in a hidden input text to serailize
+            $('#program').val(text); //insert the content of text editor in a hidden input text to serailize
 
             var form = $('#input').serializeFormJSON();
+
             $.ajax({
                 type: "POST",
                 url: "/run",
@@ -191,15 +192,16 @@ $(document).on('click', '.btn-add-option', function () {
     $(clone).find('.form-control-option').attr('name', 'option[' + lenghtClass + '][name]');
     var inputValueClone = $(clone).find('.input-group-value');
     $(inputValueClone).remove(); //remove all input value forms
-    inputValueClone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name="option['+lenghtClass+'][value][]"> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+    clone.find($('.center-btn-value')).remove(); //remove eventually button to add input value
+    inputValueClone = '<div class="text-center center-btn-value"><button type="button" class="btn btn-info btn-info-value ">Add value</button></div>';
     $(clone).find('.option-value').append(inputValueClone); //append only one input value in the new options block
 
 });
 
 $(document).on('click', '.btn-del-option', function () {
     var row = $(this).closest('.row-option');
-    row.empty();    //delete option container
-    $('.form-control-option').each(function (index) {   //iterate over '.form-control-option' classes to change the number of the object options for correct json format   
+    row.empty(); //delete option container
+    $('.form-control-option').each(function (index) { //iterate over '.form-control-option' classes to change the number of the object options for correct json format   
         $(this).attr('name', 'option[' + index + '][name]');
 
         $(this).closest('.row-option').find('.form-control-value').each(function (index2) { //iterate over '.form-control-value' classes to change the number of the objects value for correct json format   
@@ -210,19 +212,35 @@ $(document).on('click', '.btn-del-option', function () {
 
 });
 
-$(document).on('click', '.btn-del-value', function () {     //delete input value
+$(document).on('click', '.btn-del-value', function () { //delete input value
     var inputValue = $(this).closest('.input-group-value');
-    inputValue.empty();
+    var closestRow= inputValue.closest('.row-option');
+    var lenghtInputValue = closestRow.find('.input-group-value').length; //count number of class '.input-group-value'
+    if (lenghtInputValue === 1) //if the lenght of the class is equal to one, append the button to add input value 
+    {
+        closestRow.find('.option-value').append('<div class="text-center center-btn-value"><button type="button" class="btn btn-info btn-info-value ">Add value</button></div>');
+    }
+    inputValue.remove(); //remove input value
 
 });
 
-$(document).on('click', '.btn-add', function (e) {
-
-    var optionValue = $(this).closest('.option-value');
-    var tmpName=$(this).closest('.row-option').find('.form-control-option').attr('name');
-    var replaceName=tmpName.replace('name','value');    //replace 'name' in 'value' for correct json format   
-    replaceName+='[]';
-    var clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name='+replaceName+'> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
-    $(optionValue).append(clone);   //append form input value to the DOM
+$(document).on('click', '.btn-add', function () {
+    addInpuValue($(this));
 
 });
+
+$(document).on('click', '.btn-info-value', function () {
+    addInpuValue($(this));
+    $(this).closest('.center-btn-value').remove(); // remove button to add input value 
+
+
+});
+
+function addInpuValue(inputClass) {
+    var optionValue = $(inputClass).closest('.option-value');
+    var tmpName = $(inputClass).closest('.row-option').find('.form-control-option').attr('name');
+    var replaceName = tmpName.replace('name', 'value'); //replace 'name' in 'value' for correct json format   
+    replaceName += '[]';
+    var clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+    $(optionValue).append(clone); //append form input value to the DOM
+}

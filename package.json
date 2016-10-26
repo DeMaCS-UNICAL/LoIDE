@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DeMaCS-UNICAL/LoIDE.git"
+    "url": "https://github.com/DeMaCS-UNICAL/LoIDE.git"
   },
   "author": "",
   "license": "MIT",

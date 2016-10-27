@@ -65,24 +65,16 @@
         return json;
     };
 })(jQuery);
-
+var editor = ace.edit("editor");
+ace.config.set("packaged", true);
+var path = "ace/mode";
+ace.config.set("modePath", path);
+editor.session.setMode("asp");
+editor.setTheme("ace/theme/tomorrow");
+editor.setValue("");
+editor.resize();
 $('[data-toggle="tooltip"]').tooltip(); //active tooltip bootstrap
 
-require.config({
-    baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
-    paths: {
-        ace: "ace/lib/ace"
-    }
-});
-require(["ace/ace"], function (ace) { //inizialize ace editor
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/tomorrow");
-    editor.setValue("");
-    editor.getSession().setMode("ace/mode/Asp");
-    editor.setAutoScrollEditorIntoView(true);
-    editor.resize();
-
-});
 $(document).ready(function () {
     var a = $('body > form > .container > .layout').layout({ //fix minWidth layout
         center__minWidth: 600,
@@ -214,7 +206,7 @@ $(document).on('click', '.btn-del-option', function () {
 
 $(document).on('click', '.btn-del-value', function () { //delete input value
     var inputValue = $(this).closest('.input-group-value');
-    var closestRow= inputValue.closest('.row-option');
+    var closestRow = inputValue.closest('.row-option');
     var lenghtInputValue = closestRow.find('.input-group-value').length; //count number of class '.input-group-value'
     if (lenghtInputValue === 1) //if the lenght of the class is equal to one, append the button to add input value 
     {

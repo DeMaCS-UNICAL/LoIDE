@@ -86,11 +86,8 @@ $(document).ready(function () {
         var reader = new FileReader(); // constructed FileReader
         reader.onload = function (event) {
             var text = event.target.result; //takes content of the file
-            require(["ace/ace"], function (ace) {
                 var editor = ace.edit("editor");
                 editor.setValue(text); //set value of the file in text editor
-
-            });
 
         };
         reader.readAsText(fileToLoad, "UTF-8"); //access to the file as text
@@ -98,10 +95,8 @@ $(document).ready(function () {
     });
     $('#btn-download').click(function (e) {
         var chose = $('#choise').text(); //returns the value of what to download and place the value of the text editor into a 'text' variable 
-        if (chose !== "") {
-            require(["ace/ace"], function (ace, text) {
-                var chose = $('#choise').text();
-                var editor = ace.edit("editor");
+        if (chose !== "") {               
+
                 if (chose === "Input") {
                     text = editor.getValue();
 
@@ -129,7 +124,6 @@ $(document).ready(function () {
                 downloadLink.style.display = "none"; // make sure the link is hidden.
                 document.body.appendChild(downloadLink); // add the link to the DOM
                 downloadLink.click(); // click the new link
-            });
 
         }
     });
@@ -144,13 +138,11 @@ $(document).ready(function () {
 
     $('#input').submit(function (e) {
         e.preventDefault();
-        require(["ace/ace"], function (ace) {
-            var editor = ace.edit("editor");
             var text = editor.getValue();
             $('#program').val(text); //insert the content of text editor in a hidden input text to serailize
 
             var form = $('#input').serializeFormJSON();
-
+            console.log(form);
             $.ajax({
                 type: "POST",
                 url: "/run",
@@ -161,7 +153,6 @@ $(document).ready(function () {
                 }
             });
 
-        });
 
     });
     $("#slide").click(function (e) {

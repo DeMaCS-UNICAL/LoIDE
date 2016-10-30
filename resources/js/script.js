@@ -64,6 +64,7 @@
 
         return json;
     };
+
 })(jQuery);
 var editor = ace.edit("editor");
 ace.config.set("packaged", true);
@@ -86,8 +87,8 @@ $(document).ready(function () {
         var reader = new FileReader(); // constructed FileReader
         reader.onload = function (event) {
             var text = event.target.result; //takes content of the file
-                var editor = ace.edit("editor");
-                editor.setValue(text); //set value of the file in text editor
+            var editor = ace.edit("editor");
+            editor.setValue(text); //set value of the file in text editor
 
         };
         reader.readAsText(fileToLoad, "UTF-8"); //access to the file as text
@@ -95,35 +96,35 @@ $(document).ready(function () {
     });
     $('#btn-download').click(function (e) {
         var chose = $('#choise').text(); //returns the value of what to download and place the value of the text editor into a 'text' variable 
-        if (chose !== "") {               
+        if (chose !== "") {
 
-                if (chose === "Input") {
-                    text = editor.getValue();
+            if (chose === "Input") {
+                text = editor.getValue();
 
-                } else if (chose === "Output") {
-                    text = $('#output').val();
-                } else if (chose === "Input & Output") {
-                    text = editor.getValue();
-                    text += '\n';
-                    text += '\n';
-                    text += 'Output\n';
-                    text += '\n';
-                    text += text = $('#output').val();
-                }
+            } else if (chose === "Output") {
+                text = $('#output').val();
+            } else if (chose === "Input & Output") {
+                text = editor.getValue();
+                text += '\n';
+                text += '\n';
+                text += 'Output\n';
+                text += '\n';
+                text += text = $('#output').val();
+            }
 
-                var textFileAsBlob = new Blob([text], { // create a new Blob (html5 magic) that conatins the data from your form feild
+            var textFileAsBlob = new Blob([text], { // create a new Blob (html5 magic) that conatins the data from your form feild
 
-                    type: 'text/plain'
-                });
-                var fileNameToSaveAs = "myFile.txt"; // Specify the name of the file to be saved
-                var downloadLink = document.createElement("a"); // create a link for our script to 'click'
-                downloadLink.download = fileNameToSaveAs; //  supply the name of the file
-                window.URL = window.URL || window.webkitURL; // allow code to work in webkit & Gecko based browsers without the need for a if / else block.
-                downloadLink.href = window.URL.createObjectURL(textFileAsBlob); // Create the link Object.
-                downloadLink.onclick = destroyClickedElement; // when link is clicked call a function to remove it from the DOM in case user wants to save a second file.
-                downloadLink.style.display = "none"; // make sure the link is hidden.
-                document.body.appendChild(downloadLink); // add the link to the DOM
-                downloadLink.click(); // click the new link
+                type: 'text/plain'
+            });
+            var fileNameToSaveAs = "myFile.txt"; // Specify the name of the file to be saved
+            var downloadLink = document.createElement("a"); // create a link for our script to 'click'
+            downloadLink.download = fileNameToSaveAs; //  supply the name of the file
+            window.URL = window.URL || window.webkitURL; // allow code to work in webkit & Gecko based browsers without the need for a if / else block.
+            downloadLink.href = window.URL.createObjectURL(textFileAsBlob); // Create the link Object.
+            downloadLink.onclick = destroyClickedElement; // when link is clicked call a function to remove it from the DOM in case user wants to save a second file.
+            downloadLink.style.display = "none"; // make sure the link is hidden.
+            document.body.appendChild(downloadLink); // add the link to the DOM
+            downloadLink.click(); // click the new link
 
         }
     });
@@ -136,25 +137,34 @@ $(document).ready(function () {
         $('#choise').text(concept); //append to the DOM the choise for download
     });
 
+
+
     $('#input').submit(function (e) {
         e.preventDefault();
-            var text = editor.getValue();
-            $('#program').val(text); //insert the content of text editor in a hidden input text to serailize
-
-            var form = $('#input').serializeFormJSON();
-            console.log(form);
-            $.ajax({
-                type: "POST",
-                url: "/run",
-                data: form,
-                dataType: "JSON",
-                success: function (response) {
+        configureOptions();
+        var text = editor.getValue();
+        $('#program').val(text); //insert the content of text editor in a hidden input text to serailize
+        var form = $('#input').serializeFormJSON();
+        destroyOptions();
+        $.ajax({
+            type: "POST",
+            url: "/run",
+            data: form,
+            dataType: "JSON",
+            success: function (response) {
+                if (response.error === "") {
                     $('#output').val(response.model); //append the response in the textarea 
+                    $('#output').css('color', 'black');
+                } else {
+                    $('#output').val(response.error);
+                    $('#output').css('color', 'red');
                 }
-            });
+            }
+        });
 
 
     });
+
     $("#slide").click(function (e) {
         $('.left-panel').toggleClass('left-panel-show'); //add class 'left-panel-show' to increase the width of the left panel 
         $('.option-solver > div').toggleClass("hidden show"); //add class to show option components
@@ -221,9 +231,53 @@ $(document).on('click', '.btn-info-value', function () {
 
 function addInpuValue(inputClass) {
     var optionValue = $(inputClass).closest('.option-value');
-    var tmpName = $(inputClass).closest('.row-option').find('.form-control-option').attr('name');
-    var replaceName = tmpName.replace('name', 'value'); //replace 'name' in 'value' for correct json format   
+    var currentName = $(inputClass).closest('.row-option').find('.form-control-option').attr('name');
+    var replaceName = currentName.replace('name', 'value'); //replace 'name' in 'value' for correct json format   
     replaceName += '[]';
     var clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
     $(optionValue).append(clone); //append form input value to the DOM
+}
+
+function OptionDLV () {
+    this.map= new BiMap();
+    this.init= function () {
+        this.map.push("filter", "-filter=");
+        this.map.push("nofacts", "-nofacts");
+        this.map.push("silent", "-silent");
+    };
+
+}
+
+function configureOptions() {
+    var optionDLV= new OptionDLV();
+    optionDLV.init();
+    var engine = $('#inputengine').val();
+    switch (engine) {
+        case 'dlv':
+            $('.form-control-option').each(function (indexInArray) {
+                var currentVal = $(this).val();
+                if (currentVal !== "option") {
+                    var val = optionDLV.map.key(currentVal);
+                    $(this).append('<option value="' + val + '"></option>');
+                    $(this).val(val);
+                }
+            });
+            break;
+
+        default:
+            break;
+    }
+}
+
+function destroyOptions() {
+    var optionDLV = new OptionDLV();
+    optionDLV.init();
+    $('.form-control-option').each(function (indexInArray) {
+        var currentVal = $(this).val();
+        if (currentVal !== "option") {
+            var val = optionDLV.map.val(currentVal);
+            $(this).val(val).change();
+            $(this).find('option[value="'+currentVal+'"]').remove();
+        }
+    });
 }

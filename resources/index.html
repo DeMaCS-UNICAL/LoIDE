@@ -32,7 +32,7 @@
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav navbar-left">
 					<div class="btn-group btn-group-info">
-						<button id="btn-download" class="btn btn-info" type="button">Download</button>
+						<button id="btn-download" class="btn btn-info" type="submit">Download</button>
 						<button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button"> <span id="choise"></span> <span class="caret"></span> </button>
 						<ul class="dropdown-menu dropdown-menu-choise">
 							<li><a href="#">Input</a></li>
@@ -44,7 +44,7 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><input id="upload-file" type="file" accept="text/plain" class="file" data-show-preview="false"></li>
+					<li><input id="upload-file" type="file" data-show-preview="false" multiple class="file-loading"></li>
 				</ul>
 
 			</div>
@@ -53,6 +53,7 @@
 
 
 		<div class="container">
+			<div id="errorBlock" class="help-block"></div>
 			<div class="left-panel">
 				<div class="text-center">
 					<a href="#" role="button" id="slide" data-toggle="tooltip" data-placement="top" title="Options solver"><i class="glyphicon glyphicon-cog"></i></a>
@@ -63,7 +64,7 @@
 						<select name="language" id="inputLanguage" class="form-control">
 					<option value="asp">Asp</option>
 				</select>
-						<label for="inputLanguage" class="col-sm-12 text-center">Solver</label>
+						<label for="inputEngine" class="col-sm-12 text-center">Solver</label>
 						<select name="engine" id="inputengine" class="form-control">
 						<option value="dlv">DLV</option>
 						</select>

@@ -68,7 +68,7 @@
 })(jQuery);
 var editor = ace.edit("editor");
 ace.config.set("packaged", true);
-var path = "ace/mode";
+var path = "js/ace/mode";
 ace.config.set("modePath", path);
 editor.session.setMode("asp");
 editor.setTheme("ace/theme/tomorrow");
@@ -77,6 +77,8 @@ editor.resize();
 $('[data-toggle="tooltip"]').tooltip(); //active tooltip bootstrap
 
 $(document).ready(function () {
+
+    setHeightComponents();
 
     $('#upload-file').fileinput({
         allowedFileExtensions: ["json"],
@@ -166,7 +168,7 @@ $(document).ready(function () {
 
     });
 
-    $("#slide").click(function (e) {
+    $("#btn-option").click(function (e) {
         $('.left-panel').toggleClass('left-panel-show'); //add class 'left-panel-show' to increase the width of the left panel 
         $('.option-solver > div').toggleClass("hidden show"); //add class to show option components
     });
@@ -286,7 +288,7 @@ function destroyOptions() {
 }
 
 function setJSONInput(text) {
-    if (text.hasOwnProperty('language') && text.hasOwnProperty('engine') && text.hasOwnProperty('option') && text.hasOwnProperty('program') && text.hasOwnProperty('output')) {
+    if (text.hasOwnProperty('language') || text.hasOwnProperty('engine') || text.hasOwnProperty('option') || text.hasOwnProperty('program') || text.hasOwnProperty('output')) {
         var editor = ace.edit("editor");
         var t = text.program;
         editor.setValue(t);
@@ -295,9 +297,11 @@ function setJSONInput(text) {
         $('#output').val(text.output);
         var obj = text;
         var currentClass;
-        $('.row-option').each(function (index) {
-            $(this).remove();
-        });
+        if (text.hasOwnProperty('option')) {
+            $('.row-option').each(function (index) {
+                $(this).remove();
+            });
+        }
         $(obj.option).each(function (indexInArray, item) {
             addOption(indexInArray, item.name);
             if (item['value']) {
@@ -326,10 +330,16 @@ function addOption(index, valueOption) {
     var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value="option">Option</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"><div class="text-center center-btn-value"><button type="button" class="btn btn-info btn-info-value ">Add value</button></div></div></div></div>';
     $('.show').append(clone);
     $('.hidden').append(clone);
-    if (index >= 1) {
-
-    }
     var id = "#op" + index;
     $(id).val(valueOption).change();
+
+}
+
+function setHeightComponents() {
+    var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    var navbarHeight = $('.navbar').outerHeight(true);
+
+    $('.left-panel').css('height', height - navbarHeight);
+    $('.layout').css('height', height - navbarHeight);
 
 }

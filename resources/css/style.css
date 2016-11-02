@@ -5,7 +5,8 @@
     bottom: 0;
     left: 0;
 }
-#output{
+
+#output {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -18,9 +19,12 @@
     }
 }
 
+body {
+    height: 100%;
+}
+
 .nav {
     padding-top: 1%;
-    padding-bottom: 1%;
 }
 
 .navbar-brand {
@@ -35,12 +39,11 @@
 }
 
 .left-panel {
-    height: 900px;
     width: 5%;
     z-index: 1;
     overflow-x: hidden;
     float: left;
-    background:seashell;
+    background: seashell;
     transition: 0.5s;
 }
 
@@ -53,11 +56,15 @@
     width: 19%;
 }
 
-.layout{
-    height: 900px;
+.layout {
     padding-left: 1%;
 }
-.option-solver{
+
+.option-solver {
     margin-left: 3%;
     margin-right: 3%;
+}
+
+#btn-option {
+    font-size: 19px;
 }

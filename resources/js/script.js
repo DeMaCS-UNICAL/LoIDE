@@ -65,6 +65,27 @@
         return json;
     };
 
+    Dropzone.options.upload = {
+        acceptedFiles: ".json",
+        init: function () {
+            this.options.addRemoveLinks = true;
+            this.options.dictRemoveFile = "Delete";
+            this.on('success', function (file, resp) {
+
+                var text = JSON.parse(resp); //takes content of the file in the response
+
+                if (!setJSONInput(text)) {
+                    var config = JSON.stringify(text);
+                    var editor = ace.edit("editor");
+                    editor.setValue(config); //set value of the file in text editor
+                }
+
+            });
+
+        },
+
+    };
+
 })(jQuery);
 var editor = ace.edit("editor");
 ace.config.set("packaged", true);
@@ -80,20 +101,12 @@ $(document).ready(function () {
 
     setHeightComponents();
 
-    $('#upload-file').fileinput({
-        allowedFileExtensions: ["json"],
-        elErrorContainer: "#errorBlock"
-    });
-
-    var a = $('body > form > .container > .layout').layout({ //fix minWidth layout
+    var a = $('body > .container > form > .layout').layout({ //fix minWidth layout
         center__minWidth: 600,
         east__minSize: 250
     });
 
 
-    function destroyClickedElement(event) {
-        document.body.removeChild(event.target); // remove the link from the DOM
-    }
     $('.dropdown-menu-choise').find('a').click(function (e) {
         var concept = $(this).text();
         $('#choise').text(concept); //append to the DOM the choise for download
@@ -147,26 +160,14 @@ $(document).ready(function () {
             downloadLink.style.display = "none"; // make sure the link is hidden.
             document.body.appendChild(downloadLink); // add the link to the DOM
             downloadLink.click(); // click the new link
-        } else {
-            var fileToLoad = document.getElementById("upload-file").files[0]; //takes the uploaded file
-            var reader = new FileReader(); // constructed FileReader
-            reader.onload = function (event) {
-                var text = JSON.parse(event.target.result); //takes content of the file
-
-                if (!setJSONInput(text)) {
-                    var gatta = JSON.stringify(text);
-                    var editor = ace.edit("editor");
-                    editor.setValue(gatta); //set value of the file in text editor
-                }
-
-            };
-            reader.readAsText(fileToLoad, "UTF-8"); //access to the file as text
-
-
-            //}
         }
 
     });
+
+
+    function destroyClickedElement(event) {
+        document.body.removeChild(event.target); // remove the link from the DOM
+    }
 
     $("#btn-option").click(function (e) {
         $('.left-panel').toggleClass('left-panel-show'); //add class 'left-panel-show' to increase the width of the left panel 

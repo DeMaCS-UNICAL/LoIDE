@@ -13,12 +13,6 @@
     padding: 0;
 }
 
-@media screen and (min-width:768px) {
-    ul.nav.navbar-nav.navbar-right {
-        width: 50%;
-    }
-}
-
 body {
     height: 100%;
 }
@@ -36,6 +30,10 @@ body {
     margin: 0;
     padding-right: 1%;
     width: 100%;
+}
+
+.navbar-right{
+    padding-right: 1%;
 }
 
 .left-panel {
@@ -67,4 +65,8 @@ body {
 
 #btn-option {
     font-size: 19px;
+}
+
+#upload-container{
+    padding-bottom: 1%;
 }

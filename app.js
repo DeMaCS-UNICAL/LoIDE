@@ -1,42 +1,60 @@
 var express = require('express');
-var path = require('path');
-var fs = require('fs');
+var http = require('http');
 var app = express();
+var path = require('path');
+var webSocket = require('websocket').w3cwebsocket;
+var fs = require('fs');
 var multer = require('multer');
+var bodyParser = require('body-parser');
+
+var port=8084;
+
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+
+app.use(express.static(path.join(__dirname, 'resources')));
+
 var upload = multer({
     dest: 'uploads/'
 });
-var request = require('request');
-var bodyParser = require('body-parser');
-app.use(express.static(path.join(__dirname, 'resources')));
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.post('/run', function (req, res) {
-    var data = req.body; // take data and options from http request and save it to a local variable
+app.get('/', function (req, res) { // Send the response to index.html
+    res.sendFile(__dirname + '/index.html');
+});
 
-    request.post({
-            url: 'http://localhost:8080/EmbASPExecutor/home?metod=sync', // send data to EmbASPExecutor in json format -- temporarely metod sync
-            method: 'POST',
-            json: data
-        },
-        function (err, httpResponse, body) {
-            if (!err)
-                res.send(body); // send the solution of the data by http rosponse to the gui
-        });
+io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
 
+    socket.on('run', function (data) { // Wait for the incoming data with the 'feedback' event and send data
 
+        var client = new webSocket('ws://localhost:8080/EmbASPExecutor/home'); // connet to the EmbASPExecutor
+
+        client.onopen = function () { // Opens the connection and send data 
+            client.send(data);
+        };
+        client.onerror = function () {
+            console.log('Connection Error');
+        };
+        client.onmessage = function (output) { // Wait for the incoming data from the EmbASPExecutor
+            var model = JSON.parse(output.data);
+            socket.emit('output', model); // Socket.io calls emit() to send data to the browser.
+
+        };
+
+    });
 });
 
 app.post("/file-upload", upload.single('file'), function (req, res, next) {
-    fs.readFile(req.file.path, 'utf8', function (err, data) {   // read file from the request
+    fs.readFile(req.file.path, 'utf8', function (err, data) { // read file from the request
         res.send(data); // send contents 
     });
 });
 
 
 
-app.listen(8084, function () {
-    console.log('App listening on port 8084!');
+server.listen(port, function () {
+    console.log('App listening on port '+port);
 });

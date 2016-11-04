@@ -120,28 +120,25 @@ $(document).ready(function () {
     $('#input').submit(function (e) {
         e.preventDefault();
         var text = editor.getValue();
+        $('#program').val(text); //insert the content of text editor in a hidden input text to serailize
         $('#output').removeAttr('name');
         var form;
         if (clkBtn === "run") {
             configureOptions();
-            $('#program').val(text); //insert the content of text editor in a hidden input text to serailize
             form = $('#input').serializeFormJSON();
             destroyOptions();
-            $.ajax({
-                type: "POST",
-                url: "/run",
-                data: form,
-                dataType: "JSON",
-                success: function (response) {
-                    if (response.error === "") {
-                        $('#output').val(response.model); //append the response in the textarea 
-                        $('#output').css('color', 'black');
-                    } else {
-                        $('#output').val(response.error);
-                        $('#output').css('color', 'red');
-                    }
+            var socket = io.connect();
+            socket.emit('run', JSON.stringify(form));
+            socket.on('output', function (response) {
+                if (response.error === "") {
+                    $('#output').val(response.model); //append the response in the textarea 
+                    $('#output').css('color', 'black');
+                } else {
+                    $('#output').val(response.error);
+                    $('#output').css('color', 'red');
                 }
             });
+
         } else if (clkBtn === 'btn-download') {
             $('#output').attr('name', 'output');
             form = $('#input').serializeFormJSON();

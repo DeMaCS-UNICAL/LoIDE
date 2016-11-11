@@ -30,7 +30,7 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
 
     socket.on('run', function (data) { // Wait for the incoming data with the 'feedback' event and send data
 
-        var client = new webSocket('ws://localhost:8080/EmbASPExecutor/home'); // connet to the EmbASPExecutor
+        var client = new webSocket('ws://localhost:8080/ASPServerExecutor/home'); // connet to the ASPServerExecutor
 
         client.onopen = function () { // Opens the connection and send data 
             client.send(data);

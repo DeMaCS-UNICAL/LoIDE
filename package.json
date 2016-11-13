@@ -23,6 +23,7 @@
     "http": "0.0.0",
     "multer": "^1.2.0",
     "path": "^0.12.7",
+    "properties-reader": "0.0.15",
     "socket.io": "^1.5.1",
     "websocket": "^1.0.23"
   },

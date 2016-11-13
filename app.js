@@ -7,10 +7,12 @@ var fs = require('fs');
 var multer = require('multer');
 var bodyParser = require('body-parser');
 
-var port=8084;
+var port = 8084;
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+var PropertiesReader = require('properties-reader');
+var properties = PropertiesReader('resources/config/properties');
 
 app.use(express.static(path.join(__dirname, 'resources')));
 
@@ -26,17 +28,21 @@ app.get('/', function (req, res) { // Send the response to index.html
     res.sendFile(__dirname + '/index.html');
 });
 
+var ws_server = properties.get('ws.server');
+
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
 
     socket.on('run', function (data) { // Wait for the incoming data with the 'feedback' event and send data
 
-        var client = new webSocket('ws://localhost:8080/ASPServerExecutor/home'); // connet to the ASPServerExecutor
+        var client = new webSocket(ws_server); // connet to the ASPServerExecutor
 
         client.onopen = function () { // Opens the connection and send data 
             client.send(data);
         };
         client.onerror = function () {
-            console.log('Connection Error');
+            socket.emit('problem', {
+                reason: "Sorry the connection lost, please try again later!"
+            });
         };
         client.onmessage = function (output) { // Wait for the incoming data from the EmbASPExecutor
             var model = JSON.parse(output.data);
@@ -56,5 +62,5 @@ app.post("/file-upload", upload.single('file'), function (req, res, next) {
 
 
 server.listen(port, function () {
-    console.log('App listening on port '+port);
+    console.log('App listening on port ' + port);
 });

@@ -67,12 +67,14 @@
         return json;
     };
 
+
+
+
     /**
      * Dropzone's method to configure files during upload  
      * @fires Dropzone#upload
      */
     Dropzone.options.upload = {
-        acceptedFiles: ".json",
         init: function () {
             this.options.addRemoveLinks = true;
             this.options.dictRemoveFile = "Delete";
@@ -83,21 +85,52 @@
              */
             this.on('success', function (file, resp) {
 
-                var text = JSON.parse(resp); // takes content of the file in the response
+                if (isJosn(resp)) {
+                    var text = JSON.parse(resp); // takes content of the file in the response
+                    if (!setJSONInput(text)) {
+                        var config = JSON.stringify(text);
+                        editor.setValue(config); // set value of the file in text editor
+                    }
 
-                if (!setJSONInput(text)) {
-                    var config = JSON.stringify(text);
-                    var editor = ace.edit("editor");
-                    editor.setValue(config); // set value of the file in text editor
+                } else {
+                    $('.row-option').each(function (index) {
+                        $(this).remove();
+                    });
+                    addOption(0, 'option');
+                    $('#output').val("");
+                    editor.setValue(resp);
                 }
-
+                /**
+                 * remove and close container after success upload
+                 */
+                this.removeFile(file);
+                $('.collapse').collapse('hide');
+                setHeightComponents();
             });
-
         },
 
     };
 
+    /**
+     * @global 
+     * @description set the id of interval function to stop the execution
+     */
+    var idInterval;
+
 })(jQuery);
+
+/**
+ * @param {json} result - description of the problem 
+ * @description Open a container to display the result 
+ */
+function operation_alert(result) {
+    $("#result-auto-close-alert").focus();
+    $("#result-alert-text").html("<strong>" + result.reason + "</strong>");
+    $("#result-auto-close-alert").removeClass("hidden").addClass("alert-danger fade in");
+    $("#result-auto-close-alert").fadeTo(1500, 750).slideUp(800, function () {
+        $(this).removeClass("alert-danger fade in");
+    });
+}
 
 /**
  * set up ace editor
@@ -110,13 +143,35 @@ editor.session.setMode("asp");
 editor.setTheme("ace/theme/tomorrow");
 editor.setValue("");
 editor.resize();
+editor.setOptions({
+    fontSize: 15
+});
 
 /**
  * active tooltip bootstrap
  */
 $('[data-toggle="tooltip"]').tooltip();
 
+
 $(document).ready(function () {
+
+    /**
+     * Hidden tooltip when button is clicked
+     */
+    $('[data-toggle="tooltip"]').on('click', function () {
+        $(this).tooltip('hide');
+    });
+
+    $('#btn-upload').on('click', function () {
+        var expandend = $('#upload-container').attr('aria-expanded');
+        if (expandend == 'false') {
+            setHeightComponents(expandend);
+        } else {
+            setHeightComponents();
+        }
+
+
+    });
 
     setHeightComponents();
 
@@ -132,6 +187,23 @@ $(document).ready(function () {
     $('.dropdown-menu-choise').find('a').click(function (e) {
         var concept = $(this).text();
         $('#choise').text(concept); // append to the DOM the choise for download
+        var stringify, form, chose;
+        if (concept === 'Input') {
+            form = $('#input').serializeFormJSON();
+            stringify = JSON.stringify(form);
+            chose = $('#choise').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
+            createFileToDownload(stringify);
+        } else {
+            $('#program').removeAttr('name', 'prgram');
+            $('#output').attr('name', 'output');
+            form = $('#input').serializeFormJSON();
+            stringify = JSON.stringify(form);
+            chose = $('#choise').text();
+            createFileToDownload(stringify);
+            $('#program').attr('name', 'prgram');
+            $('#output').removeAttr('name', 'output');
+        }
+        $('#choise').text("");
     });
 
     /**
@@ -142,29 +214,17 @@ $(document).ready(function () {
 
     $('button[type="submit"]').click(function (evt) {
         clkBtn = evt.target.id;
+
     });
+
 
     $('#input').submit(function (e) {
         e.preventDefault();
         var text = editor.getValue();
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
-        $('#output').removeAttr('name');
         var form;
         if (clkBtn === "run") {
-            configureOptions();
-            form = $('#input').serializeFormJSON();
-            destroyOptions();
-            var socket = io.connect();
-            socket.emit('run', JSON.stringify(form));
-            socket.on('output', function (response) {
-                if (response.error === "") {
-                    $('#output').val(response.model); // append the response in the textarea 
-                    $('#output').css('color', 'black');
-                } else {
-                    $('#output').val(response.error);
-                    $('#output').css('color', 'red');
-                }
-            });
+            callSocketServer();
 
         } else if (clkBtn === 'btn-download') {
             $('#output').attr('name', 'output');
@@ -172,52 +232,15 @@ $(document).ready(function () {
             var stringify = JSON.stringify(form);
             var chose = $('#choise').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
+            $('#output').removeAttr('name');
+
+        } else if (clkBtn === 'run-sec') {
+            callSocketServer();
+            $('.navbar-left').append('<button id="stop" class="btn btn-danger">STOP</button>');
+            idInterval = setInterval(intervalRun, 5000);
         }
 
     });
-
-    /**
-     * @param {string} text - json configuration to be saved
-     * @description Create a new Blob that contains the data from your form feild, then create a link object to attach the file to download
-     */
-
-    function createFileToDownload(text) {
-        var textFileAsBlob = new Blob([text], {
-
-            type: 'application/json'
-        });
-        /**
-         * specify the name of the file to be saved
-         */
-        var fileNameToSaveAs = "Config.json";
-        var downloadLink = document.createElement("a");
-
-        /**
-         * supply the name of the file
-         */
-        downloadLink.download = fileNameToSaveAs;
-
-        /**
-         * allow code to work in webkit & Gecko based browsers without the need for a if / else block.
-         */
-        window.URL = window.URL || window.webkitURL;
-        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-
-        /**
-         * when link is clicked, call the function to remove it from the DOM in case user wants to save a second file
-         */
-        downloadLink.onclick = destroyClickedElement;
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-    }
-    /**
-     * @param {Object} event - reference to the object that dispatched the event
-     * @description Remove the link from the DOM 
-     */
-    function destroyClickedElement(event) {
-        document.body.removeChild(event.target);
-    }
 
     $("#btn-option").click(function () {
 
@@ -228,6 +251,78 @@ $(document).ready(function () {
 
 });
 
+/**
+ * @description Serialize form and send it to socket server and waits for the response
+ */
+function callSocketServer() {
+    configureOptions();
+    var form = $('#input').serializeFormJSON();
+    destroyOptions();
+    var socket = io.connect();
+    socket.emit('run', JSON.stringify(form));
+    socket.on('problem', function (response) {
+        operation_alert(response);
+    });
+    socket.on('output', function (response) {
+        if (response.error === "") {
+            $('#output').val(response.model); // append the response in the textarea 
+            $('#output').css('color', 'black');
+        } else {
+            $('#output').val(response.error);
+            $('#output').css('color', 'red');
+        }
+    });
+}
+
+/**
+ * @description Trigger a 'run' button to execute the program
+ */
+function intervalRun() {
+    $('#run').trigger('click');
+}
+
+/**
+ * @param {string} text - json configuration to be saved
+ * @description Create a new Blob that contains the data from your form feild, then create a link object to attach the file to download
+ */
+
+function createFileToDownload(text) {
+    var textFileAsBlob = new Blob([text], {
+
+        type: 'application/json'
+    });
+    /**
+     * specify the name of the file to be saved
+     */
+    var fileNameToSaveAs = "Config.json";
+    var downloadLink = document.createElement("a");
+
+    /**
+     * supply the name of the file
+     */
+    downloadLink.download = fileNameToSaveAs;
+
+    /**
+     * allow code to work in webkit & Gecko based browsers without the need for a if / else block.
+     */
+    window.URL = window.URL || window.webkitURL;
+    downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+
+    /**
+     * when link is clicked, call the function to remove it from the DOM in case user wants to save a second file
+     */
+    downloadLink.onclick = destroyClickedElement;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
+/**
+ * @param {Object} event - reference to the object that dispatched the event
+ * @description Remove the link from the DOM 
+ */
+function destroyClickedElement(event) {
+    document.body.removeChild(event.target);
+}
 
 $(document).on('click', '.btn-add-option', function () {
     addOptionDOM($(this));
@@ -252,7 +347,23 @@ $(document).on('click', '.btn-add', function () {
 $(document).on('click', '.btn-info-value', function () {
     addInpuValue($(this));
 
+});
 
+$(document).on('change', '.form-control-option', function () { //add or remove the button 'add value' based on the option
+
+    var val = $(this).val();
+    if (val === 'option' || val === 'nofacts' || val === 'silent') {
+        $(this).closest('.row-option').find('.option-value').remove();
+    } else {
+        if ($(this).closest('.row-option').find('.option-value').length === 0)
+            $(this).closest('.col-sm-12').append('<div class="option-value"><div class="text-center center-btn-value"><button type="button" class="btn btn-info btn-info-value ">Add value</button></div></div>');
+    }
+
+});
+
+$(document).on('click', '#stop', function () {
+    clearInterval(idInterval);
+    $(this).remove();
 });
 
 /**
@@ -293,9 +404,7 @@ function addOptionDOM(optionClassBtn) {
     $(inputValueClone).remove(); // remove all input value forms
 
     clone.find($('.center-btn-value')).remove(); // remove button to add input value, if present 
-    inputValueClone = '<div class="text-center center-btn-value"><button type="button" class="btn btn-info btn-info-value ">Add value</button></div>';
 
-    $(clone).find('.option-value').append(inputValueClone); // append only one input value in the new option container
 }
 
 /**
@@ -456,13 +565,37 @@ function addOption(index, valueOption) {
 }
 
 /**
+ * @param {string} expanded - check if the upload container is expanded to resize the components
  * @description set the height of the components with the height of your browser
  */
-function setHeightComponents() {
+function setHeightComponents(expanded) {
     var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; // cross-browser solution
     var navbarHeight = $('.navbar').outerHeight(true);
 
-    $('.left-panel').css('height', height - navbarHeight);
-    $('.layout').css('height', height - navbarHeight);
+    if (expanded !== undefined) {
+        var containerUpload = $('#upload-container').outerHeight(true);
+        $('.left-panel').css('height', height - (navbarHeight + containerUpload));
+        $('.layout').css('height', height - (navbarHeight + containerUpload));
+        $('.ui-layout-pane-east').css('height', height - (navbarHeight + containerUpload));
+        $('.ui-layout-pane-center').css('height', height - (navbarHeight + containerUpload));
+    } else {
+        $('.left-panel').css('height', height - navbarHeight);
+        $('.layout').css('height', height - navbarHeight);
+        $('.ui-layout-pane-east').css('height', height - navbarHeight);
+        $('.ui-layout-pane-center').css('height', height - navbarHeight);
+    }
+    editor.resize();
+}
 
+/**
+ * @param {string} str - string to check 
+ * @description check if a string is JSON
+ */
+function isJosn(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }

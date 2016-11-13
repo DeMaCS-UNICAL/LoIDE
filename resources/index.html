@@ -31,25 +31,31 @@
 			<ul class="nav navbar-nav navbar-right">
 				<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#upload-container" id="btn-upload">Upload File</button>
 				<div class="btn-group btn-group-info">
-					<button id="btn-download" class="btn btn-info" type="submit" form="input">Download</button>
+					<label for="btn-download" role="button" class="btn btn-info">Download</label>
 					<button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button"> <span id="choise"></span> <span class="caret"></span> </button>
 					<ul class="dropdown-menu dropdown-menu-choise">
-						<li><a href="#">Input</a></li>
-						<li><a href="#">Output</a></li>
-						<li><a href="#">Input & Output</a></li>
+						<li><a>Input</a></li>
+						<li><a>Output</a></li>
 					</ul>
 				</div>
 			</ul>
 			<ul class="nav navbar-nav navbar-left">
-				<button type="submit" class="btn btn-success" id="run" form="input">Run!</button>
+				<label role="button" class="btn btn-success" for="run">Run!</label>
+				<label role="button" class="btn btn-warning" for="run-sec">Run every 5 sec!</label>
 			</ul>
 		</div>
 		<!-- /.navbar-collapse -->
 	</nav>
-	<div id="upload-container" class="collapse">
+	<div tabindex="-1" id="result-auto-close-alert" class="alert hidden">
+		<p id="result-alert-text"></p>
+	</div>
+	<div id="upload-container" class="collapse" aria-expanded="false">
 		<form action="/file-upload" class="dropzone" id="upload" enctype="multipart/form-data">
 			<div class="fallback">
 				<input name="file" type="file" multiple />
+			</div>
+			<div class="dz-message">Drag and Drop here, or click to manually download.
+				<br> If the file is .json it will set the configuration, otherwise it will show on text editor.
 			</div>
 		</form>
 	</div>
@@ -57,13 +63,13 @@
 		<form id="input">
 			<div class="left-panel">
 				<div class="text-center">
-					<a href="#" role="button" id="btn-option" data-toggle="tooltip" data-placement="top" title="Options solver"><i class="glyphicon glyphicon-cog"></i></a>
+					<a role="button" id="btn-option" data-toggle="tooltip" data-placement="top" title="Options solver"><i class="glyphicon glyphicon-cog"></i></a>
 				</div>
 				<div class="option-solver">
 					<div class="hidden">
 						<label for="inputLanguage" class="col-sm-12 text-center">Language</label>
 						<select name="language" id="inputLanguage" class="form-control">
-					<option value="asp">Asp</option>
+					<option value="asp">ASP</option>
 				</select>
 						<label for="inputEngine" class="col-sm-12 text-center">Solver</label>
 						<select name="engine" id="inputengine" class="form-control">
@@ -83,11 +89,6 @@
 										<span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span>
 									</div>
 								</div>
-								<div class="option-value">
-									<div class="text-center center-btn-value">
-										<button type="button" class="btn btn-info btn-info-value ">Add value</button>
-									</div>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -95,6 +96,9 @@
 			</div>
 			<div class="layout">
 				<input type="hidden" name="program" id="program" value="">
+				<button id="btn-download" type="submit" class="hidden"></button>
+				<button id="run" type="submit" class="hidden"></button>
+				<button id="run-sec" type="submit" class="hidden"></button>
 				<div class="pane ui-layout-center">
 					<div id="editor" class=" ">
 					</div>

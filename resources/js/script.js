@@ -111,12 +111,6 @@
 
     };
 
-    /**
-     * @global 
-     * @description set the id of interval function to stop the execution
-     */
-    var idInterval;
-
 })(jQuery);
 
 /**
@@ -148,12 +142,35 @@ editor.setOptions({
 });
 
 /**
+ * Execute the program when you insert a . and if the readio button is checked
+ */
+editor.on('change', function () {
+    if ($('#run-dot').prop('checked')) {
+        var text = editor.getValue();
+        if (text.slice(-1) === ".") {
+            intervalRun();
+        }
+
+    }
+});
+
+$('#modal-about').modal({
+    backdrop: false,
+    show: false
+});
+
+/**
  * active tooltip bootstrap
  */
 $('[data-toggle="tooltip"]').tooltip();
 
-
 $(document).ready(function () {
+
+    if ($('.form-control-option').val() === 'option') {
+        addInpuValue($('.form-control-option').closest('.row-option'));
+    }
+
+    $('#run-dot').prop('checked', true);
 
     /**
      * Hidden tooltip when button is clicked
@@ -194,13 +211,13 @@ $(document).ready(function () {
             chose = $('#choise').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
         } else {
-            $('#program').removeAttr('name', 'prgram');
+            $('#program').removeAttr('name', 'program');
             $('#output').attr('name', 'output');
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
             chose = $('#choise').text();
             createFileToDownload(stringify);
-            $('#program').attr('name', 'prgram');
+            $('#program').attr('name', 'program');
             $('#output').removeAttr('name', 'output');
         }
         $('#choise').text("");
@@ -234,10 +251,6 @@ $(document).ready(function () {
             createFileToDownload(stringify);
             $('#output').removeAttr('name');
 
-        } else if (clkBtn === 'run-sec') {
-            callSocketServer();
-            $('.navbar-left').append('<button id="stop" class="btn btn-danger">STOP</button>');
-            idInterval = setInterval(intervalRun, 5000);
         }
 
     });
@@ -349,21 +362,32 @@ $(document).on('click', '.btn-info-value', function () {
 
 });
 
+$(document).on('change', '#inputengine', function () {
+    var val = $(this).val();
+    if (val === "clingo") {
+        $('.form-control-option').find('option[value!="option"]').remove();
+        $('.form-control-option').each(function (indexInArray, valueOfElement) {
+            if ($(this).closest('.row-option').find('.form-control-value').length === 0) {
+                addInpuValue($(this).closest('.row-option'));
+            }
+        });
+
+    } else {
+        $('.form-control-option').append('<option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
+    }
+});
+
 $(document).on('change', '.form-control-option', function () { //add or remove the button 'add value' based on the option
 
     var val = $(this).val();
-    if (val === 'option' || val === 'nofacts' || val === 'silent') {
-        $(this).closest('.row-option').find('.option-value').remove();
+    if (val === 'option' || val === 'filter') {
+        if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) < 1)
+            addInpuValue($(this).closest('.row-option'));
     } else {
-        if ($(this).closest('.row-option').find('.option-value').length === 0)
-            $(this).closest('.col-sm-12').append('<div class="option-value"><div class="text-center center-btn-value"><button type="button" class="btn btn-info btn-info-value ">Add value</button></div></div>');
+        $(this).closest('.row-option').find('.option-value').remove();
+        $(this).closest('.col-sm-12').append("<div class='option-value'></div>");
     }
 
-});
-
-$(document).on('click', '#stop', function () {
-    clearInterval(idInterval);
-    $(this).remove();
 });
 
 /**
@@ -404,6 +428,9 @@ function addOptionDOM(optionClassBtn) {
     $(inputValueClone).remove(); // remove all input value forms
 
     clone.find($('.center-btn-value')).remove(); // remove button to add input value, if present 
+    if ($(clone).find('.form-control-option').val() === 'option') {
+        addInpuValue($(clone).find('.form-control-option').closest('.row-option'));
+    }
 
 }
 
@@ -426,7 +453,9 @@ function deleteInputValue(inputClass) {
  * @description Add the input type to a correct class parent
  */
 function addInpuValue(inputClass) {
-    var optionValue = $(inputClass).closest('.option-value');
+    var optionValue = $(inputClass).find('.option-value');
+    if (optionValue.size() === 0)
+        optionValue = $(inputClass).closest('.option-value');
     var currentName = $(inputClass).closest('.row-option').find('.form-control-option').attr('name');
 
     /**
@@ -435,7 +464,12 @@ function addInpuValue(inputClass) {
      */
     var replaceName = currentName.replace('name', 'value');
     replaceName += '[]';
-    var clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+    var clone;
+    if (optionValue.find('.input-group-value').length > 0) {
+        clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+    } else {
+        clone = '<div class="form-group input-group input-group-value"><input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+    }
     $(optionValue).append(clone);
     $(inputClass).closest('.center-btn-value').remove();
 }
@@ -460,6 +494,7 @@ function OptionDLV() {
         this.map.push("filter", "-filter=");
         this.map.push("nofacts", "-nofacts");
         this.map.push("silent", "-silent");
+        this.map.push("query", "-FC");
     };
 
 }

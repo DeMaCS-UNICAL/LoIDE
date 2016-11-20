@@ -29,9 +29,9 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#upload-container" id="btn-upload">Upload File</button>
+				<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#upload-container" id="btn-upload">Upload File <i class="glyphicon glyphicon-upload"></i></button>
 				<div class="btn-group btn-group-info">
-					<label for="btn-download" role="button" class="btn btn-info">Download</label>
+					<label for="btn-download" role="button" class="btn btn-info">Download <i class="glyphicon glyphicon-download"></i></label>
 					<button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button"> <span id="choise"></span> <span class="caret"></span> </button>
 					<ul class="dropdown-menu dropdown-menu-choise">
 						<li><a>Input</a></li>
@@ -40,8 +40,8 @@
 				</div>
 			</ul>
 			<ul class="nav navbar-nav navbar-left">
-				<label role="button" class="btn btn-success" for="run">Run!</label>
-				<label role="button" class="btn btn-warning" for="run-sec">Run every 5 sec!</label>
+				<label role="button" class="btn btn-success" for="run">Run! <i class="glyphicon glyphicon-play"></i></label>
+				<button id="a" type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-about">About </button>
 			</ul>
 		</div>
 		<!-- /.navbar-collapse -->
@@ -54,7 +54,7 @@
 			<div class="fallback">
 				<input name="file" type="file" multiple />
 			</div>
-			<div class="dz-message">Drag and Drop here, or click to manually download.
+			<div class="dz-message">Drag and Drop here, or click to manually upload.
 				<br> If the file is .json it will set the configuration, otherwise it will show on text editor.
 			</div>
 		</form>
@@ -74,6 +74,7 @@
 						<label for="inputEngine" class="col-sm-12 text-center">Solver</label>
 						<select name="engine" id="inputengine" class="form-control">
 						<option value="dlv">DLV</option>
+						<option value="clingo">Clingo</option>
 						</select>
 						<div class="row row-option">
 							<div class="col-sm-12">
@@ -85,11 +86,21 @@
 											<option value="filter">Filter</option>
 											<option value="nofacts">Nofacts</option>
 											<option value="silent">Silent</option>
+											<option value="query">Query</option>
 										</select>
 										<span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span>
 									</div>
 								</div>
+								<div class="option-value">
+								</div>
 							</div>
+						</div>
+						<div class="checkbox">
+							<p class="text-center"> <strong> Option executable </strong> </p>
+							<label>
+								<input type="checkbox" value="" id="run-dot">
+								Run after you insert . 
+							</label>
 						</div>
 					</div>
 				</div>
@@ -98,7 +109,6 @@
 				<input type="hidden" name="program" id="program" value="">
 				<button id="btn-download" type="submit" class="hidden"></button>
 				<button id="run" type="submit" class="hidden"></button>
-				<button id="run-sec" type="submit" class="hidden"></button>
 				<div class="pane ui-layout-center">
 					<div id="editor" class=" ">
 					</div>
@@ -108,6 +118,21 @@
 				</div>
 			</div>
 		</form>
+	</div>
+	<div class="modal fade" id="modal-about" role="dialog" tabindex="-1">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">LoIDE</h4>
+				</div>
+				<div class="modal-body">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

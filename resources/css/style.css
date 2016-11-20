@@ -18,7 +18,8 @@ body {
 }
 
 .nav {
-    padding-top: 1%;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
 }
 
 .navbar-brand {
@@ -32,7 +33,7 @@ body {
     width: 100%;
 }
 
-.navbar-right{
+.navbar-right {
     padding-right: 1%;
 }
 
@@ -67,6 +68,13 @@ body {
     font-size: 19px;
 }
 
-#upload-container{
+#upload-container {
     padding-bottom: 1%;
+}
+
+.btn:focus {
+    outline: none;
+}
+.checkbox{
+    margin-top: 20%;
 }

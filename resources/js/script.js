@@ -1,5 +1,5 @@
 (function ($) {
-
+    
     /** 
      *  @description Serialize form as json object
      */
@@ -110,6 +110,11 @@
         },
 
     };
+/**
+ * @global
+ * @description place object layout
+ */
+var layout;
 
 })(jQuery);
 
@@ -195,11 +200,13 @@ $(document).ready(function () {
     /**
      * fix minWidth layout
      */
-    $('body > .container > form > .layout').layout({
+    layout = $('body > .container > form > .layout').layout({
         center__minWidth: 600,
-        east__minSize: 250
+        east__minSize: 250,
+        south__maxSize: 350,
+        south__minSize: 150
     });
-
+    layout.removePane("south");
 
     $('.dropdown-menu-choise').find('a').click(function (e) {
         var concept = $(this).text();
@@ -359,6 +366,29 @@ $(document).on('click', '.btn-add', function () {
 
 $(document).on('click', '.btn-info-value', function () {
     addInpuValue($(this));
+
+});
+
+$(document).on('click', '#split', function () {
+    layout.removePane("east");
+    var currentVal = $('#output').val();
+    $(this).parent().empty();
+    layout.addPane("south");
+    createTextArea($('.ui-layout-south'));
+    $('#output').val(currentVal);
+    $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
+    $('#split').attr('id', 'split-up');
+
+
+});
+
+$(document).on('click', '#split-up', function () {
+    layout.removePane("south");
+    var currentVal = $('#output').val();
+    $(this).parent().empty();
+    layout.addPane("east");
+    createTextArea($('.ui-layout-east'));
+    $('#output').val(currentVal);
 
 });
 
@@ -633,4 +663,11 @@ function isJosn(str) {
         return false;
     }
     return true;
+}
+/**
+ * @param {string} layout - specific layout
+ * @description append textarea to a specific layout
+ */
+function createTextArea(layout) {
+    $(layout).append('Output <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a><textarea readonly name="" id="output" class="form-control output"></textarea>');
 }

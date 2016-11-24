@@ -56,16 +56,6 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     });
 });
 
-app.post("/file-upload", upload.single('file'), function (req, res, next) {
-    fs.readFile(req.file.path, 'utf8', function (err, data) { // read file from the request
-        res.send(data); // send contents 
-    });
-    fs.unlinkSync(req.file.path);
-    console.log("file deleted!");
-});
-
-
-
 server.listen(port, function () {
     console.log('App listening on port ' + port);
 });

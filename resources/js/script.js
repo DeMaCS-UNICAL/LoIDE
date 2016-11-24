@@ -1,5 +1,5 @@
 (function ($) {
-    
+
     /** 
      *  @description Serialize form as json object
      */
@@ -110,11 +110,11 @@
         },
 
     };
-/**
- * @global
- * @description place object layout
- */
-var layout;
+    /**
+     * @global
+     * @description place object layout
+     */
+    var layout;
 
 })(jQuery);
 
@@ -170,6 +170,11 @@ $('#modal-about').modal({
 $('[data-toggle="tooltip"]').tooltip();
 
 $(document).ready(function () {
+
+    var dropZone = document.getElementById('drop_zone');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('drop', handleFileSelect, false);
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
     if ($('.form-control-option').val() === 'option') {
         addInpuValue($('.form-control-option').closest('.row-option'));
@@ -407,11 +412,11 @@ $(document).on('change', '#inputengine', function () {
     }
 });
 
-$(document).on('change', '.form-control-option', function () { //add or remove the button 'add value' based on the option
+$(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
 
     var val = $(this).val();
     if (val === 'option' || val === 'filter') {
-        if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) < 1)
+        if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
             addInpuValue($(this).closest('.row-option'));
     } else {
         $(this).closest('.row-option').find('.option-value').remove();
@@ -595,19 +600,29 @@ function setJSONInput(config) {
             if (item['value']) {
                 currentClass = $('.option-value').eq(indexInArray);
                 $(item.value).each(function (indexInArray, itemValue) {
-                    addInpuValue(currentClass);
+                    if (indexInArray !== 0)
+                        addInpuValue(currentClass);
                     $('.input-group-value').last().find('.form-control-value').val(itemValue);
                 });
             }
 
         });
-
         $('.row-option').each(function (index) { // add delete button after first option
             if (index > 0) {
                 var cloneOpname = $(this).find('.opname');
                 $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>');
             }
         });
+
+        if (config.engine === "clingo") {
+            $('.form-control-option').find('option[value!="option"]').remove();
+            $('.form-control-option').each(function (indexInArray, valueOfElement) {
+                if ($(this).closest('.row-option').find('.form-control-value').length === 0) {
+                    addInpuValue($(this).closest('.row-option'));
+                }
+            });
+
+        }
 
         return true;
     } else {
@@ -621,9 +636,8 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value="option">Option</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"><div class="text-center center-btn-value"><button type="button" class="btn btn-info btn-info-value ">Add value</button></div></div></div></div>';
-    $('.show').append(clone);
-    $('.hidden').append(clone);
+    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value="option">Option</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"></div></div></div>';
+    $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
 
@@ -670,4 +684,44 @@ function isJosn(str) {
  */
 function createTextArea(layout) {
     $(layout).append('Output <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a><textarea readonly name="" id="output" class="form-control output"></textarea>');
+}
+
+function handleFileSelect(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    files = document.getElementById("files").files[0];
+    if (files === undefined) {
+        files = evt.dataTransfer.files[0];
+    }
+    var reader = new FileReader();
+    reader.onload = function (event) {
+        var text = event.target.result;
+        if (isJosn(text)) {
+            var jsontext = JSON.parse(text); // takes content of the file in the response
+            if (!setJSONInput(jsontext)) {
+                editor.setValue(JSON.stringify(text)); // set value of the file in text editor
+            }
+
+        } else {
+            $('.row-option').each(function (index) {
+                $(this).remove();
+            });
+            addOption(0, 'option');
+            $('#output').val("");
+            editor.setValue(text);
+        }
+        /**
+         * remove and close container after success upload
+         */
+        $('.collapse').collapse('hide');
+        setHeightComponents();
+    };
+    reader.readAsText(files);
+    $('#files').val("");
+}
+
+function handleDragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }

@@ -78,3 +78,21 @@ body {
 .checkbox{
     margin-top: 20%;
 }
+
+#drop_zone{
+    border-style: dashed;
+    border-color: grey;
+    margin-left: 1%;
+    margin-right: 1%;
+    height: 100px;
+}
+
+#drop_zone > p{
+margin-top: 1%;
+}
+
+#input-select{
+    margin-left: 1%;
+    margin-top: 2%;
+    margin-bottom: 1%;
+}

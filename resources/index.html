@@ -9,7 +9,7 @@
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/layout-default-latest.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
@@ -56,8 +56,8 @@
 		</div>
 		<div id="list">
 		</div>
-		<div id="input-select">
-			<input type="file" id="files" name="files[]" multiple />
+			<div id="input-select">
+				<input type="file" id="files" name="files[]" multiple />
 		</div>
 	</div>
 	<div class="container">
@@ -115,6 +115,7 @@
 					</div>
 				</div>
 				<div class="pane ui-layout-east">Output
+					<a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a>
 					<a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a>
 					<textarea readonly name="" id="output" class="form-control output"></textarea>
 				</div>
@@ -128,12 +129,67 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">LoIDE</h4>
+					<h4 class="modal-title">About LoIDE</h4>
 				</div>
 				<div class="modal-body">
+					<p>LoIDE is a web-based IDE for Logic Programming<br></p>
+					<p><strong>It is part of an undergraduate student's work of thesis, and is still at the early stages of development </strong><br></p>
+					<p><strong>It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet </strong><br></p>
+					<p>The LoIDE source is available from <a href="https://github.com/DeMaCS-UNICAL/LoIDE">Github <i class="fa fa-github"></i></a></p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="setting-editor" role="dialog" tabindex="-1">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Options Text Editor</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-4">
+							<label for="font-editor">Font size Text Editor</label>
+							<input id="font-editor" type="number" min="15" max="60">
+						</div>
+						<div class="col-md-4  col-md-offset-2">
+							<label for="font-output">Font size Output</label>
+							<input id="font-output" type="number" min="15" max="60">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-8">
+							<label for="theme">Change theme Text Editor</label>
+							<div class="input-group opname">
+								<select id="theme">
+									<optgroup label="Bright">
+										<option value="ace/theme/tomorrow">Tomorrow</option>
+										<option value="ace/theme/solarized_light">Solarized Light</option>
+										<option value="ace/theme/clouds">Clouds</option>
+										<option value="ace/theme/github">Github</option>
+										<option value="ace/theme/xcode">XCode</option>
+										<option value="ace/theme/katzenmilch">KatzenMilch</option>
+									</optgroup>
+									<optgroup label="Dark">
+										<option value="ace/theme/kr_theme">KrTheme</option>
+										<option value="ace/theme/chaos">Chaos</option>
+										<option value="ace/theme/cobalt">Cobalt</option>
+										<option value="ace/theme/terminal">Terminal</option>
+										<option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
+										<option value="ace/theme/monokai">Monokai</option>
+									</optgroup>
+											
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>

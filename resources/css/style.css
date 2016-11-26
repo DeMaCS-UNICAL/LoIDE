@@ -64,8 +64,16 @@ body {
     margin-right: 3%;
 }
 
-#btn-option {
+a[role="button"] {
     font-size: 19px;
+}
+
+a[role="button"]:focus {
+    outline: none;
+}
+
+[href="#setting-editor"] {
+    padding-left: 5%;
 }
 
 #upload-container {
@@ -75,11 +83,12 @@ body {
 .btn:focus {
     outline: none;
 }
-.checkbox{
+
+.checkbox {
     margin-top: 20%;
 }
 
-#drop_zone{
+#drop_zone {
     border-style: dashed;
     border-color: grey;
     margin-left: 1%;
@@ -87,12 +96,21 @@ body {
     height: 100px;
 }
 
-#drop_zone > p{
-margin-top: 1%;
+#drop_zone>p {
+    margin-top: 1%;
 }
 
-#input-select{
+#input-select {
+    text-align: center;
+    vertical-align: middle;
     margin-left: 1%;
     margin-top: 2%;
     margin-bottom: 1%;
+}
+#files{
+    display: inline-block;
+}
+
+#setting-editor>.modal-dialog>.modal-content>.modal-body>.row {
+    margin-bottom: 3%;
 }

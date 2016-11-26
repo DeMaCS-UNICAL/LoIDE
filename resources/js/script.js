@@ -136,8 +136,7 @@ function operation_alert(result) {
  */
 var editor = ace.edit("editor");
 ace.config.set("packaged", true);
-var path = "js/ace/mode";
-ace.config.set("modePath", path);
+ace.config.set("modePath", "js/ace/mode");
 editor.session.setMode("asp");
 editor.setTheme("ace/theme/tomorrow");
 editor.setValue("");
@@ -159,9 +158,16 @@ editor.on('change', function () {
     }
 });
 
-$('#modal-about').modal({
+$('.modal').modal({
     backdrop: false,
     show: false
+});
+
+/**
+ * set autofocus in modal
+ */
+$('.modal').on('shown.bs.modal', function () {
+    $('#myInput').focus();
 });
 
 /**
@@ -170,6 +176,21 @@ $('#modal-about').modal({
 $('[data-toggle="tooltip"]').tooltip();
 
 $(document).ready(function () {
+
+    $('#font-output').change(function (e) {
+        var size = $(this).val();
+        $('#output').css('font-size', size + "px");
+    });
+
+    $('#font-editor').change(function (e) {
+        var size = $(this).val();
+        editor.setFontSize(size + "px");
+    });
+
+    $('#theme').change(function (e) { 
+        var theme = $(this).val();
+        editor.setTheme(theme);
+    });
 
     var dropZone = document.getElementById('drop_zone');
     dropZone.addEventListener('dragover', handleDragOver, false);
@@ -683,7 +704,7 @@ function isJosn(str) {
  * @description append textarea to a specific layout
  */
 function createTextArea(layout) {
-    $(layout).append('Output <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a><textarea readonly name="" id="output" class="form-control output"></textarea>');
+    $(layout).append('Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a><textarea readonly name="" id="output" class="form-control output"></textarea>');
 }
 
 function handleFileSelect(evt) {

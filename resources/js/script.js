@@ -67,49 +67,6 @@
         return json;
     };
 
-
-
-
-    /**
-     * Dropzone's method to configure files during upload  
-     * @fires Dropzone#upload
-     */
-    Dropzone.options.upload = {
-        init: function () {
-            this.options.addRemoveLinks = true;
-            this.options.dictRemoveFile = "Delete";
-
-            /**
-             * Event for a successfull upload file
-             * @event Dropzone#success
-             */
-            this.on('success', function (file, resp) {
-
-                if (isJosn(resp)) {
-                    var text = JSON.parse(resp); // takes content of the file in the response
-                    if (!setJSONInput(text)) {
-                        var config = JSON.stringify(text);
-                        editor.setValue(config); // set value of the file in text editor
-                    }
-
-                } else {
-                    $('.row-option').each(function (index) {
-                        $(this).remove();
-                    });
-                    addOption(0, 'option');
-                    $('#output').val("");
-                    editor.setValue(resp);
-                }
-                /**
-                 * remove and close container after success upload
-                 */
-                this.removeFile(file);
-                $('.collapse').collapse('hide');
-                setHeightComponents();
-            });
-        },
-
-    };
     /**
      * @global
      * @description place object layout
@@ -132,31 +89,16 @@ function operation_alert(result) {
 }
 
 /**
- * set up ace editor
+ * @global
+ * @description place the id of the current shown editor 
  */
-var editor = ace.edit("editor");
-ace.config.set("packaged", true);
-ace.config.set("modePath", "js/ace/mode");
-editor.session.setMode("asp");
-editor.setTheme("ace/theme/tomorrow");
-editor.setValue("");
-editor.resize();
-editor.setOptions({
-    fontSize: 15
-});
+var idEditor = 'editor1';
 
 /**
- * Execute the program when you insert a . and if the readio button is checked
+ * set up ace editors into object
  */
-editor.on('change', function () {
-    if ($('#run-dot').prop('checked')) {
-        var text = editor.getValue();
-        if (text.slice(-1) === ".") {
-            intervalRun();
-        }
-
-    }
-});
+editors = {};
+setUpAce('editor1');
 
 $('.modal').modal({
     backdrop: false,
@@ -184,12 +126,12 @@ $(document).ready(function () {
 
     $('#font-editor').change(function (e) {
         var size = $(this).val();
-        editor.setFontSize(size + "px");
+        editors[idEditor].setFontSize(size + "px");
     });
 
-    $('#theme').change(function (e) { 
+    $('#theme').change(function (e) {
         var theme = $(this).val();
-        editor.setTheme(theme);
+        editors[idEditor].setTheme(theme);
     });
 
     var dropZone = document.getElementById('drop_zone');
@@ -270,7 +212,7 @@ $(document).ready(function () {
 
     $('#input').submit(function (e) {
         e.preventDefault();
-        var text = editor.getValue();
+        var text = editors[idEditor].getValue();
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
         var form;
         if (clkBtn === "run") {
@@ -394,6 +336,11 @@ $(document).on('click', '.btn-info-value', function () {
     addInpuValue($(this));
 
 });
+$(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+    currentTab = e.target;
+    idTab = $(currentTab).attr('data-target');
+    idEditor = $(idTab).find('.ace').attr("id");
+});
 
 $(document).on('click', '#split', function () {
     layout.removePane("east");
@@ -442,6 +389,29 @@ $(document).on('change', '.form-control-option', function () { //add or remove t
     } else {
         $(this).closest('.row-option').find('.option-value').remove();
         $(this).closest('.col-sm-12').append("<div class='option-value'></div>");
+    }
+
+});
+$(document).on('click', '.add-tab', function () { // add new tab 
+    var id = $(".nav-tabs").children().length;
+    var tabId = "tab" + id;
+    var editorId = "editor" + id;
+    $('<li role="presentation"><a data-target="#' + tabId + '" aria-controls="tab" role="tab" data-toggle="tab">Tab' + id + ' <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($(this).parent());
+    $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
+    editors[editorId] = new ace.edit(editorId);
+    setUpAce(editorId);
+});
+
+$(document).on('click', '.delete-tab', function () { // delete tab
+    var r = confirm("Are you sure you want to delete this file? This cannot be undone.");
+    if (r) {
+        var prevEditor = $(this).parent().parent().prev();
+        var currentID = $(this).closest('a').attr('data-target');
+        $(this).parent().parent().remove();
+        var ideditor = $(currentID).find('.ace').attr("id");
+        $(currentID).remove();
+        delete editors[ideditor];
+        $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
     }
 
 });
@@ -602,9 +572,8 @@ function destroyOptions() {
  */
 function setJSONInput(config) {
     if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output')) {
-        var editor = ace.edit("editor");
         var text = config.program;
-        editor.setValue(text);
+        editors[idEditor].setValue(text);
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
         $('#output').val(config.output);
@@ -671,24 +640,29 @@ function addOption(index, valueOption) {
 function setHeightComponents(expanded) {
     var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; // cross-browser solution
     var navbarHeight = $('.navbar').outerHeight(true);
+    var tabpanel = $(".nav-tabs").outerHeight(true);
+    $('.ace').css('height', height - navbarHeight - tabpanel);
 
     if (expanded !== undefined) {
         var containerUpload = $('#upload-container').outerHeight(true);
+        containerUpload += 22;
         $('.left-panel').css('height', height - (navbarHeight + containerUpload));
         $('.layout').css('height', height - (navbarHeight + containerUpload));
         $('.ui-layout-pane-east').css('height', height - (navbarHeight + containerUpload));
         $('.ui-layout-pane-center').css('height', height - (navbarHeight + containerUpload));
+        $('.ace').css('height', height - (navbarHeight + tabpanel + containerUpload));
     } else {
         $('.left-panel').css('height', height - navbarHeight);
         $('.layout').css('height', height - navbarHeight);
         $('.ui-layout-pane-east').css('height', height - navbarHeight);
         $('.ui-layout-pane-center').css('height', height - navbarHeight);
     }
-    editor.resize();
+    editors[idEditor].resize();
 }
 
 /**
- * @param {string} str - string to check 
+ * @param {string} str - string to check
+ * @returns {boolean} 
  * @description check if a string is JSON
  */
 function isJosn(str) {
@@ -720,7 +694,7 @@ function handleFileSelect(evt) {
         if (isJosn(text)) {
             var jsontext = JSON.parse(text); // takes content of the file in the response
             if (!setJSONInput(jsontext)) {
-                editor.setValue(JSON.stringify(text)); // set value of the file in text editor
+                editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
             }
 
         } else {
@@ -729,7 +703,7 @@ function handleFileSelect(evt) {
             });
             addOption(0, 'option');
             $('#output').val("");
-            editor.setValue(text);
+            editors[idEditor].setValue(text);
         }
         /**
          * remove and close container after success upload
@@ -745,4 +719,35 @@ function handleDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+}
+
+/**
+ * @param {string} ideditor - current id editor
+ * @description set up current editor 
+ */
+function setUpAce(ideditor) {
+    editors[ideditor] = new ace.edit(ideditor);
+    ace.config.set("packaged", true);
+    ace.config.set("modePath", "js/ace/mode");
+    editors[ideditor].session.setMode("ace/mode/asp");
+    editors[ideditor].setTheme("ace/theme/tomorrow");
+    editors[ideditor].setValue("");
+    editors[ideditor].resize();
+    editors[ideditor].setOptions({
+        fontSize: 15
+    });
+
+    /**
+     * Execute the program when you insert a . and if the readio button is checked
+     */
+    editors[ideditor].on('change', function () {
+        if ($('#run-dot').prop('checked')) {
+            var text = editors[ideditor].getValue();
+            if (text.slice(-1) === ".") {
+                intervalRun();
+            }
+
+        }
+    });
+    setHeightComponents();
 }

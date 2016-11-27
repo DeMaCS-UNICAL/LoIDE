@@ -94,5 +94,4 @@ oop.inherits(aspHighlightRules, TextHighlightRules);
 exports.aspHighlightRules = aspHighlightRules;
 });
 
-editor.session.setMode("ace/mode/asp");
 

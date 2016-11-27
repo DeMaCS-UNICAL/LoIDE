@@ -100,7 +100,7 @@
 							<p class="text-center"> <strong> Option executable </strong> </p>
 							<label>
 								<input type="checkbox" value="" id="run-dot">
-								Run after you insert . 
+								Run automatically
 							</label>
 						</div>
 					</div>
@@ -110,9 +110,22 @@
 				<input type="hidden" name="program" id="program" value="">
 				<button id="btn-download" type="submit" class="hidden"></button>
 				<button id="run" type="submit" class="hidden"></button>
-				<div class="pane ui-layout-center">
-					<div id="editor" class=" ">
+				<div class="pane ui-layout-center">		
+					<div role="tabpanel" id="gatta">
+						<!-- Nav tabs -->
+						<ul class="nav nav-tabs" role="tablist">
+							<li role="presentation" class="active">
+								<a data-target="#tab1" aria-controls="home" role="tab" data-toggle="tab">Tab1</a>
+							</li>
+							 <li role="presentation"><a role="button" class="add-tab">+</a></li>
+						</ul>
+					
+						<!-- Tab panes -->
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="tab1"><div id="editor1" class="ace"></div></div>
+						</div>
 					</div>
+					
 				</div>
 				<div class="pane ui-layout-east">Output
 					<a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a>
@@ -135,7 +148,8 @@
 					<p>LoIDE is a web-based IDE for Logic Programming<br></p>
 					<p><strong>It is part of an undergraduate student's work of thesis, and is still at the early stages of development </strong><br></p>
 					<p><strong>It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet </strong><br></p>
-					<p>The LoIDE source is available from <a href="https://github.com/DeMaCS-UNICAL/LoIDE">Github <i class="fa fa-github"></i></a></p>
+					<p>LoIDE is an Open Source project available on <a href="https://github.com/DeMaCS-UNICAL/LoIDE">Github <i class="fa fa-github"></i></a></p> 
+					<p>It's released under <a href="https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/LICENSE">MIT License</a></p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -148,12 +162,12 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Options Text Editor</h4>
+					<h4 class="modal-title">Editor Options</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-md-4">
-							<label for="font-editor">Font size Text Editor</label>
+							<label for="font-editor">Font size Editor</label>
 							<input id="font-editor" type="number" min="15" max="60">
 						</div>
 						<div class="col-md-4  col-md-offset-2">
@@ -163,7 +177,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-8">
-							<label for="theme">Change theme Text Editor</label>
+							<label for="theme">Change theme Editor</label>
 							<div class="input-group opname">
 								<select id="theme">
 									<optgroup label="Bright">

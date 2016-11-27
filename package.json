@@ -26,11 +26,7 @@
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE/issues"
   },
   "dependencies": {
-    "body-parser": "~1.15.2",
     "express": "~4.14.0",
-    "fs": "0.0.1-security",
-    "multer": "^1.2.0",
-    "path": "^0.12.7",
     "properties-reader": "0.0.15",
     "socket.io": "^1.5.1",
     "websocket": "^1.0.23"

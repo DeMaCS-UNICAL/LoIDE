@@ -1,34 +1,16 @@
 var express = require('express');
 var http = require('http');
 var app = express();
-var path = require('path');
 var webSocket = require('websocket').w3cwebsocket;
-var fs = require('fs');
-var multer = require('multer');
-var bodyParser = require('body-parser');
-
-var port = 8084;
-
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 var PropertiesReader = require('properties-reader');
 var properties = PropertiesReader('resources/config/properties');
-
-app.use(express.static(path.join(__dirname, 'resources')));
-
-var upload = multer({
-    dest: 'uploads/'
-});
-
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
-app.get('/', function (req, res) { // Send the response to index.html
-    res.sendFile(__dirname + '/index.html');
-});
-
 var ws_server = properties.get('ws.server');
+
+var port = 8084;
+
+app.use(express.static('resources'));
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
 

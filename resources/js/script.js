@@ -73,6 +73,7 @@
      */
     var layout;
 
+
 })(jQuery);
 
 /**
@@ -93,12 +94,12 @@ function operation_alert(result) {
  * @description place the id of the current shown editor 
  */
 var idEditor = 'editor1';
-
 /**
  * set up ace editors into object
  */
 editors = {};
-setUpAce('editor1');
+setUpAce(idEditor);
+
 
 $('.modal').modal({
     backdrop: false,
@@ -162,8 +163,6 @@ $(document).ready(function () {
 
 
     });
-
-    setHeightComponents();
 
     /**
      * fix minWidth layout
@@ -399,6 +398,7 @@ $(document).on('click', '.add-tab', function () { // add new tab
     $('<li role="presentation"><a data-target="#' + tabId + '" aria-controls="tab" role="tab" data-toggle="tab">Tab' + id + ' <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($(this).parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     editors[editorId] = new ace.edit(editorId);
+    $("[data-target='#" + tabId + "']").trigger('click');
     setUpAce(editorId);
 });
 
@@ -641,6 +641,7 @@ function setHeightComponents(expanded) {
     var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; // cross-browser solution
     var navbarHeight = $('.navbar').outerHeight(true);
     var tabpanel = $(".nav-tabs").outerHeight(true);
+
     $('.ace').css('height', height - navbarHeight - tabpanel);
 
     if (expanded !== undefined) {

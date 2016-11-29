@@ -249,6 +249,7 @@ function callSocketServer() {
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
         operation_alert(response);
+        console.log(response);
     });
     socket.on('output', function (response) {
         if (response.error === "") {

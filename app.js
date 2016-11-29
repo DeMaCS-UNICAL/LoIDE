@@ -23,7 +23,10 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
             client.send(data);
             console.log(data + " from gui"); // debug string
         };
-        client.onerror = function () {
+        client.onerror = function (error) {
+            socket.emit('problem', {
+                reason: error
+            });
             socket.emit('problem', {
                 reason: "Sorry the connection lost, please try again later!"
             });

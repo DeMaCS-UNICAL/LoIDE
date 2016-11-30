@@ -1,45 +1,45 @@
-define('ace/mode/asp', [], function(require, exports, module) {
+define('ace/mode/asp', [], function (require, exports, module) {
 
-var oop = require("ace/lib/oop");
-var TextMode = require("ace/mode/text").Mode;
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var aspHighlightRules = require("ace/mode/asp_highlight_rules").aspHighlightRules;
+    var oop = require("ace/lib/oop");
+    var TextMode = require("ace/mode/text").Mode;
+    var Tokenizer = require("ace/tokenizer").Tokenizer;
+    var aspHighlightRules = require("ace/mode/asp_highlight_rules").aspHighlightRules;
 
-var Mode = function() {
-    this.HighlightRules = aspHighlightRules;
-};
-oop.inherits(Mode, TextMode);
+    var Mode = function () {
+        this.HighlightRules = aspHighlightRules;
+    };
+    oop.inherits(Mode, TextMode);
 
-(function() {
-   this.lineCommentStart = "%";
-}).call(Mode.prototype);
+    (function () {
+        this.lineCommentStart = "%";
+    }).call(Mode.prototype);
 
-exports.Mode = Mode;
+    exports.Mode = Mode;
 });
 
-define('ace/mode/asp_highlight_rules', [], function(require, exports, module) {
+define('ace/mode/asp_highlight_rules', [], function (require, exports, module) {
 
-var oop = require("ace/lib/oop");
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+    var oop = require("ace/lib/oop");
+    var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
 
-var aspHighlightRules = function() {
-var aggr = ("#count|#sum|#max|#min|#int|#maxint");
-    var keywordMapper = this.createKeywordMapper({
+    var aspHighlightRules = function () {
+        var aggr = ("#count|#sum|#max|#min|#int|#maxint");
+        var keywordMapper = this.createKeywordMapper({
             "keyword": aggr
         }, "identifier", true);
 
-    this.$rules = {
+        this.$rules = {
             "start": [{
                 token: "keyword",
                 regex: "not|\\:~"
 
             }, {
                 token: "string",
-                regex: "[a-z]+",
+                regex: "[A-Za-z0-9_]+",
                 next: "blocktag"
             }, {
                 token: "text",
-                regex: ",|:-",
+                regex: ",|:-|;",
                 next: "start"
             }, {
                 token: "keyword.operator",
@@ -53,45 +53,48 @@ var aggr = ("#count|#sum|#max|#min|#int|#maxint");
             }, {
 
                 token: "rparen",
-                regex: "[\\]}]"
+                regex: "[\\]}]",
+                next: "start"
             }, {
                 token: keywordMapper,
-                regex: "\\#[a-z]+"
+                regex: "\\#[a-z]+",
+                next:"blocktag"
 
             }, {
                 token: "text",
                 regex: "\s+"
-            },
-            {
+            }, {
                 token: "comment",
                 regex: "\%.+"
-
             }],
             "blocktag": [
-
                 {
                     token: "keyword",
-                    regex: "\\(",
+                    regex: "[\\(]*",
                     next: "blocktagproperties"
                 }
             ],
             "blocktagproperties": [{
-                    token: "keyword",
-                    regex: "\\)",
-                    next: "start"
-                }, {
                     token: "parameter",
-                    regex: "[a-zA-Z0-9]+"
+                    regex: "[A-Za-z0-9_][a-zA-Z0-9_]*",
+                    next: "blocknext"
+                }, {
+                    token: "keyword",
+                    regex: "[\\)]*",
+                    next: "start"
                 }
 
-            ]
+            ],
+            "blocknext": [{
+                token: "text",
+                regex: "[,\s|:|,]*",
+                next: "blocktagproperties"
+            }]
         };
-    this.normalizeRules();
-};
+        this.normalizeRules();
+    };
 
-oop.inherits(aspHighlightRules, TextHighlightRules);
+    oop.inherits(aspHighlightRules, TextHighlightRules);
 
-exports.aspHighlightRules = aspHighlightRules;
+    exports.aspHighlightRules = aspHighlightRules;
 });
-
-

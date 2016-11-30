@@ -167,12 +167,7 @@ $(document).ready(function () {
     /**
      * fix minWidth layout
      */
-    layout = $('body > .container > form > .layout').layout({
-        center__minWidth: 600,
-        east__minSize: 250,
-        south__maxSize: 350,
-        south__minSize: 150
-    });
+    layout = $('body > .container > form > .layout').layout({});
     layout.removePane("south");
 
     $('.dropdown-menu-choise').find('a').click(function (e) {
@@ -234,6 +229,7 @@ $(document).ready(function () {
         $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
 
         $('.option-solver > div').toggleClass("hidden show"); // add class to show option components
+
     });
 
 });

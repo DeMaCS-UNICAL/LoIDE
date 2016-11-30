@@ -64,23 +64,23 @@
 		<form id="input">
 			<div class="left-panel">
 				<div class="text-center">
-					<a role="button" id="btn-option" data-toggle="tooltip" data-placement="top" title="Options solver"><i class="glyphicon glyphicon-cog"></i></a>
+					<a role="button" id="btn-option" data-toggle="tooltip" data-placement="top" title="Solver options "><i class="glyphicon glyphicon-cog"></i></a>
 				</div>
 				<div class="option-solver">
 					<div class="hidden">
-						<label for="inputLanguage" class="col-sm-12 text-center">Language</label>
+						<label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
 						<select name="language" id="inputLanguage" class="form-control">
 					<option value="asp">ASP</option>
 				</select>
-						<label for="inputEngine" class="col-sm-12 text-center">Solver</label>
+						<label for="inputEngine" class="col-sm-12 col-xs-12 text-center">Solver</label>
 						<select name="engine" id="inputengine" class="form-control">
 						<option value="dlv">DLV</option>
 						<option value="clingo">Clingo</option>
 						</select>
 						<div class="row row-option">
-							<div class="col-sm-12">
+							<div class="col-sm-12 col-xs-12">
 								<div class="form-group">
-									<label for="option" class="col-sm-12 text-center">Options</label>
+									<label for="option" class="col-sm-12 col-xs-12 text-center">Options</label>
 									<div class="input-group opname">
 										<select name="option[0][name]" class="form-control form-control-option">
 											<option value="option">Option</option>
@@ -134,6 +134,9 @@
 				</div>
 				<div class="pane ui-layout-south">
 				</div>
+				<div class="ui-layout-resizer-east">
+					
+				</div>
 			</div>
 		</form>
 	</div>
@@ -166,11 +169,11 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-md-4">
+						<div class="col-md-4 col-xs-4">
 							<label for="font-editor">Font size Editor</label>
 							<input id="font-editor" type="number" min="15" max="60">
 						</div>
-						<div class="col-md-4  col-md-offset-2">
+						<div class="col-md-4 col-xs-4 col-md-offset-2 col-xs-offset-2">
 							<label for="font-output">Font size Output</label>
 							<input id="font-output" type="number" min="15" max="60">
 						</div>
@@ -195,8 +198,7 @@
 										<option value="ace/theme/terminal">Terminal</option>
 										<option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
 										<option value="ace/theme/monokai">Monokai</option>
-									</optgroup>
-											
+									</optgroup>										
 								</select>
 							</div>
 						</div>

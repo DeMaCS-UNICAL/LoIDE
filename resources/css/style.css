@@ -37,22 +37,37 @@ body {
     padding-right: 1%;
 }
 
-.left-panel {
-    width: 5%;
-    z-index: 1;
-    overflow-x: hidden;
-    float: left;
-    background: seashell;
-    transition: 0.5s;
+@media screen and (max-width: 480px) {
+    .left-panel {
+        width: 10%;
+        z-index: 1;
+        overflow-x: hidden;
+        float: left;
+        background: seashell;
+        transition: 0.5s;
+    }
+    .left-panel-show {
+        width: 40%;
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .left-panel {
+        width: 5%;
+        z-index: 1;
+        overflow-x: hidden;
+        float: left;
+        background: seashell;
+        transition: 0.5s;
+    }
+    .left-panel-show {
+        width: 18%;
+    }
 }
 
 .panel-right {
     transition: margin-left .5s;
     padding: 16px;
-}
-
-.left-panel-show {
-    width: 19%;
 }
 
 .layout {

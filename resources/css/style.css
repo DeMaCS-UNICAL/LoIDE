@@ -39,7 +39,7 @@ body {
 
 @media screen and (max-width: 480px) {
     .left-panel {
-        width: 10%;
+        width: 15%;
         z-index: 1;
         overflow-x: hidden;
         float: left;
@@ -64,7 +64,19 @@ body {
         width: 18%;
     }
 }
-
+@media screen and (min-width: 1700px) {
+    .left-panel {
+        width: 5%;
+        z-index: 1;
+        overflow-x: hidden;
+        float: left;
+        background: seashell;
+        transition: 0.5s;
+    }
+    .left-panel-show {
+        width: 12%;
+    }
+}
 .panel-right {
     transition: margin-left .5s;
     padding: 16px;
@@ -143,4 +155,11 @@ a[role="button"]:focus {
 
 .nav-tabs>li:hover>a>span>i {
     display: inline-block;
+}
+
+.nav > .btn{
+    margin-right: 5px;
+}
+#tab-execute{
+    margin-top: 5%;
 }

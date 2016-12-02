@@ -120,6 +120,8 @@ $('[data-toggle="tooltip"]').tooltip();
 
 $(document).ready(function () {
 
+    inizializeShortcuts();
+
     $('#font-output').change(function (e) {
         var size = $(this).val();
         $('#output').css('font-size', size + "px");
@@ -146,10 +148,15 @@ $(document).ready(function () {
 
     $('#run-dot').prop('checked', true);
 
+    $("[rel='tooltip']").tooltip();
+
     /**
      * Hidden tooltip when button is clicked
      */
     $('[data-toggle="tooltip"]').on('click', function () {
+        $(this).tooltip('hide');
+    });
+    $('[rel="tooltip"]').on('click', function () {
         $(this).tooltip('hide');
     });
 
@@ -164,9 +171,6 @@ $(document).ready(function () {
 
     });
 
-    /**
-     * fix minWidth layout
-     */
     layout = $('body > .container > form > .layout').layout({});
     layout.removePane("south");
 
@@ -206,15 +210,17 @@ $(document).ready(function () {
 
     $('#input').submit(function (e) {
         e.preventDefault();
-        var text = editors[idEditor].getValue();
-        $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
         var form;
         if (clkBtn === "run") {
             callSocketServer();
 
         } else if (clkBtn === 'btn-download') {
+            var text = editors[idEditor].getValue();
+            $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
+            $('#program').attr('name', 'program');
             $('#output').attr('name', 'output');
             form = $('#input').serializeFormJSON();
+            $('#program').attr('name', 'program[0]');
             var stringify = JSON.stringify(form);
             var chose = $('#choise').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
@@ -239,13 +245,18 @@ $(document).ready(function () {
  */
 function callSocketServer() {
     configureOptions();
+    if (!addMorePrograms()) {
+        var text = editors[idEditor].getValue();
+        $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
+    }
     var form = $('#input').serializeFormJSON();
+    destroyPrograms();
     destroyOptions();
     var socket = io.connect();
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
         operation_alert(response);
-        console.log(response);
+        console.log(response); // debug string 
     });
     socket.on('output', function (response) {
         if (response.error === "") {
@@ -397,6 +408,7 @@ $(document).on('click', '.add-tab', function () { // add new tab
     editors[editorId] = new ace.edit(editorId);
     $("[data-target='#" + tabId + "']").trigger('click');
     setUpAce(editorId);
+    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> Tab' + id + ' </label>');
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -409,6 +421,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         $(currentID).remove();
         delete editors[ideditor];
         $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
+        $($(':checkbox[value="' + ideditor + '"]')).parent().remove();
     }
 
 });
@@ -738,14 +751,87 @@ function setUpAce(ideditor) {
     /**
      * Execute the program when you insert a . and if the readio button is checked
      */
-    editors[ideditor].on('change', function () {
+    editors[ideditor].on('change', function (e) {
         if ($('#run-dot').prop('checked')) {
-            var text = editors[ideditor].getValue();
-            if (text.slice(-1) === ".") {
+            if (e.lines[0] === '.') {
                 intervalRun();
             }
-
         }
     });
     setHeightComponents();
+}
+
+/**
+ * @description inizialize shortcuts and set title to the tooltips base on the OS
+ */
+function inizializeShortcuts() {
+    if (window.navigator.userAgent.indexOf("Mac") !== -1) {
+        key('command + d', function () {
+            $('#btn-download').trigger('click');
+            return false;
+        });
+        key('command + enter', function () {
+            $('#run').trigger('click');
+            return false;
+        });
+        key('command + u', function () {
+            $('#btn-upload').trigger('click');
+            return false;
+        });
+
+        $('[for="run"]').attr('data-original-title', '{ ⌘ + Enter }');
+        $('#btn-upload').attr('data-original-title', '{ ⌘ + u }');
+        $('[for="btn-download"]').attr('data-original-title', '{ ⌘ + d }');
+        
+    } else {
+        key('control + d', function () {
+            $('#btn-download').trigger('click');
+            return false;
+        });
+        key('control + enter', function () {
+            $('#run').trigger('click');
+            return false;
+        });
+        key('control + u', function () {
+            $('#btn-upload').trigger('click');
+            return false;
+        });
+
+        $('[for="run"]').attr('data-original-title', '{ ctrl + Enter }');
+        $('#btn-upload').attr('data-original-title', '{ ctrl + u }');
+        $('[for="btn-download"]').attr('data-original-title', '{ ctrl + d }');
+    }
+
+}
+
+/**
+ * @returns {boolean}
+ * @description add the programs into the input type hidden to serialize 
+ */
+function addMorePrograms() {
+    var check = false;
+    var index = 0;
+    $('#tab-execute').find('[type="checkbox"]').each(function (indexInArray) {
+        if ($(this).prop('checked')) {
+            check = true;
+            var p = editors[$(this).val()].getValue();
+            $('.layout').prepend('<input type="hidden" name="program[' + index + ']" id="program' + $(this).val() + '" value="' + p + '" class="programs">');
+            index += 1;
+        }
+    });
+    if (check) {
+        $('#program').remove();
+    }
+    return check;
+
+}
+/**
+ * @description destroy all the input type created and insert the default input type
+ */
+function destroyPrograms() {
+    $('.programs').each(function (index) {
+        $(this).remove();
+    });
+    $('.layout').prepend('<input type="hidden" name="program[0]" id="program" class="programs" value="">');
+
 }

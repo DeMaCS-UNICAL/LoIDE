@@ -376,8 +376,8 @@ $(document).on('click', '#split-up', function () {
 $(document).on('change', '#inputengine', function () {
     var val = $(this).val();
     if (val === "clingo") {
-        $('.form-control-option').find('option[value!="free choise"]').remove();
-        $('<option value=""></option> ').insertBefore('option[value="free choise"]');
+        $('.form-control-option').find('option[value!="free choice"]').remove();
+        $('<option value=""></option> ').insertBefore('option[value="free choice"]');
     } else {
         $('.form-control-option').append('</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
     }
@@ -386,7 +386,7 @@ $(document).on('change', '#inputengine', function () {
 $(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
 
     var val = $(this).val();
-    if (val === 'free choise' || val === 'filter') {
+    if (val === 'free choice' || val === 'filter') {
         if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
             addInpuValue($(this).closest('.row-option'));
     } else {
@@ -472,7 +472,7 @@ function addOptionDOM(optionClassBtn) {
     $(inputValueClone).remove(); // remove all input value forms
 
     clone.find($('.center-btn-value')).remove(); // remove button to add input value, if present 
-    if ($(clone).find('.form-control-option').val() === 'free choise') {
+    if ($(clone).find('.form-control-option').val() === 'free choice') {
         addInpuValue($(clone).find('.form-control-option').closest('.row-option'));
     }
     clone.find('label').empty();
@@ -555,7 +555,7 @@ function configureOptions() {
             optionDLV.init();
             $('.form-control-option').each(function (indexInArray) {
                 var currentVal = $(this).val();
-                if (currentVal !== "free choise" && currentVal.length !== 0) {
+                if (currentVal !== "free choice" && currentVal.length !== 0) {
                     var val = optionDLV.map.key(currentVal);
                     $(this).append('<option value="' + val + '"></option>');
                     $(this).val(val);
@@ -576,7 +576,7 @@ function destroyOptions() {
     optionDLV.init();
     $('.form-control-option').each(function (indexInArray) {
         var currentVal = $(this).val();
-        if (currentVal !== "free choise" && currentVal.length !== 0) {
+        if (currentVal !== "free choice" && currentVal.length !== 0) {
             var val = optionDLV.map.val(currentVal);
             $(this).val(val).change();
             $(this).find('option[value="' + currentVal + '"]').remove();
@@ -629,7 +629,7 @@ function setJSONInput(config) {
 
         if (config.engine === "clingo") {
             $('.form-control-option').find('option').each(function (index, element) {
-                if ($(this).val() !== 'free choise' && $(this).val().length !== 0)
+                if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
                     $(this).remove();
             });
 
@@ -647,7 +647,7 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value=""></option><option value="free choise">Free choise</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"></div></div></div>';
+    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value=""></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"></div></div></div>';
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();

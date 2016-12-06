@@ -15,7 +15,7 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-default" role="navigation">
+	<nav class="navbar navbar-default">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -84,7 +84,8 @@
 									<label for="option" class="col-sm-12 col-xs-12 text-center">Options</label>
 									<div class="input-group opname">
 										<select name="option[0][name]" class="form-control form-control-option">
-											<option value="option">Option</option>
+											<option></option>
+											<option value="free choise">Free choise</option>
 											<option value="filter">Filter</option>
 											<option value="nofacts">Nofacts</option>
 											<option value="silent">Silent</option>
@@ -125,7 +126,7 @@
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active">
-								<a data-target="#tab1" aria-controls="home" role="tab" data-toggle="tab">Tab1</a>
+								<a data-target="#tab1" role="tab" data-toggle="tab">Tab1 <span class="delete-tab"> <i class="fa fa-times"></i> </span></a>
 							</li>
 							<li role="presentation"><a role="button" class="add-tab">+</a></li>
 						</ul>

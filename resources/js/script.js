@@ -147,6 +147,7 @@ $(document).ready(function () {
     }
 
     $('#run-dot').prop('checked', true);
+    $(':checkbox[value="editor1"]').prop('checked', true);
 
     $("[rel='tooltip']").tooltip();
 
@@ -375,22 +376,17 @@ $(document).on('click', '#split-up', function () {
 $(document).on('change', '#inputengine', function () {
     var val = $(this).val();
     if (val === "clingo") {
-        $('.form-control-option').find('option[value!="option"]').remove();
-        $('.form-control-option').each(function (indexInArray, valueOfElement) {
-            if ($(this).closest('.row-option').find('.form-control-value').length === 0) {
-                addInpuValue($(this).closest('.row-option'));
-            }
-        });
-
+        $('.form-control-option').find('option[value!="free choise"]').remove();
+        $('<option value=""></option> ').insertBefore('option[value="free choise"]');
     } else {
-        $('.form-control-option').append('<option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
+        $('.form-control-option').append('</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
     }
 });
 
 $(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
 
     var val = $(this).val();
-    if (val === 'option' || val === 'filter') {
+    if (val === 'free choise' || val === 'filter') {
         if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
             addInpuValue($(this).closest('.row-option'));
     } else {
@@ -422,6 +418,16 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         delete editors[ideditor];
         $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
         $($(':checkbox[value="' + ideditor + '"]')).parent().remove();
+        if ($(".nav-tabs").children().length === 1) {
+            var parent=$('.add-tab').parent();
+            $('<li role="presentation"><a data-target="#tab1" aria-controls="tab" role="tab" data-toggle="tab">Tab1 <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
+            $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
+            editors[ideditor] = new ace.edit(ideditor);
+            setUpAce(ideditor);
+            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"> Tab1</label>');
+            $(':checkbox[value="editor1"]').prop('checked', true);
+            $("[data-target='#tab1']").trigger('click');
+        }
     }
 
 });
@@ -433,6 +439,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
 function delOptionDOM(optionClassBtn) {
     var row = $(optionClassBtn).closest('.row-option');
     row.empty(); //delete option container
+    row.remove();
     $('.form-control-option').each(function (index) {
         $(this).attr('name', 'option[' + index + '][name]');
 
@@ -458,15 +465,17 @@ function addOptionDOM(optionClassBtn) {
 
         $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>'); //append button delete after first option block
     }
+    lenghtClass -= 1;
     $(clone).find('.form-control-option').attr('name', 'option[' + lenghtClass + '][name]');
     var inputValueClone = $(clone).find('.input-group-value');
 
     $(inputValueClone).remove(); // remove all input value forms
 
     clone.find($('.center-btn-value')).remove(); // remove button to add input value, if present 
-    if ($(clone).find('.form-control-option').val() === 'option') {
+    if ($(clone).find('.form-control-option').val() === 'free choise') {
         addInpuValue($(clone).find('.form-control-option').closest('.row-option'));
     }
+    clone.find('label').empty();
 
 }
 
@@ -546,7 +555,7 @@ function configureOptions() {
             optionDLV.init();
             $('.form-control-option').each(function (indexInArray) {
                 var currentVal = $(this).val();
-                if (currentVal !== "option") {
+                if (currentVal !== "free choise" && currentVal.length !== 0) {
                     var val = optionDLV.map.key(currentVal);
                     $(this).append('<option value="' + val + '"></option>');
                     $(this).val(val);
@@ -567,7 +576,7 @@ function destroyOptions() {
     optionDLV.init();
     $('.form-control-option').each(function (indexInArray) {
         var currentVal = $(this).val();
-        if (currentVal !== "option") {
+        if (currentVal !== "free choise" && currentVal.length !== 0) {
             var val = optionDLV.map.val(currentVal);
             $(this).val(val).change();
             $(this).find('option[value="' + currentVal + '"]').remove();
@@ -597,6 +606,10 @@ function setJSONInput(config) {
 
         $(obj.option).each(function (indexInArray, item) { // create option's form
             addOption(indexInArray, item.name);
+            if (indexInArray !== 0){               
+                var currentOption=$('.row-option').get(indexInArray);
+                $(currentOption).find('label').empty();
+            }
             if (item['value']) {
                 currentClass = $('.option-value').eq(indexInArray);
                 $(item.value).each(function (indexInArray, itemValue) {
@@ -615,11 +628,9 @@ function setJSONInput(config) {
         });
 
         if (config.engine === "clingo") {
-            $('.form-control-option').find('option[value!="option"]').remove();
-            $('.form-control-option').each(function (indexInArray, valueOfElement) {
-                if ($(this).closest('.row-option').find('.form-control-value').length === 0) {
-                    addInpuValue($(this).closest('.row-option'));
-                }
+            $('.form-control-option').find('option').each(function (index, element) {
+                if ($(this).val() !== 'free choise' && $(this).val().length !== 0)
+                    $(this).remove();
             });
 
         }
@@ -636,7 +647,7 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value="option">Option</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"></div></div></div>';
+    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value=""></option><option value="free choise">Free choise</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"></div></div></div>';
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
@@ -709,11 +720,6 @@ function handleFileSelect(evt) {
             }
 
         } else {
-            $('.row-option').each(function (index) {
-                $(this).remove();
-            });
-            addOption(0, 'option');
-            $('#output').val("");
             editors[idEditor].setValue(text);
         }
         /**
@@ -782,7 +788,7 @@ function inizializeShortcuts() {
         $('[for="run"]').attr('data-original-title', '{ ⌘ + Enter }');
         $('#btn-upload').attr('data-original-title', '{ ⌘ + u }');
         $('[for="btn-download"]').attr('data-original-title', '{ ⌘ + d }');
-        
+
     } else {
         key('control + d', function () {
             $('#btn-download').trigger('click');

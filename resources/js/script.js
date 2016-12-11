@@ -172,29 +172,41 @@ $(document).ready(function () {
 
     });
 
-    layout = $('body > .container > form > .layout').layout({});
+    layout = $('body > .container > form > .layout').layout({
+        onresize_end: function () {
+            var length = $(".nav-tabs").children().length;
+            for (var index = 1; index <= length-1; index++) {
+                var idE="editor"+index;
+                 editors[idE].resize();
+            }        
+        }
+    });
     layout.removePane("south");
 
-    $('.dropdown-menu-choise').find('a').click(function (e) {
+    $('.dropdown-menu-choice').find('a').click(function (e) {
         var concept = $(this).text();
-        $('#choise').text(concept); // append to the DOM the choise for download
+        $('#choice').text(concept); // append to the DOM the choice for download
         var stringify, form, chose;
         if (concept === 'Input') {
+            var text = editors[idEditor].getValue();
+            $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
+            $('#program').attr('name', 'program');
             form = $('#input').serializeFormJSON();
+            $('#program').attr('name', 'program[0]');
             stringify = JSON.stringify(form);
-            chose = $('#choise').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
+            chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
         } else {
-            $('#program').removeAttr('name', 'program');
+            $('#program').removeAttr('name', 'program[0]');
             $('#output').attr('name', 'output');
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
-            chose = $('#choise').text();
+            chose = $('#choice').text();
             createFileToDownload(stringify);
-            $('#program').attr('name', 'program');
+            $('#program').attr('name', 'program[0]');
             $('#output').removeAttr('name', 'output');
         }
-        $('#choise').text("");
+        $('#choice').text("");
     });
 
     /**
@@ -223,7 +235,7 @@ $(document).ready(function () {
             form = $('#input').serializeFormJSON();
             $('#program').attr('name', 'program[0]');
             var stringify = JSON.stringify(form);
-            var chose = $('#choise').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
+            var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
             $('#output').removeAttr('name');
 
@@ -397,9 +409,10 @@ $(document).on('change', '.form-control-option', function () { //add or remove t
 });
 $(document).on('click', '.add-tab', function () { // add new tab 
     var id = $(".nav-tabs").children().length;
-    var tabId = "tab" + id;
+    var prevEditor = $(this).parent().prev();
+    var tabId = generateIDTab();
     var editorId = "editor" + id;
-    $('<li role="presentation"><a data-target="#' + tabId + '" aria-controls="tab" role="tab" data-toggle="tab">Tab' + id + ' <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($(this).parent());
+    $('<li role="presentation"><a data-target="#' + tabId + '" role="tab" data-toggle="tab">Tab' + id + ' <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($(this).parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     editors[editorId] = new ace.edit(editorId);
     $("[data-target='#" + tabId + "']").trigger('click');
@@ -409,8 +422,15 @@ $(document).on('click', '.add-tab', function () { // add new tab
 
 $(document).on('click', '.delete-tab', function () { // delete tab
     var r = confirm("Are you sure you want to delete this file? This cannot be undone.");
+    var ids = $(".nav-tabs").children().length - 1;
+    var t = $(this).parent().attr('data-target');
+    var currentids = $(t).find(".ace").attr("id").substr(6);
+    var parse = parseInt(currentids);
     if (r) {
         var prevEditor = $(this).parent().parent().prev();
+        if (prevEditor.size() === 0) {
+            prevEditor = $(this).parent().parent().next();
+        }
         var currentID = $(this).closest('a').attr('data-target');
         $(this).parent().parent().remove();
         var ideditor = $(currentID).find('.ace').attr("id");
@@ -418,18 +438,42 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         delete editors[ideditor];
         $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
         $($(':checkbox[value="' + ideditor + '"]')).parent().remove();
-        if ($(".nav-tabs").children().length === 1) {
-            var parent=$('.add-tab').parent();
-            $('<li role="presentation"><a data-target="#tab1" aria-controls="tab" role="tab" data-toggle="tab">Tab1 <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
+        if ($(".nav-tabs").children().length === 1) { // add a new tab if we delete the last
+            var parent = $('.add-tab').parent();
+            idEditor = 'editor1';
+            ideditor = 'editor1';
+            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab">Tab1 <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor);
             $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"> Tab1</label>');
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
+        } else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
+
+            $('.nav-tabs').find('li:not(:last)').each(function (index) {
+                $(this).find('a').text('Tab' + (index + 1));
+                $(this).find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
+            });
+            $('.tab-content').find("[role='tabpanel']").each(function (index) {
+                ideditor = 'editor' + (index + 1);
+                var currentEditor = $(this).find('.ace').attr('id');
+                if (ideditor !== currentEditor) {
+                    $(this).find('.ace').attr("id", ideditor);
+                    editors[ideditor] = editors[currentEditor];
+                    delete editors[currentEditor];
+                    var parent = $(':checkbox[value="' + currentEditor + '"]').parent().empty();
+                    $(parent).append('<input type="checkbox" value="' + ideditor + '">Tab' + (index + 1));
+                }
+            });
+            var tab = "#" + $("#" + ideditor).parent().attr("id");
+            $("[data-target='" + tab + "']").trigger('click');
+        }
+        if ($(".nav-tabs").children().length == 2) {
+            $(':checkbox[value="editor1"]').prop('checked', true);
+            idEditor = "editor1";
         }
     }
-
 });
 
 /**
@@ -606,8 +650,8 @@ function setJSONInput(config) {
 
         $(obj.option).each(function (indexInArray, item) { // create option's form
             addOption(indexInArray, item.name);
-            if (indexInArray !== 0){               
-                var currentOption=$('.row-option').get(indexInArray);
+            if (indexInArray !== 0) {
+                var currentOption = $('.row-option').get(indexInArray);
                 $(currentOption).find('label').empty();
             }
             if (item['value']) {
@@ -840,4 +884,19 @@ function destroyPrograms() {
     });
     $('.layout').prepend('<input type="hidden" name="program[0]" id="program" class="programs" value="">');
 
+}
+
+/**
+ * @returns {string}
+ *@description generate unique id for the tabs 
+ */
+function generateIDTab() {
+    var id = $(".nav-tabs").children().length;
+    var tabid = "tab" + id;
+
+    while ($("#" + tabid).size() !== 0) {
+        id += 1;
+        tabid = "tab" + id;
+    }
+    return tabid;
 }

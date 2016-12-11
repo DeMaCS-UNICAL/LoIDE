@@ -129,12 +129,20 @@ $(document).ready(function () {
 
     $('#font-editor').change(function (e) {
         var size = $(this).val();
-        editors[idEditor].setFontSize(size + "px");
+        var length = $(".nav-tabs").children().length;
+        for (var index = 1; index <= length - 1; index++) {
+            var idE = "editor" + index;
+            editors[idE].setFontSize(size + "px");
+        }
     });
 
     $('#theme').change(function (e) {
         var theme = $(this).val();
-        editors[idEditor].setTheme(theme);
+        var length = $(".nav-tabs").children().length;
+        for (var index = 1; index <= length - 1; index++) {
+            var idE = "editor" + index;
+            editors[idE].setTheme(theme);
+        }
     });
 
     var dropZone = document.getElementById('drop_zone');
@@ -175,10 +183,10 @@ $(document).ready(function () {
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
             var length = $(".nav-tabs").children().length;
-            for (var index = 1; index <= length-1; index++) {
-                var idE="editor"+index;
-                 editors[idE].resize();
-            }        
+            for (var index = 1; index <= length - 1; index++) {
+                var idE = "editor" + index;
+                editors[idE].resize();
+            }
         }
     });
     layout.removePane("south");
@@ -450,7 +458,6 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
         } else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
-
             $('.nav-tabs').find('li:not(:last)').each(function (index) {
                 $(this).find('a').text('Tab' + (index + 1));
                 $(this).find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
@@ -466,10 +473,8 @@ $(document).on('click', '.delete-tab', function () { // delete tab
                     $(parent).append('<input type="checkbox" value="' + ideditor + '">Tab' + (index + 1));
                 }
             });
-            var tab = "#" + $("#" + ideditor).parent().attr("id");
-            $("[data-target='" + tab + "']").trigger('click');
         }
-        if ($(".nav-tabs").children().length == 2) {
+        if ($(".nav-tabs").children().length === 2) {
             $(':checkbox[value="editor1"]').prop('checked', true);
             idEditor = "editor1";
         }

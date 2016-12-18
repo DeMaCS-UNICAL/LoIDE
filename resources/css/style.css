@@ -22,8 +22,8 @@ body {
     padding-bottom: 0.5%;
 }
 
-.navbar-brand {
-    padding-right: 50%;
+.navbar-header {
+    margin-right: 3%;
 }
 
 .container {
@@ -49,6 +49,10 @@ body {
     .left-panel-show {
         width: 40%;
     }
+     #btn-upload{
+        display: block;
+        margin-bottom: 2%;
+    }
 }
 
 @media screen and (min-width: 500px) {
@@ -62,7 +66,7 @@ body {
     }
     .left-panel-show {
         width: 18%;
-    }
+    }  
 }
 @media screen and (min-width: 1700px) {
     .left-panel {
@@ -162,4 +166,14 @@ a[role="button"]:focus {
 }
 #tab-execute{
     margin-top: 5%;
+}
+
+.navbar-header > img{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.nav{
+    padding-top: 1%;
 }

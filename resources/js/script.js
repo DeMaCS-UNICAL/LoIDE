@@ -187,7 +187,9 @@ $(document).ready(function () {
                 var idE = "editor" + index;
                 editors[idE].resize();
             }
-        }
+        },
+        south__minSize: 125
+
     });
     layout.removePane("south");
 

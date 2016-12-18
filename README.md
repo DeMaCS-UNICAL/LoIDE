@@ -14,7 +14,7 @@ __*It currently supports only Answer Set Programming; we encourage any feedback,
 You need to install node.js and run `npm install` in this directory.
 Then run 
 ```
-node server.js
+node app.js
 ```
 And you can run _LoIDE_ in your browser by serving:
 ```

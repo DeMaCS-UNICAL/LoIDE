@@ -122,26 +122,29 @@ $(document).ready(function () {
 
     inizializeShortcuts();
 
+    restoreOptions();
+
     $('#font-output').change(function (e) {
         var size = $(this).val();
         $('#output').css('font-size', size + "px");
+        if (!saveOption("fontSizeO", size)) {
+            alert("Sorry, this options will not save in your browser");
+        }
     });
 
     $('#font-editor').change(function (e) {
         var size = $(this).val();
-        var length = $(".nav-tabs").children().length;
-        for (var index = 1; index <= length - 1; index++) {
-            var idE = "editor" + index;
-            editors[idE].setFontSize(size + "px");
+        setFontSizeEditors(size);
+        if (!saveOption("fontSizeE", size)) {
+            alert("Sorry, this options will not save in your browser");
         }
     });
 
     $('#theme').change(function (e) {
         var theme = $(this).val();
-        var length = $(".nav-tabs").children().length;
-        for (var index = 1; index <= length - 1; index++) {
-            var idE = "editor" + index;
-            editors[idE].setTheme(theme);
+        setTheme(theme);
+        if (!saveOption("theme", theme)) {
+            alert("Sorry, this options will not save in your browser");
         }
     });
 
@@ -906,4 +909,77 @@ function generateIDTab() {
         tabid = "tab" + id;
     }
     return tabid;
+}
+
+/**
+ * @param {string} theme - value of the theme choosed
+ * @description Sets the theme to all the editors
+ */
+function setTheme(theme) {
+    var length = $(".nav-tabs").children().length;
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].setTheme(theme);
+    }
+}
+
+/**
+ * @param {number} size - font's size
+ * @description Sets the font's size to all the editors
+ */
+function setFontSizeEditors(size) {
+    var length = $(".nav-tabs").children().length;
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].setFontSize(size + "px");
+    }
+}
+
+/**
+ * @returns {boolean}
+ * @description Checks if the browser supports the localStorage
+ */
+function supportLocalStorage() {
+    try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * @param {string} key
+ * @param {string} value
+ * @returns {boolean}
+ * @description Saves options in localStorage
+ */
+function saveOption(key, value) {
+    if (!supportLocalStorage) {
+        return false;
+    }
+    localStorage[key] = value;
+    return true;
+}
+
+/**
+ * @description Sets the saved options in the localStorage
+ * @returns {boolean}
+ */
+function restoreOptions() {
+    if (!supportLocalStorage) {
+        return false;
+    }
+    var theme = localStorage.getItem("theme");
+    $('#theme').val(theme);
+    setTheme(theme);
+
+    var fontSizeE = localStorage.getItem("fontSizeE");
+    $('#font-editor').val(fontSizeE);
+    setFontSizeEditors(fontSizeE);
+
+    var fontSizeO = localStorage.getItem("fontSizeO");
+    $("#font-output").val(fontSizeO);
+    $('#output').css('font-size', fontSizeO + "px");
+
+    return true;
 }

@@ -118,6 +118,19 @@ $('.modal').on('shown.bs.modal', function () {
  */
 $('[data-toggle="tooltip"]').tooltip();
 
+window.onbeforeunload = function () {
+    $('#save-options').trigger('click');
+    if ($('#run-dot').prop('checked')) {
+        if (!saveOption("run-auto", "true")) {
+            alert("Sorry, this options will not save in your browser");
+        }
+    } else {
+        if (!saveOption("run-auto", "false")) {
+            alert("Sorry, this options will not save in your browser");
+        }
+    }
+};
+
 $(document).ready(function () {
 
     inizializeShortcuts();
@@ -157,7 +170,6 @@ $(document).ready(function () {
         addInpuValue($('.form-control-option').closest('.row-option'));
     }
 
-    $('#run-dot').prop('checked', true);
     $(':checkbox[value="editor1"]').prop('checked', true);
 
     $("[rel='tooltip']").tooltip();
@@ -237,6 +249,7 @@ $(document).ready(function () {
     $('#input').submit(function (e) {
         e.preventDefault();
         var form;
+        var stringify;
         if (clkBtn === "run") {
             callSocketServer();
 
@@ -247,10 +260,17 @@ $(document).ready(function () {
             $('#output').attr('name', 'output');
             form = $('#input').serializeFormJSON();
             $('#program').attr('name', 'program[0]');
-            var stringify = JSON.stringify(form);
+            stringify = JSON.stringify(form);
             var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
             $('#output').removeAttr('name');
+
+        } else if (clkBtn === 'save-options') {
+            form = $('#input').serializeFormJSON();
+            stringify = JSON.stringify(form);
+            if (!saveOption("solverOptions", stringify)) {
+                alert("Sorry, this options will not save in your browser");
+            }
 
         }
 
@@ -401,15 +421,21 @@ $(document).on('click', '#split-up', function () {
 $(document).on('change', '#inputengine', function () {
     var val = $(this).val();
     if (val === "clingo") {
-        $('.form-control-option').find('option[value!="free choice"]').remove();
-        $('<option value=""></option> ').insertBefore('option[value="free choice"]');
+        $('.form-control-option').each(function (index, element) {
+            $(this).find("option").each(function (index, element) {
+                if ($(this).val() !== "free choice" && $(this).val() !== "")
+                    $(this).remove();
+            });
+            if ($(this).val() !== 'free choice')
+                $(this).val("").change();
+        });
+
     } else {
         $('.form-control-option').append('</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
     }
 });
 
 $(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
-
     var val = $(this).val();
     if (val === 'free choice' || val === 'filter') {
         if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
@@ -652,42 +678,7 @@ function setJSONInput(config) {
         $('#output').val(config.output);
         var obj = config;
         var currentClass;
-        if (config.hasOwnProperty('option')) {
-            $('.row-option').each(function (index) {
-                $(this).remove();
-            });
-        }
-
-        $(obj.option).each(function (indexInArray, item) { // create option's form
-            addOption(indexInArray, item.name);
-            if (indexInArray !== 0) {
-                var currentOption = $('.row-option').get(indexInArray);
-                $(currentOption).find('label').empty();
-            }
-            if (item['value']) {
-                currentClass = $('.option-value').eq(indexInArray);
-                $(item.value).each(function (indexInArray, itemValue) {
-                    if (indexInArray !== 0)
-                        addInpuValue(currentClass);
-                    $('.input-group-value').last().find('.form-control-value').val(itemValue);
-                });
-            }
-
-        });
-        $('.row-option').each(function (index) { // add delete button after first option
-            if (index > 0) {
-                var cloneOpname = $(this).find('.opname');
-                $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>');
-            }
-        });
-
-        if (config.engine === "clingo") {
-            $('.form-control-option').find('option').each(function (index, element) {
-                if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
-                    $(this).remove();
-            });
-
-        }
+        setOptions(obj);
 
         return true;
     } else {
@@ -963,7 +954,6 @@ function saveOption(key, value) {
 
 /**
  * @description Sets the saved options in the localStorage
- * @returns {boolean}
  */
 function restoreOptions() {
     if (!supportLocalStorage) {
@@ -981,5 +971,62 @@ function restoreOptions() {
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
 
-    return true;
+    var opt = localStorage.getItem("solverOptions");
+    if (opt !== null) {
+        var obj = JSON.parse(opt);
+        $('#inputLanguage').val(obj.language).change();
+        $('#inputengine').val(obj.engine).change();
+        setOptions(obj);
+    }
+
+    var check = localStorage.getItem("run-auto");
+    if (check !== null) {
+        if (check === "true") {
+            $('#run-dot').prop('checked', true);
+        } else {
+            $('#run-dot').prop('checked', false);
+        }
+    } else {
+        $('#run-dot').prop('checked', true);
+    }
+}
+
+/**
+ * @param {JSON} - obj 
+ * @description deletes all the options and add them to the DOM 
+ */
+function setOptions(obj) {
+    $('.row-option').each(function (index) {
+        $(this).remove();
+    });
+    $(obj.option).each(function (indexInArray, item) { // create option's form
+        addOption(indexInArray, item.name);
+        if (indexInArray !== 0) {
+            var currentOption = $('.row-option').get(indexInArray);
+            $(currentOption).find('label').empty();
+        }
+        if (item['value']) {
+            currentClass = $('.option-value').eq(indexInArray);
+            $(item.value).each(function (indexInArray, itemValue) {
+                if (indexInArray !== 0)
+                    addInpuValue(currentClass);
+                $('.input-group-value').last().find('.form-control-value').val(itemValue);
+            });
+        }
+
+    });
+    $('.row-option').each(function (index) { // add delete button after first option
+        if (index > 0) {
+            var cloneOpname = $(this).find('.opname');
+            $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>');
+        }
+    });
+
+    if (obj.engine === "clingo") {
+        $('.form-control-option').find('option').each(function (index, element) {
+            if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
+                $(this).remove();
+        });
+
+    }
 }

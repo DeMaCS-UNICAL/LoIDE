@@ -98,7 +98,7 @@ var idEditor = 'editor1';
  * set up ace editors into object
  */
 editors = {};
-setUpAce(idEditor);
+setUpAce(idEditor,"");
 
 
 $('.modal').modal({
@@ -213,14 +213,12 @@ $(document).ready(function () {
         $('#choice').text(concept); // append to the DOM the choice for download
         var stringify, form, chose;
         if (concept === 'Input') {
-            var text = editors[idEditor].getValue();
-            $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
-            $('#program').attr('name', 'program');
+            addProgramsToDownload();
             form = $('#input').serializeFormJSON();
-            $('#program').attr('name', 'program[0]');
             stringify = JSON.stringify(form);
             chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
+            destroyPrograms();
         } else {
             $('#program').removeAttr('name', 'program[0]');
             $('#output').attr('name', 'output');
@@ -254,16 +252,14 @@ $(document).ready(function () {
             callSocketServer();
 
         } else if (clkBtn === 'btn-download') {
-            var text = editors[idEditor].getValue();
-            $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
-            $('#program').attr('name', 'program');
+            addProgramsToDownload();
             $('#output').attr('name', 'output');
             form = $('#input').serializeFormJSON();
-            $('#program').attr('name', 'program[0]');
             stringify = JSON.stringify(form);
             var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
             $('#output').removeAttr('name');
+            destroyPrograms();
 
         } else if (clkBtn === 'save-options') {
             form = $('#input').serializeFormJSON();
@@ -447,16 +443,8 @@ $(document).on('change', '.form-control-option', function () { //add or remove t
 
 });
 $(document).on('click', '.add-tab', function () { // add new tab 
-    var id = $(".nav-tabs").children().length;
-    var prevEditor = $(this).parent().prev();
-    var tabId = generateIDTab();
-    var editorId = "editor" + id;
-    $('<li role="presentation"><a data-target="#' + tabId + '" role="tab" data-toggle="tab">Tab' + id + ' <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($(this).parent());
-    $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
-    editors[editorId] = new ace.edit(editorId);
-    $("[data-target='#" + tabId + "']").trigger('click');
-    setUpAce(editorId);
-    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> Tab' + id + ' </label>');
+    var tabID=addTab($(this),"");
+    $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -484,7 +472,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab">Tab1 <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
-            setUpAce(ideditor);
+            setUpAce(ideditor,"");
             $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"> Tab1</label>');
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
@@ -671,15 +659,21 @@ function destroyOptions() {
  */
 function setJSONInput(config) {
     if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output')) {
-        var text = config.program;
-        editors[idEditor].setValue(text);
+       $('.nav-tabs li:not(:last)').each(function (index, element) {
+           $(this).remove();
+           $("#tab"+(index+1)).remove();
+            $(':checkbox[value="editor'+(index+1)+'"]').parent().remove();         
+       });
+       var tabID;
+       $(config.program).each(function (index, element) {
+           tabID=addTab($(".add-tab"),$(this)[0]);
+       });
+       $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
+       $(':checkbox[value="editor1"]').prop('checked', true);
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
         $('#output').val(config.output);
-        var obj = config;
-        var currentClass;
-        setOptions(obj);
-
+        setOptions(config);
         return true;
     } else {
         return false;
@@ -785,15 +779,16 @@ function handleDragOver(evt) {
 
 /**
  * @param {string} ideditor - current id editor
+ * @param {string} text - value of the text editor
  * @description set up current editor 
  */
-function setUpAce(ideditor) {
+function setUpAce(ideditor,text) {
     editors[ideditor] = new ace.edit(ideditor);
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].session.setMode("ace/mode/asp");
     editors[ideditor].setTheme("ace/theme/tomorrow");
-    editors[ideditor].setValue("");
+    editors[ideditor].setValue(text);
     editors[ideditor].resize();
     editors[ideditor].setOptions({
         fontSize: 15
@@ -875,6 +870,18 @@ function addMorePrograms() {
     }
     return check;
 
+}
+
+/**
+ * @description adds the programs into the input type hidden to download
+ */
+function addProgramsToDownload() {
+    $('#program').remove();
+    $('.tab-pane').each(function (index, element) {
+        var id = $(this).find('.ace').attr("id");
+        var value = editors[id].getValue();
+        $('.layout').prepend('<input type="hidden" name="program[' + index + ']" id="program' + index + '" value="' + value + '" class="programs">');
+    });
 }
 /**
  * @description destroy all the input type created and insert the default input type
@@ -1029,4 +1036,21 @@ function setOptions(obj) {
         });
 
     }
+}
+
+/**
+ * @returns {string}
+ * @param {string} obj - where insert the tab
+ * @param {string} text - set value of the editor
+ * @description Adds tab to the DOM
+ */
+function addTab(obj,text) {
+    var id = $(".nav-tabs").children().length;
+    var tabId = generateIDTab();
+    var editorId = "editor" + id;
+    $('<li role="presentation"><a data-target="#' + tabId + '" role="tab" data-toggle="tab">Tab' + id + ' <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
+    $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
+    setUpAce(editorId,text);
+    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> Tab' + id + ' </label>');
+    return tabId;
 }

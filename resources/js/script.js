@@ -666,7 +666,7 @@ function setJSONInput(config) {
        });
        var tabID;
        $(config.program).each(function (index, element) {
-           tabID=addTab($(".add-tab"),$(this)[0]);
+          tabID=addTab($(".add-tab"),config.program[index]);
        });
        $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
        $(':checkbox[value="editor1"]').prop('checked', true);

@@ -177,3 +177,6 @@ a[role="button"]:focus {
 .nav{
     padding-top: 1%;
 }
+.opname{
+    width: 100%;
+}

@@ -98,7 +98,7 @@ var idEditor = 'editor1';
  * set up ace editors into object
  */
 editors = {};
-setUpAce(idEditor,"");
+setUpAce(idEditor, "");
 
 
 $('.modal').modal({
@@ -130,6 +130,33 @@ window.onbeforeunload = function () {
         }
     }
 };
+
+$(window).resize(function () {
+    var currentVal;
+    if (window.innerWidth > 450) {
+        layout.removePane("south");
+        currentVal = $('#output').val();
+        $(".ui-layout-south").empty();
+        layout.addPane("east");
+        createTextArea($('.ui-layout-east'));
+        $('#output').val(currentVal);
+    } else {
+        layout.removePane("east");
+        currentVal = $('#output').val();
+        $(".ui-layout-east").empty();
+        layout.addPane("south");
+        createTextArea($('.ui-layout-south'));
+        $('#output').val(currentVal);
+        $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
+        $('#split').attr('id', 'split-up');
+    }
+    setHeightComponents();
+    var length = $(".nav-tabs").children().length;
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].resize();
+    }
+});
 
 $(document).ready(function () {
 
@@ -165,10 +192,6 @@ $(document).ready(function () {
     dropZone.addEventListener('dragover', handleDragOver, false);
     dropZone.addEventListener('drop', handleFileSelect, false);
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
-
-    if ($('.form-control-option').val() === 'option') {
-        addInpuValue($('.form-control-option').closest('.row-option'));
-    }
 
     $(':checkbox[value="editor1"]').prop('checked', true);
 
@@ -206,7 +229,18 @@ $(document).ready(function () {
         south__minSize: 125
 
     });
-    layout.removePane("south");
+    if (window.innerWidth > 450) {
+        layout.removePane("south");
+    } else {
+        layout.removePane("east");
+        var currentVal = $('#output').val();
+        $(".ui-layout-east").empty();
+        layout.addPane("south");
+        createTextArea($('.ui-layout-south'));
+        $('#output').val(currentVal);
+        $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
+        $('#split').attr('id', 'split-up');
+    }
 
     $('.dropdown-menu-choice').find('a').click(function (e) {
         var concept = $(this).text();
@@ -363,28 +397,26 @@ function destroyClickedElement(event) {
 
 $(document).on('click', '.btn-add-option', function () {
     addOptionDOM($(this));
-
+    $(this).empty();
 });
 
 $(document).on('click', '.btn-del-option', function () {
+    $(this).parent().parent().parent().parent().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
     delOptionDOM($(this));
-
 });
 
 $(document).on('click', '.btn-del-value', function () {
+    if ($(this).parent().parent().is(":last-child")) {
+        $(this).parent().parent().prev().find(".input-group-btn").last().append('<button type="button" class="btn btn-default btn-add">+</button>');
+    }
     deleteInputValue($(this));
-
 });
 
 $(document).on('click', '.btn-add', function () {
     addInpuValue($(this));
-
+    $(this).parent().empty();
 });
 
-$(document).on('click', '.btn-info-value', function () {
-    addInpuValue($(this));
-
-});
 $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
     currentTab = e.target;
     idTab = $(currentTab).attr('data-target');
@@ -400,8 +432,6 @@ $(document).on('click', '#split', function () {
     $('#output').val(currentVal);
     $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
     $('#split').attr('id', 'split-up');
-
-
 });
 
 $(document).on('click', '#split-up', function () {
@@ -411,7 +441,6 @@ $(document).on('click', '#split-up', function () {
     layout.addPane("east");
     createTextArea($('.ui-layout-east'));
     $('#output').val(currentVal);
-
 });
 
 $(document).on('change', '#inputengine', function () {
@@ -443,7 +472,7 @@ $(document).on('change', '.form-control-option', function () { //add or remove t
 
 });
 $(document).on('click', '.add-tab', function () { // add new tab 
-    var tabID=addTab($(this),"");
+    var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
 });
 
@@ -472,7 +501,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab">Tab1 <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
-            setUpAce(ideditor,"");
+            setUpAce(ideditor, "");
             $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"> Tab1</label>');
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
@@ -659,17 +688,18 @@ function destroyOptions() {
  */
 function setJSONInput(config) {
     if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output')) {
-       $('.nav-tabs li:not(:last)').each(function (index, element) {
-           $(this).remove();
-           $("#tab"+(index+1)).remove();
-            $(':checkbox[value="editor'+(index+1)+'"]').parent().remove();         
-       });
-       var tabID;
-       $(config.program).each(function (index, element) {
-          tabID=addTab($(".add-tab"),config.program[index]);
-       });
-       $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
-       $(':checkbox[value="editor1"]').prop('checked', true);
+        $('.nav-tabs li:not(:last)').each(function (index, element) {
+            var id = $(this).find("a").attr("data-target");
+            $(this).remove();
+            $(id).remove();
+            $(':checkbox[value="editor' + (index + 1) + '"]').parent().remove();
+        });
+        var tabID;
+        $(config.program).each(function (index, element) {
+            tabID = addTab($(".add-tab"), config.program[index]);
+        });
+        $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
+        $(':checkbox[value="editor1"]').prop('checked', true);
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
         $('#output').val(config.output);
@@ -782,7 +812,7 @@ function handleDragOver(evt) {
  * @param {string} text - value of the text editor
  * @description set up current editor 
  */
-function setUpAce(ideditor,text) {
+function setUpAce(ideditor, text) {
     editors[ideditor] = new ace.edit(ideditor);
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
@@ -985,7 +1015,6 @@ function restoreOptions() {
         $('#inputengine').val(obj.engine).change();
         setOptions(obj);
     }
-
     var check = localStorage.getItem("run-auto");
     if (check !== null) {
         if (check === "true") {
@@ -1008,9 +1037,14 @@ function setOptions(obj) {
     });
     $(obj.option).each(function (indexInArray, item) { // create option's form
         addOption(indexInArray, item.name);
+        var currentOption;
         if (indexInArray !== 0) {
-            var currentOption = $('.row-option').get(indexInArray);
+            currentOption = $('.row-option').get(indexInArray);
             $(currentOption).find('label').empty();
+        }
+        if (indexInArray < obj.option.length - 1) { //deletes all 'btn-add' except in the last option
+            currentOption = $('.row-option').get(indexInArray);
+            $(currentOption).find('.btn-add-option').empty();
         }
         if (item['value']) {
             currentClass = $('.option-value').eq(indexInArray);
@@ -1018,6 +1052,9 @@ function setOptions(obj) {
                 if (indexInArray !== 0)
                     addInpuValue(currentClass);
                 $('.input-group-value').last().find('.form-control-value').val(itemValue);
+                if (indexInArray < item.value.length - 1) { //deletes all 'btn-add' except the last in the input type value
+                    $('.input-group-value').last().find('.btn-add').parent().empty();
+                }
             });
         }
 
@@ -1044,13 +1081,13 @@ function setOptions(obj) {
  * @param {string} text - set value of the editor
  * @description Adds tab to the DOM
  */
-function addTab(obj,text) {
+function addTab(obj, text) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
     var editorId = "editor" + id;
     $('<li role="presentation"><a data-target="#' + tabId + '" role="tab" data-toggle="tab">Tab' + id + ' <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
-    setUpAce(editorId,text);
+    setUpAce(editorId, text);
     $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> Tab' + id + ' </label>');
     return tabId;
 }

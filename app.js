@@ -7,10 +7,15 @@ var io = require('socket.io').listen(server);
 var PropertiesReader = require('properties-reader');
 var properties = PropertiesReader('resources/config/properties');
 var ws_server = properties.get('ws.server');
+var pckg = require('./package.json');
 
 var port = 8084;
 
 app.use(express.static('resources'));
+
+app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
+    res.send('{"version":"' + pckg.version + '"}');
+});
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
 
@@ -43,4 +48,5 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
 
 server.listen(port, function () {
     console.log('App listening on port ' + port);
+    console.log('Version: ' + pckg.version);
 });

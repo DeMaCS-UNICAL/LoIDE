@@ -120,15 +120,6 @@ $('[data-toggle="tooltip"]').tooltip();
 
 window.onbeforeunload = function () {
     $('#save-options').trigger('click');
-    if ($('#run-dot').prop('checked')) {
-        if (!saveOption("run-auto", "true")) {
-            alert("Sorry, this options will not save in your browser");
-        }
-    } else {
-        if (!saveOption("run-auto", "false")) {
-            alert("Sorry, this options will not save in your browser");
-        }
-    }
 };
 
 $(window).resize(function () {
@@ -207,6 +198,18 @@ $(document).ready(function () {
         $(this).tooltip('hide');
     });
 
+    $('[data-target="#modal-about"]').on('click', function () {
+        $.ajax({
+            type: "POST",
+            url: "/version",
+            dataType: "JSON",
+            success: function (response) {
+                $("#version").empty();
+                $("#version").append(response.version);
+            }
+        });
+    });
+
     $('#btn-upload').on('click', function () {
         var expandend = $('#upload-container').attr('aria-expanded');
         if (expandend == 'false') {
@@ -282,26 +285,50 @@ $(document).ready(function () {
         e.preventDefault();
         var form;
         var stringify;
+        var i = 0;
         if (clkBtn === "run") {
             callSocketServer();
 
         } else if (clkBtn === 'btn-download') {
             addProgramsToDownload();
             $('#output').attr('name', 'output');
+            i = 0;
+            $("#tab-execute input").each(function (index, element) {
+                if ($(this).prop('checked')) {
+                    $(this).attr("name", "tab[" + i + "]");
+                    i++;
+                }
+            });
+            $("#run-dot").attr("name", "runAuto");
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
             var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
             $('#output').removeAttr('name');
             destroyPrograms();
+            $("#tab-execute input").each(function (index, element) {
+                $(this).removeAttr("name");
+            });
+            $("#run-dot").removeAttr("name");
 
         } else if (clkBtn === 'save-options') {
+            i = 0;
+            $("#tab-execute input").each(function (index, element) {
+                if ($(this).prop('checked')) {
+                    $(this).attr("name", "tab[" + index + "]");
+                    i++;
+                }
+            });
+            $("#run-dot").attr("name", "runAuto");
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
             if (!saveOption("solverOptions", stringify)) {
                 alert("Sorry, this options will not save in your browser");
             }
-
+            $("#tab-execute input").each(function (index, element) {
+                $(this).removeAttr("name");
+            });
+            $("#run-dot").removeAttr("name");
         }
 
     });
@@ -699,7 +726,14 @@ function setJSONInput(config) {
             tabID = addTab($(".add-tab"), config.program[index]);
         });
         $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
-        $(':checkbox[value="editor1"]').prop('checked', true);
+        if (config.hasOwnProperty('tab')) {
+            $(config.tab).each(function (index, element) {
+                $(':checkbox[value="' + element + '"]').prop('checked', true);
+            });
+        }
+        if (config.hasOwnProperty('runAuto')) {
+            $("#run-dot").prop('checked', true);
+        }
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
         $('#output').val(config.output);
@@ -1014,16 +1048,9 @@ function restoreOptions() {
         $('#inputLanguage').val(obj.language).change();
         $('#inputengine').val(obj.engine).change();
         setOptions(obj);
-    }
-    var check = localStorage.getItem("run-auto");
-    if (check !== null) {
-        if (check === "true") {
-            $('#run-dot').prop('checked', true);
-        } else {
-            $('#run-dot').prop('checked', false);
+        if (obj.hasOwnProperty('runAuto')) {
+            $("#run-dot").prop('checked', true);
         }
-    } else {
-        $('#run-dot').prop('checked', true);
     }
 }
 

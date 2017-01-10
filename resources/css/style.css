@@ -49,7 +49,7 @@ body {
     .left-panel-show {
         width: 40%;
     }
-     #btn-upload{
+    #btn-upload {
         display: block;
         margin-bottom: 2%;
     }
@@ -66,8 +66,9 @@ body {
     }
     .left-panel-show {
         width: 18%;
-    }  
+    }
 }
+
 @media screen and (min-width: 1700px) {
     .left-panel {
         width: 5%;
@@ -81,6 +82,7 @@ body {
         width: 12%;
     }
 }
+
 .panel-right {
     transition: margin-left .5s;
     padding: 16px;
@@ -161,22 +163,28 @@ a[role="button"]:focus {
     display: inline-block;
 }
 
-.nav > .btn{
+.nav>.btn {
     margin-right: 5px;
 }
-#tab-execute{
+
+#tab-execute {
     margin-top: 5%;
 }
 
-.navbar-header > img{
+.navbar-header>img {
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: 5px;
 }
 
-.nav{
+.nav {
     padding-top: 1%;
 }
-.opname{
+
+.opname {
     width: 100%;
+}
+
+#version {
+    color: #337ab7;
 }

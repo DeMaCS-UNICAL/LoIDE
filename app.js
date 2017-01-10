@@ -9,7 +9,7 @@ var properties = PropertiesReader('resources/config/properties');
 var ws_server = properties.get('ws.server');
 var pckg = require('./package.json');
 
-var port = 8084;
+var port = properties.get('port');
 
 app.use(express.static('resources'));
 

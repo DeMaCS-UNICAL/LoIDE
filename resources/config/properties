@@ -1,1 +1,2 @@
-ws.server=ws://localhost:8080/ASPServerExecutor/home
+ws.server=
+port=

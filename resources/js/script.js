@@ -124,20 +124,25 @@ window.onbeforeunload = function () {
 
 $(window).resize(function () {
     var currentVal;
+    var fontSizeO = localStorage.getItem("fontSizeO");
     if (window.innerWidth > 450) {
         layout.removePane("south");
-        currentVal = $('#output').val();
+        currentVal = $('#output').text();
         $(".ui-layout-south").empty();
         layout.addPane("east");
         createTextArea($('.ui-layout-east'));
-        $('#output').val(currentVal);
+        $("#font-output").val(fontSizeO);
+        $('#output').css('font-size', fontSizeO + "px");
+        $('#output').text(currentVal);
     } else {
         layout.removePane("east");
-        currentVal = $('#output').val();
+        currentVal = $('#output').text();
         $(".ui-layout-east").empty();
         layout.addPane("south");
         createTextArea($('.ui-layout-south'));
-        $('#output').val(currentVal);
+        $("#font-output").val(fontSizeO);
+        $('#output').css('font-size', fontSizeO + "px");
+        $('#output').text(currentVal);
         $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
         $('#split').attr('id', 'split-up');
     }
@@ -217,8 +222,6 @@ $(document).ready(function () {
         } else {
             setHeightComponents();
         }
-
-
     });
 
     layout = $('body > .container > form > .layout').layout({
@@ -232,15 +235,16 @@ $(document).ready(function () {
         south__minSize: 125
 
     });
+
     if (window.innerWidth > 450) {
         layout.removePane("south");
     } else {
         layout.removePane("east");
-        var currentVal = $('#output').val();
+        var currentVal = $('#output').text();
         $(".ui-layout-east").empty();
         layout.addPane("south");
         createTextArea($('.ui-layout-south'));
-        $('#output').val(currentVal);
+        $('#output').text(currentVal);
         $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
         $('#split').attr('id', 'split-up');
     }
@@ -258,13 +262,15 @@ $(document).ready(function () {
             destroyPrograms();
         } else {
             $('#program').removeAttr('name', 'program[0]');
-            $('#output').attr('name', 'output');
+            $('#output-form').attr('name', 'output');
+            var text = $("#output").text();
+            $('#output-form').val(text);
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
             chose = $('#choice').text();
             createFileToDownload(stringify);
             $('#program').attr('name', 'program[0]');
-            $('#output').removeAttr('name', 'output');
+            $('#output-form').removeAttr('name', 'output');
         }
         $('#choice').text("");
     });
@@ -291,7 +297,9 @@ $(document).ready(function () {
 
         } else if (clkBtn === 'btn-download') {
             addProgramsToDownload();
-            $('#output').attr('name', 'output');
+            $('#output-form').attr('name', 'output');
+            var text = $("#output").text();
+            $('#output-form').val(text);
             i = 0;
             $("#tab-execute input").each(function (index, element) {
                 if ($(this).prop('checked')) {
@@ -304,7 +312,7 @@ $(document).ready(function () {
             stringify = JSON.stringify(form);
             var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
             createFileToDownload(stringify);
-            $('#output').removeAttr('name');
+            $('#output-form').removeAttr('name');
             destroyPrograms();
             $("#tab-execute input").each(function (index, element) {
                 $(this).removeAttr("name");
@@ -363,10 +371,10 @@ function callSocketServer() {
     });
     socket.on('output', function (response) {
         if (response.error === "") {
-            $('#output').val(response.model); // append the response in the textarea 
+            $('#output').text(response.model); // append the response in the container 
             $('#output').css('color', 'black');
         } else {
-            $('#output').val(response.error);
+            $('#output').text(response.error);
             $('#output').css('color', 'red');
         }
     });
@@ -444,6 +452,27 @@ $(document).on('click', '.btn-add', function () {
     $(this).parent().empty();
 });
 
+$(document).on('mouseup', '#output', function () {
+    $("#output").unmark();
+    var start, end;
+    var text = $("#output").text();
+    start = window.getSelection().getRangeAt(0).startOffset;
+    end = window.getSelection().getRangeAt(0).endOffset;
+    var slice = text.slice(start, end + 1);
+    if (slice.search(/[[a-z0-9_]+[\(|,|}]+/) !== -1) {      
+        slice = text.slice(start, end);
+        $("#output").unmark();
+
+        if (slice.search(/[[a-z0-9_]+[\(|,|}]+/) === -1) {
+            var tmp = text.slice(start - 1, start);
+            if (tmp.search(/[[a-z0-9_]+/) === -1)
+                $("#output").mark(slice); 
+                var randomColor = Math.floor(Math.random()*16777215).toString(16);
+                $("mark").css("color","#"+randomColor);    
+        }
+    }
+});
+
 $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
     currentTab = e.target;
     idTab = $(currentTab).attr('data-target');
@@ -452,22 +481,28 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 
 $(document).on('click', '#split', function () {
     layout.removePane("east");
-    var currentVal = $('#output').val();
+    var currentVal = $('#output').text();
     $(this).parent().empty();
     layout.addPane("south");
     createTextArea($('.ui-layout-south'));
-    $('#output').val(currentVal);
+    var fontSizeO = localStorage.getItem("fontSizeO");
+    $("#font-output").val(fontSizeO);
+    $('#output').css('font-size', fontSizeO + "px");
+    $('#output').text(currentVal);
     $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
     $('#split').attr('id', 'split-up');
 });
 
 $(document).on('click', '#split-up', function () {
     layout.removePane("south");
-    var currentVal = $('#output').val();
+    var currentVal = $('#output').text();
     $(this).parent().empty();
     layout.addPane("east");
     createTextArea($('.ui-layout-east'));
-    $('#output').val(currentVal);
+    var fontSizeO = localStorage.getItem("fontSizeO");
+    $("#font-output").val(fontSizeO);
+    $('#output').css('font-size', fontSizeO + "px");
+    $('#output').text(currentVal);
 });
 
 $(document).on('change', '#inputengine', function () {
@@ -736,7 +771,7 @@ function setJSONInput(config) {
         }
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
-        $('#output').val(config.output);
+        $('#output').text(config.output);
         setOptions(config);
         return true;
     } else {
@@ -803,7 +838,7 @@ function isJosn(str) {
  * @description append textarea to a specific layout
  */
 function createTextArea(layout) {
-    $(layout).append('Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a><textarea readonly name="" id="output" class="form-control output"></textarea>');
+    $(layout).append('Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a><div id="output" class="output"></div>');
 }
 
 function handleFileSelect(evt) {

@@ -10,6 +10,9 @@ __*LoIDE is part of an undergraduate student's work of thesis, and is still at t
 __*It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet.*__
 
 
+## Online Beta
+Find a live beta version at www.mat.unical.it/calimeri/projects/loide
+
 ## Purpose
 [...]
 

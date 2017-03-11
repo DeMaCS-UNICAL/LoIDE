@@ -13,6 +13,9 @@ __*It currently supports only Answer Set Programming; we encourage any feedback,
 ## Online Beta
 Find a live beta version at www.mat.unical.it/calimeri/projects/loide
 
+This online version uses the [ASPServerExecutor](https://github.com/DeMaCS-UNICAL/ASPServerExecutor) to run the ASP solvers
+
+
 ## Purpose
 [...]
 

@@ -73,7 +73,6 @@
      */
     var layout;
 
-
 })(jQuery);
 
 /**
@@ -371,6 +370,7 @@ function callSocketServer() {
     });
     socket.on('output', function (response) {
         if (response.error === "") {
+            console.log(response.model); // debug string
             $('#output').text(response.model); // append the response in the container 
             $('#output').css('color', 'black');
         } else {
@@ -456,19 +456,42 @@ $(document).on('mouseup', '#output', function () {
     $("#output").unmark();
     var start, end;
     var text = $("#output").text();
-    start = window.getSelection().getRangeAt(0).startOffset;
-    end = window.getSelection().getRangeAt(0).endOffset;
+    var mainDiv = document.getElementById("output");
+    var sel = getSelectionCharOffsetsWithin(mainDiv);
+    start = sel.start;
+    end = sel.end;
     var slice = text.slice(start, end + 1);
-    if (slice.search(/[[a-z0-9_]+[\(|,|}]+/) !== -1) {      
+    if (slice.search(/[[A-za-z0-9_]+[\(|,|}]+/) !== -1) {      
         slice = text.slice(start, end);
-        $("#output").unmark();
-
-        if (slice.search(/[[a-z0-9_]+[\(|,|}]+/) === -1) {
+        var subStr = "";
+        if (slice.search(/[[A-za-z0-9_]+[\(|,|}]+/) === -1) {
             var tmp = text.slice(start - 1, start);
-            if (tmp.search(/[[a-z0-9_]+/) === -1)
-                $("#output").mark(slice); 
-                var randomColor = Math.floor(Math.random()*16777215).toString(16);
-                $("mark").css("color","#"+randomColor);    
+            if (tmp.search(/[[A-Za-z0-9_]+/) === -1) {
+                var indices = getIndicesOf(slice, text);
+                var mark;
+                var currentStr;
+                for (var index = 0; index < indices.length; index++) {
+                    mark = "<mark>";
+                    var element = indices[index];
+                    currentStr = subStr;
+                    if (currentStr === "" && text.charAt(element + slice.length) === "(") {
+                        currentStr = text.substr(0, element) + mark + text.substr(element);
+                        mark = "</mark>";
+                        subStr = currentStr.substr(0, element + slice.length + 6) + mark + currentStr.substr(element + slice.length + 6);
+                    } else {
+                        var is = getIndicesOf(slice, currentStr);
+                        if (currentStr.charAt(is[index] + slice.length) === "(") {
+                            currentStr = currentStr.substr(0, is[index]) + mark + currentStr.substr(is[index]);
+                            mark = "</mark>";
+                            subStr = currentStr.substr(0, is[index] + slice.length + 6) + mark + currentStr.substr(is[index] + slice.length + 6);
+                        }
+                    }
+                }
+                $("#output").empty();
+                $("#output").html(subStr);
+                var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+                $("mark").css("color", "#" + randomColor); 
+            }   
         }
     }
 });
@@ -590,6 +613,60 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         }
     }
 });
+
+/**
+ * 
+ * @param {string} searchStr - string to search
+ * @param {string} str - text where search the string
+ * @param {boolean} caseSensitive 
+ * @returns {array}
+ * @description Returns each position of the searched string
+ */
+function getIndicesOf(searchStr, str, caseSensitive) {
+    var searchStrLen = searchStr.length;
+    if (searchStrLen === 0) {
+        return [];
+    }
+    var startIndex = 0,
+        index, indices = [];
+
+    while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+        indices.push(index);
+        startIndex = index + searchStrLen;
+    }
+    return indices;
+}
+
+/**
+ * 
+ * @param {*} element - container  where to search 
+ * @description Returns the start and the end position of the selected string in the output container 
+ */
+function getSelectionCharOffsetsWithin(element) {
+    var start = 0,
+        end = 0;
+    var sel, range, priorRange;
+    if (typeof window.getSelection != "undefined") {
+        range = window.getSelection().getRangeAt(0);
+        priorRange = range.cloneRange();
+        priorRange.selectNodeContents(element);
+        priorRange.setEnd(range.startContainer, range.startOffset);
+        start = priorRange.toString().length;
+        end = start + range.toString().length;
+    } else if (typeof document.selection != "undefined" &&
+        (sel = document.selection).type != "Control") {
+        range = sel.createRange();
+        priorRange = document.body.createTextRange();
+        priorRange.moveToElementText(element);
+        priorRange.setEndPoint("EndToStart", range);
+        start = priorRange.text.length;
+        end = start + range.text.length;
+    }
+    return {
+        start: start,
+        end: end
+    };
+}
 
 /**
  * @param optionClassBtn - class of the clicked button to find the closest row 
@@ -809,7 +886,7 @@ function setHeightComponents(expanded) {
         $('.left-panel').css('height', height - (navbarHeight + containerUpload));
         $('.layout').css('height', height - (navbarHeight + containerUpload));
         $('.ui-layout-pane-east').css('height', height - (navbarHeight + containerUpload));
-        $('.ui-layout-pane-center').css('height', height - (navbarHeight + containerUpload));
+        $('.ui-layout-pane-center').css('height', height - (navbarHeight + containerUpload + 10));
         $('.ace').css('height', height - (navbarHeight + tabpanel + containerUpload));
     } else {
         $('.left-panel').css('height', height - navbarHeight);
@@ -817,6 +894,7 @@ function setHeightComponents(expanded) {
         $('.ui-layout-pane-east').css('height', height - navbarHeight);
         $('.ui-layout-pane-center').css('height', height - navbarHeight);
     }
+
     editors[idEditor].resize();
 }
 
@@ -838,7 +916,10 @@ function isJosn(str) {
  * @description append textarea to a specific layout
  */
 function createTextArea(layout) {
-    $(layout).append('Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a><div id="output" class="output"></div>');
+    $("#setting-output").remove();
+    $("#output").remove();
+    $(layout).append('<div id="setting-output"> Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a></div><div id="output" class="output"></div>');
+
 }
 
 function handleFileSelect(evt) {

@@ -474,13 +474,13 @@ $(document).on('mouseup', '#output', function () {
                     mark = "<mark>";
                     var element = indices[index];
                     currentStr = subStr;
-                    if (currentStr === "" && text.charAt(element + slice.length) === "(") {
+                    if (currentStr === "" && (text.charAt(element + slice.length) === "(" || text.charAt(element + slice.length) === ",") && text.charAt(element - 1).search(/[[A-Za-z0-9_]+/) === -1) {
                         currentStr = text.substr(0, element) + mark + text.substr(element);
                         mark = "</mark>";
                         subStr = currentStr.substr(0, element + slice.length + 6) + mark + currentStr.substr(element + slice.length + 6);
                     } else {
                         var is = getIndicesOf(slice, currentStr);
-                        if (currentStr.charAt(is[index] + slice.length) === "(") {
+                        if ((currentStr.charAt(is[index] + slice.length) === "(" || currentStr.charAt(is[index] + slice.length) === ",") && currentStr.charAt(is[index] - 1).search(/[[A-Za-z0-9_]+/) === -1) {
                             currentStr = currentStr.substr(0, is[index]) + mark + currentStr.substr(is[index]);
                             mark = "</mark>";
                             subStr = currentStr.substr(0, is[index] + slice.length + 6) + mark + currentStr.substr(is[index] + slice.length + 6);

@@ -292,6 +292,8 @@ $(document).ready(function () {
         var stringify;
         var i = 0;
         if (clkBtn === "run") {
+            $("#output").empty();
+            $("#output").text("Sending..");
             callSocketServer();
 
         } else if (clkBtn === 'btn-download') {

@@ -2,12 +2,35 @@
 	"port": 8084,
 	"servers": [
 		{
-			"language": "asp",
+			"language": "ASP",
+			"default": true,
 			"engines": [
 				{
-					"name": "dlv",
+					"name": "DLV",
+					"default": true,
 					"state": "online",
 					"host": "ws://localhost:8080/ASPServerExecutor/home"
+				}, {
+					"name": "Clingo",
+					"default": false,
+					"state": "online",
+					"host": "ws://localhost:8080/ASPServerExecutor/home"
+				}
+			]
+		}, {
+			"language": "Foo",
+			"default": false,
+			"engines": [
+				{
+					"name": "BAR",
+					"default": true,
+					"state": "online",
+					"host": "#"
+				}, {
+					"name": "LoL",
+					"default": false,
+					"state": "online",
+					"host": "#"
 				}
 			]
 		}

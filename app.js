@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+var pug = require('pug');
 
 var webSocket = require('websocket').w3cwebsocket;
 
@@ -13,6 +14,21 @@ var port = properties.port;
 var pckg = require('./package.json');
 
 app.use(express.static('resources'));
+app.set('views', './resources');
+app.set('view engine', 'pug');
+
+app.get('/', function (req, res) {
+    var executors = ws_servers.map((item) => {
+        var result = {};
+        result.language = item.language;
+        result.default = item.default;
+        result.engines = item.engines.map((engine) => {
+            return engine.name;
+        });
+        return result;
+    });
+    res.render('index', {executors});
+})
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
     res.send('{"version":"' + pckg.version + '"}');

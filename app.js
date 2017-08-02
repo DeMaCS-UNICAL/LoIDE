@@ -18,16 +18,7 @@ app.set('views', './resources');
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-    var executors = ws_servers.map((item) => {
-        var result = {};
-        result.language = item.language;
-        result.default = item.default;
-        result.engines = item.engines.map((engine) => {
-            return engine.name;
-        });
-        return result;
-    });
-    res.render('index', {executors});
+    res.render('index', {"executors": ws_servers});
 })
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
@@ -36,7 +27,7 @@ app.post('/version', function (req, res) { // send the version (and take it in p
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
-        var host = getExcecutor(data).host;
+        var host = getExcecutor(data).host; //The function check that the language and the engine are supported
         var client = new webSocket(host); // connet to the ASPServerExecutor
         console.log(host + " path"); // debug string
 

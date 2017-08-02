@@ -530,8 +530,14 @@ $(document).on('click', '#split-up', function () {
     $('#output').text(currentVal);
 });
 
-$(document).on('change', '#inputengine', function () {
-    var val = $(this).val();
+$(document).on('change', '#inputLanguage', function () {
+	var val = $(this).val();
+	$('#inputEngine').html($("#" + val).html());
+});
+
+$(document).on('change', '#inputEngine', function () {	
+	var val = $(this).val();
+	//TODO
     if (val === "clingo") {
         $('.form-control-option').each(function (index, element) {
             $(this).find("option").each(function (index, element) {
@@ -761,6 +767,7 @@ function addInpuValue(inputClass) {
  * @class
  * @classdesc Creates dlv's options
  */
+ //TODO
 function OptionDLV() {
     /**
      * bidirectional map
@@ -785,8 +792,9 @@ function OptionDLV() {
 /**
  * @description Based on the value 'engine', it creates a hidden option temporary with the corresponding value of the option name to set the value of the select option
  */
+//TODO
 function configureOptions() {
-    var engine = $('#inputengine').val();
+    var engine = $('#inputEngine').val();
     switch (engine) {
         case 'dlv':
             var optionDLV = new OptionDLV();
@@ -809,6 +817,7 @@ function configureOptions() {
 /**
  * @description Destroy the temporary options and set the select option to the original value
  */
+ //TODO
 function destroyOptions() {
     var optionDLV = new OptionDLV();
     optionDLV.init();
@@ -849,7 +858,7 @@ function setJSONInput(config) {
             $("#run-dot").prop('checked', true);
         }
         $('#inputLanguage').val(config.language).change();
-        $('#inputengine').val(config.engine).change();
+        $('#inputEngine').val(config.engine).change();
         $('#output').text(config.output);
         setOptions(config);
         return true;
@@ -1164,7 +1173,7 @@ function restoreOptions() {
     if (opt !== null) {
         var obj = JSON.parse(opt);
         $('#inputLanguage').val(obj.language).change();
-        $('#inputengine').val(obj.engine).change();
+        $('#inputEngine').val(obj.engine).change();
         setOptions(obj);
         if (obj.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);
@@ -1210,7 +1219,7 @@ function setOptions(obj) {
             $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>');
         }
     });
-
+	//TODO
     if (obj.engine === "clingo") {
         $('.form-control-option').find('option').each(function (index, element) {
             if ($(this).val() !== 'free choice' && $(this).val().length !== 0)

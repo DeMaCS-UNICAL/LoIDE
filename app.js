@@ -7,9 +7,11 @@ var pug = require('pug');
 
 var webSocket = require('websocket').w3cwebsocket;
 
-var properties = require('./resources/config/properties.json');
-var ws_servers = properties.servers;
-var port = properties.port;
+var config = require('./resources/config/app-config.json');
+var port = config.port;
+
+var services = require('./resources/config/services.json');
+var ws_servers = services.servers;
 
 var pckg = require('./package.json');
 
@@ -27,7 +29,7 @@ app.post('/version', function (req, res) { // send the version (and take it in p
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
-        var host = getExcecutor(data).host; //The function check that the language and the engine are supported
+        var host = getExcecutor(data).host; //The function return the address for a particular language and engine, if known
         var client = new webSocket(host); // connet to the ASPServerExecutor
         console.log(host + " path"); // debug string
 
@@ -49,7 +51,6 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
             socket.emit('output', model); // Socket.io calls emit() to send data to the browser.
 
         };
-
     });
 });
 

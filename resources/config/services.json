@@ -1,0 +1,56 @@
+{
+	"servers": [
+		{
+			"language": "asp",
+			"default": true,
+			"engines": [
+				{
+					"name": "clingo",
+					"default": false,
+					"state": "online",
+					"host": "ws://localhost:8080/ASPServerExecutor/home",
+					"options" : [
+						{
+							"name": "Free choise",
+							"sign": [""],
+							"argument": true,
+							"description": "You have to know the right options"
+						}
+					]
+				}, {
+					"name": "dlv",
+					"default": true,
+					"state": "online",
+					"host": "ws://localhost:8080/ASPServerExecutor/home",
+					"options": [
+						{
+							"name": "Free choise",
+							"sign": [""],
+							"argument": true,
+							"description": "You have to know the right options"
+						}
+					]
+				}
+			]
+		}, {
+			"language": "foo",
+			"default": false,
+			"engines": [
+				{
+					"name": "bar",
+					"default": true,
+					"state": "online",
+					"host": "#",
+					"options": [
+						{
+							"name": "Free choise",
+							"sign": [],
+							"argument": true,
+							"description": "You have to know the right options"
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -462,39 +462,20 @@ $(document).on('mouseup', '#output', function () {
     var sel = getSelectionCharOffsetsWithin(mainDiv);
     start = sel.start;
     end = sel.end;
-    var slice = text.slice(start, end + 1);
-    if (slice.search(/[[A-za-z0-9_]+[\(|,|}]+/) !== -1) {      
-        slice = text.slice(start, end);
-        var subStr = "";
-        if (slice.search(/[[A-za-z0-9_]+[\(|,|}]+/) === -1) {
-            var tmp = text.slice(start - 1, start);
-            if (tmp.search(/[[A-Za-z0-9_]+/) === -1) {
-                var indices = getIndicesOf(slice, text);
-                var mark;
-                var currentStr;
-                for (var index = 0; index < indices.length; index++) {
-                    mark = "<mark>";
-                    var element = indices[index];
-                    currentStr = subStr;
-                    if (currentStr === "" && (text.charAt(element + slice.length) === "(" || text.charAt(element + slice.length) === ",") && text.charAt(element - 1).search(/[[A-Za-z0-9_]+/) === -1) {
-                        currentStr = text.substr(0, element) + mark + text.substr(element);
-                        mark = "</mark>";
-                        subStr = currentStr.substr(0, element + slice.length + 6) + mark + currentStr.substr(element + slice.length + 6);
-                    } else {
-                        var is = getIndicesOf(slice, currentStr);
-                        if ((currentStr.charAt(is[index] + slice.length) === "(" || currentStr.charAt(is[index] + slice.length) === ",") && currentStr.charAt(is[index] - 1).search(/[[A-Za-z0-9_]+/) === -1) {
-                            currentStr = currentStr.substr(0, is[index]) + mark + currentStr.substr(is[index]);
-                            mark = "</mark>";
-                            subStr = currentStr.substr(0, is[index] + slice.length + 6) + mark + currentStr.substr(is[index] + slice.length + 6);
-                        }
-                    }
-                }
-                $("#output").empty();
-                $("#output").html(subStr);
-                var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-                $("mark").css("color", "#" + randomColor); 
-            }   
-        }
+
+    var preChart = text.slice(start - 1, start);
+    var postChart = text.slice(end, end + 1);
+    var selected = text.slice(start, end);
+    var isPreChartCompliance = preChart.match(/[\{\s\,]/g);
+    var isPostChartCompliance = postChart.match(/[\(\s\,]/g);
+    var isSelectedWordCompliance = !selected.match(/[\s\(\)\,]/g);
+    if (isPreChartCompliance && isPostChartCompliance && isSelectedWordCompliance) {
+        var regex = new RegExp('([\\s\\{\\,])(' + selected + ')([\\(\\,\\s])', 'g');
+        text = text.replace(regex, '$1<mark>$2</mark>$3');
+        $("#output").empty();
+        $("#output").html(text);
+        var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        $("mark").css("color", "#" + randomColor); 
     }
 });
 
@@ -1043,7 +1024,7 @@ function addMorePrograms() {
         if ($(this).prop('checked')) {
             check = true;
             var p = editors[$(this).val()].getValue();
-            $('.layout').prepend('<input type="hidden" name="program[' + index + ']" id="program' + $(this).val() + '" value="' + p + '" class="programs">');
+            $('.layout').prepend("<input type='hidden' name='program[" + index + "]' id='program" + $(this).val() + "' value='" + p + "' class='programs'>");
             index += 1;
         }
     });
@@ -1062,7 +1043,7 @@ function addProgramsToDownload() {
     $('.tab-pane').each(function (index, element) {
         var id = $(this).find('.ace').attr("id");
         var value = editors[id].getValue();
-        $('.layout').prepend('<input type="hidden" name="program[' + index + ']" id="program' + index + '" value="' + value + '" class="programs">');
+        $('.layout').prepend("<input type='hidden' name='program[" + index + "]' id='program" + index + "' value='" + value + "' class='programs'>");
     });
 }
 /**

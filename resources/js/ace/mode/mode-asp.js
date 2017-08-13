@@ -70,7 +70,7 @@ define('ace/mode/asp_highlight_rules', [], function (require, exports, module) {
             ],
             "blocktag": [{
                 token: "string",
-                regex: "[A-Za-z0-9_][a-zA-Z0-9_]*",
+                regex: "[A-Za-z0-9_\"][a-zA-Z0-9_\"]*",
                 next: "blocknext"
             }, {
                 token: "keyword",

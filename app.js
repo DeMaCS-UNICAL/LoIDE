@@ -21,7 +21,7 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
 
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
 
-        var client = new webSocket(ws_server); // connet to the ASPServerExecutor
+        var client = new webSocket(ws_server); // connet to the EmbASPServerExecutor
         console.log(ws_server + " path"); // debug string
 
         client.onopen = function () { // Opens the connection and send data 
@@ -36,9 +36,9 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
                 reason: "Sorry the connection lost, please try again later!"
             });
         };
-        client.onmessage = function (output) { // Wait for the incoming data from the ASPServerExecutor
+        client.onmessage = function (output) { // Wait for the incoming data from the EmbASPServerExecutor
             var model = JSON.parse(output.data);
-            console.log(model + " from ASPServerExecutor"); // debug string
+            console.log(model + " from EmbASPServerExecutor"); // debug string
             socket.emit('output', model); // Socket.io calls emit() to send data to the browser.
 
         };

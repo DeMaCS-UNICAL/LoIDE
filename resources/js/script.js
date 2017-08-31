@@ -657,6 +657,7 @@ function getSelectionCharOffsetsWithin(element) {
  */
 function delOptionDOM(optionClassBtn) {
     var row = $(optionClassBtn).closest('.row-option');
+    $(row).prev().remove();
     row.empty(); //delete option container
     row.remove();
     $('.form-control-option').each(function (index) {
@@ -678,6 +679,7 @@ function addOptionDOM(optionClassBtn) {
     var clone = row.clone();
     var lenghtClass = $('.opname').length;
     $(clone).insertAfter(row);
+    $("<hr>").insertBefore(clone);
     var cloneOpname = $(clone).find('.opname');
     if (lenghtClass > 0) {
         $(cloneOpname).find('.btn-del-option').remove();

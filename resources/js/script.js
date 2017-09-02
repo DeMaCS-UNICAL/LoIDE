@@ -438,7 +438,7 @@ $(document).on('click', '.btn-add-option', function () {
 });
 
 $(document).on('click', '.btn-del-option', function () {
-    $(this).parent().parent().parent().parent().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
+    $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
     delOptionDOM($(this));
 });
 
@@ -1184,6 +1184,9 @@ function setOptions(obj) {
                     $('.input-group-value').last().find('.btn-add').parent().empty();
                 }
             });
+        }
+        if (indexInArray != $(obj.option).size() - 1) {
+            $("<hr>").insertAfter($('.row-option').get(indexInArray));
         }
 
     });

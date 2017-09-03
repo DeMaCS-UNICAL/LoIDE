@@ -30,9 +30,10 @@ app.post('/version', function (req, res) { // send the version (and take it in p
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
         var host = getExcecutor(data).host; //The function return the address for a particular language and engine, if known
-        var client = new webSocket(host); // connet to the ASPServerExecutor
+        var client = new webSocket(host); // Connect to the engine
         console.log(host + " path"); // debug string
-
+        console.log(data + " from gui"); // debug string
+        
         client.onopen = function () { // Opens the connection and send data
             client.send(data);
             console.log(data + " from gui"); // debug string

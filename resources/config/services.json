@@ -7,46 +7,45 @@
 				{
 					"name": "clingo",
 					"default": false,
-					"state": "online",
 					"host": "ws://localhost:8080/ASPServerExecutor/home",
 					"options" : [
 						{
 							"name": "Free choise",
-							"sign": [""],
+							"sign": "",
 							"argument": true,
-							"description": "You have to know the right options"
+							"description": "Missing description"
 						}
 					]
 				}, {
 					"name": "dlv",
 					"default": true,
-					"state": "online",
 					"host": "ws://localhost:8080/ASPServerExecutor/home",
 					"options": [
 						{
 							"name": "Free choise",
-							"sign": [""],
+							"sign": "",
 							"argument": true,
-							"description": "You have to know the right options"
-						}
-					]
-				}
-			]
-		}, {
-			"language": "foo",
-			"default": false,
-			"engines": [
-				{
-					"name": "bar",
-					"default": true,
-					"state": "online",
-					"host": "#",
-					"options": [
-						{
-							"name": "Free choise",
-							"sign": [],
+							"description": "Missing description"
+						}, {
+							"name": "Filter",
+							"sign": "-filter=",
 							"argument": true,
-							"description": "You have to know the right options"
+							"description": "Missing description"
+						}, {
+							"name": "NoFacts",
+							"sign": "-nofacts",
+							"argument": false,
+							"description": "Missing description"
+						}, {
+							"name": "Silent",
+							"sign": "-silent",
+							"argument": false,
+							"description": "Missing description"
+						}, {
+							"name": "Query",
+							"sign": "-FC",
+							"argument": false,
+							"description": "Missing description"
 						}
 					]
 				}

@@ -2,11 +2,9 @@
 	"servers": [
 		{
 			"language": "asp",
-			"default": true,
 			"engines": [
 				{
 					"name": "clingo",
-					"default": false,
 					"host": "ws://localhost:8080/ASPServerExecutor/home",
 					"options" : [
 						{
@@ -18,7 +16,6 @@
 					]
 				}, {
 					"name": "dlv",
-					"default": true,
 					"host": "ws://localhost:8080/ASPServerExecutor/home",
 					"options": [
 						{

@@ -1,8 +1,8 @@
-![](https://img.shields.io/badge/license-MIT-blue.svg)
-![](https://img.shields.io/github/release/DeMaCS-UNICAL/LoIDE.svg)
-![](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)
-![](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=my-website)
-![](https://img.shields.io/twitter/url/https/github.com/DeMaCS-UNICAL/LoIDE.svg?style=social)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/DeMaCS-UNICAL/LoIDE/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest)
+[![GitHub issues](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/issues)
+[![Website](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=my-website)](https://www.mat.unical.it/calimeri/projects/loide)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/DeMaCS-UNICAL/LoIDE.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 
 # LoIDE
 _LoIDE_ is a web-based IDE for Logic Programming.

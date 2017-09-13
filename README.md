@@ -41,11 +41,21 @@ This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UN
 
 
 ## Purpose
-[...]
+
+The main goal of the LoIDE project is the release of a modular and extensible web-IDE for Logic Programming using modern technologies and languages.
+
+A further goal of the project is to provide a web-service with a common set of APIs for different logic-based languages.
 
 
 ## Key Features
-[...]
+
+ - Syntax highlighting
+ - Output highlighting
+ - Layout and appearance customization
+ - Keyboard shortcuts
+ - Multiple file support
+ - Execution and Solvers options definition
+ - Import and Export files
 
 
 ## Getting Started (Installation and Usage)

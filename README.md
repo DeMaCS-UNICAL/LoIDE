@@ -81,8 +81,6 @@ Please read [CONTRIBUTING.md]() for details on our code of conduct, and the proc
 We use [Semantic Versioning](http://semver.org) for versioning. For the versions available, see the [releases on this repository](https://github.com/DeMaCS-UNICAL/LoIDE/releases). 
 
 
-
-
 ## Credits
  - Stefano Germano
  - Eliana Palermiti
@@ -92,4 +90,4 @@ From the [Department of Mathematics and Computer Science](https://www.mat.unical
 
 
 ## License
-  [MIT](LICENSE)
+  This project is licensed under the [MIT License](LICENSE)

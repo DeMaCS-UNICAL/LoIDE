@@ -41,7 +41,6 @@ This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UN
 
 
 ## Purpose
-
 The main goal of the LoIDE project is the release of a modular and extensible web-IDE for Logic Programming using modern technologies and languages.
 
 A further goal of the project is to provide a web-service with a common set of APIs for different logic-based languages.
@@ -59,22 +58,18 @@ A further goal of the project is to provide a web-service with a common set of A
 
 
 ## Getting Started (Installation and Usage)
-
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
-
 It requires only [Node.js&reg;](https://nodejs.org)
 
 ### Installing
-
 Install dependencies:
  ```
  npm install
  ```
 
 ### Running
-
 Start the server:
 ```
 npm start
@@ -86,7 +81,6 @@ http://localhost:8084
 ```
 
 ### Note
-
 You need an "executor" in order to run the solvers.
 
 If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor).
@@ -106,7 +100,6 @@ Please read [CONTRIBUTING.md]() for details on our code of conduct, and the proc
  -->
 
 ## Versioning
-
 We use [Semantic Versioning](http://semver.org) for versioning. For the versions available, see the [releases on this repository](https://github.com/DeMaCS-UNICAL/LoIDE/releases). 
 
 

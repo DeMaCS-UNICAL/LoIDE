@@ -63,6 +63,14 @@ You need an "executor" in order to run the solvers.
 If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor).
 
 
+## Built With
+ - [Ace](https://ace.c9.io) - The "base" of our editor
+ - [Bootstrap](https://getbootstrap.com) - the front-end web framework used
+ - [jQuery](https://jquery.com) and [its UI Layout plugin](http://plugins.jquery.com/layout) - Used to improve the UI
+ - [BiMap](https://github.com/alethes/bimap) - Used to manage the options for solvers and languages
+ - [keymaster.js](https://github.com/madrobby/keymaster) - Used to implement keyboard shortcuts outside the editor
+
+
 ## Credits
  - Stefano Germano
  - Eliana Palermiti

@@ -6,7 +6,6 @@
 
 # LoIDE
 _LoIDE_ is a web-based IDE for Logic Programming.
-[...]
 
 
 ## IMPORTANT NOTE
@@ -19,7 +18,7 @@ __*It currently supports only Answer Set Programming; we encourage any feedback,
 ## Online Beta
 Find a live beta version at www.mat.unical.it/calimeri/projects/loide
 
-This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/ASPServerExecutor) to run the ASP solvers
+This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor) to run the solvers
 
 
 ## Purpose
@@ -30,13 +29,22 @@ This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UN
 [...]
 
 
-## Quick start (Installation and Usage)
-Install [Node.js&reg;](https://nodejs.org)
+## Getting Started (Installation and Usage)
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+It requires only [Node.js&reg;](https://nodejs.org)
+
+### Installing
 
 Install dependencies:
  ```
  npm install
  ```
+
+### Running
 
 Start the server:
 ```
@@ -47,6 +55,12 @@ Use _LoIDE_ in a browser at:
 ```
 http://localhost:8084
 ```
+
+### Note
+
+You need an "executor" in order to run the solvers.
+
+If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor).
 
 
 ## Credits

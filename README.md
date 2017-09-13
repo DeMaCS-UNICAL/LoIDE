@@ -70,6 +70,18 @@ If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS
  - [BiMap](https://github.com/alethes/bimap) - Used to manage the options for solvers and languages
  - [keymaster.js](https://github.com/madrobby/keymaster) - Used to implement keyboard shortcuts outside the editor
 
+<!-- 
+## Contributing
+
+Please read [CONTRIBUTING.md]() for details on our code of conduct, and the process for submitting pull requests to us.
+ -->
+
+## Versioning
+
+We use [Semantic Versioning](http://semver.org) for versioning. For the versions available, see the [releases on this repository](https://github.com/DeMaCS-UNICAL/LoIDE/releases). 
+
+
+
 
 ## Credits
  - Stefano Germano

@@ -43,7 +43,8 @@
                     "sign",
                     "argument",
                     "description"
-                ]
+                ],
+                "additionalProperties": false                
             }
         }
     },

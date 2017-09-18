@@ -12,7 +12,37 @@
         "syntax-highlighter": {
             "title": "Syntax highlighter URL.",
             "description": "This property indicates the syntax highlighter URL corresponding to this language.",
-            "type": "string",
+            "type": "object",
+            "properties": {
+                "protocol": {
+                    "title": "Protocol name.",
+                    "description": "This property indicates the protocol name to use for the connection.",
+                    "enum": [ "ws", "http" ]
+                },
+                "url": {
+                    "title": "Syntax-Highlighter URL.",
+                    "description": "This property indicates the syntax-highlighter url.",
+                    "type": "string",
+                    "oneOf": [
+                        { "format": "hostname" },
+                        { "format": "ipv4" },
+                        { "format": "ipv6" }                
+                    ]
+                },
+                "port": {
+                    "title": "Connection port number.",
+                    "description": "This property indicates the port number.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 65535
+                }
+            },
+            "required": [
+                "protocol",
+                "url",
+                "port"
+            ],
+            "additionalProperties": false,
             "oneOf": [
                 { "format": "hostname" },
                 { "format": "ipv4" },

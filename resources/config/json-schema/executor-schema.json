@@ -9,11 +9,15 @@
             "description": "This property indicates the protocol name to use for a connection with this Executor.",
             "enum": [ "ws", "http" ]
         },
-        //TODO insert the url's format, in this case it could be better join "protocol", "url" and "port" properties
         "url": {
             "title": "Executor URL.",
             "description": "This property indicates the executor url to connect with it.",
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+                { "format": "hostname" },
+                { "format": "ipv4" },
+                { "format": "ipv6" }                
+            ]
         },
         "port": {
             "title": "Connection port number.",

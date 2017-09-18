@@ -6,18 +6,18 @@
     "properties": {
         "protocol": {
             "title": "Protocol name.",
-            "description": "Missing.",
+            "description": "This property indicates the protocol name to use for a connection with this Executor.",
             "enum": [ "ws", "http" ]
         },
         //TODO insert the url's format, in this case it could be better join "protocol", "url" and "port" properties
         "url": {
             "title": "Executor URL.",
-            "description": "Missing.",
+            "description": "This property indicates the executor url to connect with it.",
             "type": "string"
         },
         "port": {
             "title": "Connection port number.",
-            "description": "Missing.",
+            "description": "This property indicates the port number open on this executor for the incoming connections.",
             "type": "number",
             "minimum": 0,
             "maximum": 65535

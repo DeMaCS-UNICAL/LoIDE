@@ -5,13 +5,13 @@
     "type": "object",
     "properties": {
         "language": {
-            "title": "Language's name.",
-            "description": "Missing.",
+            "title": "Language name.",
+            "description": "This property indicates the language's name.",
             "type": "string"
         },
-        "sintax-highlighter": {
-            "title": "Sintax highlighter URL.",
-            "description": "Missing.",
+        "syntax-highlighter": {
+            "title": "Syntax highlighter URL.",
+            "description": "This property indicates the syntax highlighter URL corresponding to this language.",
             "type": "string",
             "oneOf": [
                 { "format": "hostname" },

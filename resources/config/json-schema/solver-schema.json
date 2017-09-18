@@ -5,37 +5,37 @@
     "type": "object",
     "properties": {
         "solver": {
-            "title": "Solver's name.",
-            "description": "Missing.",
+            "title": "Solver name.",
+            "description": "This property indicates the solver name.",
             "type": "string"
         },
         "options": {
-            "title": "Solver's option",
-            "description": "Missing.",
+            "title": "Solver option",
+            "description": "This property indicates the options supported by the solver.",
             "type": "array",
             "minItems": 1,
             "items": {
                 "type": "object",
                 "properties": {
                     "name": {
-                        "title": "Option's name.",
-                        "description": "Missing.",
+                        "title": "Option name.",
+                        "description": "This property indicates the option name.",
                         "type": "string"
                     },
-                    "sign": {
-                        "title": "Option's sign.",
-                        "description": "Missing.",
-                        "type": "string"            
-                    },
                     "argument": {
-                        "title": "Argument's presence.",
-                        "description": "Missing.",
-                        "type": "boolean"            
+                        "title": "Argument.",
+                        "description": "This property indicates the argument passed to the solver.",
+                        "type": "string"
+                    },
+                    "word-argument": {
+                        "title": "Word argument.",
+                        "description": "This property indicates if this type of argument requires the second argument or it's just a word argument (flag).",
+                        "type": "boolean"
                     },
                     "description": {
-                        "title": "Options description.",
-                        "description": "Missing.",
-                        "type": "string"            
+                        "title": "Option description.",
+                        "description": "This property contains the description of the option.",
+                        "type": "string"
                     }
                 },
                 "required": [

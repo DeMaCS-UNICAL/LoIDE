@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    // TODO need to choose the proper id
+    "$id": "http://localhost:8080/resources/config/json-schema/language-schema.json",
+    "type": "object",
+    "properties": {
+        "language": {
+            "title": "Language's name.",
+            "description": "Missing.",
+            "type": "string"
+        },
+        "sintax-highlighter": {
+            "title": "Sintax highlighter URL.",
+            "description": "Missing.",
+            "type": "string",
+            "oneOf": [
+                { "format": "hostname" },
+                { "format": "ipv4" },
+                { "format": "ipv6" }                
+            ]
+        }
+    },
+    "required": [
+        "language"
+    ],
+    "additionalProperties": false
+}

@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    //TODO need to choose the proper id
+    "$id": "http://localhost:8080/resources/config/json-schema/executor-schema.json",
+    "type": "object",
+    "properties": {
+        "protocol": {
+            "title": "Protocol name.",
+            "description": "Missing.",
+            "enum": [ "ws", "http" ]
+        },
+        //TODO insert the url's format, in this case it could be better join "protocol", "url" and "port" properties
+        "url": {
+            "title": "Executor URL.",
+            "description": "Missing.",
+            "type": "string"
+        },
+        "port": {
+            "title": "Connection port number.",
+            "description": "Missing.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 65535
+        }
+    },
+    "required": [
+        "protocol",
+        "url",
+        "port"
+    ],
+    "additionalProperties": false
+}

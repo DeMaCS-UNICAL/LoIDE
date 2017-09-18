@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    // TODO need to choose the proper id
+    "$id": "http://localhost:8080/resources/config/json-schema/app-config-schema.json",
+    "type": "object",
+    "properties": {
+        "port": {
+            "title": "Connection port of this WebApplication.",
+            "description": "Missing.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 65535
+        }
+    },
+    "required": [
+        "port"
+    ]
+}

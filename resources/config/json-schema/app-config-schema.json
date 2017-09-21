@@ -5,8 +5,8 @@
     "type": "object",
     "properties": {
         "port": {
-            "title": "Connection port of this WebApplication.",
-            "description": "Missing.",
+            "title": "Connection port of the LoIDE Web Application.",
+            "description": "This property specifies the port to use for the LoIDE Web Application.",
             "type": "number",
             "minimum": 0,
             "maximum": 65535
@@ -14,5 +14,6 @@
     },
     "required": [
         "port"
-    ]
+    ],
+    "additionalProperties": false    
 }

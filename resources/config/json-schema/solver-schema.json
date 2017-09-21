@@ -9,6 +9,11 @@
             "description": "This property indicates the solver name.",
             "type": "string"
         },
+        "version": {
+            "title": "Solver version",
+            "description": "This property indicates the solver version.",
+            "type": "string"
+        },
         "options": {
             "title": "Solver option",
             "description": "This property indicates the options supported by the solver.",
@@ -49,7 +54,8 @@
         }
     },
     "required": [
-        "solver"
+        "solver",
+        "version"
     ],
     "additionalProperties": false
 }

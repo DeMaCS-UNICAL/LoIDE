@@ -9,6 +9,11 @@
             "description": "This property indicates the language's name.",
             "type": "string"
         },
+        "version": {
+            "title": "Language version.",
+            "description": "This property indicates the language version.",
+            "type": "string"
+        },
         "syntax-highlighter": {
             "title": "Syntax highlighter URL.",
             "description": "This property indicates the syntax highlighter URL corresponding to this language.",
@@ -51,7 +56,8 @@
         }
     },
     "required": [
-        "language"
+        "language",
+        "version"
     ],
     "additionalProperties": false
 }

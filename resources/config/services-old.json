@@ -1,0 +1,63 @@
+{
+	"services": [
+		{
+			"language": "asp",
+			"sintax-highlighter": "http://localhost:8080/resources/js/sintax-highlighter/asp-example.js",
+			"engines": [
+				{
+					"name": "clingo",
+					"host": "ws://localhost:8080/ASPServerExecutor/home",
+					"executor": {
+						"protocol": "ws",
+						"url": "localhost/ASPServerExecutor/home",
+						"port": "8080"
+					},
+					"options" : [
+						{
+							"name": "Free choise",
+							"sign": "",
+							"argument": true,
+							"description": "Missing description"
+						}
+					]
+				}, {
+					"name": "dlv",
+					"host": "ws://localhost:8080/ASPServerExecutor/home",
+					"executor": {
+						"protocol": "ws",
+						"url": "localhost/ASPServerExecutor/home",
+						"port": "8080"
+					},
+					"options": [
+						{
+							"name": "Free choise",
+							"sign": "",
+							"argument": true,
+							"description": "Missing description"
+						}, {
+							"name": "Filter",
+							"sign": "-filter=",
+							"argument": true,
+							"description": "Missing description"
+						}, {
+							"name": "NoFacts",
+							"sign": "-nofacts",
+							"argument": false,
+							"description": "Missing description"
+						}, {
+							"name": "Silent",
+							"sign": "-silent",
+							"argument": false,
+							"description": "Missing description"
+						}, {
+							"name": "Query",
+							"sign": "-FC",
+							"argument": false,
+							"description": "Missing description"
+						}
+					]
+				}
+			]
+		}
+	]
+}

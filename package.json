@@ -27,6 +27,7 @@
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE/issues"
   },
   "dependencies": {
+    "ajv": "^5.2.2",
     "express": "~4.14.0",
     "properties-reader": "0.0.15",
     "pug": "^2.0.0-rc.2",

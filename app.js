@@ -10,8 +10,9 @@ var webSocket = require('websocket').w3cwebsocket;
 var config = require('./resources/config/app-config.json');
 var port = config.port;
 
-var services = require('./resources/config/services.json');
-var ws_servers = services.servers;
+// TODO "services-old.json" had to be replaced by "services.json"
+var services = require('./resources/config/services-old.json');
+var ws_servers = services.services;
 
 var pckg = require('./package.json');
 

@@ -16,6 +16,10 @@ var ws_servers = services.services;
 
 var pckg = require('./package.json');
 
+// This funcion validates the JSON configuration files
+var Ajv = require('ajv');
+validateConfigurationFiles();
+
 app.use(express.static('resources'));
 app.set('views', './resources');
 app.set('view engine', 'pug');
@@ -34,7 +38,7 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
         var client = new webSocket(host); // Connect to the engine
         console.log(host + " path"); // debug string
         console.log(data + " from gui"); // debug string
-        
+
         client.onopen = function () { // Opens the connection and send data
             client.send(data);
             console.log(data + " from gui"); // debug string
@@ -73,4 +77,32 @@ function getExcecutor(data) {
       }
     }
   }
+}
+
+function validateConfigurationFiles() {
+    // TODO add all the schemas and manage the errors
+    // Validating services.json
+    var services_schema = require('./resources/config/json-schema/services-schema.json');
+    var language_schema = require('./resources/config/json-schema/language-schema.json');
+    var solver_schema = require('./resources/config/json-schema/solver-schema.json');
+    var executor_schema = require('./resources/config/json-schema/executor-schema.json');
+
+    var ajv_services = new Ajv();
+    ajv_services.addSchema([language_schema, solver_schema, executor_schema]);
+    var validate_services = ajv_services.compile(services_schema);
+    var valid_services = validate_services(require('./resources/config/services.json'));
+    if (!valid_services)
+        console.log(validate_services.errors);
+    else
+        console.log('Validated: services.json')
+
+    // Validating app-config.json
+    var app_config_schema = require('./resources/config/json-schema/app-config-schema.json');
+    var ajv_app_config = new Ajv();
+    var validate_app_config = ajv_app_config.compile(app_config_schema);
+    var valid_app_config = validate_app_config(require('./resources/config/app-config.json'));
+    if(!valid_app_config)
+        console.log(validate_app_config.errors);
+    else
+        console.log('Validated: app-config.json')
 }

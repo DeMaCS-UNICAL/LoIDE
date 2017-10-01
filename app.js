@@ -11,8 +11,7 @@ var config = require('./resources/config/app-config.json');
 var port = config.port;
 
 // TODO "services-old.json" had to be replaced by "services.json"
-var services = require('./resources/config/services-old.json');
-var ws_servers = services.services;
+var services = require('./resources/config/services.json').services;
 
 var pckg = require('./package.json');
 
@@ -25,7 +24,7 @@ app.set('views', './resources');
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-    res.render('index', {"executors": ws_servers});
+    res.render('index', {"services": services});
 })
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
@@ -34,7 +33,7 @@ app.post('/version', function (req, res) { // send the version (and take it in p
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
-        var host = getExcecutor(data).host; //The function return the address for a particular language and engine, if known
+        var host = getExcecutorURL(data); // The function return the address for a particular language and engine, if known
         var client = new webSocket(host); // Connect to the engine
         console.log(host + " path"); // debug string
         console.log(data + " from gui"); // debug string
@@ -65,22 +64,25 @@ server.listen(port, function () {
     console.log('Version: ' + pckg.version);
 });
 
-function getExcecutor(data) {
-  data = JSON.parse(data);
-  for(i in ws_servers) {
-    if(ws_servers[i].language === data.language) {
-      var engines = ws_servers[i].engines;
-      for(j in engines) {
-        if(engines[j].name === data.engine) {
-          return engines[j];
+function getExcecutorURL(data) {
+    data = JSON.parse(data);
+    for(i in services) {
+        if(services[i].language === data.language) {
+            var solvers = services[i].solvers;
+            for(j in solvers) {
+                if(solvers[j].solver === data.engine) {
+                    // TODO let the user choose the executor. atm this is a missing data
+                    // by default the first executor will be chosen
+                    var executor = solver[j].executors[0];
+                    return executor.protocol + '://' + executor.url + ':' + executor.port + executor.path;
+                }
+            }
         }
-      }
     }
-  }
 }
 
+// TODO Manage the errors
 function validateConfigurationFiles() {
-    // TODO add all the schemas and manage the errors
     // Validating services.json
     var services_schema = require('./resources/config/json-schema/services-schema.json');
     var language_schema = require('./resources/config/json-schema/language-schema.json');

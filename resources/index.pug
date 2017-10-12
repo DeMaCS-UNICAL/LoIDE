@@ -69,38 +69,39 @@
 				<div class="option-solver">
 					<div class="hidden">
 						<label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
+						<!-- Languages -->
 						<select name="language" id="inputLanguage" class="form-control">
-							<!-- Languages -->
-							each executor in executors
-								option(value=executor.language, selected=executor.default) #{executor.language}
+							//- Sets the languages
+							- var firstLanguage = services[0].language
+							each language in services
+								- var selectedLanguage = (language.language === firstLanguage)
+								option(value=language.language, selected=selectedLanguage) #{language.language}
 						</select>
 						<label for="inputEngine" class="col-sm-12 col-xs-12 text-center">Solver</label>
+						<!-- Engines -->
 						<select name="engine" id="inputEngine" class="form-control">
-							<!-- Engines -->
-							<!-- These divs contains all engines of all languages. JQuery will insert all options in the <select id="inputngine"> tag -->
-							each executor in executors
-								if executor.default
-									each engine in executor.engines
-										option(value=engine.name, selected=executor.default) #{engine.name}
+							//- FIXME choose the name for this entity: 'engine' or 'solver'
+							//- Sets the engines
+							each language in services
+								if language.language === firstLanguage
+									- firstSolver = language.solvers[0].solver
+									each solver in language.solvers
+										- var selectedSolver = (solver.solver === firstSolver)
+										option(value=solver.solver, selected=selectedSolver) #{solver.solver}
 						</select>
-						<!-- Container for engines -->
-						//- TODO per non riscrivere due volte gli inputEngine, lasciare vuoto il select all'inizio e poi caricare con gli engines del linguaggio di default al caricamento della pagina con una funzione. -->
-						each executor in executors
-							div(class='hidden', id=executor.language)
-								each engine in executor.engines
-									option(value=engine.name, selected=engine.default) #{engine.name}
 						<div class="row row-option">
 							<div class="col-md-12 col-sm-12 col-xs-12">
 								<div class="form-group">
 									<label for="option" class="col-sm-12 col-xs-12 text-center">Options</label>
 									<div class="input-group opname">
 										<select name="option[0][name]" class="form-control form-control-option">
-											<option></option>													
-											<option value="free choice">Free choice</option>
-											<option value="filter">Filter</option>
-											<option value="nofacts">Nofacts</option>
-											<option value="silent">Silent</option>
-											<option value="query">Query</option>
+											//- Sets the options
+											each language in services
+												if language.language === firstLanguage
+													each solver in language.solvers
+														if solver.solver === firstSolver
+															each option in solver.options
+																option(value=option.name, argument=option.argument, word-argument=option.word-argument, title=option.description) #{option.name}
 										</select>
 										<span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span>
 									</div>
@@ -218,7 +219,7 @@
 										<option value="ace/theme/terminal">Terminal</option>
 										<option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
 										<option value="ace/theme/monokai">Monokai</option>
-									</optgroup>	
+									</optgroup>
 								</select>
 							</div>
 						</div>
@@ -243,16 +244,6 @@
 	<script src="js/keymaster.js" type="text/javascript"></script>
 	<script src="js/bimap.js" type="text/javascript"></script>
 	<script src="js/script.js" type="text/javascript"></script>
-	//- Script di pug per caricare le opzioni degli esecutori
-	script.
-		var map = {};
-		for(executor in #{executors}) {
-			for(engine in executor.engines) {
-				map[engine.name] = new BiMap();
-				console.log(engine.name);
-			}
-		}
-		
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 (function ($) {
 
-    /** 
+    /**
      *  @description Serialize form as json object
      */
     $.fn.serializeFormJSON = function () {
@@ -76,8 +76,8 @@
 })(jQuery);
 
 /**
- * @param {json} result - description of the problem 
- * @description Open a container to display the result 
+ * @param {json} result - description of the problem
+ * @description Open a container to display the result
  */
 function operation_alert(result) {
     $("#result-auto-close-alert").focus();
@@ -90,7 +90,7 @@ function operation_alert(result) {
 
 /**
  * @global
- * @description place the id of the current shown editor 
+ * @description place the id of the current shown editor
  */
 var idEditor = 'editor1';
 /**
@@ -156,8 +156,11 @@ $(window).resize(function () {
 $(document).ready(function () {
 
     inizializeShortcuts();
+    socket = io.connect();
 
-    restoreOptions();
+    // TODO Restores the saved options from the local storage (if supported)
+    // commented because there are issues with the new implementations
+    //restoreOptions();
 
     $('#font-output').change(function (e) {
         var size = $(this).val();
@@ -202,6 +205,7 @@ $(document).ready(function () {
         $(this).tooltip('hide');
     });
 
+    // TODO its possible to substitute the ajax with the socket
     $('[data-target="#modal-about"]').on('click', function () {
         $.ajax({
             type: "POST",
@@ -256,7 +260,7 @@ $(document).ready(function () {
             addProgramsToDownload();
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
-            chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
+            chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable
             createFileToDownload(stringify);
             destroyPrograms();
         } else {
@@ -276,7 +280,7 @@ $(document).ready(function () {
 
     /**
      * @global
-     * @description id of the clicked button 'submit'  
+     * @description id of the clicked button 'submit'
      */
     var clkBtn = "";
 
@@ -311,7 +315,7 @@ $(document).ready(function () {
             $("#run-dot").attr("name", "runAuto");
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
-            var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
+            var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable
             createFileToDownload(stringify);
             $('#output-form').removeAttr('name');
             destroyPrograms();
@@ -364,16 +368,15 @@ function callSocketServer() {
     var form = $('#input').serializeFormJSON();
     destroyPrograms();
     destroyOptions();
-    var socket = io.connect();
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
         operation_alert(response);
-        console.log(response); // debug string 
+        console.log(response); // debug string
     });
     socket.on('output', function (response) {
         if (response.error === "") {
             console.log(response.model); // debug string
-            $('#output').text(response.model); // append the response in the container 
+            $('#output').text(response.model); // append the response in the container
             $('#output').css('color', 'black');
         } else {
             $('#output').text(response.error);
@@ -426,7 +429,7 @@ function createFileToDownload(text) {
 }
 /**
  * @param {Object} event - reference to the object that dispatched the event
- * @description Remove the link from the DOM 
+ * @description Remove the link from the DOM
  */
 function destroyClickedElement(event) {
     document.body.removeChild(event.target);
@@ -530,41 +533,53 @@ $(document).on('click', '#split-up', function () {
     $('#output').text(currentVal);
 });
 
+// Sets the engines and options on language change
 $(document).on('change', '#inputLanguage', function () {
 	var val = $(this).val();
-	$('#inputEngine').html($("#" + val).html());
+    socket.emit('changeLanguage', val);
+    socket.on('changeLanguageRes', function (data) {
+        $('#inputEngine').empty();
+        $('.form-control-option').empty();
+        for (var index = 0; index < data.length; index++) {
+            var element = data[index];
+            $('<option>').val(element.solver).text(element.solver).appendTo('#inputEngine');
+        }
+        $('#inputEngine').change();
+});
 });
 
-$(document).on('change', '#inputEngine', function () {	
+// Sets the options on engine change
+$(document).on('change', '#inputEngine', function () {
 	var val = $(this).val();
-	//TODO
-    if (val === "clingo") {
-        $('.form-control-option').each(function (index, element) {
-            $(this).find("option").each(function (index, element) {
-                if ($(this).val() !== "free choice" && $(this).val() !== "")
-                    $(this).remove();
-            });
-            if ($(this).val() !== 'free choice')
-                $(this).val("").change();
+    var obj = {};
+    obj["language"] = $('#inputLanguage').val();
+    obj["solver"] = $('#inputEngine').val();
+    socket.emit('changeEngine', obj);
+    socket.on('changeEngineRes', function (data) {
+        $('.form-control-option').empty();
+        for (var index = 0; index < data.length; index++) {
+            var element = data[index];
+            $('<option>').val(element.name).text(element.name)
+                .attr("argument", element.argument)
+                .attr("word-argument", element["word-argument"])
+                .attr("title", element.descption).appendTo('.form-control-option');
+        }
+        $('.form-control-option').change();
         });
-
-    } else {
-        $('.form-control-option').append('</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
-    }
 });
 
 $(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
     var val = $(this).val();
-    if (val === 'free choice' || val === 'filter') {
+    if ($(this).find("[value='" + val + "']").attr('word-argument') === 'true') {
         if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
             addInpuValue($(this).closest('.row-option'));
     } else {
         $(this).closest('.row-option').find('.option-value').remove();
         $(this).closest('.col-sm-12').append("<div class='option-value'></div>");
     }
-
 });
-$(document).on('click', '.add-tab', function () { // add new tab 
+
+$(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
 });
@@ -623,10 +638,10 @@ $(document).on('click', '.delete-tab', function () { // delete tab
 });
 
 /**
- * 
+ *
  * @param {string} searchStr - string to search
  * @param {string} str - text where search the string
- * @param {boolean} caseSensitive 
+ * @param {boolean} caseSensitive
  * @returns {array}
  * @description Returns each position of the searched string
  */
@@ -646,9 +661,9 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 }
 
 /**
- * 
- * @param {*} element - container  where to search 
- * @description Returns the start and the end position of the selected string in the output container 
+ *
+ * @param {*} element - container  where to search
+ * @description Returns the start and the end position of the selected string in the output container
  */
 function getSelectionCharOffsetsWithin(element) {
     var start = 0,
@@ -677,10 +692,11 @@ function getSelectionCharOffsetsWithin(element) {
 }
 
 /**
- * @param optionClassBtn - class of the clicked button to find the closest row 
+ * @param optionClassBtn - class of the clicked button to find the closest row
  * @description Delete from the DOM an option block and iterates all of the form options to change their 'name' for a correct json format (if present, included input value)
  */
 function delOptionDOM(optionClassBtn) {
+    // TODO BUG: sometimes when an option is deleted an additional '+' button is added to the above option.
     var row = $(optionClassBtn).closest('.row-option');
     row.empty(); //delete option container
     row.remove();
@@ -695,7 +711,7 @@ function delOptionDOM(optionClassBtn) {
 }
 
 /**
- * @param optionClassBtn - class of the clicked button to find the closest row 
+ * @param optionClassBtn - class of the clicked button to find the closest row
  * @description Clone the closest row with the option select to add it to the DOM and change 'name' with the correct value for json format
  */
 function addOptionDOM(optionClassBtn) {
@@ -715,8 +731,8 @@ function addOptionDOM(optionClassBtn) {
 
     $(inputValueClone).remove(); // remove all input value forms
 
-    clone.find($('.center-btn-value')).remove(); // remove button to add input value, if present 
-    if ($(clone).find('.form-control-option').val() === 'free choice') {
+    clone.find($('.center-btn-value')).remove(); // remove button to add input value, if present
+    if ($(clone).find('.form-control-option option:selected').attr('word-argument') === 'true') {
         addInpuValue($(clone).find('.form-control-option').closest('.row-option'));
     }
     clone.find('label').empty();
@@ -749,7 +765,7 @@ function addInpuValue(inputClass) {
 
     /**
      * replace 'name' in 'value' for correct json format
-     * @example currentName=option[0][name] , replaceName=option[0][value][] 
+     * @example currentName=option[0][name] , replaceName=option[0][value][]
      */
     var replaceName = currentName.replace('name', 'value');
     replaceName += '[]';
@@ -833,8 +849,8 @@ function destroyOptions() {
 
 /**
  * @param {Object} text - configuration in json format
- * @returns {boolean} 
- * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor   
+ * @returns {boolean}
+ * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor
  */
 function setJSONInput(config) {
     if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output')) {
@@ -911,7 +927,7 @@ function setHeightComponents(expanded) {
 
 /**
  * @param {string} str - string to check
- * @returns {boolean} 
+ * @returns {boolean}
  * @description check if a string is JSON
  */
 function isJosn(str) {
@@ -971,7 +987,7 @@ function handleDragOver(evt) {
 /**
  * @param {string} ideditor - current id editor
  * @param {string} text - value of the text editor
- * @description set up current editor 
+ * @description set up current editor
  */
 function setUpAce(ideditor, text) {
     editors[ideditor] = new ace.edit(ideditor);
@@ -1043,7 +1059,7 @@ function inizializeShortcuts() {
 
 /**
  * @returns {boolean}
- * @description add the programs into the input type hidden to serialize 
+ * @description add the programs into the input type hidden to serialize
  */
 function addMorePrograms() {
     var check = false;
@@ -1087,7 +1103,7 @@ function destroyPrograms() {
 
 /**
  * @returns {string}
- *@description generate unique id for the tabs 
+ *@description generate unique id for the tabs
  */
 function generateIDTab() {
     var id = $(".nav-tabs").children().length;
@@ -1182,8 +1198,8 @@ function restoreOptions() {
 }
 
 /**
- * @param {JSON} - obj 
- * @description deletes all the options and add them to the DOM 
+ * @param {JSON} - obj
+ * @description deletes all the options and add them to the DOM
  */
 function setOptions(obj) {
     $('.row-option').each(function (index) {

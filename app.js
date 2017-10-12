@@ -10,7 +10,6 @@ var webSocket = require('websocket').w3cwebsocket;
 var config = require('./resources/config/app-config.json');
 var port = config.port;
 
-// TODO "services-old.json" had to be replaced by "services.json"
 var services = require('./resources/config/services.json').services;
 
 var pckg = require('./package.json');
@@ -25,13 +24,38 @@ app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
     res.render('index', {"services": services});
-})
+});
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
     res.send('{"version":"' + pckg.version + '"}');
 });
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
+    // TODO manage the errors on 'data' and add more comments
+    socket.on('changeLanguage', function (data) {
+       for (var index = 0; index < services.length; index++) {
+           var language = services[index];
+           if(language.language === data) {
+               socket.emit('changeLanguageRes', language.solvers);
+               break;
+           }
+       }
+    });
+    socket.on('changeEngine', function (data) {
+        for (var i = 0; i < services.length; i++) {
+            var language = services[i];
+            if(language.language === data["language"]) {
+                for (var j = 0; j < language.solvers.length; j++) {
+                    var solver = language.solvers[j];
+                    if(solver.solver === data["solver"]) {
+                        socket.emit('changeEngineRes', solver.options);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    });
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
         var host = getExcecutorURL(data); // The function return the address for a particular language and engine, if known
         var client = new webSocket(host); // Connect to the engine
@@ -73,7 +97,7 @@ function getExcecutorURL(data) {
                 if(solvers[j].solver === data.engine) {
                     // TODO let the user choose the executor. atm this is a missing data
                     // by default the first executor will be chosen
-                    var executor = solver[j].executors[0];
+                    var executor = solvers[j].executors[0];
                     return executor.protocol + '://' + executor.url + ':' + executor.port + executor.path;
                 }
             }

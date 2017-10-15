@@ -1,6 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "$id": "services-schema.json",
+    "self": {
+        "vendor": "unical",
+        "name": "services",
+        "format": "jsonschema",
+        "version": "1-0-0"
+    },
     "properties": {
         "services": {
             "title": "Services available.",

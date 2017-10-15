@@ -1,6 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "$id": "language-schema.json",
+    "self": {
+        "vendor": "unical",
+        "name": "language",
+        "format": "jsonschema",
+        "version": "1-0-0"
+    },
     "type": "object",
     "properties": {
         "language": {
@@ -8,13 +14,8 @@
             "description": "This property indicates the language's name.",
             "type": "string"
         },
-        "version": {
-            "title": "Language version.",
-            "description": "This property indicates the language version.",
-            "type": "string"
-        },
         "syntax-highlighter": {
-            "title": "Syntax highlighter URL.",
+            "title": "Syntax-Highlighter URL.",
             "description": "This property indicates the syntax highlighter URL corresponding to this language.",
             "type": "object",
             "properties": {
@@ -25,7 +26,7 @@
                 },
                 "url": {
                     "title": "Syntax-Highlighter URL.",
-                    "description": "This property indicates the syntax-highlighter url.",
+                    "description": "This property indicates the syntax-highlighter URL.",
                     "type": "string",
                     "oneOf": [
                         { "format": "hostname" },
@@ -34,8 +35,8 @@
                     ]
                 },
                 "path": {
-                    "title": "Missing.",
-                    "description": "Missing.",
+                    "title": "Syntax-Highlighter path.",
+                    "description": "This property indicates the syntax-highlighter path relative to its URL.",
                     "type": "string",
                     "_comment": "Add the pattern to match with the 'path'."
                 },
@@ -56,8 +57,8 @@
             "additionalProperties": false
         },
         "solvers": {
-            "title": "missing",
-            "description": "missing",
+            "title": "Supporting solvers.",
+            "description": "This property indicates all supporting solvers for this language.",
             "type": "array",
             "minItems": 1,
             "items": {
@@ -67,7 +68,6 @@
     },
     "required": [
         "language",
-        "version",
         "solvers"
     ],
     "additionalProperties": false

@@ -1,6 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "$id": "solver-schema.json",
+    "self": {
+        "vendor": "unical",
+        "name": "solver",
+        "format": "jsonschema",
+        "version": "1-0-0"
+    },
     "type": "object",
     "properties": {
         "solver": {
@@ -8,14 +14,9 @@
             "description": "This property indicates the solver name.",
             "type": "string"
         },
-        "version": {
-            "title": "Solver version",
-            "description": "This property indicates the solver version.",
-            "type": "string"
-        },
         "executors": {
-            "title": "missing",
-            "description": "missing",
+            "title": "Supporting executors.",
+            "description": "This property indicates all supporting executors for this solver.",
             "type": "array",
             "minItems": 1,
             "items": {
@@ -63,7 +64,6 @@
     },
     "required": [
         "solver",
-        "version",
         "executors",
         "options"
     ],

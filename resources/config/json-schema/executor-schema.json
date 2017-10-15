@@ -1,6 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "$id": "executor-schema.json",
+    "self": {
+        "vendor": "unical",
+        "name": "executor",
+        "format": "jsonschema",
+        "version": "1-0-0"
+    },
     "type": "object",
     "properties": {
         "protocol": {
@@ -10,7 +16,7 @@
         },
         "url": {
             "title": "Executor URL.",
-            "description": "This property indicates the executor url to connect with it.",
+            "description": "This property indicates the executor URL to connect with it.",
             "type": "string",
             "oneOf": [
                 { "format": "hostname" },
@@ -19,8 +25,8 @@
             ]
         },
         "path": {
-            "title": "Missing.",
-            "description": "Missing.",
+            "title": "Executor path.",
+            "description": "This property indicates the executor path relative to its URL.",
             "type": "string",
             "_comment": "Add the pattern to match with the 'path'."
         },

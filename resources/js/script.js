@@ -154,7 +154,6 @@ $(window).resize(function () {
 });
 
 $(document).ready(function () {
-
     inizializeShortcuts();
     socket = io.connect();
 
@@ -236,7 +235,6 @@ $(document).ready(function () {
             }
         },
         south__minSize: 125
-
     });
 
     if (window.innerWidth > 450) {
@@ -286,7 +284,6 @@ $(document).ready(function () {
 
     $('button[type="submit"]').click(function (evt) {
         clkBtn = evt.target.id;
-
     });
 
     $('#input').submit(function (e) {
@@ -342,17 +339,12 @@ $(document).ready(function () {
             });
             $("#run-dot").removeAttr("name");
         }
-
     });
 
     $("#btn-option").click(function () {
-
         $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
-
         $('.option-solver > div').toggleClass("hidden show"); // add class to show option components
-
     });
-
 });
 
 /**
@@ -396,7 +388,6 @@ function intervalRun() {
 
 function createFileToDownload(text) {
     var textFileAsBlob = new Blob([text], {
-
         type: 'application/json'
     });
     /**
@@ -511,29 +502,29 @@ $(document).on('click', '#split-up', function () {
     $('#output').text(currentVal);
 });
 
-// Sets the engines and options on language change
+// Sets the solvers and options on language change
 $(document).on('change', '#inputLanguage', function () {
 	var val = $(this).val();
     socket.emit('changeLanguage', val);
     socket.on('changeLanguageRes', function (data) {
-        $('#inputEngine').empty();
+        $('#inputSolver').empty();
         $('.form-control-option').empty();
         for (var index = 0; index < data.length; index++) {
             var element = data[index];
-            $('<option>').val(element.solver).text(element.solver).appendTo('#inputEngine');
+            $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
         }
-        $('#inputEngine').change();
+        $('#inputSolver').change();
 });
 });
 
-// Sets the options on engine change
-$(document).on('change', '#inputEngine', function () {
+// Sets the options on solver change
+$(document).on('change', '#inputSolver', function () {
 	var val = $(this).val();
     var obj = {};
     obj["language"] = $('#inputLanguage').val();
-    obj["solver"] = $('#inputEngine').val();
-    socket.emit('changeEngine', obj);
-    socket.on('changeEngineRes', function (data) {
+    obj["solver"] = $('#inputSolver').val();
+    socket.emit('changeSolver', obj);
+    socket.on('changeSolverRes', function (data) {
         $('.form-control-option').empty();
         for (var index = 0; index < data.length; index++) {
             var element = data[index];
@@ -683,7 +674,6 @@ function delOptionDOM(optionClassBtn) {
 
         $(this).closest('.row-option').find('.form-control-value').each(function (index2) {
             $(this).attr('name', 'option[' + index + '][value][]');
-
         });
     });
 }
@@ -700,7 +690,6 @@ function addOptionDOM(optionClassBtn) {
     var cloneOpname = $(clone).find('.opname');
     if (lenghtClass > 0) {
         $(cloneOpname).find('.btn-del-option').remove();
-
         $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>'); //append button delete after first option block
     }
     lenghtClass -= 1;
@@ -714,7 +703,6 @@ function addOptionDOM(optionClassBtn) {
         addInpuValue($(clone).find('.form-control-option').closest('.row-option'));
     }
     clone.find('label').empty();
-
 }
 
 /**
@@ -763,7 +751,7 @@ function addInpuValue(inputClass) {
  * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor
  */
 function setJSONInput(config) {
-    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output')) {
+    if (config.hasOwnProperty('language') || config.hasOwnProperty('solver') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
@@ -784,7 +772,7 @@ function setJSONInput(config) {
             $("#run-dot").prop('checked', true);
         }
         $('#inputLanguage').val(config.language).change();
-        $('#inputEngine').val(config.engine).change();
+        $('#inputSolver').val(config.solver).change();
         $('#output').text(config.output);
         setOptions(config);
         return true;
@@ -803,7 +791,6 @@ function addOption(index, valueOption) {
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
-
 }
 
 /**
@@ -831,7 +818,6 @@ function setHeightComponents(expanded) {
         $('.ui-layout-pane-east').css('height', height - navbarHeight);
         $('.ui-layout-pane-center').css('height', height - navbarHeight);
     }
-
     editors[idEditor].resize();
 }
 
@@ -848,6 +834,7 @@ function isJosn(str) {
     }
     return true;
 }
+
 /**
  * @param {string} layout - specific layout
  * @description append textarea to a specific layout
@@ -856,7 +843,6 @@ function createTextArea(layout) {
     $("#setting-output").remove();
     $("#output").remove();
     $(layout).append('<div id="setting-output"> Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a></div><div id="output" class="output"></div>');
-
 }
 
 function handleFileSelect(evt) {
@@ -874,7 +860,6 @@ function handleFileSelect(evt) {
             if (!setJSONInput(jsontext)) {
                 editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
             }
-
         } else {
             editors[idEditor].setValue(text);
         }
@@ -964,7 +949,6 @@ function inizializeShortcuts() {
         $('#btn-upload').attr('data-original-title', '{ ctrl + u }');
         $('[for="btn-download"]').attr('data-original-title', '{ ctrl + d }');
     }
-
 }
 
 /**
@@ -986,7 +970,6 @@ function addMorePrograms() {
         $('#program').remove();
     }
     return check;
-
 }
 
 /**
@@ -1000,6 +983,7 @@ function addProgramsToDownload() {
         $('.layout').prepend("<input type='hidden' name='program[" + index + "]' id='program" + index + "' value='" + value + "' class='programs'>");
     });
 }
+
 /**
  * @description destroy all the input type created and insert the default input type
  */
@@ -1008,7 +992,6 @@ function destroyPrograms() {
         $(this).remove();
     });
     $('.layout').prepend('<input type="hidden" name="program[0]" id="program" class="programs" value="">');
-
 }
 
 /**
@@ -1094,12 +1077,11 @@ function restoreOptions() {
     var fontSizeO = localStorage.getItem("fontSizeO");
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
-
     var opt = localStorage.getItem("solverOptions");
     if (opt !== null) {
         var obj = JSON.parse(opt);
         $('#inputLanguage').val(obj.language).change();
-        $('#inputEngine').val(obj.engine).change();
+        $('#inputSolver').val(obj.solver).change();
         setOptions(obj);
         if (obj.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);

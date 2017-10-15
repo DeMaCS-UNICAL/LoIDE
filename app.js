@@ -41,14 +41,14 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
            }
        }
     });
-    socket.on('changeEngine', function (data) {
+    socket.on('changeSolver', function (data) {
         for (var i = 0; i < services.length; i++) {
             var language = services[i];
             if(language.language === data["language"]) {
                 for (var j = 0; j < language.solvers.length; j++) {
                     var solver = language.solvers[j];
                     if(solver.solver === data["solver"]) {
-                        socket.emit('changeEngineRes', solver.options);
+                        socket.emit('changeSolverRes', solver.options);
                         break;
                     }
                 }
@@ -57,8 +57,8 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
         }
     });
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
-        var host = getExcecutorURL(data); // The function return the address for a particular language and engine, if known
-        var client = new webSocket(host); // Connect to the engine
+        var host = getExcecutorURL(data); // The function return the address for a particular language and solver, if known
+        var client = new webSocket(host); // Connect to the solver
         console.log(host + " path"); // debug string
         console.log(data + " from gui"); // debug string
 
@@ -94,7 +94,7 @@ function getExcecutorURL(data) {
         if(services[i].language === data.language) {
             var solvers = services[i].solvers;
             for(j in solvers) {
-                if(solvers[j].solver === data.engine) {
+                if(solvers[j].solver === data.solver) {
                     // TODO let the user choose the executor. atm this is a missing data
                     // by default the first executor will be chosen
                     var executor = solvers[j].executors[0];

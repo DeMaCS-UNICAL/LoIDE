@@ -77,11 +77,10 @@
 								- var selectedLanguage = (language.language === firstLanguage)
 								option(value=language.language, selected=selectedLanguage) #{language.language}
 						</select>
-						<label for="inputEngine" class="col-sm-12 col-xs-12 text-center">Solver</label>
-						<!-- Engines -->
-						<select name="engine" id="inputEngine" class="form-control">
-							//- FIXME choose the name for this entity: 'engine' or 'solver'
-							//- Sets the engines
+						<label for="inputSolver" class="col-sm-12 col-xs-12 text-center">Solver</label>
+						<!-- Solvers -->
+						<select name="solver" id="inputSolver" class="form-control">
+							//- Sets the solvers
 							each language in services
 								if language.language === firstLanguage
 									- firstSolver = language.solvers[0].solver

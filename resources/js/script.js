@@ -157,9 +157,9 @@ $(document).ready(function () {
     inizializeShortcuts();
     socket = io.connect();
 
-    // TODO Restores the saved options from the local storage (if supported)
-    // commented because there are issues with the new implementations
-    //restoreOptions();
+    // Restores the saved settings from the local storage (if supported)
+    // TODO BUG: the restoring process is buggy
+    restoreOptions();
 
     $('#font-output').change(function (e) {
         var size = $(this).val();
@@ -514,7 +514,7 @@ $(document).on('change', '#inputLanguage', function () {
             $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
         }
         $('#inputSolver').change();
-});
+    });
 });
 
 // Sets the options on solver change
@@ -534,7 +534,7 @@ $(document).on('change', '#inputSolver', function () {
                 .attr("title", element.descption).appendTo('.form-control-option');
         }
         $('.form-control-option').change();
-        });
+    });
 });
 
 $(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
@@ -665,7 +665,7 @@ function getSelectionCharOffsetsWithin(element) {
  * @description Delete from the DOM an option block and iterates all of the form options to change their 'name' for a correct json format (if present, included input value)
  */
 function delOptionDOM(optionClassBtn) {
-    // TODO BUG: sometimes when an option is deleted an additional '+' button is added to the above option.
+    // TODO BUG: sometimes when an option is deleted an additional '+' button is added to the above option. Probably because at the start of the client word-argument property is setted to null
     var row = $(optionClassBtn).closest('.row-option');
     row.empty(); //delete option container
     row.remove();
@@ -1127,14 +1127,6 @@ function setOptions(obj) {
             $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>');
         }
     });
-	//TODO
-    if (obj.engine === "clingo") {
-        $('.form-control-option').find('option').each(function (index, element) {
-            if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
-                $(this).remove();
-        });
-
-    }
 }
 
 /**

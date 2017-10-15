@@ -2,11 +2,9 @@
     "services": [
         {
             "language": "ASP",
-            "version": "missing",
             "solvers": [
                 {
-                    "solver": "clingo",
-                    "version": "missing",
+                    "solver": "Clingo",
                     "executors": [
                         {
                             "protocol": "ws",
@@ -25,7 +23,6 @@
                     ]
                 }, {
                     "solver": "DLV",
-                    "version": "missing",
                     "executors":[
                         {
                             "protocol": "ws",

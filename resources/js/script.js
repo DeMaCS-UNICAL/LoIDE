@@ -289,7 +289,6 @@ $(document).ready(function () {
 
     });
 
-
     $('#input').submit(function (e) {
         e.preventDefault();
         var form;
@@ -360,14 +359,12 @@ $(document).ready(function () {
  * @description Serialize form and send it to socket server and waits for the response
  */
 function callSocketServer() {
-    configureOptions();
     if (!addMorePrograms()) {
         var text = editors[idEditor].getValue();
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
     var form = $('#input').serializeFormJSON();
     destroyPrograms();
-    destroyOptions();
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
         operation_alert(response);
@@ -758,74 +755,6 @@ function addInpuValue(inputClass) {
     }
     $(optionValue).append(clone);
     $(inputClass).closest('.center-btn-value').remove();
-}
-
-/**
- * @class
- * @classdesc Creates dlv's options
- */
- //TODO
-function OptionDLV() {
-    /**
-     * bidirectional map
-     * @type {Object}
-     * @memberof OptionDLV#
-     */
-    this.map = new BiMap();
-
-    /**
-     * Add into the object map the value of dlv's options
-     * @memberof OptionDLV#
-     */
-    this.init = function () {
-        this.map.push("filter", "-filter=");
-        this.map.push("nofacts", "-nofacts");
-        this.map.push("silent", "-silent");
-        this.map.push("query", "-FC");
-    };
-
-}
-
-/**
- * @description Based on the value 'engine', it creates a hidden option temporary with the corresponding value of the option name to set the value of the select option
- */
-//TODO
-function configureOptions() {
-    var engine = $('#inputEngine').val();
-    switch (engine) {
-        case 'dlv':
-            var optionDLV = new OptionDLV();
-            optionDLV.init();
-            $('.form-control-option').each(function (indexInArray) {
-                var currentVal = $(this).val();
-                if (currentVal !== "free choice" && currentVal.length !== 0) {
-                    var val = optionDLV.map.key(currentVal);
-                    $(this).append('<option value="' + val + '"></option>');
-                    $(this).val(val);
-                }
-            });
-            break;
-
-        default:
-            break;
-    }
-}
-
-/**
- * @description Destroy the temporary options and set the select option to the original value
- */
- //TODO
-function destroyOptions() {
-    var optionDLV = new OptionDLV();
-    optionDLV.init();
-    $('.form-control-option').each(function (indexInArray) {
-        var currentVal = $(this).val();
-        if (currentVal !== "free choice" && currentVal.length !== 0) {
-            var val = optionDLV.map.val(currentVal);
-            $(this).val(val).change();
-            $(this).find('option[value="' + currentVal + '"]').remove();
-        }
-    });
 }
 
 /**

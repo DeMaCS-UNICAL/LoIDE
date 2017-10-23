@@ -155,10 +155,9 @@ $(window).resize(function () {
 
 $(document).ready(function () {
     inizializeShortcuts();
-    socket = io.connect();
 
     // Restores the saved settings from the local storage (if supported)
-    // TODO BUG: the restoring process is buggy
+    // TODO: the restoring process is incomplete
     restoreOptions();
 
     $('#font-output').change(function (e) {
@@ -274,6 +273,42 @@ $(document).ready(function () {
             $('#output-form').removeAttr('name', 'output');
         }
         $('#choice').text("");
+    });
+
+    /**
+     * @global
+     * @description The socket to connect with the web server
+     */
+    var socket = io.connect();
+
+    socket.on('changeLanguageRes', function (data) {
+        $('#inputSolver').empty();
+        $('.form-control-option').empty();
+        for (var index = 0; index < data.length; index++) {
+            var element = data[index];
+            $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
+        }
+        $('#inputSolver').change();
+    });
+    socket.on('changeLanguageError', function () {
+        $('#inputSolver').empty();
+        $('.form-control-option').empty();
+        alert('The selected language doesn\'t exist!');
+    });
+    socket.on('changeSolverRes', function (data) {
+        $('.form-control-option').empty();
+        for (var index = 0; index < data.length; index++) {
+            var element = data[index];
+            $('<option>').val(element.name).text(element.name)
+                .attr("argument", element.argument)
+                .attr("word-argument", element["word-argument"])
+                .attr("title", element.descption).appendTo('.form-control-option');
+        }
+        $('.form-control-option').change();
+    });
+    socket.on('changeSolverError', function () {
+        $('.form-control-option').empty();
+        alert('The selected solver doesn\'t exist!');
     });
 
     /**
@@ -429,7 +464,9 @@ $(document).on('click', '.btn-add-option', function () {
 });
 
 $(document).on('click', '.btn-del-option', function () {
+    if($(this).parent().parent().parent().parent().is('.row-option:last')) {
     $(this).parent().parent().parent().parent().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
+    }
     delOptionDOM($(this));
 });
 
@@ -504,40 +541,25 @@ $(document).on('click', '#split-up', function () {
 
 // Sets the solvers and options on language change
 $(document).on('change', '#inputLanguage', function () {
-	var val = $(this).val();
-    socket.emit('changeLanguage', val);
-    socket.on('changeLanguageRes', function (data) {
-        $('#inputSolver').empty();
-        $('.form-control-option').empty();
-        for (var index = 0; index < data.length; index++) {
-            var element = data[index];
-            $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
-        }
-        $('#inputSolver').change();
-    });
+    var val = $(this).val();
+    if(val !== '') {
+        socket.emit('changeLanguage', val);
+    }
 });
 
 // Sets the options on solver change
 $(document).on('change', '#inputSolver', function () {
-	var val = $(this).val();
-    var obj = {};
-    obj["language"] = $('#inputLanguage').val();
-    obj["solver"] = $('#inputSolver').val();
-    socket.emit('changeSolver', obj);
-    socket.on('changeSolverRes', function (data) {
-        $('.form-control-option').empty();
-        for (var index = 0; index < data.length; index++) {
-            var element = data[index];
-            $('<option>').val(element.name).text(element.name)
-                .attr("argument", element.argument)
-                .attr("word-argument", element["word-argument"])
-                .attr("title", element.descption).appendTo('.form-control-option');
-        }
-        $('.form-control-option').change();
-    });
+    var val = $(this).val();
+    if(val !== '') {
+        var obj = {};
+        obj["language"] = $('#inputLanguage').val();
+        obj["solver"] = $('#inputSolver').val();
+        socket.emit('changeSolver', obj);
+    }
 });
 
-$(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
+// Add or remove the 'input type value' based on the option
+$(document).on('change', '.form-control-option', function () {
     var val = $(this).val();
     if ($(this).find("[value='" + val + "']").attr('word-argument') === 'true') {
         if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
@@ -665,7 +687,6 @@ function getSelectionCharOffsetsWithin(element) {
  * @description Delete from the DOM an option block and iterates all of the form options to change their 'name' for a correct json format (if present, included input value)
  */
 function delOptionDOM(optionClassBtn) {
-    // TODO BUG: sometimes when an option is deleted an additional '+' button is added to the above option. Probably because at the start of the client word-argument property is setted to null
     var row = $(optionClassBtn).closest('.row-option');
     row.empty(); //delete option container
     row.remove();

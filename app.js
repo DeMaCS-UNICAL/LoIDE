@@ -31,17 +31,23 @@ app.post('/version', function (req, res) { // send the version (and take it in p
 });
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
-    // TODO manage the errors on 'data' and add more comments
+    // Check the services.json for the received language and sends solvers for this
     socket.on('changeLanguage', function (data) {
-       for (var index = 0; index < services.length; index++) {
-           var language = services[index];
-           if(language.language === data) {
-               socket.emit('changeLanguageRes', language.solvers);
-               break;
+        var error = true;
+        for (var index = 0; index < services.length; index++) {
+            var language = services[index];
+            if(language.language === data) {
+                socket.emit('changeLanguageRes', language.solvers);
+                error = false;
+                break;
            }
        }
+       // Sends the error event if the received language is not found in services.json
+       if(error) socket.emit('changeLanguageError');
     });
+    // Check the services.json for the received solver and sends options for this
     socket.on('changeSolver', function (data) {
+        var error = true;
         for (var i = 0; i < services.length; i++) {
             var language = services[i];
             if(language.language === data["language"]) {
@@ -55,6 +61,8 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
                 break;
             }
         }
+        // Sends the error event if the received solver is not found in services.json
+        if(error) socket.emit('changeSolverError');
     });
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
         var host = getExcecutorURL(data); // The function return the address for a particular language and solver, if known

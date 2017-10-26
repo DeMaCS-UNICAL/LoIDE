@@ -55,6 +55,7 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
                     var solver = language.solvers[j];
                     if(solver.solver === data["solver"]) {
                         socket.emit('changeSolverRes', solver.options);
+                        error = false;
                         break;
                     }
                 }

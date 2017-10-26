@@ -277,42 +277,6 @@ $(document).ready(function () {
 
     /**
      * @global
-     * @description The socket to connect with the web server
-     */
-    var socket = io.connect();
-
-    socket.on('changeLanguageRes', function (data) {
-        $('#inputSolver').empty();
-        $('.form-control-option').empty();
-        for (var index = 0; index < data.length; index++) {
-            var element = data[index];
-            $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
-        }
-        $('#inputSolver').change();
-    });
-    socket.on('changeLanguageError', function () {
-        $('#inputSolver').empty();
-        $('.form-control-option').empty();
-        alert('The selected language doesn\'t exist!');
-    });
-    socket.on('changeSolverRes', function (data) {
-        $('.form-control-option').empty();
-        for (var index = 0; index < data.length; index++) {
-            var element = data[index];
-            $('<option>').val(element.name).text(element.name)
-                .attr("argument", element.argument)
-                .attr("word-argument", element["word-argument"])
-                .attr("title", element.descption).appendTo('.form-control-option');
-        }
-        $('.form-control-option').change();
-    });
-    socket.on('changeSolverError', function () {
-        $('.form-control-option').empty();
-        alert('The selected solver doesn\'t exist!');
-    });
-
-    /**
-     * @global
      * @description id of the clicked button 'submit'
      */
     var clkBtn = "";
@@ -392,6 +356,8 @@ function callSocketServer() {
     }
     var form = $('#input').serializeFormJSON();
     destroyPrograms();
+
+    var socket = io.connect();
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
         operation_alert(response);
@@ -543,7 +509,22 @@ $(document).on('click', '#split-up', function () {
 $(document).on('change', '#inputLanguage', function () {
     var val = $(this).val();
     if(val !== '') {
+        var socket = io.connect();
         socket.emit('changeLanguage', val);
+        socket.on('changeLanguageRes', function (data) {
+            $('#inputSolver').empty();
+            $('.form-control-option').empty();
+            for (var index = 0; index < data.length; index++) {
+                var element = data[index];
+                $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
+            }
+            $('#inputSolver').change();
+        });
+        socket.on('changeLanguageError', function () {
+            $('#inputSolver').empty();
+            $('.form-control-option').empty();
+            alert('The selected language doesn\'t exist!');
+        });
     }
 });
 
@@ -554,7 +535,23 @@ $(document).on('change', '#inputSolver', function () {
         var obj = {};
         obj["language"] = $('#inputLanguage').val();
         obj["solver"] = $('#inputSolver').val();
+        var socket = io.connect();
         socket.emit('changeSolver', obj);
+        socket.on('changeSolverRes', function (data) {
+            $('.form-control-option').empty();
+            for (var index = 0; index < data.length; index++) {
+                var element = data[index];
+                $('<option>').val(element.name).text(element.name)
+                    .attr("argument", element.argument)
+                    .attr("word-argument", element["word-argument"])
+                    .attr("title", element.descption).appendTo('.form-control-option');
+            }
+            $('.form-control-option').change();
+        });
+        socket.on('changeSolverError', function () {
+            $('.form-control-option').empty();
+            alert('The selected solver doesn\'t exist!');
+        });
     }
 });
 

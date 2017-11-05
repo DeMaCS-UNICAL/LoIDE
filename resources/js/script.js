@@ -431,7 +431,7 @@ $(document).on('click', '.btn-add-option', function () {
 
 $(document).on('click', '.btn-del-option', function () {
     if($(this).parent().parent().parent().parent().is('.row-option:last')) {
-    $(this).parent().parent().parent().parent().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
+        $(this).parent().parent().parent().parent().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
     }
     delOptionDOM($(this));
 });

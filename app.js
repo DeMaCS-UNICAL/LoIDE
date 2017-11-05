@@ -10,7 +10,7 @@ var webSocket = require('websocket').w3cwebsocket;
 var config = require('./resources/config/app-config.json');
 var port = config.port;
 
-var services = require('./resources/config/services.json').services;
+var services_config = require('./resources/config/services.json');
 
 var pckg = require('./package.json');
 
@@ -23,7 +23,7 @@ app.set('views', './resources');
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-    res.render('index', {"services": services});
+    res.render('index', {"services": services_config.services});
 });
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
@@ -34,8 +34,8 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     // Check the services.json for the received language and sends solvers for this
     socket.on('changeLanguage', function (data) {
         var error = true;
-        for (var index = 0; index < services.length; index++) {
-            var language = services[index];
+        for (var index = 0; index < services_config.services.length; index++) {
+            var language = services_config.services[index];
             if(language.language === data) {
                 socket.emit('changeLanguageRes', language.solvers);
                 error = false;
@@ -48,8 +48,8 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     // Check the services.json for the received solver and sends options for this
     socket.on('changeSolver', function (data) {
         var error = true;
-        for (var i = 0; i < services.length; i++) {
-            var language = services[i];
+        for (var i = 0; i < services_config.services.length; i++) {
+            var language = services_config.services[i];
             if(language.language === data["language"]) {
                 for (var j = 0; j < language.solvers.length; j++) {
                     var solver = language.solvers[j];
@@ -99,9 +99,9 @@ server.listen(port, function () {
 
 function getExcecutorURL(data) {
     data = JSON.parse(data);
-    for(i in services) {
-        if(services[i].language === data.language) {
-            var solvers = services[i].solvers;
+    for(i in services_config.services) {
+        if(services_config.services[i].language === data.language) {
+            var solvers = services_config.services[i].solvers;
             for(j in solvers) {
                 if(solvers[j].solver === data.solver) {
                     // TODO let the user choose the executor. atm this is a missing data
@@ -114,30 +114,89 @@ function getExcecutorURL(data) {
     }
 }
 
-// TODO Manage the errors
 function validateConfigurationFiles() {
+    var jpointer = require('json-pointer');
+    var services_validation = false;
+    var app_config_validation = false;
+    var abort_application = false;
+
+    var error_print = true;
+
     // Validating services.json
     var services_schema = require('./resources/config/json-schema/services-schema.json');
     var language_schema = require('./resources/config/json-schema/language-schema.json');
     var solver_schema = require('./resources/config/json-schema/solver-schema.json');
     var executor_schema = require('./resources/config/json-schema/executor-schema.json');
 
-    var ajv_services = new Ajv();
+    var ajv_services = new Ajv({'allErrors': true, 'jsonPointers': true});
     ajv_services.addSchema([language_schema, solver_schema, executor_schema]);
     var validate_services = ajv_services.compile(services_schema);
-    var valid_services = validate_services(require('./resources/config/services.json'));
-    if (!valid_services)
-        console.log(validate_services.errors);
-    else
-        console.log('Validated: services.json')
+    while(!services_validation) {
+        var valid_services = validate_services(require('./resources/config/services.json'));
+        // If some there is some error, the nearest parent object in the services.json file, containing this error, is deleted
+        if (!valid_services) {
+            // Prints the errors only the first time
+            if(error_print) {
+                console.log(validate_services.errors);
+                error_print = false;
+            }
 
+            for(index in validate_services.errors) {
+                var path = validate_services.errors[index].dataPath;
+                if(path === '') {
+                    // 'This' case happen when there is a problem in to the root of the services.json file (eg. when the file is empty)
+                    // ..this condition will abort the entire application
+                    console.log('Fatal error: services.json is not setted up properly!');
+                    abort_application = true;
+                    services_validation = true;
+                } else {
+                    jpointer.remove(services_config, path);
+                }
+            }
+        }
+        else {
+            console.log('Validated: services.json');
+            services_validation = true;
+        }
+    }
+
+    error_print = true;
     // Validating app-config.json
     var app_config_schema = require('./resources/config/json-schema/app-config-schema.json');
-    var ajv_app_config = new Ajv();
+    var ajv_app_config = new Ajv({'allErrors': true, 'jsonPointers': true});
     var validate_app_config = ajv_app_config.compile(app_config_schema);
-    var valid_app_config = validate_app_config(require('./resources/config/app-config.json'));
-    if(!valid_app_config)
-        console.log(validate_app_config.errors);
-    else
-        console.log('Validated: app-config.json')
+
+    while(!app_config_validation) {
+        var valid_app_config = validate_app_config(require('./resources/config/app-config.json'));
+        // If some there is some error, the nearest parent object in the app-config.json file, containing this error, is deleted
+        if (!valid_app_config) {
+            // Prints the errors only the first time
+            if(error_print) {
+                console.log(validate_app_config.errors);
+                error_print = false;
+            }
+
+            for(index in validate_app_config.errors) {
+                var path = validate_app_config.errors[index].dataPath;
+                if(path === '') {
+                    // 'This' case happen when there is a problem in to the root of the app-config.json file (eg. when the file is empty)
+                    // ..this condition will abort the entire application
+                    console.log('Fatal error: app-config.json is not setted up properly!');
+                    abort_application = true;
+                    app_config_validation = true;
+                } else {
+                    jpointer.remove(config, path);
+                }
+            }
+        }
+        else {
+            console.log('Validated: app-config.json');
+            app_config_validation = true;
+        }
+    }
+
+    if(abort_application) {
+        console.log('Fatal error: configuration files are not setted up properly!');
+        process.exit(1);
+    }
 }

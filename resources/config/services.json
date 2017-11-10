@@ -17,7 +17,7 @@
                         {
 							"name": "Free choise",
 							"argument": "",
-							"word-argument": true,
+							"word_argument": true,
 							"description": "Missing description"
 						}
                     ]
@@ -35,27 +35,27 @@
                         {
 							"name": "Free choise",
 							"argument": "",
-							"word-argument": true,
+							"word_argument": true,
 							"description": "Missing description"
 						}, {
 							"name": "Filter",
 							"argument": "-filter=",
-							"word-argument": true,
+							"word_argument": true,
 							"description": "Missing description"
 						}, {
 							"name": "No Facts",
 							"argument": "-nofacts",
-							"word-argument": false,
+							"word_argument": false,
 							"description": "Missing description"
 						}, {
 							"name": "Silent",
 							"argument": "-silent",
-							"word-argument": false,
+							"word_argument": false,
 							"description": "Missing description"
 						}, {
 							"name": "Query",
 							"argument": "-FC",
-							"word-argument": false,
+							"word_argument": false,
 							"description": "Missing description"
 						}
                     ]

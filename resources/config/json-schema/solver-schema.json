@@ -41,7 +41,7 @@
                         "description": "This property indicates the argument passed to the solver.",
                         "type": "string"
                     },
-                    "word-argument": {
+                    "word_argument": {
                         "title": "Word argument.",
                         "description": "This property indicates if this type of argument requires the second argument or it's just a word argument (flag).",
                         "type": "boolean"
@@ -55,7 +55,7 @@
                 "required": [
                     "name",
                     "argument",
-                    "word-argument",
+                    "word_argument",
                     "description"
                 ],
                 "additionalProperties": false

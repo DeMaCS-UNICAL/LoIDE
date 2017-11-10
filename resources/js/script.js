@@ -444,7 +444,7 @@ $(document).on('click', '.btn-del-value', function () {
 });
 
 $(document).on('click', '.btn-add', function () {
-    addInpuValue($(this));
+    addInputValue($(this));
     $(this).parent().empty();
 });
 
@@ -543,7 +543,7 @@ $(document).on('change', '#inputSolver', function () {
                 var element = data[index];
                 $('<option>').val(element.name).text(element.name)
                     .attr("argument", element.argument)
-                    .attr("word-argument", element["word-argument"])
+                    .attr("word_argument", element["word_argument"])
                     .attr("title", element.descption).appendTo('.form-control-option');
             }
             $('.form-control-option').change();
@@ -558,9 +558,9 @@ $(document).on('change', '#inputSolver', function () {
 // Add or remove the 'input type value' based on the option
 $(document).on('change', '.form-control-option', function () {
     var val = $(this).val();
-    if ($(this).find("[value='" + val + "']").attr('word-argument') === 'true') {
+    if ($(this).find("[value='" + val + "']").attr('word_argument') === 'true') {
         if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
-            addInpuValue($(this).closest('.row-option'));
+            addInputValue($(this).closest('.row-option'));
     } else {
         $(this).closest('.row-option').find('.option-value').remove();
         $(this).closest('.col-sm-12').append("<div class='option-value'></div>");
@@ -717,8 +717,8 @@ function addOptionDOM(optionClassBtn) {
     $(inputValueClone).remove(); // remove all input value forms
 
     clone.find($('.center-btn-value')).remove(); // remove button to add input value, if present
-    if ($(clone).find('.form-control-option option:selected').attr('word-argument') === 'true') {
-        addInpuValue($(clone).find('.form-control-option').closest('.row-option'));
+    if ($(clone).find('.form-control-option option:selected').attr('word_argument') === 'true') {
+        addInputValue($(clone).find('.form-control-option').closest('.row-option'));
     }
     clone.find('label').empty();
 }
@@ -741,7 +741,7 @@ function deleteInputValue(inputClass) {
  * @param inputClass - class of the clicked button to find the closest row
  * @description Add the input type to a correct class parent
  */
-function addInpuValue(inputClass) {
+function addInputValue(inputClass) {
     var optionValue = $(inputClass).find('.option-value');
     if (optionValue.size() === 0)
         optionValue = $(inputClass).closest('.option-value');
@@ -1130,14 +1130,13 @@ function setOptions(obj) {
             currentClass = $('.option-value').eq(indexInArray);
             $(item.value).each(function (indexInArray, itemValue) {
                 if (indexInArray !== 0)
-                    addInpuValue(currentClass);
+                    addInputValue(currentClass);
                 $('.input-group-value').last().find('.form-control-value').val(itemValue);
                 if (indexInArray < item.value.length - 1) { //deletes all 'btn-add' except the last in the input type value
                     $('.input-group-value').last().find('.btn-add').parent().empty();
                 }
             });
         }
-
     });
     $('.row-option').each(function (index) { // add delete button after first option
         if (index > 0) {

@@ -100,12 +100,18 @@
 													each solver in language.solvers
 														if solver.solver === firstSolver
 															each option in solver.options
-																option(value=option.name, argument=option.argument, word-argument=option.word-argument, title=option.description) #{option.name}
+																- word_argument = option.word_argument
+																option(value=option.name, argument=option.argument, word_argument=option.word_argument.toString(), title=option.description) #{option.name}
 										</select>
 										<span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span>
 									</div>
 								</div>
 								<div class="option-value">
+									if word_argument
+										div(class='form-group input-group input-group-value')
+											input(type='text' class='form-control form-control-value' name='option[0][value][]')
+											span(class='input-group-btn')
+												button(type='button' class='btn btn-default btn-add') +
 								</div>
 							</div>
 						</div>

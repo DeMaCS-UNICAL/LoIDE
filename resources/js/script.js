@@ -519,14 +519,14 @@ $(document).on('change', '#inputLanguage', function (event, languageChanged) {
                 $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
             }
             $('#inputSolver').change();
-            // TODO COMMENT
+            // Used during option loading from file or local storage
             if(languageChanged)
                 languageChanged(true);
         });
         socket.on('changeLanguageError', function () {
             $('#inputSolver').empty();
             $('.form-control-option').empty();
-            // TODO COMMENT
+            // Used during option loading from file or local storage
             if(languageChanged)
                 languageChanged(false);
             alert('The selected language doesn\'t exist!');
@@ -553,13 +553,13 @@ $(document).on('change', '#inputSolver', function (event, solverChange) {
                     .attr("title", element.descption).appendTo('.form-control-option');
             }
             $('.form-control-option').change();
-            // TODO COMMENT
+            // Used during option loading from file or local storage
             if(solverChange)
                 solverChange(true);
         });
         socket.on('changeSolverError', function () {
             $('.form-control-option').empty();
-            // TODO COMMENT
+            // Used during option loading from file or local storage
             if(solverChange)
                 solverChange(true);
             alert('The selected solver doesn\'t exist!');
@@ -801,7 +801,7 @@ function setJSONInput(config) {
         if (config.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);
         }
-        // TODO DEBUG: changed like loading from local storage, need debug
+        // TODO DEBUG: changed like loading from local storage. Not debugged yet.
         restoreOptions(config);
         $('#output').text(config.output);
         return true;
@@ -811,11 +811,11 @@ function setJSONInput(config) {
 }
 
 /**
+ * @param {Object} optionTemplate - JQuery object
  * @param {number} index - Item number Created
  * @param {string} valueOption - option's value
- * @description creates a option's form and append it to the DOM with the corresponding value
+ * @description Append the option's form, passed in input like a template, to the DOM with the corresponding value
  */
-// TODO COMMENT: add comment for the added param
 function addOption(optionTemplate, index, valueOption) {
     var clone = $(optionTemplate).clone();
     $(clone).find('select').attr('id', 'op' + index);
@@ -1119,21 +1119,23 @@ function restoreOptionsFromLocalStorage() {
     }
 }
 
-// TODO COMMENT: this function with the documentation headers
+/**
+ * @param {JSON} obj - Object containing the options settings
+ */
 function restoreOptions(obj) {
     $('#inputLanguage option').each(function (index, language) {
         if($(language).val() === obj.language) {
             var deferLanguage = $.Deferred();
+            // Promise serves to wait all new solvers are loaded from the server
             var promiseLanguage = deferLanguage.promise();
-            // TODO COMMENT: this function with the documentation headers
             var languageChanged = (success) => { success ? deferLanguage.resolve() : deferLanguage.reject(); };
             $('#inputLanguage option[value="' + obj.language + '"]').prop('selected', true).trigger('change', languageChanged);
             $.when(promiseLanguage).done(function () {
                 $('#inputSolver option').each(function (index, solver) {
                     if($(solver).val() === obj.solver) {
                         var deferSolver = $.Deferred();
+                        // Promise serves to wait all new options are loaded from the server
                         var promiseSolver = deferSolver.promise();
-                        // TODO COMMENT: this function with the documentation headers
                         var solverChanged = (success) => { success ? deferSolver.resolve() : deferSolver.reject(); };
                         $('#inputSolver option[value="' + obj.solver + '"]').prop('selected', true).trigger('change', solverChanged);
                         $.when(promiseSolver).done(function () {
@@ -1147,13 +1149,15 @@ function restoreOptions(obj) {
 }
 
 /**
- * @param {JSON} - obj
+ * @param {JSON} obj - Object containing the options settings
  * @description deletes all the options and add them to the DOM
  */
-// TODO BUG: if "$('.row-option').eq(0)" did not exist there might be a problem
 function setOptions(obj) {
+    // TODO BUG: if "$('.row-option').eq(0)" did not exist there might be a problem
+    // Clone the first 'option' to use it as the template
     var optionTemplate = $('.row-option').eq(0).clone();
     $(obj.option).each(function (index, elem) {
+        // Check that 'obj' contains at least one valid and well formed option to load
         if ($(optionTemplate).contents().find('option[value="' + elem.name + '"]').length > 0) {
             setOptionsFromTemplate();
             return false;

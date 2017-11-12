@@ -158,7 +158,7 @@ $(document).ready(function () {
 
     // Restores the saved settings from the local storage (if supported)
     // TODO: the restoring process is incomplete
-    restoreOptions();
+    restoreOptionsFromLocalStorage();
 
     $('#font-output').change(function (e) {
         var size = $(this).val();
@@ -203,7 +203,7 @@ $(document).ready(function () {
         $(this).tooltip('hide');
     });
 
-    // TODO its possible to substitute the ajax with the socket
+    // TODO: its possible to substitute the ajax with the socket
     $('[data-target="#modal-about"]').on('click', function () {
         $.ajax({
             type: "POST",
@@ -506,7 +506,7 @@ $(document).on('click', '#split-up', function () {
 });
 
 // Sets the solvers and options on language change
-$(document).on('change', '#inputLanguage', function () {
+$(document).on('change', '#inputLanguage', function (event, languageChanged) {
     var val = $(this).val();
     if(val !== '') {
         var socket = io.connect();
@@ -519,17 +519,23 @@ $(document).on('change', '#inputLanguage', function () {
                 $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
             }
             $('#inputSolver').change();
+            // TODO COMMENT
+            if(languageChanged)
+                languageChanged(true);
         });
         socket.on('changeLanguageError', function () {
             $('#inputSolver').empty();
             $('.form-control-option').empty();
+            // TODO COMMENT
+            if(languageChanged)
+                languageChanged(false);
             alert('The selected language doesn\'t exist!');
         });
     }
 });
 
 // Sets the options on solver change
-$(document).on('change', '#inputSolver', function () {
+$(document).on('change', '#inputSolver', function (event, solverChange) {
     var val = $(this).val();
     if(val !== '') {
         var obj = {};
@@ -547,9 +553,15 @@ $(document).on('change', '#inputSolver', function () {
                     .attr("title", element.descption).appendTo('.form-control-option');
             }
             $('.form-control-option').change();
+            // TODO COMMENT
+            if(solverChange)
+                solverChange(true);
         });
         socket.on('changeSolverError', function () {
             $('.form-control-option').empty();
+            // TODO COMMENT
+            if(solverChange)
+                solverChange(true);
             alert('The selected solver doesn\'t exist!');
         });
     }
@@ -789,10 +801,9 @@ function setJSONInput(config) {
         if (config.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);
         }
-        $('#inputLanguage').val(config.language).change();
-        $('#inputSolver').val(config.solver).change();
+        // TODO DEBUG: changed like loading from local storage, need debug
+        restoreOptions(config);
         $('#output').text(config.output);
-        setOptions(config);
         return true;
     } else {
         return false;
@@ -804,8 +815,11 @@ function setJSONInput(config) {
  * @param {string} valueOption - option's value
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
-function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value=""></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"></div></div></div>';
+// TODO COMMENT: add comment for the added param
+function addOption(optionTemplate, index, valueOption) {
+    var clone = $(optionTemplate).clone();
+    $(clone).find('select').attr('id', 'op' + index);
+    $(clone).find('select').attr('name', 'option[' + index + '][name]');
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
@@ -1080,7 +1094,7 @@ function saveOption(key, value) {
 /**
  * @description Sets the saved options in the localStorage
  */
-function restoreOptions() {
+function restoreOptionsFromLocalStorage() {
     if (!supportLocalStorage) {
         return false;
     }
@@ -1098,52 +1112,88 @@ function restoreOptions() {
     var opt = localStorage.getItem("solverOptions");
     if (opt !== null) {
         var obj = JSON.parse(opt);
-        $('#inputLanguage').val(obj.language).change();
-        $('#inputSolver').val(obj.solver).change();
-        setOptions(obj);
+        restoreOptions(obj);
         if (obj.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);
         }
     }
 }
 
+// TODO COMMENT: this function with the documentation headers
+function restoreOptions(obj) {
+    $('#inputLanguage option').each(function (index, language) {
+        if($(language).val() === obj.language) {
+            var deferLanguage = $.Deferred();
+            var promiseLanguage = deferLanguage.promise();
+            // TODO COMMENT: this function with the documentation headers
+            var languageChanged = (success) => { success ? deferLanguage.resolve() : deferLanguage.reject(); };
+            $('#inputLanguage option[value="' + obj.language + '"]').prop('selected', true).trigger('change', languageChanged);
+            $.when(promiseLanguage).done(function () {
+                $('#inputSolver option').each(function (index, solver) {
+                    if($(solver).val() === obj.solver) {
+                        var deferSolver = $.Deferred();
+                        var promiseSolver = deferSolver.promise();
+                        // TODO COMMENT: this function with the documentation headers
+                        var solverChanged = (success) => { success ? deferSolver.resolve() : deferSolver.reject(); };
+                        $('#inputSolver option[value="' + obj.solver + '"]').prop('selected', true).trigger('change', solverChanged);
+                        $.when(promiseSolver).done(function () {
+                            setOptions(obj);
+                        });
+                    }
+                });
+            });
+        }
+    });
+}
+
 /**
  * @param {JSON} - obj
  * @description deletes all the options and add them to the DOM
  */
+// TODO BUG: if "$('.row-option').eq(0)" did not exist there might be a problem
 function setOptions(obj) {
-    $('.row-option').each(function (index) {
-        $(this).remove();
-    });
-    $(obj.option).each(function (indexInArray, item) { // create option's form
-        addOption(indexInArray, item.name);
-        var currentOption;
-        if (indexInArray !== 0) {
-            currentOption = $('.row-option').get(indexInArray);
-            $(currentOption).find('label').empty();
-        }
-        if (indexInArray < obj.option.length - 1) { //deletes all 'btn-add' except in the last option
-            currentOption = $('.row-option').get(indexInArray);
-            $(currentOption).find('.btn-add-option').empty();
-        }
-        if (item['value']) {
-            currentClass = $('.option-value').eq(indexInArray);
-            $(item.value).each(function (indexInArray, itemValue) {
-                if (indexInArray !== 0)
-                    addInputValue(currentClass);
-                $('.input-group-value').last().find('.form-control-value').val(itemValue);
-                if (indexInArray < item.value.length - 1) { //deletes all 'btn-add' except the last in the input type value
-                    $('.input-group-value').last().find('.btn-add').parent().empty();
-                }
-            });
+    var optionTemplate = $('.row-option').eq(0).clone();
+    $(obj.option).each(function (index, elem) {
+        if ($(optionTemplate).contents().find('option[value="' + elem.name + '"]').length > 0) {
+            setOptionsFromTemplate();
+            return false;
         }
     });
-    $('.row-option').each(function (index) { // add delete button after first option
-        if (index > 0) {
-            var cloneOpname = $(this).find('.opname');
-            $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>');
-        }
-    });
+    function setOptionsFromTemplate() {
+        $(optionTemplate).contents().find('.option-value').empty();
+        $('.row-option').each(function (index) {
+            $(this).remove();
+        });
+        $(obj.option).each(function (indexInArray, item) { // create option's form
+            addOption(optionTemplate, indexInArray, item.name);
+            var currentOption;
+            if (indexInArray !== 0) {
+                currentOption = $('.row-option').get(indexInArray);
+                $(currentOption).find('label').empty();
+            }
+            if (indexInArray < obj.option.length - 1) { //deletes all 'btn-add' except in the last option
+                currentOption = $('.row-option').get(indexInArray);
+                $(currentOption).find('.btn-add-option').empty();
+            }
+            if (item['value']) {
+                currentClass = $('.option-value').eq(indexInArray);
+                $(item.value).each(function (indexInArray, itemValue) {
+                    if (indexInArray !== 0)
+                        addInputValue(currentClass);
+                    $('.input-group-value').last().find('.form-control-value').val(itemValue);
+                    if (indexInArray < item.value.length - 1) { //deletes all 'btn-add' except the last in the input type value
+                        $('.input-group-value').last().find('.btn-add').parent().empty();
+                    }
+                });
+            }
+        });
+        $('.row-option').each(function (index) { // add delete button after first option
+            if (index > 0) {
+                var cloneOpname = $(this).find('.opname');
+                $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>');
+            }
+        });
+    }
 }
 
 /**

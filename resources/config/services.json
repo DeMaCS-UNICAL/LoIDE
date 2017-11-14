@@ -1,10 +1,12 @@
 {
-    "services": [
+    "languages": [
         {
-            "language": "ASP",
+            "name": "ASP",
+            "value": "asp",
             "solvers": [
                 {
-                    "solver": "Clingo",
+                    "name": "Clingo",
+                    "value": "clingo",
                     "executors": [
                         {
                             "protocol": "ws",
@@ -15,14 +17,15 @@
                     ],
                     "options": [
                         {
-							"name": "Free choise",
-							"argument": "",
+                            "name": "Free choise",
+                            "value": "free choise",
 							"word_argument": true,
 							"description": "Missing description"
 						}
                     ]
                 }, {
-                    "solver": "DLV",
+                    "name": "DLV",
+                    "value": "dlv",
                     "executors":[
                         {
                             "protocol": "ws",
@@ -34,27 +37,27 @@
                     "options": [
                         {
 							"name": "Free choise",
-							"argument": "",
+                            "value": "",
 							"word_argument": true,
 							"description": "Missing description"
 						}, {
 							"name": "Filter",
-							"argument": "-filter=",
+							"value": "-filter=",
 							"word_argument": true,
 							"description": "Missing description"
 						}, {
 							"name": "No Facts",
-							"argument": "-nofacts",
+							"value": "-nofacts",
 							"word_argument": false,
 							"description": "Missing description"
 						}, {
 							"name": "Silent",
-							"argument": "-silent",
+							"value": "-silent",
 							"word_argument": false,
 							"description": "Missing description"
 						}, {
 							"name": "Query",
-							"argument": "-FC",
+							"value": "-FC",
 							"word_argument": false,
 							"description": "Missing description"
 						}

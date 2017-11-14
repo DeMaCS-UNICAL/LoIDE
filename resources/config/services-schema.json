@@ -8,9 +8,9 @@
         "version": "1-0-0"
     },
     "properties": {
-        "services": {
-            "title": "Services available.",
-            "description": "This property indicates the services avalable on the LoIDE Web Application.",
+        "languages": {
+            "title": "Supported languages.",
+            "description": "This property indicates all the supported languages by the services avalable on the LoIDE Web Application.",
             "type": "array",
             "minItems": 1,
             "items": {
@@ -19,16 +19,21 @@
         }
     },
     "required": [
-        "services"
+        "languages"
     ],
     "additionalProperties": false,
     "definitions": {
         "language": {
             "type": "object",
             "properties": {
-                "language": {
+                "name": {
                     "title": "Language name.",
-                    "description": "This property indicates the language's name.",
+                    "description": "This property indicates the language name.",
+                    "type": "string"
+                },
+                "value": {
+                    "title": "Language value.",
+                    "description": "This property indicates the language value used in communication with other services.",
                     "type": "string"
                 },
                 "syntax-highlighter": {
@@ -84,7 +89,8 @@
                 }
             },
             "required": [
-                "language",
+                "name",
+                "value",
                 "solvers"
             ],
             "additionalProperties": false
@@ -92,9 +98,14 @@
         "solver": {
             "type": "object",
             "properties": {
-                "solver": {
+                "name": {
                     "title": "Solver name.",
                     "description": "This property indicates the solver name.",
+                    "type": "string"
+                },
+                "value": {
+                    "title": "Solver value.",
+                    "description": "This property indicates the solver value used in communication with other services.",
                     "type": "string"
                 },
                 "executors": {
@@ -119,14 +130,14 @@
                                 "description": "This property indicates the option name.",
                                 "type": "string"
                             },
-                            "argument": {
-                                "title": "Argument.",
-                                "description": "This property indicates the argument passed to the solver.",
+                            "value": {
+                                "title": "Option value.",
+                                "description": "This property indicates the command line argument passed to the solver.",
                                 "type": "string"
                             },
                             "word_argument": {
                                 "title": "Word argument.",
-                                "description": "This property indicates if this type of argument requires the second argument or it's just a word argument (flag).",
+                                "description": "This property indicates if this type of argument requires the second argument or it's just a word argument (this is just a flag).",
                                 "type": "boolean"
                             },
                             "description": {
@@ -137,7 +148,7 @@
                         },
                         "required": [
                             "name",
-                            "argument",
+                            "value",
                             "word_argument",
                             "description"
                         ],
@@ -146,7 +157,8 @@
                 }
             },
             "required": [
-                "solver",
+                "name",
+                "value",
                 "executors",
                 "options"
             ],

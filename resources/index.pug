@@ -72,21 +72,21 @@
 						<!-- Languages -->
 						<select name="language" id="inputLanguage" class="form-control">
 							//- Sets the languages
-							- var firstLanguage = services[0].language
-							each language in services
-								- var selectedLanguage = (language.language === firstLanguage)
-								option(value=language.language, selected=selectedLanguage) #{language.language}
+							- var firstLanguage = languages[0].value
+							each language in languages
+								- var selectedLanguage = (language.value === firstLanguage)
+								option(value=language.value, selected=selectedLanguage) #{language.name}
 						</select>
 						<label for="inputSolver" class="col-sm-12 col-xs-12 text-center">Solver</label>
 						<!-- Solvers -->
 						<select name="solver" id="inputSolver" class="form-control">
 							//- Sets the solvers
-							each language in services
-								if language.language === firstLanguage
-									- firstSolver = language.solvers[0].solver
+							each language in languages
+								if language.value === firstLanguage
+									- firstSolver = language.solvers[0].value
 									each solver in language.solvers
-										- var selectedSolver = (solver.solver === firstSolver)
-										option(value=solver.solver, selected=selectedSolver) #{solver.solver}
+										- var selectedSolver = (solver.value === firstSolver)
+										option(value=solver.value, selected=selectedSolver) #{solver.name}
 						</select>
 						<div class="row row-option">
 							<div class="col-md-12 col-sm-12 col-xs-12">
@@ -95,13 +95,13 @@
 									<div class="input-group opname">
 										<select name="option[0][name]" class="form-control form-control-option">
 											//- Sets the options
-											each language in services
-												if language.language === firstLanguage
+											each language in languages
+												if language.value === firstLanguage
 													each solver in language.solvers
-														if solver.solver === firstSolver
+														if solver.value === firstSolver
 															each option in solver.options
 																- word_argument = option.word_argument
-																option(value=option.name, argument=option.argument, word_argument=option.word_argument.toString(), title=option.description) #{option.name}
+																option(value=option.value, word_argument=option.word_argument.toString(), title=option.description) #{option.name}
 										</select>
 										<span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span>
 									</div>

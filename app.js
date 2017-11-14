@@ -23,7 +23,7 @@ app.set('views', './resources');
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-    res.render('index', {"services": services_config.services});
+    res.render('index', {"languages": services_config.languages});
 });
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
@@ -34,9 +34,9 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     // Check the services.json for the received language and sends solvers for this
     socket.on('changeLanguage', function (data) {
         var error = true;
-        for (var index = 0; index < services_config.services.length; index++) {
-            var language = services_config.services[index];
-            if(language.language === data) {
+        for (var index = 0; index < services_config.languages.length; index++) {
+            var language = services_config.languages[index];
+            if(language.value === data) {
                 socket.emit('changeLanguageRes', language.solvers);
                 error = false;
                 break;
@@ -48,12 +48,12 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     // Check the services.json for the received solver and sends options for this
     socket.on('changeSolver', function (data) {
         var error = true;
-        for (var i = 0; i < services_config.services.length; i++) {
-            var language = services_config.services[i];
-            if(language.language === data["language"]) {
+        for (var i = 0; i < services_config.languages.length; i++) {
+            var language = services_config.languages[i];
+            if(language.value === data["language"]) {
                 for (var j = 0; j < language.solvers.length; j++) {
                     var solver = language.solvers[j];
-                    if(solver.solver === data["solver"]) {
+                    if(solver.value === data["solver"]) {
                         socket.emit('changeSolverRes', solver.options);
                         error = false;
                         break;
@@ -68,6 +68,10 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
         var host = getExcecutorURL(data); // The function return the address for a particular language and solver, if known
         var client = new webSocket(host); // Connect to the solver
+
+        // TODO FIXME: this modification is needed because the client use 'solver' but the executor use 'engine'
+        data = data.replace('solver', 'engine');
+
         console.log(host + " path"); // debug string
         console.log(data + " from gui"); // debug string
 
@@ -99,11 +103,11 @@ server.listen(port, function () {
 
 function getExcecutorURL(data) {
     data = JSON.parse(data);
-    for(var i in services_config.services) {
-        if(services_config.services[i].language === data.language) {
-            var solvers = services_config.services[i].solvers;
+    for(var i in services_config.languages) {
+        if(services_config.languages[i].value === data.language) {
+            var solvers = services_config.languages[i].solvers;
             for(var j in solvers) {
-                if(solvers[j].solver === data.solver) {
+                if(solvers[j].value === data.solver) {
                     // TODO let the user choose the executor. atm this is a missing data
                     // by default the first executor will be chosen
                     var executor = solvers[j].executors[0];
@@ -158,6 +162,7 @@ function validateConfigurationFiles() {
 
     error_print = true;
     // Validating app-config.json
+    // TODO the property `value` must be unique (?)
     var app_config_schema = require('./resources/config/app-config-schema.json');
     var ajv_app_config = new Ajv({'allErrors': true, 'jsonPointers': true});
     var validate_app_config = ajv_app_config.compile(app_config_schema);

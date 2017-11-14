@@ -505,6 +505,7 @@ $(document).on('click', '#split-up', function () {
     $('#output').text(currentVal);
 });
 
+// TODO BUG: on change check if the languages loaded are still supported by the executor
 // Sets the solvers and options on language change
 $(document).on('change', '#inputLanguage', function (event, languageChanged) {
     var val = $(this).val();
@@ -516,7 +517,7 @@ $(document).on('change', '#inputLanguage', function (event, languageChanged) {
             $('.form-control-option').empty();
             for (var index = 0; index < data.length; index++) {
                 var element = data[index];
-                $('<option>').val(element.solver).text(element.solver).appendTo('#inputSolver');
+                $('<option>').val(element.value).text(element.name).appendTo('#inputSolver');
             }
             $('#inputSolver').change();
             // Used during option loading from file or local storage
@@ -547,8 +548,7 @@ $(document).on('change', '#inputSolver', function (event, solverChange) {
             $('.form-control-option').empty();
             for (var index = 0; index < data.length; index++) {
                 var element = data[index];
-                $('<option>').val(element.name).text(element.name)
-                    .attr("argument", element.argument)
+                $('<option>').val(element.value).text(element.name)
                     .attr("word_argument", element["word_argument"])
                     .attr("title", element.descption).appendTo('.form-control-option');
             }

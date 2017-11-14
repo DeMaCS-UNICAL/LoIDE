@@ -99,10 +99,10 @@ server.listen(port, function () {
 
 function getExcecutorURL(data) {
     data = JSON.parse(data);
-    for(i in services_config.services) {
+    for(var i in services_config.services) {
         if(services_config.services[i].language === data.language) {
             var solvers = services_config.services[i].solvers;
-            for(j in solvers) {
+            for(var j in solvers) {
                 if(solvers[j].solver === data.solver) {
                     // TODO let the user choose the executor. atm this is a missing data
                     // by default the first executor will be chosen
@@ -123,13 +123,9 @@ function validateConfigurationFiles() {
     var error_print = true;
 
     // Validating services.json
-    var services_schema = require('./resources/config/json-schema/services-schema.json');
-    var language_schema = require('./resources/config/json-schema/language-schema.json');
-    var solver_schema = require('./resources/config/json-schema/solver-schema.json');
-    var executor_schema = require('./resources/config/json-schema/executor-schema.json');
+    var services_schema = require('./resources/config/services-schema.json');
 
     var ajv_services = new Ajv({'allErrors': true, 'jsonPointers': true});
-    ajv_services.addSchema([language_schema, solver_schema, executor_schema]);
     var validate_services = ajv_services.compile(services_schema);
     while(!services_validation) {
         var valid_services = validate_services(require('./resources/config/services.json'));
@@ -141,7 +137,7 @@ function validateConfigurationFiles() {
                 error_print = false;
             }
 
-            for(index in validate_services.errors) {
+            for(var index in validate_services.errors) {
                 var path = validate_services.errors[index].dataPath;
                 if(path === '') {
                     // 'This' case happen when there is a problem in to the root of the services.json file (eg. when the file is empty)
@@ -162,7 +158,7 @@ function validateConfigurationFiles() {
 
     error_print = true;
     // Validating app-config.json
-    var app_config_schema = require('./resources/config/json-schema/app-config-schema.json');
+    var app_config_schema = require('./resources/config/app-config-schema.json');
     var ajv_app_config = new Ajv({'allErrors': true, 'jsonPointers': true});
     var validate_app_config = ajv_app_config.compile(app_config_schema);
 
@@ -176,7 +172,7 @@ function validateConfigurationFiles() {
                 error_print = false;
             }
 
-            for(index in validate_app_config.errors) {
+            for(var index in validate_app_config.errors) {
                 var path = validate_app_config.errors[index].dataPath;
                 if(path === '') {
                     // 'This' case happen when there is a problem in to the root of the app-config.json file (eg. when the file is empty)

@@ -513,7 +513,7 @@ $(document).on('click', '#split-up', function () {
 
 $(document).on('change', '#inputengine', function () {
     var val = $(this).val();
-    if (val === "clingo") {
+    if (val === "clingo" || val === "dlv2") {
         $('.form-control-option').each(function (index, element) {
             $(this).find("option").each(function (index, element) {
                 if ($(this).val() !== "free choice" && $(this).val() !== "")
@@ -1192,7 +1192,7 @@ function setOptions(obj) {
         }
     });
 
-    if (obj.engine === "clingo") {
+    if (obj.engine === "clingo" || obj.engine === "dlv2") {
         $('.form-control-option').find('option').each(function (index, element) {
             if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
                 $(this).remove();

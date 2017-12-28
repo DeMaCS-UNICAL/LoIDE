@@ -350,6 +350,8 @@ $(document).ready(function () {
 
     });
 
+    addCommand(idEditor);
+
 });
 
 /**
@@ -1215,5 +1217,21 @@ function addTab(obj, text) {
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
     $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> Tab' + id + ' </label>');
+    addCommand(editorId);
     return tabId;
 }
+    /**
+     * 
+     * @param {int} ideditor - editor id
+     * @description Add New Commands and Keybindings 
+     */
+    function addCommand(ideditor) {
+        editors[ideditor].commands.addCommand({
+            name: 'myCommand',
+            bindKey: {win: 'Ctrl-enter',  mac: 'Command-enter'},
+            exec: function(editor) {
+                intervalRun();
+            },
+            readOnly: true
+        });
+    }

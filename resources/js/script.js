@@ -438,7 +438,7 @@ $(document).on('click', '.btn-add-option', function () {
 });
 
 $(document).on('click', '.btn-del-option', function () {
-    $(this).parent().parent().parent().parent().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
+    $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
     delOptionDOM($(this));
 });
 
@@ -657,6 +657,7 @@ function getSelectionCharOffsetsWithin(element) {
  */
 function delOptionDOM(optionClassBtn) {
     var row = $(optionClassBtn).closest('.row-option');
+    $(row).prev().remove();
     row.empty(); //delete option container
     row.remove();
     $('.form-control-option').each(function (index) {
@@ -678,6 +679,7 @@ function addOptionDOM(optionClassBtn) {
     var clone = row.clone();
     var lenghtClass = $('.opname').length;
     $(clone).insertAfter(row);
+    $("<hr>").insertBefore(clone);
     var cloneOpname = $(clone).find('.opname');
     if (lenghtClass > 0) {
         $(cloneOpname).find('.btn-del-option').remove();
@@ -1182,6 +1184,9 @@ function setOptions(obj) {
                     $('.input-group-value').last().find('.btn-add').parent().empty();
                 }
             });
+        }
+        if (indexInArray != $(obj.option).size() - 1) {
+            $("<hr>").insertAfter($('.row-option').get(indexInArray));
         }
 
     });

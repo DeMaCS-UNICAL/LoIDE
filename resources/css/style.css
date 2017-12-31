@@ -223,3 +223,58 @@ mark {
     height: 1%;
     padding: 5px 5px 20px 5px;
 }
+
+#btn-run-nav {
+    margin-left: 25%;
+    margin-top: -2px;
+}
+
+.navbar-header {
+    width: 20%;
+}
+
+@media screen and (max-width: 736px) {
+    #btn-run-nav {
+        margin-left: 4%;
+        margin-top: -2px;
+    }
+    .navbar-header {
+        width: 90%;
+    }
+}
+
+@media screen and (min-width: 768px){
+    #btn-run-nav {
+        margin-top: -11px;
+    }
+    .navbar-header {
+        width: 35%;
+    }
+}
+
+@media screen and (min-width: 1024px){
+    #btn-run-nav {
+        margin-top: -8px;
+    }
+    .navbar-header {
+        width: 25%;
+    }
+}
+
+@media screen and (min-width: 1036px){
+    #btn-run-nav {
+        margin-top: -2px;
+    }
+    .navbar-header {
+        width: 25%;
+    }
+}
+
+@media screen and (max-width: 1183px) and (min-width: 1024px){
+    #btn-run-nav {
+        margin-top: -8px;
+    }
+    .navbar-header {
+        width: 25%;
+    }
+}

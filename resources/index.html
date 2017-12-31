@@ -25,12 +25,14 @@
                     <span class="icon-bar"></span>
                 </button>
 			<img src="img/logo_LoIDE.png" alt="logo">
+			<button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip">Run! <i class="glyphicon glyphicon-play"></i></button>
+
 		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#upload-container" id="btn-upload" rel="tooltip"
-								data-placement="bottom" title="">Upload File <i class="glyphicon glyphicon-upload"></i></button>
+				    data-placement="bottom" title="">Upload File <i class="glyphicon glyphicon-upload"></i></button>
 				<div class="btn-group btn-group-info">
 					<label for="btn-download" role="button" class="btn btn-info" rel="tooltip" data-placement="bottom" title="">Download <i class="glyphicon glyphicon-download"></i></label>
 					<button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button"> <span id="choice"></span> <span class="caret"></span> </button>
@@ -41,7 +43,6 @@
 				</div>
 			</ul>
 			<ul class="nav navbar-nav navbar-left">
-				<label role="button" class="btn btn-success" for="run" data-toggle="tooltip" data-placement="bottom" title="">Run! <i class="glyphicon glyphicon-play"></i></label>
 				<button id="a" type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-about">About </button>
 			</ul>
 		</div>
@@ -77,7 +78,12 @@
 						<select name="engine" id="inputengine" class="form-control">
 						<option value="dlv">DLV</option>
 						<option value="clingo">Clingo</option>
+<<<<<<< HEAD
 				</select>
+=======
+						<option value="dlv2">DLV2</option>
+						</select>
+>>>>>>> master
 						<div class="row row-option">
 							<div class="col-md-12 col-sm-12 col-xs-12">
 								<div class="form-group">
@@ -145,9 +151,9 @@
 					</div>
 				</div>
 				<div class="pane ui-layout-east">
-					<div id="setting-output">  Output
-					<a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a>
-					<a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a>
+					<div id="setting-output"> Output
+						<a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a>
+						<a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a>
 					</div>
 					<div id="output" class="output"></div>
 				</div>

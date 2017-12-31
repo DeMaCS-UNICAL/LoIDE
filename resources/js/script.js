@@ -459,7 +459,7 @@ $(document).on('click', '.btn-add-option', function () {
 });
 
 $(document).on('click', '.btn-del-option', function () {
-    $(this).parent().parent().parent().parent().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
+    $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
     delOptionDOM($(this));
 });
 
@@ -516,7 +516,7 @@ $(document).on('click', '#split-up', function () {
 
 $(document).on('change', '#inputengine', function () {
     var val = $(this).val();
-    if (val === "clingo") {
+    if (val === "clingo" || val === "dlv2") {
         $('.form-control-option').each(function (index, element) {
             $(this).find("option").each(function (index, element) {
                 if ($(this).val() !== "free choice" && $(this).val() !== "")
@@ -696,6 +696,7 @@ function getSelectionCharOffsetsWithin(element) {
  */
 function delOptionDOM(optionClassBtn) {
     var row = $(optionClassBtn).closest('.row-option');
+    $(row).prev().remove();
     row.empty(); //delete option container
     row.remove();
     $('.form-control-option').each(function (index) {
@@ -717,6 +718,7 @@ function addOptionDOM(optionClassBtn) {
     var clone = row.clone();
     var lenghtClass = $('.opname').length;
     $(clone).insertAfter(row);
+    $("<hr>").insertBefore(clone);
     var cloneOpname = $(clone).find('.opname');
     if (lenghtClass > 0) {
         $(cloneOpname).find('.btn-del-option').remove();
@@ -1239,6 +1241,9 @@ function setOptions(obj) {
                 }
             });
         }
+        if (indexInArray != $(obj.option).size() - 1) {
+            $("<hr>").insertAfter($('.row-option').get(indexInArray));
+        }
 
     });
     $('.row-option').each(function (index) { // add delete button after first option
@@ -1248,7 +1253,7 @@ function setOptions(obj) {
         }
     });
 
-    if (obj.engine === "clingo") {
+    if (obj.engine === "clingo" || obj.engine === "dlv2") {
         $('.form-control-option').find('option').each(function (index, element) {
             if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
                 $(this).remove();

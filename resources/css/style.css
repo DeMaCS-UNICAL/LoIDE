@@ -224,7 +224,6 @@ mark {
     padding: 5px 5px 20px 5px;
 }
 
-<<<<<<< HEAD
 .btn-outline {
     background-color: transparent;
     border: 1px solid red;
@@ -242,7 +241,8 @@ mark {
 
 #reset-container {
     margin-top: 5%;
-=======
+}
+
 #btn-run-nav {
     margin-left: 25%;
     margin-top: -2px;
@@ -296,5 +296,4 @@ mark {
     .navbar-header {
         width: 25%;
     }
->>>>>>> master
 }

@@ -38,7 +38,8 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
         };
         client.onmessage = function (output) { // Wait for the incoming data from the EmbASPServerExecutor
             var model = JSON.parse(output.data);
-            console.log(model + " from EmbASPServerExecutor"); // debug string
+//          console.log("%j from EmbASPServerExecutor", model); // debug string
+            console.log('From EmbASPServerExecutor: "model":"%s", "error":"%s"', model.model, model.error); // debug string
             socket.emit('output', model); // Socket.io calls emit() to send data to the browser.
 
         };

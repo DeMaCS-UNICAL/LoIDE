@@ -285,6 +285,13 @@ $(document).ready(function () {
 
     });
 
+    $("#btn-run-nav").click(function (e) { 
+        e.preventDefault();
+        $("#output").empty();
+        $("#output").text("Sending..");
+        callSocketServer();
+    });
+
 
     $('#input').submit(function (e) {
         e.preventDefault();

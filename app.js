@@ -1,11 +1,16 @@
 var express = require('express');
-var http = require('http');
-var app = express();
-var webSocket = require('websocket').w3cwebsocket;
-var server = http.createServer(app);
-var io = require('socket.io').listen(server);
+var https = require('https');
+var fs = require('fs');
 var PropertiesReader = require('properties-reader');
 var properties = PropertiesReader('resources/config/properties');
+var options = {
+    key: fs.readFileSync(properties.get("path.key")),
+    cert: fs.readFileSync(properties.get("path.cert"))
+};
+var app = express();
+var webSocket = require('websocket').w3cwebsocket;
+var secureServer = https.createServer(options, app);
+var io = require('socket.io').listen(secureServer, {secure:true});
 var ws_server = properties.get('ws.server');
 var pckg = require('./package.json');
 
@@ -47,7 +52,7 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     });
 });
 
-server.listen(port, function () {
+secureServer.listen(port, function () {
     console.log('App listening on port ' + port);
     console.log('Version: ' + pckg.version);
 });

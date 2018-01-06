@@ -21,11 +21,6 @@ body {
     height: 100%;
 }
 
-.nav {
-    padding-top: 0.5%;
-    padding-bottom: 0.5%;
-}
-
 .container {
     padding: 0;
     margin: 0;
@@ -177,10 +172,6 @@ a[role="button"]:focus {
     margin-left: 5px;
 }
 
-.nav {
-    padding-top: 1%;
-}
-
 .opname {
     width: 100%;
 }
@@ -222,55 +213,46 @@ mark {
 
 #btn-run-nav {
     margin-left: 25%;
-    margin-top: -2px;
 }
 
 .navbar-header {
     width: 20%;
 }
 
-@media screen and (max-width: 736px) {
+.nav.navbar-nav .btn {
+    margin-top: 12.5px;
+}
+
+@media screen and (max-width: 767px) {
     #btn-run-nav {
         margin-left: 4%;
-        margin-top: -2px;
     }
     .navbar-header {
         width: 90%;
     }
+
+    .nav.navbar-nav .btn:not(#dropdown) {
+        margin-left: 10px;
+    }
 }
 
 @media screen and (min-width: 768px){
-    #btn-run-nav {
-        margin-top: -11px;
-    }
+
     .navbar-header {
         width: 35%;
     }
 }
 
-@media screen and (min-width: 1024px){
-    #btn-run-nav {
-        margin-top: -8px;
-    }
-    .navbar-header {
-        width: 25%;
-    }
-}
-
 @media screen and (min-width: 1036px){
-    #btn-run-nav {
-        margin-top: -2px;
-    }
+
     .navbar-header {
         width: 25%;
     }
 }
 
 @media screen and (max-width: 1183px) and (min-width: 1024px){
-    #btn-run-nav {
-        margin-top: -8px;
-    }
+
     .navbar-header {
-        width: 25%;
+        width: 30%;
     }
 }

@@ -11,22 +11,27 @@
     "type": "git",
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE.git"
   },
-  "contributors": [{
-    "name": "Eliana Palermiti",
-    "email": "eliana_palermiti@libero.it"
-  }, {
-    "name": "Stefano Germano",
-    "email": "germano@mat.unical.it"
-  }, {
-    "name": "Francesco Calimeri",
-    "email": "calimeri@mat.unical.it"
-  }],
+  "contributors": [
+    {
+      "name": "Eliana Palermiti",
+      "email": "eliana_palermiti@libero.it"
+    },
+    {
+      "name": "Stefano Germano",
+      "email": "germano@mat.unical.it"
+    },
+    {
+      "name": "Francesco Calimeri",
+      "email": "calimeri@mat.unical.it"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE/issues"
   },
   "dependencies": {
     "express": "~4.14.0",
+    "helmet": "^3.9.0",
     "properties-reader": "0.0.15",
     "socket.io": "^1.5.1",
     "websocket": "^1.0.23"

@@ -2,3 +2,4 @@ ws.server=ws://localhost:8080/EmbASPServerExecutor/home
 port=8084
 path.key=
 path.cert=
+max.age=31536000

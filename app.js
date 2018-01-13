@@ -1,3 +1,4 @@
+var helmet = require('helmet');
 var express = require('express');
 var https = require('https');
 var fs = require('fs');
@@ -8,6 +9,12 @@ var options = {
     cert: fs.readFileSync(properties.get("path.cert"))
 };
 var app = express();
+
+// Sets "Strict-Transport-Security, by default maxAge is setted 1 year in second
+app.use(helmet.hsts({
+  maxAge: properties.get("max.age")
+}));
+
 var webSocket = require('websocket').w3cwebsocket;
 var secureServer = https.createServer(options, app);
 var io = require('socket.io').listen(secureServer, {secure:true});

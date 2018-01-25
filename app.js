@@ -33,7 +33,7 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
                 reason: error
             });
             socket.emit('problem', {
-                reason: "Sorry the connection lost, please try again later!"
+                reason: "Execution error, please try again later!"
             });
         };
         client.onmessage = function (output) { // Wait for the incoming data from the EmbASPServerExecutor

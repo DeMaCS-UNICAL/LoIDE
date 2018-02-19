@@ -211,6 +211,25 @@ mark {
     padding: 5px 5px 20px 5px;
 }
 
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid red;
+    transition: all .5s;
+}
+
+.btn-outline.btn-outline-danger {
+    color: #d9534f;
+}
+
+.btn-outline.btn-outline-danger:hover {
+    color: #fff;
+    background-color: #d9534f;
+}
+
+#reset-container {
+    margin-top: 5%;
+}
+
 #btn-run-nav {
     margin-left: 25%;
 }

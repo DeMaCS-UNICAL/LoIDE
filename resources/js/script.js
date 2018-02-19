@@ -67,12 +67,6 @@
         return json;
     };
 
-    /**
-     * @global
-     * @description place object layout
-     */
-    var layout;
-
 })(jQuery);
 
 /**
@@ -89,10 +83,29 @@ function operation_alert(result) {
 }
 
 /**
+ ** @global
+ * @description place object layout
+ */
+var layout;
+
+/**
  * @global
  * @description place the id of the current shown editor 
  */
 var idEditor = 'editor1';
+
+/**
+ * @global
+ * @description default font size editor 
+ */
+var defaultFontSize = 15;
+
+/**
+ * @global
+ * @description default ace theme 
+ */
+var defaultTheme = "ace/theme/tomorrow";
+
 /**
  * set up ace editors into object
  */
@@ -154,6 +167,18 @@ $(window).resize(function () {
 });
 
 $(document).ready(function () {
+
+    layout = $('body > .container > form > .layout').layout({
+        onresize_end: function () {
+            var length = $(".nav-tabs").children().length;
+            for (var index = 1; index <= length - 1; index++) {
+                var idE = "editor" + index;
+                editors[idE].resize();
+            }
+        },
+        south__minSize: 125
+
+    });
 
     inizializeShortcuts();
 
@@ -223,19 +248,7 @@ $(document).ready(function () {
         }
     });
 
-    layout = $('body > .container > form > .layout').layout({
-        onresize_end: function () {
-            var length = $(".nav-tabs").children().length;
-            for (var index = 1; index <= length - 1; index++) {
-                var idE = "editor" + index;
-                editors[idE].resize();
-            }
-        },
-        south__minSize: 125
-
-    });
-
-    if (window.innerWidth > 450) {
+    if (window.innerWidth > 450 && localStorage.getItem("outputPos") !== "south") {
         layout.removePane("south");
     } else {
         layout.removePane("east");
@@ -283,6 +296,13 @@ $(document).ready(function () {
     $('button[type="submit"]').click(function (evt) {
         clkBtn = evt.target.id;
 
+    });
+
+    $("#btn-run-nav").click(function (e) { 
+        e.preventDefault();
+        $("#output").empty();
+        $("#output").text("Sending..");
+        callSocketServer();
     });
 
 
@@ -348,6 +368,14 @@ $(document).ready(function () {
 
         $('.option-solver > div').toggleClass("hidden show"); // add class to show option components
 
+    });
+
+    $("#reset-editor").click(function () {
+        resetEditorOptions();
+    });
+
+    $("#reset-options").click(function () {
+        resetSolverOptions();
     });
 
     addCommand(idEditor);
@@ -440,7 +468,7 @@ $(document).on('click', '.btn-add-option', function () {
 });
 
 $(document).on('click', '.btn-del-option', function () {
-    $(this).parent().parent().parent().parent().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
+    $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
     delOptionDOM($(this));
 });
 
@@ -488,34 +516,16 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 });
 
 $(document).on('click', '#split', function () {
-    layout.removePane("east");
-    var currentVal = $('#output').text();
-    $(this).parent().empty();
-    layout.addPane("south");
-    createTextArea($('.ui-layout-south'));
-    var fontSizeO = localStorage.getItem("fontSizeO");
-    $("#font-output").val(fontSizeO);
-    $('#output').css('font-size', fontSizeO + "px");
-    $('#output').text(currentVal);
-    $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
-    $('#split').attr('id', 'split-up');
+    addSouthLayout(layout);
 });
 
 $(document).on('click', '#split-up', function () {
-    layout.removePane("south");
-    var currentVal = $('#output').text();
-    $(this).parent().empty();
-    layout.addPane("east");
-    createTextArea($('.ui-layout-east'));
-    var fontSizeO = localStorage.getItem("fontSizeO");
-    $("#font-output").val(fontSizeO);
-    $('#output').css('font-size', fontSizeO + "px");
-    $('#output').text(currentVal);
+    addEastLayout(layout);
 });
 
 $(document).on('change', '#inputengine', function () {
     var val = $(this).val();
-    if (val === "clingo") {
+    if (val === "clingo" || val === "dlv2") {
         $('.form-control-option').each(function (index, element) {
             $(this).find("option").each(function (index, element) {
                 if ($(this).val() !== "free choice" && $(this).val() !== "")
@@ -600,6 +610,42 @@ $(document).on('click', '.delete-tab', function () { // delete tab
 });
 
 /**
+ * @description Add east and remove south layout
+ */
+function addEastLayout(layout) {
+    layout.removePane("south");
+    saveOption("outputPos", "east");
+    var currentVal = $('#output').text();
+    $("#split-up").parent().empty();
+    layout.addPane("east");
+    createTextArea($('.ui-layout-east'));
+    var fontSizeO = localStorage.getItem("fontSizeO");
+    fontSizeO = fontSizeO !== null ? fontSizeO : defaultFontSize;
+    $("#font-output").val(fontSizeO);
+    $('#output').css('font-size', fontSizeO + "px");
+    $('#output').text(currentVal);
+}
+
+/**
+ * @description Add south and remove east layout
+ */
+function addSouthLayout(layout) {
+    layout.removePane("east");
+    saveOption("outputPos", "south");
+    var currentVal = $('#output').text();
+    $("#split").parent().empty();
+    layout.addPane("south");
+    createTextArea($('.ui-layout-south'));
+    var fontSizeO = localStorage.getItem("fontSizeO");
+    fontSizeO = fontSizeO !== null ? fontSizeO : defaultFontSize;
+    $("#font-output").val(fontSizeO);
+    $('#output').css('font-size', fontSizeO + "px");
+    $('#output').text(currentVal);
+    $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
+    $('#split').attr('id', 'split-up');
+}
+
+/**
  * 
  * @param {string} searchStr - string to search
  * @param {string} str - text where search the string
@@ -659,6 +705,7 @@ function getSelectionCharOffsetsWithin(element) {
  */
 function delOptionDOM(optionClassBtn) {
     var row = $(optionClassBtn).closest('.row-option');
+    $(row).prev().remove();
     row.empty(); //delete option container
     row.remove();
     $('.form-control-option').each(function (index) {
@@ -680,6 +727,7 @@ function addOptionDOM(optionClassBtn) {
     var clone = row.clone();
     var lenghtClass = $('.opname').length;
     $(clone).insertAfter(row);
+    $("<hr>").insertBefore(clone);
     var cloneOpname = $(clone).find('.opname');
     if (lenghtClass > 0) {
         $(cloneOpname).find('.btn-del-option').remove();
@@ -952,7 +1000,7 @@ function setUpAce(ideditor, text) {
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].session.setMode("ace/mode/asp");
-    editors[ideditor].setTheme("ace/theme/tomorrow");
+    editors[ideditor].setTheme(defaultTheme);
     editors[ideditor].setValue(text);
     editors[ideditor].resize();
     editors[ideditor].setOptions({
@@ -1132,16 +1180,24 @@ function restoreOptions() {
         return false;
     }
     var theme = localStorage.getItem("theme");
+    theme = theme !== null ? theme : defaultTheme;
     $('#theme').val(theme);
     setTheme(theme);
 
     var fontSizeE = localStorage.getItem("fontSizeE");
+    fontSizeE = fontSizeE !== null ? fontSizeE : defaultFontSize;
     $('#font-editor').val(fontSizeE);
     setFontSizeEditors(fontSizeE);
 
     var fontSizeO = localStorage.getItem("fontSizeO");
+    fontSizeO = fontSizeO !== null ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
+
+    var outputSize = localStorage.getItem("outputSize");
+    if (outputSize !== null) {
+        $('#output').parent().css("width", outputSize);
+    }
 
     var opt = localStorage.getItem("solverOptions");
     if (opt !== null) {
@@ -1152,6 +1208,15 @@ function restoreOptions() {
         if (obj.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);
         }
+    }
+
+    var layoutPos = localStorage.getItem("outputPos");
+    layoutPos = layoutPos !== null ? layoutPos : "east";
+
+    if (layoutPos === "east") {
+        addEastLayout(layout);
+    } else {
+        addSouthLayout(layout);
     }
 }
 
@@ -1185,6 +1250,9 @@ function setOptions(obj) {
                 }
             });
         }
+        if (indexInArray != $(obj.option).size() - 1) {
+            $("<hr>").insertAfter($('.row-option').get(indexInArray));
+        }
 
     });
     $('.row-option').each(function (index) { // add delete button after first option
@@ -1194,7 +1262,7 @@ function setOptions(obj) {
         }
     });
 
-    if (obj.engine === "clingo") {
+    if (obj.engine === "clingo" || obj.engine === "dlv2") {
         $('.form-control-option').find('option').each(function (index, element) {
             if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
                 $(this).remove();
@@ -1220,18 +1288,52 @@ function addTab(obj, text) {
     addCommand(editorId);
     return tabId;
 }
-    /**
-     * 
-     * @param {int} ideditor - editor id
-     * @description Add New Commands and Keybindings 
-     */
-    function addCommand(ideditor) {
-        editors[ideditor].commands.addCommand({
-            name: 'myCommand',
-            bindKey: {win: 'Ctrl-enter',  mac: 'Command-enter'},
-            exec: function(editor) {
-                intervalRun();
-            },
-            readOnly: true
-        });
-    }
+
+/**
+ * 
+ * @param {int} ideditor - editor id
+ * @description Add New Commands and Keybindings 
+ */
+function addCommand(ideditor) {
+    editors[ideditor].commands.addCommand({
+        name: 'myCommand',
+        bindKey: {win: 'Ctrl-enter',  mac: 'Command-enter'},
+        exec: function(editor) {
+            intervalRun();
+        },
+        readOnly: true
+    });
+}
+
+/**
+ * @description Reset editor options with default values
+ */
+function resetEditorOptions() {
+    $('#theme').val(defaultTheme);
+    saveOption("theme", defaultTheme);
+    setTheme(defaultTheme);
+
+    $('#font-editor').val(defaultFontSize);
+    saveOption("fontSizeE", defaultFontSize);
+    setFontSizeEditors(defaultFontSize);
+
+    $("#font-output").val(defaultFontSize);
+    saveOption("fontSizeO", defaultFontSize);
+    $('#output').css('font-size', defaultFontSize + "px");
+}
+
+/**
+ * @description Reset solver options with default values
+ */
+function resetSolverOptions() {
+    $('#inputLanguage').val("asp").change();
+    $('#inputengine').val("dlv").change();
+    $("#run-dot").prop('checked', false);
+
+    $(".row-option:not(:first)").remove();
+    var $select = $(".row-option").find("select");
+    $select.val("").change();
+    var $btn = $("<button/>").attr("class", "btn btn-default").text("+");
+    $(".row-option").find("span").append($btn);
+
+}

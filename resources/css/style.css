@@ -21,15 +21,6 @@ body {
     height: 100%;
 }
 
-.nav {
-    padding-top: 0.5%;
-    padding-bottom: 0.5%;
-}
-
-.navbar-header {
-    margin-right: 3%;
-}
-
 .container {
     padding: 0;
     margin: 0;
@@ -181,10 +172,6 @@ a[role="button"]:focus {
     margin-left: 5px;
 }
 
-.nav {
-    padding-top: 1%;
-}
-
 .opname {
     width: 100%;
 }
@@ -222,4 +209,69 @@ mark {
     width: 100%;
     height: 1%;
     padding: 5px 5px 20px 5px;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid red;
+    transition: all .5s;
+}
+
+.btn-outline.btn-outline-danger {
+    color: #d9534f;
+}
+
+.btn-outline.btn-outline-danger:hover {
+    color: #fff;
+    background-color: #d9534f;
+}
+
+#reset-container {
+    margin-top: 5%;
+}
+
+#btn-run-nav {
+    margin-left: 25%;
+}
+
+.navbar-header {
+    width: 20%;
+}
+
+.nav.navbar-nav .btn {
+    margin-top: 12.5px;
+}
+
+@media screen and (max-width: 767px) {
+    #btn-run-nav {
+        margin-left: 4%;
+    }
+    .navbar-header {
+        width: 90%;
+    }
+
+    .nav.navbar-nav .btn:not(#dropdown) {
+        margin-left: 10px;
+    }
+}
+
+@media screen and (min-width: 768px){
+
+    .navbar-header {
+        width: 35%;
+    }
+}
+
+@media screen and (min-width: 1036px){
+
+    .navbar-header {
+        width: 25%;
+    }
+}
+
+@media screen and (max-width: 1183px) and (min-width: 1024px){
+
+    .navbar-header {
+        width: 30%;
+    }
 }

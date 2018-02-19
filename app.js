@@ -1,15 +1,49 @@
+var helmet = require('helmet');
 var express = require('express');
+var https = require('https');
 var http = require('http');
-var app = express();
+var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
+var fs = require('fs');
+var propertiesReader = require('properties-reader');
+
+var properties = propertiesReader('resources/config/properties');
+
+var app = express();
+
+var key = properties.get("path.key");
+var cert = properties.get("path.cert");
+var enableHTTPS = false;
+
+if (key !== 0 && cert !== 0) {
+var options = {
+    key: fs.readFileSync(key),
+    cert: fs.readFileSync(cert)
+};
+
+// Enable redirect from HTTP to HTTPS
+var securePort = properties.get('port.https');
+app.use(forceSSL);
+app.set('forceSSLOptions', {
+    httpsPort: securePort,
+  });
+
+var secureServer = https.createServer(options, app);  
+enableHTTPS = true;
+}
+
+// Sets "Strict-Transport-Security, by default maxAge is setted 1 year in second
+app.use(helmet.hsts({
+  maxAge: properties.get("max.age")
+}));
+ 
 var server = http.createServer(app);
-var io = require('socket.io').listen(server);
-var PropertiesReader = require('properties-reader');
-var properties = PropertiesReader('resources/config/properties');
+
+var io = require('socket.io').listen(enableHTTPS ? secureServer : server);
 var ws_server = properties.get('ws.server');
 var pckg = require('./package.json');
 
-var port = properties.get('port');
+var port = properties.get('port.http');
 
 app.use(express.static('resources'));
 
@@ -33,12 +67,13 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
                 reason: error
             });
             socket.emit('problem', {
-                reason: "Sorry the connection lost, please try again later!"
+                reason: "Execution error, please try again later!"
             });
         };
         client.onmessage = function (output) { // Wait for the incoming data from the EmbASPServerExecutor
             var model = JSON.parse(output.data);
-            console.log(model + " from EmbASPServerExecutor"); // debug string
+//          console.log("%j from EmbASPServerExecutor", model); // debug string
+            console.log('From EmbASPServerExecutor: "model":"%s", "error":"%s"', model.model, model.error); // debug string
             socket.emit('output', model); // Socket.io calls emit() to send data to the browser.
 
         };
@@ -46,6 +81,12 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     });
 });
 
+if (enableHTTPS) {
+    secureServer.listen(securePort, function () {
+        console.log('App listening on secure port ' + securePort);
+        console.log('Version: ' + pckg.version);
+    });
+}
 server.listen(port, function () {
     console.log('App listening on port ' + port);
     console.log('Version: ' + pckg.version);

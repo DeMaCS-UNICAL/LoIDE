@@ -1,6 +1,6 @@
 {
   "name": "LoIDE",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Web-based IDE for Logic Programming",
   "main": "app.js",
   "scripts": {
@@ -11,24 +11,30 @@
     "type": "git",
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE.git"
   },
-  "contributors": [{
-    "name": "Eliana Palermiti",
-    "email": "eliana_palermiti@libero.it"
-  }, {
-    "name": "Stefano Germano",
-    "email": "germano@mat.unical.it"
-  }, {
-    "name": "Francesco Calimeri",
-    "email": "calimeri@mat.unical.it"
-  }],
+  "contributors": [
+    {
+      "name": "Eliana Palermiti",
+      "email": "eliana_palermiti@libero.it"
+    },
+    {
+      "name": "Stefano Germano",
+      "email": "germano@mat.unical.it"
+    },
+    {
+      "name": "Francesco Calimeri",
+      "email": "calimeri@mat.unical.it"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE/issues"
   },
   "dependencies": {
-    "express": "~4.14.0",
-    "properties-reader": "0.0.15",
-    "socket.io": "^1.5.1",
+    "express": "~4.16.2",
+    "express-force-ssl": "^0.3.2",
+    "helmet": "^3.9.0",
+    "properties-reader": "0.0.16",
+    "socket.io": "^2.0.4",
     "websocket": "^1.0.23"
   },
   "analyze": true,

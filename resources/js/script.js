@@ -1333,7 +1333,10 @@ function resetSolverOptions() {
     $(".row-option:not(:first)").remove();
     var $select = $(".row-option").find("select");
     $select.val("").change();
+    $(".show").find("hr").remove();
     var $btn = $("<button/>").attr("class", "btn btn-default").text("+");
-    $(".row-option").find("span").append($btn);
-
+    var $span = $(".row-option").find("span");
+        if (!$span.has("button").length) {
+            $span.append($btn);
+    }    
 }

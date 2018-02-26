@@ -1,3 +1,14 @@
+@font-face {
+    font-family: betaFont;
+    src: url(../font/DancingScript-Regular.otf);
+}
+
+#beta {
+    font-family: betaFont;
+    font-style: italic;
+    font-size: 22px;
+}
+
 .ace {
     position: absolute;
     top: 0;
@@ -231,7 +242,7 @@ mark {
 }
 
 #btn-run-nav {
-    margin-left: 25%;
+    margin-left: 17%;
 }
 
 .navbar-header {
@@ -244,10 +255,10 @@ mark {
 
 @media screen and (max-width: 767px) {
     #btn-run-nav {
-        margin-left: 4%;
+        margin-left: 2%;
     }
     .navbar-header {
-        width: 90%;
+        width: 103%;
     }
 
     .nav.navbar-nav .btn:not(#dropdown) {
@@ -258,7 +269,7 @@ mark {
 @media screen and (min-width: 768px){
 
     .navbar-header {
-        width: 35%;
+        width: 41%;
     }
 }
 
@@ -274,4 +285,8 @@ mark {
     .navbar-header {
         width: 30%;
     }
+}
+
+#beta {
+    font-family: 
 }

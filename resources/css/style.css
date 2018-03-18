@@ -1,12 +1,7 @@
-@font-face {
-    font-family: betaFont;
-    src: url(../font/DancingScript-Regular.otf);
-}
-
 #beta {
-    font-family: betaFont;
-    font-style: italic;
+    font-family: 'Dancing Script', cursive;
     font-size: 22px;
+    vertical-align: top;
 }
 
 .ace {

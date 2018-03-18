@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
 </head>
 
 <body>
@@ -19,26 +20,39 @@
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
 			<img src="img/logo_LoIDE.png" alt="logo">
 			<span id="beta">(Beta)</span>
-			<button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip">Run! <i class="glyphicon glyphicon-play"></i></button>
+			<button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip">Run!
+				<i class="glyphicon glyphicon-play"></i>
+			</button>
 		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#upload-container" id="btn-upload" rel="tooltip"
-				    data-placement="bottom" title="">Upload File <i class="glyphicon glyphicon-upload"></i></button>
+				 data-placement="bottom" title="">Upload File
+					<i class="glyphicon glyphicon-upload"></i>
+				</button>
 				<div class="btn-group btn-group-info">
-					<label for="btn-download" role="button" class="btn btn-info" rel="tooltip" data-placement="bottom" title="">Download <i class="glyphicon glyphicon-download"></i></label>
-					<button data-toggle="dropdown" id="dropdown" class="btn btn-info dropdown-toggle" type="button"> <span id="choice"></span> <span class="caret"></span> </button>
+					<label for="btn-download" role="button" class="btn btn-info" rel="tooltip" data-placement="bottom" title="">Download
+						<i class="glyphicon glyphicon-download"></i>
+					</label>
+					<button data-toggle="dropdown" id="dropdown" class="btn btn-info dropdown-toggle" type="button">
+						<span id="choice"></span>
+						<span class="caret"></span>
+					</button>
 					<ul class="dropdown-menu dropdown-menu-choice">
-						<li><a>Input</a></li>
-						<li><a>Output</a></li>
+						<li>
+							<a>Input</a>
+						</li>
+						<li>
+							<a>Output</a>
+						</li>
 					</ul>
 				</div>
 			</ul>
@@ -66,19 +80,21 @@
 		<form id="input">
 			<div class="left-panel">
 				<div class="text-center">
-					<a role="button" id="btn-option" data-toggle="tooltip" data-placement="top" title="Options "><i class="glyphicon glyphicon-cog"></i></a>
+					<a role="button" id="btn-option" data-toggle="tooltip" data-placement="top" title="Options ">
+						<i class="glyphicon glyphicon-cog"></i>
+					</a>
 				</div>
 				<div class="option-solver">
 					<div class="hidden">
 						<label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
 						<select name="language" id="inputLanguage" class="form-control">
-					<option value="asp">ASP</option>
-				</select>
+							<option value="asp">ASP</option>
+						</select>
 						<label for="inputEngine" class="col-sm-12 col-xs-12 text-center">Solver</label>
 						<select name="engine" id="inputengine" class="form-control">
-						<option value="dlv">DLV</option>
-						<option value="clingo">Clingo</option>
-						<option value="dlv2">DLV2</option>
+							<option value="dlv">DLV</option>
+							<option value="clingo">Clingo</option>
+							<option value="dlv2">DLV2</option>
 						</select>
 						<div class="row row-option">
 							<div class="col-md-12 col-sm-12 col-xs-12">
@@ -93,7 +109,9 @@
 											<option value="silent">Silent</option>
 											<option value="query">Query</option>
 										</select>
-										<span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span>
+										<span class="input-group-btn btn-add-option">
+											<button type="button" class="btn btn-default">+</button>
+										</span>
 									</div>
 								</div>
 								<div class="option-value">
@@ -101,21 +119,25 @@
 							</div>
 						</div>
 						<div class="checkbox">
-							<p class="text-center"> <strong> Execution options </strong> </p>
+							<p class="text-center">
+								<strong> Execution options </strong>
+							</p>
 							<label>
-								<input type="checkbox" value="true" id="run-dot">
-								Run automatically
+								<input type="checkbox" value="true" id="run-dot"> Run automatically
 							</label>
 							<div id="tab-execute">
-								<p class="text-center"> <strong>Choose tab to execute</strong></p>
+								<p class="text-center">
+									<strong>Choose tab to execute</strong>
+								</p>
 								<label>
-								<input type="checkbox" value="editor1">
-								Tab1
-							</label>
+									<input type="checkbox" value="editor1"> Tab1
+								</label>
 							</div>
 							<div class="text-center" id="reset-container">
-								<p class="text-center"> <strong> Reset all options </strong> </p>
-									<button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>							
+								<p class="text-center">
+									<strong> Reset all options </strong>
+								</p>
+								<button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>
 							</div>
 						</div>
 						<div>
@@ -134,9 +156,15 @@
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active">
-								<a data-target="#tab1" role="tab" data-toggle="tab">Tab1 <span class="delete-tab"> <i class="fa fa-times"></i> </span></a>
+								<a data-target="#tab1" role="tab" data-toggle="tab">Tab1
+									<span class="delete-tab">
+										<i class="fa fa-times"></i>
+									</span>
+								</a>
 							</li>
-							<li role="presentation"><a role="button" class="add-tab">+</a></li>
+							<li role="presentation">
+								<a role="button" class="add-tab">+</a>
+							</li>
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content">
@@ -148,8 +176,12 @@
 				</div>
 				<div class="pane ui-layout-east">
 					<div id="setting-output"> Output
-						<a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a>
-						<a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a>
+						<a role="button" class="pull-right" data-toggle="modal" href="#setting-editor">
+							<i class="fa fa-cog"></i>
+						</a>
+						<a role="button" id="split" class="pull-right">
+							<i class="glyphicon glyphicon-menu-down"></i>
+						</a>
 					</div>
 					<div id="output" class="output"></div>
 				</div>
@@ -168,12 +200,31 @@
 					<h4 class="modal-title">About LoIDE</h4>
 				</div>
 				<div class="modal-body">
-					<p>LoIDE is a web-based IDE for Logic Programming<br></p>
-					<p><strong>It is part of an undergraduate student's work of thesis, and is still at the early stages of development </strong><br></p>
-					<p><strong>It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet </strong><br></p>
-					<p>LoIDE is an Open Source project available on <a href="https://github.com/DeMaCS-UNICAL/LoIDE">Github <i class="fa fa-github"></i></a></p>
-					<p>It's released under <a href="https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/LICENSE">MIT License</a></p>
-					<p><em>Version: <span id="version"></span></em></p>
+					<p>LoIDE is a web-based IDE for Logic Programming
+						<br>
+					</p>
+					<p>
+						<strong>It is part of an undergraduate student's work of thesis, and is still at the early stages of development </strong>
+						<br>
+					</p>
+					<p>
+						<strong>It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production
+							yet </strong>
+						<br>
+					</p>
+					<p>LoIDE is an Open Source project available on
+						<a href="https://github.com/DeMaCS-UNICAL/LoIDE">Github
+							<i class="fa fa-github"></i>
+						</a>
+					</p>
+					<p>It's released under
+						<a href="https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/LICENSE">MIT License</a>
+					</p>
+					<p>
+						<em>Version:
+							<span id="version"></span>
+						</em>
+					</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -219,12 +270,12 @@
 										<option value="ace/theme/terminal">Terminal</option>
 										<option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
 										<option value="ace/theme/monokai">Monokai</option>
-									</optgroup>										
+									</optgroup>
 								</select>
 							</div>
 						</div>
-						<div class="col-md-4 col-xs-4 col-md-offset-2 col-xs-offset-2">	
-							<label>Reset all editor options</label>						
+						<div class="col-md-4 col-xs-4 col-md-offset-2 col-xs-offset-2">
+							<label>Reset all editor options</label>
 							<button id="reset-editor" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>
 						</div>
 					</div>

@@ -55,25 +55,25 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
 
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
 
-        var client = new webSocket(ws_server); // connet to the EmbASPServerExecutor
-        console.log(ws_server + " path"); // debug string
+        console.log('Connecting to "%s"\n', ws_server); // debug string
+        var client = new webSocket(ws_server); // connect to the EmbASPServerExecutor
 
         client.onopen = function () { // Opens the connection and send data 
+            console.log('Received from gui\n%s\n', JSON.stringify(data, null, '\t')); // debug string
             client.send(data);
-            console.log(data + " from gui"); // debug string
         };
         client.onerror = function (error) {
+            console.log('WebSocket problem\n%s\n', JSON.stringify(error, null, '\t')); // debug string
             socket.emit('problem', {
                 reason: error
             });
             socket.emit('problem', {
-                reason: "Execution error, please try again later!"
+                reason: 'Execution error, please try again later!'
             });
         };
         client.onmessage = function (output) { // Wait for the incoming data from the EmbASPServerExecutor
             var model = JSON.parse(output.data);
-            //          console.log("%j from EmbASPServerExecutor", model); // debug string
-            console.log('From EmbASPServerExecutor: "model":"%s", "error":"%s"', model.model, model.error); // debug string
+            console.log('From EmbASPServerExecutor:\nModel "%s"\nError "%s"\n', model.model, model.error); // debug string
             socket.emit('output', model); // Socket.io calls emit() to send data to the browser.
 
         };

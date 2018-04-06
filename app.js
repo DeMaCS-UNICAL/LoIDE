@@ -32,7 +32,7 @@ if (key !== 0 && cert !== 0) {
     enableHTTPS = true;
 }
 
-// Sets "Strict-Transport-Security, by default maxAge is setted 1 year in second
+// Sets "Strict-Transport-Security, by default maxAge is set 1 year in seconds
 app.use(helmet.hsts({
     maxAge: properties.get("max.age")
 }));
@@ -59,11 +59,11 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
         var client = new webSocket(ws_server); // connect to the EmbASPServerExecutor
 
         client.onopen = function () { // Opens the connection and send data 
-            console.log('Received from gui\n%s\n', JSON.stringify(data, null, '\t')); // debug string
+            console.log('Sending to EmbASPServerExecutor:\n%s\n', JSON.stringify(JSON.parse(data), null, '\t')); // debug string
             client.send(data);
         };
         client.onerror = function (error) {
-            console.log('WebSocket problem\n%s\n', JSON.stringify(error, null, '\t')); // debug string
+            console.log('WebSocket problem:\n%s\n', JSON.stringify(error, null, '\t')); // debug string
             socket.emit('problem', {
                 reason: error
             });

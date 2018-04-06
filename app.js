@@ -53,17 +53,21 @@ app.post('/version', function (req, res) { // send the version (and take it in p
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
 
+    print_log('Opened connection')
+
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
 
-        console.log('Connecting to "%s"\n', ws_server); // debug string
-        var client = new webSocket(ws_server); // connect to the EmbASPServerExecutor
+        print_log('Executed "run"')
 
-        client.onopen = function () { // Opens the connection and send data 
-            console.log('Sending to EmbASPServerExecutor:\n%s\n', JSON.stringify(JSON.parse(data), null, '\t')); // debug string
+        var client = new webSocket(ws_server); // connect to the EmbASPServerExecutor
+        print_log('Connecting to "' + ws_server + '"')
+
+        client.onopen = function () { // Opens the connection and send data
+            print_log('Sending to EmbASPServerExecutor:\n' + JSON.stringify(JSON.parse(data), null, '\t'))
             client.send(data);
         };
         client.onerror = function (error) {
-            console.log('WebSocket problem:\n%s\n', JSON.stringify(error, null, '\t')); // debug string
+            print_log('WebSocket problem:\n' + JSON.stringify(error, null, '\t'));
             socket.emit('problem', {
                 reason: error
             });
@@ -73,7 +77,7 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
         };
         client.onmessage = function (output) { // Wait for the incoming data from the EmbASPServerExecutor
             var model = JSON.parse(output.data);
-            console.log('From EmbASPServerExecutor:\nModel "%s"\nError "%s"\n', model.model, model.error); // debug string
+            print_log('From EmbASPServerExecutor:\nModel "' + model.model + '"\nError "' + model.error + '"'); // debug string
             socket.emit('output', model); // Socket.io calls emit() to send data to the browser.
 
         };
@@ -83,11 +87,15 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
 
 if (enableHTTPS) {
     secureServer.listen(securePort, function () {
-        console.log('App listening on secure port ' + securePort);
-        console.log('Version: ' + pckg.version);
+        print_log('App listening on secure port ' + securePort);
+        print_log('Version: ' + pckg.version);
     });
 }
 server.listen(port, function () {
-    console.log('App listening on port ' + port);
-    console.log('Version: ' + pckg.version);
+    print_log('App listening on port ' + port);
+    print_log('Version: ' + pckg.version);
 });
+
+function print_log(statement) {
+    console.log('%s: %s', (new Date()).toLocaleString(), statement); // debug string
+}

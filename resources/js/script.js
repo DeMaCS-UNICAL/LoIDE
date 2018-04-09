@@ -535,7 +535,7 @@ $(document).on('change', '#inputengine', function () {
                 $(this).val("").change();
         });
 
-    } else {
+    } else if ($('.form-control-option').find("option[value='filter']").length === 0) {
         $('.form-control-option').append('</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
     }
 });

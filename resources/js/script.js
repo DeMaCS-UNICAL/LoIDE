@@ -387,6 +387,10 @@ $(document).ready(function () {
  */
 function callSocketServer() {
     configureOptions();
+    $('.tab-pane').each(function (index, element) {
+        var id = $(this).find('.ace').attr("id");
+        editors[id].replaceAll("", {"needle":"'"});
+    });
     if (!addMorePrograms()) {
         var text = editors[idEditor].getValue();
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
@@ -401,12 +405,12 @@ function callSocketServer() {
         console.log(response); // debug string 
     });
     socket.on('output', function (response) {
-        if (response.error === "") {
+        if (response.error == "") {
             console.log(response.model); // debug string
             $('#output').text(response.model); // append the response in the container 
             $('#output').css('color', 'black');
         } else {
-            $('#output').text(response.error);
+            $('#output').text(response.model+response.error);
             $('#output').css('color', 'red');
         }
     });
@@ -1015,6 +1019,10 @@ function setUpAce(ideditor, text) {
             if (e.lines[0] === '.') {
                 intervalRun();
             }
+        }
+        if (e.lines[0] === "'") {
+            operation_alert({reason: "Single quotes not yet supported"});
+            editors[ideditor].replaceAll("", {"needle":"'"});
         }
     });
     setHeightComponents();

@@ -199,16 +199,8 @@ mark {
     overflow: hidden;
 }
 
-.ui-layout-pane-east:hover {
-    overflow-y: scroll;
-}
-
 .ui-layout-pane-center {
     overflow: hidden;
-}
-
-.ui-layout-pane-center:hover {
-    overflow-y: auto;
 }
 
 #seeting-output {

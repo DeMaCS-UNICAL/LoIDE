@@ -1003,13 +1003,80 @@ function setUpAce(ideditor, text) {
     editors[ideditor] = new ace.edit(ideditor);
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
+    editors[ideditor].jumpToMatching();
     editors[ideditor].session.setMode("ace/mode/asp");
     editors[ideditor].setTheme(defaultTheme);
     editors[ideditor].setValue(text);
     editors[ideditor].resize();
+    editors[ideditor].setBehavioursEnabled(true);
     editors[ideditor].setOptions({
-        fontSize: 15
+        fontSize: 15,
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true,
+        enableSnippets: true
     });
+
+    var langTools = ace.require('ace/ext/language_tools');
+
+    var completer = { //completer that include snippets and some keywords
+        getCompletions: function(editor, session, pos, prefix, callback) {
+            var completions = [
+
+                {
+                    caption: "#count",
+                    snippet: "#count{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function",
+                },
+                {
+                    caption: "#sum",
+                    snippet: "#sum{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function"
+                },
+                {
+                    caption: "#min",
+                    snippet: "#min{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function"
+                },
+                {
+                    caption: "#max",
+                    snippet: "#max{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function"
+                },
+                {
+                    caption: "#times",
+                    snippet: "#times{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function"
+                },
+                {
+                    caption: "#int",
+                    snippet: "#int",
+                    meta: "keyword"
+                },
+                {
+                    caption: "#maxint",
+                    snippet: "#maxint",
+                    meta: "keyword"
+                }
+                // {
+                //     caption: "(",
+                //     snippet: "${0})",
+                //     meta: "()"
+                // },
+                // {
+                //     caption: '"',
+                //     snippet: '${0}"',
+                //     meta: '""'
+                // }
+            ];
+
+            // completions.push();
+            callback(null, completions);
+        }
+    }
+
+    langTools.setCompleters([langTools.textCompleter]);
+    langTools.addCompleter(completer);
+    console.log(langTools.keyWordCompleter);
 
     /**
      * Execute the program when you insert a . and if the readio button is checked

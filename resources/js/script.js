@@ -1275,6 +1275,68 @@ function setUpAce(ideditor, text) {
 
     var langTools = ace.require('ace/ext/language_tools');
 
+    var completer = { //completer that include snippets and some keywords
+        getCompletions: function(editor, session, pos, prefix, callback) {
+            var completions = [
+
+                {
+                    caption: "#count",
+                    snippet: "#count{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function",
+                },
+                {
+                    caption: "#sum",
+                    snippet: "#sum{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function"
+                },
+                {
+                    caption: "#min",
+                    snippet: "#min{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function"
+                },
+                {
+                    caption: "#max",
+                    snippet: "#max{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function"
+                },
+                {
+                    caption: "#times",
+                    snippet: "#times{${1:Vars} : ${2:Congj}}",
+                    meta: "aggregate function"
+                },
+                {
+                    caption: "#int",
+                    snippet: "#int",
+                    meta: "keyword"
+                },
+                {
+                    caption: "#maxint",
+                    snippet: "#maxint",
+                    meta: "keyword"
+                }
+                // {
+                //     caption: "(",
+                //     snippet: "${0})",
+                //     meta: "()"
+                // },
+                // {
+                //     caption: '"',
+                //     snippet: '${0}"',
+                //     meta: '""'
+                // }
+            ];
+
+            // completions.push();
+            callback(null, completions);
+        }
+    }
+
+    langTools.setCompleters([langTools.textCompleter]);
+    langTools.addCompleter(completer);
+    console.log(langTools.keyWordCompleter);
+
+    var langTools = ace.require('ace/ext/language_tools');
+
     // completer that include snippets and some keywords
     var completer = { //
         getCompletions: function(editor, session, pos, prefix, callback) {

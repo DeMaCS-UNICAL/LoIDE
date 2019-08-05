@@ -196,7 +196,11 @@ mark {
 }
 
 .ui-layout-pane-east {
-    overflow: hidden;
+     overflow: hidden;
+ }
+
+.ui-layout-pane-east:hover{
+    overflow-y: auto;
 }
 
 .ui-layout-pane-center {
@@ -272,8 +276,4 @@ mark {
     .navbar-header {
         width: 30%;
     }
-}
-
-#beta {
-    font-family: 
 }

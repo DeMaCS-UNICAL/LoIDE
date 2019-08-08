@@ -168,6 +168,111 @@ $(window).resize(function () {
 
 $(document).ready(function () {
 
+    $(".popover-download").popover({
+        trigger : 'manual',
+        html: 'true',
+        placement: 'bottom',
+        content: '<div class="popover-download-content row">\n' +
+            '\n' +
+            '\t\t\t\t\t\t<div class="col-sm-12">\n' +
+            '\t\t\t\t\t\t\t<div class="row">\n' +
+            '\t\t\t\t\t\t\t\t<div class="col-sm-9">\n' +
+            '\t\t\t\t\t\t\t\t\t<p>Only output: </p>\n' +
+            '\t\t\t\t\t\t\t\t</div>\n' +
+            '\t\t\t\t\t\t\t\t<div class="col-sm-3">\n' +
+            '\t\t\t\t\t\t\t\t\t<input id="only-output" type="checkbox">\n' +
+            '\t\t\t\t\t\t\t\t</div>\n' +
+            '\t\t\t\t\t\t\t</div>\n' +
+            '\t\t\t\t\t\t</div>\n' +
+            '\t\t\t\t\t\t<div class="col-sm-12 save-content">\n' +
+            '\t\t\t\t\t\t\tSave to:\n' +
+            '\t\t\t\t\t\t\t<div class="save-btn text-center">\n' +
+            '\t\t\t\t\t\t\t\t<button class="btn btn-default btn-saver local-download">Local</button>\n' +
+            '\t\t\t\t\t\t\t\t<button class="btn btn-default btn-saver cloud-download" disabled>Cloud</button>\n' +
+            '\t\t\t\t\t\t\t</div>\n' +
+            '\t\t\t\t\t\t</div>\n' +
+            '\t\t\t\t\t</div>'
+    }).click(function(e) {
+        $(this).popover('toggle');
+        $('#popover-download').not(this).popover('hide');
+
+        e.stopPropagation();
+    });
+
+    // $('body').on('click', function (e) {
+    //     $('.popover-download').each(function () {
+    //         if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+    //             $(this).popover('hide');
+    //         }
+    //     });
+    //
+    // });
+
+    $('.popover-download').on('shown.bs.popover', function() {
+        // set what happens when user clicks on the button
+        $(".local-download").on('click', function(){
+            if($('#only-output').is(":checked")){
+                $('#program').removeAttr('name', 'program[0]');
+                $('#output-form').attr('name', 'output');
+                var text = $("#output").text();
+                $('#output-form').val(text);
+                form = $('#input').serializeFormJSON();
+                stringify = JSON.stringify(form);
+                chose = $('#choice').text();
+                createFileToDownload(stringify, "local");
+                $('#program').attr('name', 'program[0]');
+                $('#output-form').removeAttr('name', 'output');
+            }
+            else {
+                    addProgramsToDownload();
+                    $('#output-form').attr('name', 'output');
+                    var text = $("#output").text();
+                    $('#output-form').val(text);
+                    i = 0;
+                    $("#tab-execute input").each(function (index, element) {
+                        if ($(this).prop('checked')) {
+                            $(this).attr("name", "tab[" + i + "]");
+                            i++;
+                        }
+                    });
+                    $("#run-dot").attr("name", "runAuto");
+                    form = $('#input').serializeFormJSON();
+                    stringify = JSON.stringify(form);
+                    var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable
+                    createFileToDownload(stringify, "local");
+                    $('#output-form').removeAttr('name');
+                    destroyPrograms();
+                    $("#tab-execute input").each(function (index, element) {
+                        $(this).removeAttr("name");
+                    });
+                    $("#run-dot").removeAttr("name");
+
+            }
+        });
+
+        $(".cloud-download").on('click', function () {
+            if(Dropbox.isBrowserSupported()){
+                $('#program').removeAttr('name', 'program[0]');
+                $('#output-form').attr('name', 'output');
+                var text = $("#output").text();
+                $('#output-form').val(text);
+                form = $('#input').serializeFormJSON();
+                stringify = JSON.stringify(form);
+                chose = $('#choice').text();
+
+                createFileToDownload(stringify, "dropbox")
+            }
+            else{
+                alert("Dropbox not supported on your browser!");
+            }
+        });
+    });
+
+    $('.popover-download').on('hidden.bs.popover', function(){
+        // clear listeners
+        $(".local-download").off('click');
+    });
+
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
             var length = $(".nav-tabs").children().length;
@@ -261,6 +366,7 @@ $(document).ready(function () {
         $('#split').attr('id', 'split-up');
     }
 
+    // now it will never be used
     $('.dropdown-menu-choice').find('a').click(function (e) {
         var concept = $(this).text();
         $('#choice').text(concept); // append to the DOM the choice for download
@@ -316,31 +422,11 @@ $(document).ready(function () {
             $("#output").text("Sending..");
             callSocketServer();
 
-        } else if (clkBtn === 'btn-download') {
-            addProgramsToDownload();
-            $('#output-form').attr('name', 'output');
-            var text = $("#output").text();
-            $('#output-form').val(text);
-            i = 0;
-            $("#tab-execute input").each(function (index, element) {
-                if ($(this).prop('checked')) {
-                    $(this).attr("name", "tab[" + i + "]");
-                    i++;
-                }
-            });
-            $("#run-dot").attr("name", "runAuto");
-            form = $('#input').serializeFormJSON();
-            stringify = JSON.stringify(form);
-            var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
-            createFileToDownload(stringify);
-            $('#output-form').removeAttr('name');
-            destroyPrograms();
-            $("#tab-execute input").each(function (index, element) {
-                $(this).removeAttr("name");
-            });
-            $("#run-dot").removeAttr("name");
+        }
+        // else if (clkBtn === 'btn-download') { //tutto questo farla nella funzione se clicco in locale e output e true
 
-        } else if (clkBtn === 'save-options') {
+        // }
+        else if (clkBtn === 'save-options') {
             i = 0;
             $("#tab-execute input").each(function (index, element) {
                 if ($(this).prop('checked')) {
@@ -428,7 +514,7 @@ function intervalRun() {
  * @description Create a new Blob that contains the data from your form feild, then create a link object to attach the file to download
  */
 
-function createFileToDownload(text) {
+function createFileToDownload(text,where) {
     var textFileAsBlob = new Blob([text], {
 
         type: 'application/json'
@@ -456,7 +542,15 @@ function createFileToDownload(text) {
     downloadLink.onclick = destroyClickedElement;
     downloadLink.style.display = "none";
     document.body.appendChild(downloadLink);
-    downloadLink.click();
+    if(where == "local")
+    {
+        downloadLink.click();
+    }
+    else if(where == "dropbox"){
+        console.log(downloadLink.href);
+        var options = { error: function (errorMessage) { alert(errorMessage);}};
+        Dropbox.save(downloadLink.href, fileNameToSaveAs, options);
+    }
 }
 /**
  * @param {Object} event - reference to the object that dispatched the event
@@ -1018,7 +1112,8 @@ function setUpAce(ideditor, text) {
 
     var langTools = ace.require('ace/ext/language_tools');
 
-    var completer = { //completer that include snippets and some keywords
+    // completer that include snippets and some keywords
+    var completer = { //
         getCompletions: function(editor, session, pos, prefix, callback) {
             var completions = [
 
@@ -1056,6 +1151,11 @@ function setUpAce(ideditor, text) {
                     caption: "#maxint",
                     snippet: "#maxint",
                     meta: "keyword"
+                },
+                {
+                    caption: ':~',
+                    snippet: ":~ ${1:literals}. [${2:conditions}]",
+                    meta: "weak constraint"
                 }
                 // {
                 //     caption: "(",
@@ -1415,3 +1515,5 @@ function resetSolverOptions() {
             $span.append($btn);
     }    
 }
+
+

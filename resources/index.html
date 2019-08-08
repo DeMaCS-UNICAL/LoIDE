@@ -38,23 +38,49 @@
 				 data-placement="bottom" title="">Upload File
 					<i class="glyphicon glyphicon-upload"></i>
 				</button>
-				<div class="btn-group btn-group-info">
+				<a class="popover-download">
 					<label for="btn-download" role="button" class="btn btn-info" rel="tooltip" data-placement="bottom" title="">Download
 						<i class="glyphicon glyphicon-download"></i>
 					</label>
-					<button data-toggle="dropdown" id="dropdown" class="btn btn-info dropdown-toggle" type="button">
-						<span id="choice"></span>
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu dropdown-menu-choice">
-						<li>
-							<a>Input</a>
-						</li>
-						<li>
-							<a>Output</a>
-						</li>
-					</ul>
-				</div>
+				</a>
+<!--				<div class="popover-download-content hide">-->
+<!--					<div class="popover-download-content row">-->
+<!--						<div class="col-sm-12">-->
+<!--							<div class="row">-->
+<!--								<div class="col-sm-9">-->
+<!--									<p>Only output: </p>-->
+<!--								</div>-->
+<!--								<div class="col-sm-3">-->
+<!--									<input class="only-output" type="checkbox">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--						<div class="col-sm-12 save-content">-->
+<!--							Save to:-->
+<!--							<div class="save-btn text-center">-->
+<!--								<button class="btn btn-default btn-saver local-download">Local</button>-->
+<!--								<button class="btn btn-default btn-saver cloud-download">Cloud</button>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+
+<!--					<div class="btn-group btn-group-info">-->
+<!--					-->
+<!--					<button data-toggle="dropdown" id="dropdown" class="btn btn-info dropdown-toggle" type="button">-->
+<!--						<span id="choice"></span>-->
+<!--						<span class="caret"></span>-->
+<!--					</button>-->
+<!--					<ul class="dropdown-menu dropdown-menu-choice">-->
+<!--						<li>-->
+<!--							<a>Input</a>-->
+<!--						</li>-->
+<!--						<li>-->
+<!--							<a>Output</a>-->
+<!--						</li>-->
+<!--					</ul>-->
+<!--				</div>-->
+<!--				</div>-->
 			</ul>
 			<ul class="nav navbar-nav navbar-left">
 				<button id="a" type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-about">About </button>
@@ -154,18 +180,28 @@
 				<div class="pane ui-layout-center">
 					<div role="tabpanel">
 						<!-- Nav tabs -->
-						<ul class="nav nav-tabs" role="tablist">
-							<li role="presentation" class="active">
-								<a data-target="#tab1" role="tab" data-toggle="tab">Tab1
-									<span class="delete-tab">
-										<i class="fa fa-times"></i>
-									</span>
-								</a>
-							</li>
-							<li role="presentation">
-								<a role="button" class="add-tab">+</a>
-							</li>
-						</ul>
+						<div class="row row-tabpanel-toolbar">
+							<ul class="col-lg-8 col-md-8 col-xs-8 nav nav-tabs" role="tablist">
+								<li role="presentation" class="active">
+									<a data-target="#tab1" role="tab" data-toggle="tab">Tab1
+										<span class="delete-tab">
+											<i class="fa fa-times"></i>
+										</span>
+									</a>
+								</li>
+								<li role="presentation">
+									<a role="button" class="add-tab">+</a>
+								</li>
+							</ul>
+							<div class="col-lg-4 col-md-4 col-xs-4 text-right toolbar">
+								<div class="undo-redo btn-group" role="group">
+									<button id="btn-undo" type="button" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
+									<button id="btn-redo" type="button" class="btn btn-default"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+								</div>
+								<button id="btn-run-thistab" type="button" class="btn btn-default"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
+								<button id="btn-share-tab" type="button" class="btn btn-default"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></button>
+							</div>
+						</div>
 						<!-- Tab panes -->
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane fade in active" id="tab1">
@@ -293,7 +329,7 @@
 	<script src="js/jquery.layout-latest.js" type="text/javascript"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js"></script>
-
+	<!-- Ace editor-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ext-language_tools.js" type="text/javascript"></script>
 
@@ -302,6 +338,11 @@
 	<script src="js/keymaster.js" type="text/javascript"></script>
 	<script src="js/bimap.js" type="text/javascript"></script>
 	<script src="js/script.js" type="text/javascript"></script>
+	<!-- Bootstrap toogle-->
+	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+	<!-- Dropbox API-->
+	<script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="nz9r7ab35gqs3su"></script>
 
 </body>
 

@@ -168,6 +168,10 @@ a[role="button"]:focus {
     margin-right: 5px;
 }
 
+.nav-tabs {
+    border-bottom: 0px;
+}
+
 .row-tabpanel-toolbar{
     margin-right:0px;
     margin-left: 0px;
@@ -249,10 +253,6 @@ mark {
     padding: 10px;
     /*border: 2px solid #8cd6ff;*/
     border-radius: 5px;
-}
-
-.popover.bottom {
-    margin-top: 30px;
 }
 
 .nav.navbar-nav .btn {

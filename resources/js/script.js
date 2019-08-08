@@ -193,8 +193,9 @@ $(document).ready(function () {
             '\t\t\t\t\t\t</div>\n' +
             '\t\t\t\t\t</div>'
     }).click(function(e) {
+
         $(this).popover('toggle');
-        $('#popover-download').not(this).popover('hide');
+        $('.popover-download').not(this).popover('hide');
 
         e.stopPropagation();
     });
@@ -210,6 +211,8 @@ $(document).ready(function () {
 
     $('.popover-download').on('shown.bs.popover', function() {
         // set what happens when user clicks on the button
+        $('.popover.bottom').css("margin-top","30px");
+
         $(".local-download").on('click', function(){
             if($('#only-output').is(":checked")){
                 $('#program').removeAttr('name', 'program[0]');
@@ -219,7 +222,7 @@ $(document).ready(function () {
                 form = $('#input').serializeFormJSON();
                 stringify = JSON.stringify(form);
                 chose = $('#choice').text();
-                createFileToDownload(stringify, "local");
+                createFileToDownload(stringify, "local","LoIDE_Output", "json");
                 $('#program').attr('name', 'program[0]');
                 $('#output-form').removeAttr('name', 'output');
             }
@@ -239,7 +242,7 @@ $(document).ready(function () {
                     form = $('#input').serializeFormJSON();
                     stringify = JSON.stringify(form);
                     var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable
-                    createFileToDownload(stringify, "local");
+                    createFileToDownload(stringify,"local","LoIDE_Project","json");
                     $('#output-form').removeAttr('name');
                     destroyPrograms();
                     $("#tab-execute input").each(function (index, element) {
@@ -260,7 +263,7 @@ $(document).ready(function () {
                 stringify = JSON.stringify(form);
                 chose = $('#choice').text();
 
-                createFileToDownload(stringify, "dropbox")
+                // createFileToDownload(stringify, "dropbox", "json")
             }
             else{
                 alert("Dropbox not supported on your browser!");
@@ -272,6 +275,81 @@ $(document).ready(function () {
         // clear listeners
         $(".local-download").off('click');
     });
+
+
+    $(".popover-share").popover({
+        container: 'body',
+        trigger : 'manual',
+        html: 'true',
+        placement: 'bottom',
+        content:'<div class="popover-share-content">\n' +
+            // '\t<button id="share-btn-telegram" type="button" class="btn btn-default btn-block">Share on Telegram</button>\n' +
+            '\t<button id="share-btn-whatsapp" type="button" class="btn btn-default btn-block">Share on Whatsapp</button>\n' +
+            '\t<button id="share-btn-download" type="button" class="btn btn-default btn-block">Download</button>\n' +
+            '\t<button id="share-btn-save-on-cloud" type="button" class="btn btn-default btn-block" disabled>Save on cloud</button>\n' +
+            '</div>'
+    }).click(function(e) {
+        $(this).popover('toggle');
+        $('.popover-share').not(this).popover('hide');
+
+        e.stopPropagation();
+    });
+
+    $('body').on('click', function (e) {
+        $('.popover-share').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+
+    });
+
+    $('.popover-share').on('shown.bs.popover', function() {
+        $('#share-btn-telegram').on('click',function () {
+            window.open('https://t.me/share/url?url='+ editors[idEditor].getValue());
+        });
+        $('#share-btn-whatsapp').on('click',function () {
+            window.open("whatsapp://send?text="+ editors[idEditor].getValue());
+        });
+        $('#share-btn-download').on('click',function () {
+            var text = editors[idEditor].getValue();
+            console.log(text);
+            createFileToDownload(text,"local","LogicProgram","txt");
+        });
+        $('#share-btn-save-on-cloud').on('click',function(){
+            console.log("Download this on cloud");
+        });
+    });
+
+    $('.popover-share').on('hidden.bs.popover', function(){
+        $('#share-btn-download').off('click');
+        $('#share-btn-save-on-cloud').off('click');
+    });
+
+    $('#btn-undo').on('click',function () {
+        var undoManager = editors[idEditor].session.getUndoManager();
+        if(undoManager.hasUndo()){
+            undoManager.undo(true);
+        }
+
+    });
+
+    $('#btn-redo').on('click',function () {
+        var undoManager = editors[idEditor].session.getUndoManager();
+        if(undoManager.hasRedo()){
+            undoManager.redo(true);
+        }
+
+    });
+
+    $('#btn-run-thistab').on('click',function () {
+        $("#output").empty();
+        $("#output").text("Sending..");
+        callSocketServer(true);
+    });
+
+
+
 
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
@@ -376,7 +454,7 @@ $(document).ready(function () {
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
             chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
-            createFileToDownload(stringify);
+            createFileToDownload(stringify,"local","LoIDE_Project","json");
             destroyPrograms();
         } else {
             $('#program').removeAttr('name', 'program[0]');
@@ -386,7 +464,7 @@ $(document).ready(function () {
             form = $('#input').serializeFormJSON();
             stringify = JSON.stringify(form);
             chose = $('#choice').text();
-            createFileToDownload(stringify);
+            createFileToDownload(stringify,"local","LoIDE_Project","json");
             $('#program').attr('name', 'program[0]');
             $('#output-form').removeAttr('name', 'output');
         }
@@ -420,7 +498,7 @@ $(document).ready(function () {
         if (clkBtn === "run") {
             $("#output").empty();
             $("#output").text("Sending..");
-            callSocketServer();
+            callSocketServer(false);
 
         }
         // else if (clkBtn === 'btn-download') { //tutto questo farla nella funzione se clicco in locale e output e true
@@ -471,13 +549,13 @@ $(document).ready(function () {
 /**
  * @description Serialize form and send it to socket server and waits for the response
  */
-function callSocketServer() {
+function callSocketServer(onlyActiveTab) {
     configureOptions();
     $('.tab-pane').each(function (index, element) {
         var id = $(this).find('.ace').attr("id");
         editors[id].replaceAll("", {"needle":"'"});
     });
-    if (!addMorePrograms()) {
+    if (onlyActiveTab || !addMorePrograms()) {
         var text = editors[idEditor].getValue();
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
@@ -514,15 +592,15 @@ function intervalRun() {
  * @description Create a new Blob that contains the data from your form feild, then create a link object to attach the file to download
  */
 
-function createFileToDownload(text,where) {
+function createFileToDownload(text,where,name,type) {
     var textFileAsBlob = new Blob([text], {
 
-        type: 'application/json'
+        type: 'application/'+type
     });
     /**
      * specify the name of the file to be saved
      */
-    var fileNameToSaveAs = "Config.json";
+    var fileNameToSaveAs = name+ "." + type;
     var downloadLink = document.createElement("a");
 
     /**
@@ -547,9 +625,9 @@ function createFileToDownload(text,where) {
         downloadLink.click();
     }
     else if(where == "dropbox"){
-        console.log(downloadLink.href);
-        var options = { error: function (errorMessage) { alert(errorMessage);}};
-        Dropbox.save(downloadLink.href, fileNameToSaveAs, options);
+        // console.log(downloadLink.href);
+        // var options = { error: function (errorMessage) { alert(errorMessage);}};
+        // Dropbox.save(downloadLink.href, fileNameToSaveAs, options);
     }
 }
 /**
@@ -1176,7 +1254,6 @@ function setUpAce(ideditor, text) {
 
     langTools.setCompleters([langTools.textCompleter]);
     langTools.addCompleter(completer);
-    console.log(langTools.keyWordCompleter);
 
     /**
      * Execute the program when you insert a . and if the readio button is checked
@@ -1514,6 +1591,10 @@ function resetSolverOptions() {
         if (!$span.has("button").length) {
             $span.append($btn);
     }    
+}
+
+function getActiveEditor() {
+    
 }
 
 

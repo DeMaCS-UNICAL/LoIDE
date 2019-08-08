@@ -313,10 +313,8 @@ $(document).ready(function () {
         });
         $('#share-btn-download').on('click',function () {
             var text = editors[idEditor].getValue();
-            var TabToDownload = $('#' + idEditor).parent().attr('id');
-            var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
-            var string = nameTab.text().replace(/\s/g,'');
-            createFileToDownload(text,"local","LogicProgram_" + string,"txt");
+            console.log(text);
+            createFileToDownload(text,"local","LogicProgram","txt");
         });
         $('#share-btn-save-on-cloud').on('click',function(){
             console.log("Download this on cloud");
@@ -328,14 +326,12 @@ $(document).ready(function () {
         $('#share-btn-save-on-cloud').off('click');
     });
 
-    //popover tab
-    inizializeChangeNameContextmenu();
-
     $('#btn-undo').on('click',function () {
         var undoManager = editors[idEditor].session.getUndoManager();
         if(undoManager.hasUndo()){
             undoManager.undo(true);
         }
+
     });
 
     $('#btn-redo').on('click',function () {
@@ -1339,7 +1335,6 @@ function setUpAce(ideditor, text) {
 
     langTools.setCompleters([langTools.textCompleter]);
     langTools.addCompleter(completer);
-    console.log(langTools.keyWordCompleter);
 
     var langTools = ace.require('ace/ext/language_tools');
 

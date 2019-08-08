@@ -168,6 +168,10 @@ a[role="button"]:focus {
     margin-right: 5px;
 }
 
+.nav-tabs {
+    border-bottom: 0px;
+}
+
 .row-tabpanel-toolbar{
     margin-right:0px;
     margin-left: 0px;

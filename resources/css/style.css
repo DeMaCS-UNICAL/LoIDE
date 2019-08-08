@@ -168,6 +168,11 @@ a[role="button"]:focus {
     margin-right: 5px;
 }
 
+.row-tabpanel-toolbar{
+    margin-right:0px;
+    margin-left: 0px;
+}
+
 #tab-execute {
     margin-top: 5%;
 }
@@ -240,8 +245,27 @@ mark {
     width: 20%;
 }
 
+.popover-download-content {
+    padding: 10px;
+    /*border: 2px solid #8cd6ff;*/
+    border-radius: 5px;
+}
+
+.popover.bottom {
+    margin-top: 30px;
+}
+
 .nav.navbar-nav .btn {
     margin-top: 12.5px;
+}
+
+.btn-saver {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.save-content {
+    margin-top: 4px;
 }
 
 @media screen and (max-width: 767px) {

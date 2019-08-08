@@ -1275,7 +1275,8 @@ function setUpAce(ideditor, text) {
 
     var langTools = ace.require('ace/ext/language_tools');
 
-    var completer = { //completer that include snippets and some keywords
+    // completer that include snippets and some keywords
+    var completer = { //
         getCompletions: function(editor, session, pos, prefix, callback) {
             var completions = [
 
@@ -1313,6 +1314,11 @@ function setUpAce(ideditor, text) {
                     caption: "#maxint",
                     snippet: "#maxint",
                     meta: "keyword"
+                },
+                {
+                    caption: ':~',
+                    snippet: ":~ ${1:literals}. [${2:conditions}]",
+                    meta: "weak constraint"
                 }
                 // {
                 //     caption: "(",

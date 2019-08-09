@@ -830,13 +830,14 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             var parent = $('.add-tab').parent();
             idEditor = 'editor1';
             ideditor = 'editor1';
-            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab"><span class="name-tab">Tab1</span><span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
+            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab"><span class="name-tab">Tab1</span><span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor, "");
-            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"> Tab1</label>');
+            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"><span class="name-tab">Tab1</span></label>');
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
+            inizializeChangeNameContextmenu();
         }
         else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
             // $('.nav-tabs').find('li:not(:last)').each(function (index) {

@@ -80,6 +80,7 @@ function operation_alert(result) {
     $("#result-auto-close-alert").fadeTo(1500, 750).slideUp(800, function () {
         $(this).removeClass("alert-danger fade in");
     });
+
 }
 
 /**
@@ -90,19 +91,19 @@ var layout;
 
 /**
  * @global
- * @description place the id of the current shown editor 
+ * @description place the id of the current shown editor
  */
-var idEditor = 'editor1';
+var idEditor = "editor1";
 
 /**
  * @global
- * @description default font size editor 
+ * @description default font size editor
  */
 var defaultFontSize = 15;
 
 /**
  * @global
- * @description default ace theme 
+ * @description default ace theme
  */
 var defaultTheme = "ace/theme/tomorrow";
 
@@ -113,10 +114,10 @@ editors = {};
 setUpAce(idEditor, "");
 
 
-$('.modal').modal({
-    backdrop: false,
-    show: false
-});
+// $('.modal').modal({
+//     backdrop: false,
+//     show: false
+// });
 
 /**
  * set autofocus in modal
@@ -155,7 +156,7 @@ $(window).resize(function () {
         $("#font-output").val(fontSizeO);
         $('#output').css('font-size', fontSizeO + "px");
         $('#output').text(currentVal);
-        $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
+        $('#split').children().attr('class', 'fa fa-chevron-up');
         $('#split').attr('id', 'split-up');
     }
     setHeightComponents();
@@ -167,193 +168,11 @@ $(window).resize(function () {
 });
 
 $(document).ready(function () {
+    inizializePopovers();
 
-    $(".popover-download").popover({
-        trigger : 'manual',
-        html: 'true',
-        placement: 'bottom',
-        content: '<div class="popover-download-content row">\n' +
-            '\n' +
-            '\t\t\t\t\t\t<div class="col-sm-12">\n' +
-            '\t\t\t\t\t\t\t<div class="row">\n' +
-            '\t\t\t\t\t\t\t\t<div class="col-sm-9">\n' +
-            '\t\t\t\t\t\t\t\t\t<p>Only output: </p>\n' +
-            '\t\t\t\t\t\t\t\t</div>\n' +
-            '\t\t\t\t\t\t\t\t<div class="col-sm-3">\n' +
-            '\t\t\t\t\t\t\t\t\t<input id="only-output" type="checkbox">\n' +
-            '\t\t\t\t\t\t\t\t</div>\n' +
-            '\t\t\t\t\t\t\t</div>\n' +
-            '\t\t\t\t\t\t</div>\n' +
-            '\t\t\t\t\t\t<div class="col-sm-12 save-content">\n' +
-            '\t\t\t\t\t\t\tSave to:\n' +
-            '\t\t\t\t\t\t\t<div class="save-btn text-center">\n' +
-            '\t\t\t\t\t\t\t\t<button class="btn btn-default btn-saver local-download">Local</button>\n' +
-            '\t\t\t\t\t\t\t\t<button class="btn btn-default btn-saver cloud-download" disabled>Cloud</button>\n' +
-            '\t\t\t\t\t\t\t</div>\n' +
-            '\t\t\t\t\t\t</div>\n' +
-            '\t\t\t\t\t</div>'
-    }).click(function(e) {
-
-        $(this).popover('toggle');
-        $('.popover-download').not(this).popover('hide');
-
-        e.stopPropagation();
-    });
-
-    // $('body').on('click', function (e) {
-    //     $('.popover-download').each(function () {
-    //         if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-    //             $(this).popover('hide');
-    //         }
-    //     });
-    //
-    // });
-
-    $('.popover-download').on('shown.bs.popover', function() {
-        // set what happens when user clicks on the button
-        $('.popover.bottom').css("margin-top","30px");
-
-        $(".local-download").on('click', function(){
-            if($('#only-output').is(":checked")){
-                $('#program').removeAttr('name', 'program[0]');
-                $('#output-form').attr('name', 'output');
-                var text = $("#output").text();
-                $('#output-form').val(text);
-                form = $('#input').serializeFormJSON();
-                stringify = JSON.stringify(form);
-                chose = $('#choice').text();
-                createFileToDownload(stringify, "local","LoIDE_Output", "json");
-                $('#program').attr('name', 'program[0]');
-                $('#output-form').removeAttr('name', 'output');
-            }
-            else {
-                    addProgramsToDownload();
-                    $('#output-form').attr('name', 'output');
-                    var text = $("#output").text();
-                    $('#output-form').val(text);
-                    i = 0;
-                    $("#tab-execute input").each(function (index, element) {
-                        if ($(this).prop('checked')) {
-                            $(this).attr("name", "tab[" + i + "]");
-                            i++;
-                        }
-                    });
-                    $("#run-dot").attr("name", "runAuto");
-                    form = $('#input').serializeFormJSON();
-                    stringify = JSON.stringify(form);
-                    var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable
-                    createFileToDownload(stringify,"local","LoIDE_Project","json");
-                    $('#output-form').removeAttr('name');
-                    destroyPrograms();
-                    $("#tab-execute input").each(function (index, element) {
-                        $(this).removeAttr("name");
-                    });
-                    $("#run-dot").removeAttr("name");
-
-            }
-        });
-
-        $(".cloud-download").on('click', function () {
-            if(Dropbox.isBrowserSupported()){
-                $('#program').removeAttr('name', 'program[0]');
-                $('#output-form').attr('name', 'output');
-                var text = $("#output").text();
-                $('#output-form').val(text);
-                form = $('#input').serializeFormJSON();
-                stringify = JSON.stringify(form);
-                chose = $('#choice').text();
-
-                // createFileToDownload(stringify, "dropbox", "json")
-            }
-            else{
-                alert("Dropbox not supported on your browser!");
-            }
-        });
-    });
-
-    $('.popover-download').on('hidden.bs.popover', function(){
-        // clear listeners
-        $(".local-download").off('click');
-    });
-
-
-    $(".popover-share").popover({
-        container: 'body',
-        trigger : 'manual',
-        html: 'true',
-        placement: 'bottom',
-        content:'<div class="popover-share-content">\n' +
-            // '\t<button id="share-btn-telegram" type="button" class="btn btn-default btn-block">Share on Telegram</button>\n' +
-            '\t<button id="share-btn-whatsapp" type="button" class="btn btn-default btn-block">Share on Whatsapp</button>\n' +
-            '\t<button id="share-btn-download" type="button" class="btn btn-default btn-block">Download</button>\n' +
-            '\t<button id="share-btn-save-on-cloud" type="button" class="btn btn-default btn-block" disabled>Save on cloud</button>\n' +
-            '</div>'
-    }).click(function(e) {
-        $(this).popover('toggle');
-        $('.popover-share').not(this).popover('hide');
-
-        e.stopPropagation();
-    });
-
-    $('body').on('click', function (e) {
-        $('.popover-share').each(function () {
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
-
-    });
-
-    $('.popover-share').on('shown.bs.popover', function() {
-        $('#share-btn-telegram').on('click',function () {
-            window.open('https://t.me/share/url?url='+ editors[idEditor].getValue());
-        });
-        $('#share-btn-whatsapp').on('click',function () {
-            window.open("whatsapp://send?text="+ editors[idEditor].getValue());
-        });
-        $('#share-btn-download').on('click',function () {
-            var text = editors[idEditor].getValue();
-            var TabToDownload = $('#' + idEditor).parent().attr('id');
-            var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
-            var string = nameTab.text().replace(/\s/g,'');
-            createFileToDownload(text,"local","LogicProgram_" + string,"txt");
-        });
-        $('#share-btn-save-on-cloud').on('click',function(){
-            console.log("Download this on cloud");
-        });
-    });
-
-    $('.popover-share').on('hidden.bs.popover', function(){
-        $('#share-btn-download').off('click');
-        $('#share-btn-save-on-cloud').off('click');
-    });
-
-    //popover tab
     inizializeChangeNameContextmenu();
 
-    $('#btn-undo').on('click',function () {
-        var undoManager = editors[idEditor].session.getUndoManager();
-        if(undoManager.hasUndo()){
-            undoManager.undo(true);
-        }
-    });
-
-    $('#btn-redo').on('click',function () {
-        var undoManager = editors[idEditor].session.getUndoManager();
-        if(undoManager.hasRedo()){
-            undoManager.redo(true);
-        }
-
-    });
-
-    $('#btn-run-thistab').on('click',function () {
-        $("#output").empty();
-        $("#output").text("Sending..");
-        callSocketServer(true);
-    });
-
-
-
+    inizializeToolbar();
 
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
@@ -366,6 +185,8 @@ $(document).ready(function () {
         south__minSize: 125
 
     });
+
+    $("[data-target='#tab1']").trigger('click'); //active the first tab
 
     inizializeShortcuts();
 
@@ -427,12 +248,8 @@ $(document).ready(function () {
     });
 
     $('#btn-upload').on('click', function () {
-        var expandend = $('#upload-container').attr('aria-expanded');
-        if (expandend == 'false') {
-            setHeightComponents(expandend);
-        } else {
-            setHeightComponents();
-        }
+        var expandend = $('#btn-upload').attr('aria-expanded');
+        setHeightComponents(expandend,true);
     });
 
     if (window.innerWidth > 450 && localStorage.getItem("outputPos") !== "south") {
@@ -444,7 +261,7 @@ $(document).ready(function () {
         layout.addPane("south");
         createTextArea($('.ui-layout-south'));
         $('#output').text(currentVal);
-        $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
+        $('#split').children().attr('class', 'fa fa-chevron-up');
         $('#split').attr('id', 'split-up');
     }
 
@@ -531,11 +348,12 @@ $(document).ready(function () {
     });
 
     $("#btn-option").click(function () {
-
         $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
-
         $('.option-solver > div').toggleClass("hidden show"); // add class to show option components
-
+        $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
+            function() {
+                $(window).trigger('resize');
+            });
     });
 
     $("#reset-editor").click(function () {
@@ -547,7 +365,6 @@ $(document).ready(function () {
     });
 
     addCommand(idEditor);
-
 });
 
 /**
@@ -648,14 +465,8 @@ function inizializeChangeNameContextmenu(){
         title: 'Change the tab name',
         container: 'body',
         trigger : 'manual',
-        html: 'true',
-        placement: 'right',
-        content:'<div class="input-group">\n' +
-            '      <input type="text" class="form-control" id="change-name-tab-textbox" placeholder="Type a name">\n' +
-            '      <span class="input-group-btn">\n' +
-            '        <button class="btn btn-default" type="button" id="change-name-tab"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></button>\n' +
-            '      </span>\n' +
-            '    </div>'
+        html: true,
+        placement: 'right'
     });
 
     $('body').on('click', function (e) {
@@ -676,7 +487,17 @@ function inizializeChangeNameContextmenu(){
 
     });
 
-    $('.btn-tab').on('shown.bs.popover', function() {
+    $('.btn-tab').on('inserted.bs.popover', function() {
+        //close other popovers 'click'
+        $('.popover-download').popover('hide');
+        $('.popover-share').popover('hide');
+
+        $('.popover-body').html('<div class="input-group">\n' +
+            '      <input type="text" class="form-control" id="change-name-tab-textbox" placeholder="Type a name">\n' +
+            '      <span class="input-group-btn">\n' +
+            '        <button class="btn btn-light" type="button" id="change-name-tab"><i class="fa fa-chevron-right"></i></button>\n' +
+            '      </span>\n' +
+            '    </div>');
         var thisTab = $(this);
         var idTabEditor = $(this).attr('data-target');
         idEditorToChangeTabName = $(idTabEditor).children().attr('id');
@@ -685,7 +506,7 @@ function inizializeChangeNameContextmenu(){
             var nameValue = $('#change-name-tab-textbox').val();
             $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
             thisTab.children('.name-tab').text(nameValue);
-
+            thisTab.popover('hide');
         });
 
         $('#change-name-tab-textbox').on('keyup', function (e) {
@@ -719,13 +540,13 @@ $(document).on('click', '.btn-add-option', function () {
 });
 
 $(document).on('click', '.btn-del-option', function () {
-    $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-default">+</button>');
+    $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-light">+</button>');
     delOptionDOM($(this));
 });
 
 $(document).on('click', '.btn-del-value', function () {
     if ($(this).parent().parent().is(":last-child")) {
-        $(this).parent().parent().prev().find(".input-group-btn").last().append('<button type="button" class="btn btn-default btn-add">+</button>');
+        $(this).parent().parent().prev().find(".input-group-btn").last().append('<button type="button" class="btn btn-light btn-add">+</button>');
     }
     deleteInputValue($(this));
 });
@@ -762,6 +583,9 @@ $(document).on('mouseup', '#output', function () {
 
 $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
     currentTab = e.target;
+    if($(this).hasClass('add-tab')){
+        return;
+    }
     idTab = $(currentTab).attr('data-target');
     idEditor = $(idTab).find('.ace').attr("id");
 });
@@ -816,7 +640,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
     var parse = parseInt(currentids);
     if (r) {
         var prevEditor = $(this).parent().parent().prev();
-        if (prevEditor.size() === 0) {
+        if (prevEditor.length === 0) {
             prevEditor = $(this).parent().parent().next();
         }
         var currentID = $(this).closest('a').attr('data-target');
@@ -830,7 +654,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             var parent = $('.add-tab').parent();
             idEditor = 'editor1';
             ideditor = 'editor1';
-            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab"><span class="name-tab">Tab1</span><span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
+            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"><span class="name-tab">Tab1</span><span class="delete-tab"><i class="fa fa-times"></i></span></a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor, "");
@@ -838,6 +662,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
             inizializeChangeNameContextmenu();
+
         }
         else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
             // $('.nav-tabs').find('li:not(:last)').each(function (index) {
@@ -902,7 +727,7 @@ function addSouthLayout(layout) {
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
     $('#output').text(currentVal);
-    $('#split').children().attr('class', 'glyphicon glyphicon-menu-up');
+    $('#split').children().attr('class', 'fa fa-chevron-up');
     $('#split').attr('id', 'split-up');
 }
 
@@ -1029,7 +854,7 @@ function deleteInputValue(inputClass) {
  */
 function addInpuValue(inputClass) {
     var optionValue = $(inputClass).find('.option-value');
-    if (optionValue.size() === 0)
+    if (optionValue.length === 0)
         optionValue = $(inputClass).closest('.option-value');
     var currentName = $(inputClass).closest('.row-option').find('.form-control-option').attr('name');
 
@@ -1041,9 +866,9 @@ function addInpuValue(inputClass) {
     replaceName += '[]';
     var clone;
     if (optionValue.find('.input-group-value').length > 0) {
-        clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+        clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-light btn-add">+</button></span></div>';
     } else {
-        clone = '<div class="form-group input-group input-group-value"><input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span></div>';
+        clone = '<div class="form-group input-group input-group-value"><input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-light btn-add">+</button></span></div>';
     }
     $(optionValue).append(clone);
     $(inputClass).closest('.center-btn-value').remove();
@@ -1156,7 +981,7 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value=""></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-default">+</button></span></div></div><div class="option-value"></div></div></div>';
+    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value=""></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
@@ -1167,14 +992,14 @@ function addOption(index, valueOption) {
  * @param {string} expanded - check if the upload container is expanded to resize the components
  * @description set the height of the components with the height of your browser
  */
-function setHeightComponents(expanded) {
+function setHeightComponents(expanded,open) {
     var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; // cross-browser solution
     var navbarHeight = $('.navbar').outerHeight(true);
     var tabpanel = $(".nav-tabs").outerHeight(true);
 
     $('.ace').css('height', height - navbarHeight - tabpanel);
 
-    if (expanded !== undefined) {
+    if (expanded !== undefined || open == true) {
         var containerUpload = $('#upload-container').outerHeight(true);
         containerUpload += 22;
         $('.left-panel').css('height', height - (navbarHeight + containerUpload));
@@ -1182,11 +1007,15 @@ function setHeightComponents(expanded) {
         $('.ui-layout-pane-east').css('height', height - (navbarHeight + containerUpload));
         $('.ui-layout-pane-center').css('height', height - (navbarHeight + containerUpload + 10));
         $('.ace').css('height', height - (navbarHeight + tabpanel + containerUpload));
+        if(expanded === "true"){
+            $(window).trigger('resize');
+        }
     } else {
         $('.left-panel').css('height', height - navbarHeight);
         $('.layout').css('height', height - navbarHeight);
         $('.ui-layout-pane-east').css('height', height - navbarHeight);
         $('.ui-layout-pane-center').css('height', height - navbarHeight);
+
     }
 
     editors[idEditor].resize();
@@ -1212,7 +1041,7 @@ function isJosn(str) {
 function createTextArea(layout) {
     $("#setting-output").remove();
     $("#output").remove();
-    $(layout).append('<div id="setting-output"> Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right"><i class="glyphicon glyphicon-menu-down"></i></a></div><div id="output" class="output"></div>');
+    $(layout).append('<div id="setting-output"> Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right" href="#"><i class="fa fa-chevron-down"></i></a></div><div id="output" class="output"></div>');
 
 }
 
@@ -1452,7 +1281,7 @@ function generateIDTab() {
     var id = $(".nav-tabs").children().length;
     var tabid = "tab" + id;
 
-    while ($("#" + tabid).size() !== 0) {
+    while ($("#" + tabid).length !== 0) {
         id += 1;
         tabid = "tab" + id;
     }
@@ -1587,7 +1416,7 @@ function setOptions(obj) {
                 }
             });
         }
-        if (indexInArray != $(obj.option).size() - 1) {
+        if (indexInArray != $(obj.option).length - 1) {
             $("<hr>").insertAfter($('.row-option').get(indexInArray));
         }
 
@@ -1617,8 +1446,8 @@ function setOptions(obj) {
 function addTab(obj, text) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
-    var editorId = "editor" + id;
-    $('<li role="presentation"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab"> <span class="name-tab">Tab' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
+    editorId = "editor" + id;
+    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <span class="name-tab">Tab' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
     $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> <span>Tab' + id + '</span></label>');
@@ -1671,15 +1500,203 @@ function resetSolverOptions() {
     var $select = $(".row-option").find("select");
     $select.val("").change();
     $(".show").find("hr").remove();
-    var $btn = $("<button/>").attr("class", "btn btn-default").text("+");
+    var $btn = $("<button/>").attr("class", "btn btn-light").text("+");
     var $span = $(".row-option").find("span");
         if (!$span.has("button").length) {
             $span.append($btn);
     }    
 }
 
-function getActiveEditor() {
-    
+function inizializePopovers(){
+    // var a = $('#btn-upload').html();
+    $(".popover-download").popover({
+        trigger : 'manual',
+        html: true,
+        placement: 'bottom',
+        content: ' ',
+    }).click(function(e) {
+
+        $(this).popover('toggle');
+        $('.popover-download').not(this).popover('hide');
+
+        e.stopPropagation();
+    });
+
+    $('body').on('click', function (e) {
+        if(e.target.classList.contains('popover-download')){
+            return;
+        }
+        $('.popover-download').popover('hide');
+    });
+
+    $('.popover-download').on('inserted.bs.popover', function() {
+        //close contestmenu popovers
+        $('.btn-tab').popover('hide');
+
+        // set what happens when user clicks on the button
+        $('.popover-header').html('');
+        $('.popover-body').html('<div class="popover-download-content row">\n' +
+            '<div class="col-sm-12">\n' +
+            '<div class="row">\n' +
+            '<div class="col-sm-6">\n' +
+            '<p>Only output: </p>\n' +
+            '</div>\n' +
+            '<div class="col-sm-6">\n' +
+            '<input id="only-output" type="checkbox">\n' +
+            '</div>\n' +
+            '</div>\n' +
+            '</div>\n' +
+            '<div class="col-sm-12 save-content">\n' +
+            'Save to:\n' +
+            '<div class="save-btn text-center">\n' +
+            '<button class="btn btn-outline-primary btn-saver local-download">Local</button>\n' +
+            '<button class="btn btn-outline-primary btn-saver cloud-download" disabled>Cloud</button>\n' +
+            '</div>\n' +
+            '</div>\n' +
+            '</div>');
+
+        $(".local-download").on('click', function(){
+            if($('#only-output').is(":checked")){
+                $('#program').removeAttr('name', 'program[0]');
+                $('#output-form').attr('name', 'output');
+                var text = $("#output").text();
+                $('#output-form').val(text);
+                form = $('#input').serializeFormJSON();
+                stringify = JSON.stringify(form);
+                chose = $('#choice').text();
+                createFileToDownload(stringify, "local","LoIDE_Output", "json");
+                $('#program').attr('name', 'program[0]');
+                $('#output-form').removeAttr('name', 'output');
+            }
+            else {
+                    addProgramsToDownload();
+                    $('#output-form').attr('name', 'output');
+                    var text = $("#output").text();
+                    $('#output-form').val(text);
+                    i = 0;
+                    $("#tab-execute input").each(function (index, element) {
+                        if ($(this).prop('checked')) {
+                            $(this).attr("name", "tab[" + i + "]");
+                            i++;
+                        }
+                    });
+                    $("#run-dot").attr("name", "runAuto");
+                    form = $('#input').serializeFormJSON();
+                    stringify = JSON.stringify(form);
+                    var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable
+                    createFileToDownload(stringify,"local","LoIDE_Project","json");
+                    $('#output-form').removeAttr('name');
+                    destroyPrograms();
+                    $("#tab-execute input").each(function (index, element) {
+                        $(this).removeAttr("name");
+                    });
+                    $("#run-dot").removeAttr("name");
+
+            }
+        });
+
+        $(".cloud-download").on('click', function () {
+            if(Dropbox.isBrowserSupported()){
+                $('#program').removeAttr('name', 'program[0]');
+                $('#output-form').attr('name', 'output');
+                var text = $("#output").text();
+                $('#output-form').val(text);
+                form = $('#input').serializeFormJSON();
+                stringify = JSON.stringify(form);
+                chose = $('#choice').text();
+
+                // createFileToDownload(stringify, "dropbox", "json")
+            }
+            else{
+                alert("Dropbox not supported on your browser!");
+            }
+        });
+    });
+
+    $('.popover-download').on('hidden.bs.popover', function(){
+        // clear listeners
+        $(".local-download").off('click');
+    });
+
+
+    $(".popover-share").popover({
+        container: 'body',
+        trigger : 'manual',
+        html: true,
+        placement: 'bottom',
+    }).click(function(e) {
+        $(this).popover('toggle');
+        $('.popover-share').not(this).popover('hide');
+
+        e.stopPropagation();
+    });
+
+    $('body').on('click', function (e) {
+        $('.popover-share').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+
+    });
+
+    $('.popover-share').on('inserted.bs.popover', function() {
+        //close contestmenu popovers
+        $('.btn-tab').popover('hide');
+
+        $('.popover-body').html('<div class="popover-share-content">\n' +
+            // '\t<button id="share-btn-telegram" type="button" class="btn btn-outline-dark btn-block">Share on Telegram</button>\n' +
+            '<button id="share-btn-whatsapp" type="button" class="btn btn-outline-dark btn-block">Share on Whatsapp</button>\n' +
+            '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
+            '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
+            '</div>');
+        $('#share-btn-telegram').on('click',function () {
+            window.open('https://t.me/share/url?url='+ editors[idEditor].getValue());
+        });
+        $('#share-btn-whatsapp').on('click',function () {
+            window.open("whatsapp://send?text="+ editors[idEditor].getValue());
+        });
+        $('#share-btn-download').on('click',function () {
+            var text = editors[idEditor].getValue();
+            var TabToDownload = $('#' + idEditor).parent().attr('id');
+            var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
+            var string = nameTab.text().replace(/\s/g,'');
+            createFileToDownload(text,"local","LogicProgram_" + string,"txt");
+        });
+        $('#share-btn-save-on-cloud').on('click',function(){
+            console.log("Download this on cloud");
+        });
+    });
+
+    $('.popover-share').on('hidden.bs.popover', function(){
+        $('#share-btn-download').off('click');
+        $('#share-btn-save-on-cloud').off('click');
+    });
+
+
+}
+
+function inizializeToolbar() {
+    $('#btn-undo').on('click',function () {
+        var undoManager = editors[idEditor].session.getUndoManager();
+        if(undoManager.hasUndo()){
+            undoManager.undo(true);
+        }
+    });
+
+    $('#btn-redo').on('click',function () {
+        var undoManager = editors[idEditor].session.getUndoManager();
+        if(undoManager.hasRedo()){
+            undoManager.redo(true);
+        }
+
+    });
+
+    $('#btn-run-thistab').on('click',function () {
+        $("#output").empty();
+        $("#output").text("Sending..");
+        callSocketServer(true);
+    });
 }
 
 

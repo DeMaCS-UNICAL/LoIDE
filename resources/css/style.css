@@ -28,9 +28,10 @@ body {
 }
 
 .container {
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
     padding-right: 1%;
+    padding-left: 1%;
     width: 100%;
 }
 
@@ -96,6 +97,10 @@ body {
 .option-solver {
     margin-left: 3%;
     margin-right: 3%;
+}
+
+#a {
+    margin-left:50%;
 }
 
 a[role="button"] {
@@ -222,6 +227,11 @@ mark {
     padding: 5px 5px 20px 5px;
 }
 
+#btn-upload {
+    margin-right: 5px;
+    color: white;
+}
+
 .btn-outline {
     background-color: transparent;
     border: 1px solid red;
@@ -243,10 +253,6 @@ mark {
 
 #btn-run-nav {
     margin-left: 17%;
-}
-
-.navbar-header {
-    width: 20%;
 }
 
 .popover-download-content {
@@ -301,3 +307,45 @@ mark {
         width: 30%;
     }
 }
+
+@media (min-width: 1200px){
+    .container {
+                max-width: 100%;
+            }
+}
+
+@media (min-width: 992px){
+    .container {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 768px){
+    .container {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 576px){
+    .container {
+        max-width: 100%;
+    }
+}
+
+.hidden{
+    display: none;
+}
+
+.toolbar {
+
+}
+
+#change-name-tab {
+    border-radius: 0px 4px 4px 0px;
+    border-color: #ced4da;
+}
+
+.delete-tab {
+    transition: 1s;
+}
+

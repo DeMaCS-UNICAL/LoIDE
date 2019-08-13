@@ -1513,7 +1513,7 @@ function inizializePopovers(){
         trigger : 'manual',
         html: true,
         placement: 'bottom',
-        content: ' ',
+        // content: ' ',
     }).click(function(e) {
 
         $(this).popover('toggle');
@@ -1522,14 +1522,12 @@ function inizializePopovers(){
         e.stopPropagation();
     });
 
-    $('body').on('click', function (e) {
-        if(e.target.classList.contains('popover-download')){
-            return;
-        }
-        $('.popover-download').popover('hide');
-    });
+    // $('body').on('click', function (e) {
+    //     $('.popover-download').popover('hide');
+    // });
 
     $('.popover-download').on('inserted.bs.popover', function() {
+
         //close contestmenu popovers
         $('.btn-tab').popover('hide');
 
@@ -1549,13 +1547,13 @@ function inizializePopovers(){
             '<div class="col-sm-12 save-content">\n' +
             'Save to:\n' +
             '<div class="save-btn text-center">\n' +
-            '<button class="btn btn-outline-primary btn-saver local-download">Local</button>\n' +
-            '<button class="btn btn-outline-primary btn-saver cloud-download" disabled>Cloud</button>\n' +
+            '<button id="local-download" class="btn btn-outline-primary btn-saver ">Local</button>\n' +
+            '<button id="cloud-download" class="btn btn-outline-primary btn-saver" disabled>Cloud</button>\n' +
             '</div>\n' +
             '</div>\n' +
             '</div>');
 
-        $(".local-download").on('click', function(){
+        $("#local-download").on('click', function(){
             if($('#only-output').is(":checked")){
                 $('#program').removeAttr('name', 'program[0]');
                 $('#output-form').attr('name', 'output');
@@ -1595,7 +1593,7 @@ function inizializePopovers(){
             }
         });
 
-        $(".cloud-download").on('click', function () {
+        $("#cloud-download").on('click', function () {
             if(Dropbox.isBrowserSupported()){
                 $('#program').removeAttr('name', 'program[0]');
                 $('#output-form').attr('name', 'output');
@@ -1615,7 +1613,8 @@ function inizializePopovers(){
 
     $('.popover-download').on('hidden.bs.popover', function(){
         // clear listeners
-        $(".local-download").off('click');
+        $("#local-download").off('click');
+        $("#cloud-download").off('click');
     });
 
 
@@ -1698,5 +1697,4 @@ function inizializeToolbar() {
         callSocketServer(true);
     });
 }
-
 

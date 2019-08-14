@@ -51,10 +51,6 @@ body {
     .left-panel-show {
         width: 40%;
     }
-    #btn-upload {
-        display: block;
-        margin-bottom: 2%;
-    }
 }
 
 @media screen and (min-width: 500px) {
@@ -97,10 +93,6 @@ body {
 .option-solver {
     margin-left: 3%;
     margin-right: 3%;
-}
-
-#a {
-    margin-left:50%;
 }
 
 a[role="button"] {
@@ -228,7 +220,6 @@ mark {
 }
 
 #btn-upload {
-    margin-right: 5px;
     color: white;
 }
 
@@ -249,10 +240,6 @@ mark {
 
 #reset-container {
     margin-top: 5%;
-}
-
-#btn-run-nav {
-    margin-left: 17%;
 }
 
 .popover-download-content {
@@ -315,5 +302,8 @@ mark {
     transition: 1s;
 }
 
+label[for=btn-download] {
+    margin-bottom: 0px;
+}
 
 

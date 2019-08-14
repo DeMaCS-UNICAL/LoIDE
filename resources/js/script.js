@@ -1689,14 +1689,14 @@ function inizializeToolbar() {
     $('#btn-undo').on('click',function () {
         var undoManager = editors[idEditor].session.getUndoManager();
         if(undoManager.hasUndo()){
-            undoManager.undo(true);
+            undoManager.undo();
         }
     });
 
     $('#btn-redo').on('click',function () {
         var undoManager = editors[idEditor].session.getUndoManager();
         if(undoManager.hasRedo()){
-            undoManager.redo(true);
+            undoManager.redo();
         }
 
     });

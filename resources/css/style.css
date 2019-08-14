@@ -274,40 +274,6 @@ mark {
     margin-top: 4px;
 }
 
-@media screen and (max-width: 767px) {
-    #btn-run-nav {
-        margin-left: 2%;
-    }
-    .navbar-header {
-        width: 103%;
-    }
-
-    .nav.navbar-nav .btn:not(#dropdown) {
-        margin-left: 10px;
-    }
-}
-
-@media screen and (min-width: 768px){
-
-    .navbar-header {
-        width: 41%;
-    }
-}
-
-@media screen and (min-width: 1036px){
-
-    .navbar-header {
-        width: 25%;
-    }
-}
-
-@media screen and (max-width: 1183px) and (min-width: 1024px){
-
-    .navbar-header {
-        width: 30%;
-    }
-}
-
 @media (min-width: 1200px){
     .container {
                 max-width: 100%;
@@ -348,4 +314,6 @@ mark {
 .delete-tab {
     transition: 1s;
 }
+
+
 

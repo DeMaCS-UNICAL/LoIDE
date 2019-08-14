@@ -174,6 +174,13 @@ $(document).ready(function () {
 
     inizializeToolbar();
 
+    $('#loide-collapse').on('hidden.bs.collapse',function () {
+        $(window).trigger('resize');
+    });
+    $('#loide-collapse').on('shown.bs.collapse',function () {
+        $(window).trigger('resize');
+    });
+
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
             var length = $(".nav-tabs").children().length;
@@ -1530,7 +1537,9 @@ function inizializePopovers(){
 
         //close contestmenu popovers
         $('.btn-tab').popover('hide');
-
+        $('#loide-navbar-toogler').on('click',function () {
+            $('.popover-download').popover('hide');
+        })
         // set what happens when user clicks on the button
         $('.popover-header').html('');
         $('.popover-body').html('<div class="popover-download-content row">\n' +
@@ -1615,6 +1624,7 @@ function inizializePopovers(){
         // clear listeners
         $("#local-download").off('click');
         $("#cloud-download").off('click');
+        $('.navbar-toggler').off('click');
     });
 
 

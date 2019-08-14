@@ -17,7 +17,7 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-md navbar-light bg-light ">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light ">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-brand">
 			<img src="img/logo_LoIDE.png" alt="logo">
@@ -26,10 +26,12 @@
 				<i class="fa fa-play"></i>
 			</button>
 		</div>
-
+        <button id="loide-navbar-toogler" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#loide-collapse" aria-controls="loide-collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="navbar-collapse collapse">
+		<div id="loide-collapse" class="collapse navbar-collapse">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item">
 					<button id="a" type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-about">About </button>
@@ -46,48 +48,7 @@
 						<i class="fa fa-arrow-circle-o-down"></i>
 					</label>
 				</li>
-
-<!--				<div class="popover-download-content hide">-->
-<!--					<div class="popover-download-content row">-->
-<!--						<div class="col-sm-12">-->
-<!--							<div class="row">-->
-<!--								<div class="col-sm-9">-->
-<!--									<p>Only output: </p>-->
-<!--								</div>-->
-<!--								<div class="col-sm-3">-->
-<!--									<input class="only-output" type="checkbox">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--						<div class="col-sm-12 save-content">-->
-<!--							Save to:-->
-<!--							<div class="save-btn text-center">-->
-<!--								<button class="btn btn-default btn-saver local-download">Local</button>-->
-<!--								<button class="btn btn-default btn-saver cloud-download">Cloud</button>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-
-<!--					<div class="btn-group btn-group-info">-->
-<!--					-->
-<!--					<button data-toggle="dropdown" id="dropdown" class="btn btn-info dropdown-toggle" type="button">-->
-<!--						<span id="choice"></span>-->
-<!--						<span class="caret"></span>-->
-<!--					</button>-->
-<!--					<ul class="dropdown-menu dropdown-menu-choice">-->
-<!--						<li>-->
-<!--							<a>Input</a>-->
-<!--						</li>-->
-<!--						<li>-->
-<!--							<a>Output</a>-->
-<!--						</li>-->
-<!--					</ul>-->
-<!--				</div>-->
-<!--				</div>-->
-
 			</ul>
-
 		</div>
 		<!-- /.navbar-collapse -->
 	</nav>

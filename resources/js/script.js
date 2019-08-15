@@ -372,6 +372,11 @@ $(document).ready(function () {
     });
 
     addCommand(idEditor);
+
+    inizializeCompleterAndSnippets();
+    $('#inputLanguage, #inputengine').on('change', function() {
+        inizializeCompleterAndSnippets();
+    });
 });
 
 /**
@@ -1109,72 +1114,7 @@ function setUpAce(ideditor, text) {
         enableSnippets: true
     });
 
-    var langTools = ace.require('ace/ext/language_tools');
-
-    // completer that include snippets and some keywords
-    var completer = { //
-        getCompletions: function(editor, session, pos, prefix, callback) {
-            var completions = [
-
-                {
-                    caption: "#count",
-                    snippet: "#count{${1:Vars} : ${2:Congj}}",
-                    meta: "aggregate function",
-                },
-                {
-                    caption: "#sum",
-                    snippet: "#sum{${1:Vars} : ${2:Congj}}",
-                    meta: "aggregate function"
-                },
-                {
-                    caption: "#min",
-                    snippet: "#min{${1:Vars} : ${2:Congj}}",
-                    meta: "aggregate function"
-                },
-                {
-                    caption: "#max",
-                    snippet: "#max{${1:Vars} : ${2:Congj}}",
-                    meta: "aggregate function"
-                },
-                {
-                    caption: "#times",
-                    snippet: "#times{${1:Vars} : ${2:Congj}}",
-                    meta: "aggregate function"
-                },
-                {
-                    caption: "#int",
-                    snippet: "#int",
-                    meta: "keyword"
-                },
-                {
-                    caption: "#maxint",
-                    snippet: "#maxint",
-                    meta: "keyword"
-                },
-                {
-                    caption: ':~',
-                    snippet: ":~ ${1:literals}. [${2:conditions}]",
-                    meta: "weak constraint"
-                }
-                // {
-                //     caption: "(",
-                //     snippet: "${0})",
-                //     meta: "()"
-                // },
-                // {
-                //     caption: '"',
-                //     snippet: '${0}"',
-                //     meta: '""'
-                // }
-            ];
-
-            // completions.push();
-            callback(null, completions);
-        }
-    }
-
-    langTools.setCompleters([langTools.textCompleter]);
-    langTools.addCompleter(completer);
+    inizializeCompleterAndSnippets();
 
     /**
      * Execute the program when you insert a . and if the readio button is checked
@@ -1706,5 +1646,262 @@ function inizializeToolbar() {
         $("#output").text("Sending..");
         callSocketServer(true);
     });
+}
+
+function inizializeCompleterAndSnippets() {
+    var languageChosen = $('#inputLanguage').val();
+    var solverChosen = $('#inputengine').val();
+
+    var langTools = ace.require('ace/ext/language_tools');
+
+    langTools.setCompleters([langTools.textCompleter]); //reset completers.
+
+    // completer that include snippets and some keywords
+    var completer;
+
+    switch (languageChosen) {
+        case "asp":
+            switch (solverChosen) {
+                case "dlv":
+                    completer = { //
+                        getCompletions: function(editor, session, pos, prefix, callback) {
+                            var completions = [
+                                {
+                                    caption: "#const",
+                                    snippet: "#const ${1:namedConstant} = ${2:costant}",
+                                    meta: "keyword"
+                                },
+                                {
+                                    caption: "#maxint",
+                                    snippet: "#maxint = ${1:Number}",
+                                    meta: "keyword"
+                                },
+                                {
+                                    caption: "#append",
+                                    snippet: "#append(${1:X}, ${2:Y}, ${3:Z})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#delnth",
+                                    snippet: "#delnth(${1:X}, ${2:Y}, ${3:Z})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#flatten",
+                                    snippet: "#flatten(${1:X}, ${2:Y}, ${3:Z})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#head",
+                                    snippet: "#head(${1:X}, ${2:Y}, ${3:Z})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#insLast",
+                                    snippet: "#insLast(${1:X}, ${2:Y}, ${3:Z})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#insnth",
+                                    snippet: "#insnth(${1:X}, ${2:Y}, ${3:Z}, ${4:W})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#last",
+                                    snippet: "#last(${1:X}, ${2:Y})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#length",
+                                    snippet: "#length(${1:X}, ${2:Y})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#member",
+                                    snippet: "#member(${1:X}, ${2:Y})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#reverse",
+                                    snippet: "#reverse(${1:X}, ${2:Y})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#subList",
+                                    snippet: "#subList(${1:X}, ${2:Y})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#tail",
+                                    snippet: "#tail(${1:X}, ${2:Y})",
+                                    meta: "list predicate"
+                                },
+                                {
+                                    caption: "#getnth",
+                                    snippet: "#getnth(${1:X}, ${2:Y}, ${3:Z})",
+                                    meta: "list predicate"
+                                },
+
+                                // -------
+                                {
+                                    caption: "+",
+                                    snippet: "+(${1:Var1}, ${2:Var2}, ${3:Var3})",
+                                    meta: "arithmetic predicates"
+                                },
+                                {
+                                    caption: "-",
+                                    snippet: "-(${1:Var1}, ${2:Var2}, ${3:Var3})",
+                                    meta: "arithmetic predicates"
+                                },
+                                {
+                                    caption: "*",
+                                    snippet: "*(${1:Var1}, ${2:Var2}, ${3:Var3})",
+                                    meta: "arithmetic predicates"
+                                },
+                                {
+                                    caption: "/",
+                                    snippet: "/(${1:Var1}, ${2:Var2}, ${3:Var3})",
+                                    meta: "arithmetic predicates"
+                                },
+                                // {
+                                //     caption: "#int(X)",
+                                //     snippet: "#int(${1:Var})",
+                                //     meta: "arithmetic predicates"
+                                // },
+                                {
+                                    caption: "#int",
+                                    snippet: "#int(${1:Var1}, ${2:Var2}, ${3:Var3})",
+                                    meta: "arithmetic predicates"
+                                },
+                                {
+                                    caption: "#suc",
+                                    snippet: "#suc(${1:Var1}, ${2:Var2})",
+                                    meta: "arithmetic predicates"
+                                },
+                                {
+                                    caption: "#pred",
+                                    snippet: "#pred(${1:Var1}, ${2:Var2})",
+                                    meta: "arithmetic predicates"
+                                },
+                                {
+                                    caption: "#mod",
+                                    snippet: "#mod(${1:Var1}, ${2:Var2}, ${3:Var3})",
+                                    meta: "arithmetic predicates"
+                                },
+                                {
+                                    caption: "#absdiff",
+                                    snippet: "#absdiff(${1:Var1}, ${2:Var2}, ${3:Var3})",
+                                    meta: "arithmetic predicates"
+                                },
+                                {
+                                    caption: "#rand",
+                                    snippet: "#rand(${1:Var1}, ${2:Var2}, ${3:Var3})",
+                                    meta: "arithmetic predicates"
+                                },
+                                // {
+                                //     caption: "#rand(X)",
+                                //     snippet: "#rand(${1:Var})",
+                                //     meta: "arithmetic predicates"
+                                // },
+                                {
+                                    caption: "#times",
+                                    snippet: "#times{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function"
+                                },
+                                {
+                                    caption: "#sum",
+                                    snippet: "#sum{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function"
+                                },
+                                {
+                                    caption: "#min",
+                                    snippet: "#min{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function"
+                                },
+                                {
+                                    caption: "#max",
+                                    snippet: "#max{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function"
+                                },
+                                {
+                                    caption: "#count",
+                                    snippet: "#count{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function",
+                                },
+                                {
+                                    caption: ':~',
+                                    snippet: ":~ ${1:literals}. [${2:conditions}]",
+                                    meta: "weak constraint"
+                                },
+                                {
+                                    caption: ':-',
+                                    snippet: ":- ${1:literals}.",
+                                    meta: "body/constraint"
+                                }
+                            ];
+                            // completions.push();
+                            callback(null, completions);
+                        }
+                    }
+                    langTools.addCompleter(completer);
+                    break;
+
+                case "dlv2":
+                    completer = { //
+                        getCompletions: function(editor, session, pos, prefix, callback) {
+                            var completions = [
+                                {
+                                    caption: "#int",
+                                    snippet: "#int",
+                                    meta: "keyword"
+                                },
+                                {
+                                    caption: "#times",
+                                    snippet: "#times{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function"
+                                },
+                                {
+                                    caption: "#sum",
+                                    snippet: "#sum{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function"
+                                },
+                                {
+                                    caption: "#min",
+                                    snippet: "#min{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function"
+                                },
+                                {
+                                    caption: "#max",
+                                    snippet: "#max{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function"
+                                },
+                                {
+                                    caption: "#count",
+                                    snippet: "#count{${1:Vars} : ${2:Congj}}",
+                                    meta: "aggregate function",
+                                },
+                                {
+                                    caption: ':~',
+                                    snippet: ":~ ${1:literals}. [${2:conditions}]",
+                                    meta: "weak constraint"
+                                },
+                                {
+                                    caption: ':-',
+                                    snippet: ":- ${1:literals}.",
+                                    meta: "body/constraint"
+                                }
+                            ];
+                            // completions.push();
+                            callback(null, completions);
+                        }
+                    }
+                    langTools.addCompleter(completer);
+                    break;
+
+                case "clingo":
+                    // add snippets
+            }
+            break;
+    }
 }
 

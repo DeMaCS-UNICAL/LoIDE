@@ -270,6 +270,7 @@ mark {
     .container {
         max-width: 100%;
     }
+
 }
 
 @media (min-width: 768px){
@@ -282,6 +283,17 @@ mark {
     .container {
         max-width: 100%;
     }
+}
+
+@media (max-width: 576px){
+    .container {
+        max-width: 100%;
+    }
+    #a{
+        margin-top: 1%;
+        margin-bottom: 1%;
+    }
+
 }
 
 .hidden{
@@ -304,5 +316,11 @@ mark {
 label[for=btn-download] {
     margin-bottom: 0px;
 }
+
+img[alt=logo] {
+    width: 44%;
+}
+
+
 
 

@@ -1485,19 +1485,15 @@ function inizializePopovers(){
         })
         // set what happens when user clicks on the button
         $('.popover-header').html('');
-        $('.popover-body').html('<div class="popover-download-content row">\n' +
-            '<div class="col-sm-12">\n' +
-            '<div class="row">\n' +
-            '<div class="col-sm-6">\n' +
-            '<p>Only output: </p>\n' +
-            '</div>\n' +
-            '<div class="col-sm-6">\n' +
+        $('.popover-body').html('<div class="popover-download-content">\n' +
+            '<div class="d-flex">\n' +
+            '<div>Only output: </div>\n' +
+            '<div class="ml-2">\n' +
             '<input id="only-output" type="checkbox">\n' +
             '</div>\n' +
             '</div>\n' +
-            '</div>\n' +
-            '<div class="col-sm-12 save-content">\n' +
-            'Save to:\n' +
+            '<div class="save-content">\n' +
+            '<div class="mt-2 mb-2"> Save to:\n </div>' +
             '<div class="save-btn text-center">\n' +
             '<button id="local-download" class="btn btn-outline-primary btn-saver ">Local</button>\n' +
             '<button id="cloud-download" class="btn btn-outline-primary btn-saver" disabled>Cloud</button>\n' +

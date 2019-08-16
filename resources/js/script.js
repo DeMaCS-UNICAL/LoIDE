@@ -373,10 +373,11 @@ $(document).ready(function () {
 
     addCommand(idEditor);
 
-    inizializeCompleterAndSnippets();
-    $('#inputLanguage, #inputengine').on('change', function() {
-        inizializeCompleterAndSnippets();
+    inizializeSnippets();
+    $('#inputLanguage').on('change', function() {
+        inizializeAutoComplete();
     });
+
 });
 
 /**
@@ -625,6 +626,7 @@ $(document).on('change', '#inputengine', function () {
     } else if ($('.form-control-option').find("option[value='filter']").length === 0) {
         $('.form-control-option').append('</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
     }
+    inizializeSnippets();
 });
 
 $(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
@@ -1114,7 +1116,7 @@ function setUpAce(ideditor, text) {
         enableSnippets: true
     });
 
-    inizializeCompleterAndSnippets();
+    inizializeSnippets();
 
     /**
      * Execute the program when you insert a . and if the readio button is checked
@@ -1129,6 +1131,7 @@ function setUpAce(ideditor, text) {
             operation_alert({reason: "Single quotes not yet supported"});
             editors[ideditor].replaceAll("", {"needle":"'"});
         }
+        inizializeAutoComplete();
     });
     setHeightComponents();
 }
@@ -1648,13 +1651,13 @@ function inizializeToolbar() {
     });
 }
 
-function inizializeCompleterAndSnippets() {
+function inizializeSnippets() {
     var languageChosen = $('#inputLanguage').val();
     var solverChosen = $('#inputengine').val();
 
     var langTools = ace.require('ace/ext/language_tools');
 
-    langTools.setCompleters([langTools.textCompleter]); //reset completers.
+    langTools.setCompleters([]); //reset completers.
 
     // completer that include snippets and some keywords
     var completer;
@@ -1903,5 +1906,71 @@ function inizializeCompleterAndSnippets() {
             }
             break;
     }
+}
+
+function inizializeAutoComplete() {
+    var languageChosen = $('#inputLanguage').val();
+    var langTools = ace.require('ace/ext/language_tools');
+    inizializeSnippets();
+    switch (languageChosen) {
+        case "asp":
+            var splitRegex = /(([a-zA-Z_]+[0-9]*)*)(\(.+?\))/gi;
+            var words = editors[idEditor].getValue().match(splitRegex);
+            if(words != null){
+                var map = new Map();
+                words.forEach(function (word) {
+                    var name = word.match(/[^_](([a-zA-Z_]+[0-9]*)*)/)[0];
+                    var arities = word.match(/\(.+?\)/)[0].split(",").length;
+                    map.set(name,arities);
+
+                });
+                var completions = [];
+                map.forEach(function (key, value) {
+
+                    completions.push({
+                        caption: value,
+                        snippet: value+giveBrackets(key),
+                        meta: "atom"
+                    });
+
+                });
+
+                console.log(completions);
+
+                var completer = {
+                    getCompletions: function(editor, session, pos, prefix, callback) {
+
+                        callback(null, completions);
+                    }
+                }
+
+                langTools.addCompleter(completer);
+            }
+
+            break;
+    }
+
+}
+
+function giveBrackets(value) {
+
+    var par="(";
+    var LETTER = "A";
+    var limit = 0;
+    if(value <= 26)
+        limit=value;
+    else
+        limit = 26;
+    for(var i=0; i<limit; i++){
+        var num = i+1;
+        par += "${" + num +":"+ LETTER + "}" ;
+        if(i!==limit-1){
+            par+=","
+        }
+        LETTER = String.fromCharCode(LETTER.charCodeAt(0) + 1);
+    }
+    par+=")";
+    return par;
+
 }
 

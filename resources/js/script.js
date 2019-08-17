@@ -168,6 +168,8 @@ $(window).resize(function () {
 });
 
 $(document).ready(function () {
+    setClipboard();
+    
     inizializePopovers();
 
     inizializeChangeNameContextmenu();
@@ -373,6 +375,8 @@ $(document).ready(function () {
 
     addCommand(idEditor);
 
+    laodFromURL(); //load program from url
+
     inizializeSnippets();
     $('#inputLanguage').on('change', function() {
         inizializeAutoComplete();
@@ -511,6 +515,7 @@ function inizializeChangeNameContextmenu(){
             '        <button class="btn btn-light" type="button" id="change-name-tab"><i class="fa fa-chevron-right"></i></button>\n' +
             '      </span>\n' +
             '    </div>');
+        $('#change-name-tab-textbox').focus();
         var thisTab = $(this);
         var idTabEditor = $(this).attr('data-target');
         idEditorToChangeTabName = $(idTabEditor).children().attr('id');
@@ -1458,17 +1463,14 @@ function resetSolverOptions() {
 }
 
 function inizializePopovers(){
-    // var a = $('#btn-upload').html();
     $(".popover-download").popover({
         trigger : 'manual',
         html: true,
         placement: 'bottom',
         // content: ' ',
     }).click(function(e) {
-
         $(this).popover('toggle');
         $('.popover-download').not(this).popover('hide');
-
         e.stopPropagation();
     });
 
@@ -1566,7 +1568,6 @@ function inizializePopovers(){
         $('.navbar-toggler').off('click');
     });
 
-
     $(".popover-share").popover({
         container: 'body',
         trigger : 'manual',
@@ -1592,18 +1593,23 @@ function inizializePopovers(){
         //close contestmenu popovers
         $('.btn-tab').popover('hide');
 
-        $('.popover-body').html('<div class="popover-share-content">\n' +
-            // '\t<button id="share-btn-telegram" type="button" class="btn btn-outline-dark btn-block">Share on Telegram</button>\n' +
-            '<button id="share-btn-whatsapp" type="button" class="btn btn-outline-dark btn-block">Share on Whatsapp</button>\n' +
-            '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
-            '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
+        $('.popover-body').html('' +
+            '<div class="popover-share-content">\n' +
+                '<div class="input-group">' +
+                    '<input id="link-to-share" type="text" class="form-control">' +
+                    '<div class="input-group-append">'+
+                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
+                    '</div>'+
+                '</div>' +
+                '<div class="text-center mt-2 mb-2"> or </div>' +
+                '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
+                // '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
             '</div>');
-        $('#share-btn-telegram').on('click',function () {
-            window.open('https://t.me/share/url?url='+ editors[idEditor].getValue());
-        });
-        $('#share-btn-whatsapp').on('click',function () {
-            window.open("whatsapp://send?text="+ editors[idEditor].getValue());
-        });
+
+        var urlToShare = createURLtoShare(editors[idEditor].getValue());
+        $('#link-to-share').val(urlToShare);
+        $('#link-to-share').prop('readonly',true);
+            
         $('#share-btn-download').on('click',function () {
             var text = editors[idEditor].getValue();
             var TabToDownload = $('#' + idEditor).parent().attr('id');
@@ -1617,6 +1623,7 @@ function inizializePopovers(){
     });
 
     $('.popover-share').on('hidden.bs.popover', function(){
+        $('#btn-copy-link').off('click');
         $('#share-btn-download').off('click');
         $('#share-btn-save-on-cloud').off('click');
     });
@@ -1931,8 +1938,6 @@ function inizializeAutoComplete() {
 
                 });
 
-                console.log(completions);
-
                 var completer = {
                     getCompletions: function(editor, session, pos, prefix, callback) {
 
@@ -1968,5 +1973,70 @@ function giveBrackets(value) {
     par+=")";
     return par;
 
+}
+
+function createURLtoShare(program) {
+    var URL = window.location.host + "/?program=";
+    URL += encodeURIComponent(program);
+
+    return URL;
+}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function getTinyURL(longURL, success) {
+
+    var API = 'http://json-tinyurl.appspot.com/?url=',
+        URL = API + encodeURIComponent(longURL) + '&callback=?';
+
+    $.getJSON(URL, function(data){
+        success && success(data.tinyurl);
+    });
+
+}
+
+function laodFromURL() {
+    var thisURL = window.location.href;
+    var program = getParameterByName('program', thisURL);
+    editors[idEditor].setValue(program);
+}
+
+function setTooltip(btn, message) {
+    $(btn).tooltip('hide')
+        .attr('data-original-title', message)
+        .tooltip('show');
+}
+
+function hideTooltip(btn) {
+    setTimeout(function() {
+        $(btn).tooltip('hide');
+    }, 1000);
+}
+
+function setClipboard() {
+    $('#btn-copy-link').tooltip({
+        trigger: 'click',
+        placement: 'bottom'
+    });
+
+    var clipboard = new ClipboardJS('#btn-copy-link');
+
+    clipboard.on('success', function(e) {
+        setTooltip(e.trigger, 'Copied!');
+        hideTooltip(e.trigger);
+    });
+
+    clipboard.on('error', function(e) {
+        setTooltip(e.trigger, 'Failed!');
+        hideTooltip(e.trigger);
+    });
 }
 

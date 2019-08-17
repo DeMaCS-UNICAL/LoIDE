@@ -321,6 +321,15 @@ img[alt=logo] {
     width: 44%;
 }
 
+.popover {
+    box-shadow: 0px 1px 5px 1px rgba(0,0,0,0.4);
+    border-radius: 0.5rem;
+}
+ .popover-header {
+     border-top-left-radius: 0.5rem;
+     border-top-right-radius: 0.5rem;
+ }
+
 
 
 

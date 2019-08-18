@@ -519,20 +519,30 @@ function inizializeChangeNameContextmenu(){
         var thisTab = $(this);
         var idTabEditor = $(this).attr('data-target');
         idEditorToChangeTabName = $(idTabEditor).children().attr('id');
+        $('#change-name-tab').prop('disabled',true);
+
+        $('#change-name-tab-textbox').on('input',function () {
+            var nameValue = $('#change-name-tab-textbox').val().trim();
+            if(nameValue.length === 0){
+                $('#change-name-tab').prop('disabled',true);
+            }
+            else{
+                $('#change-name-tab').prop('disabled',false);
+            }
+        });
 
         $('#change-name-tab').on('click',function () {
-            var nameValue = $('#change-name-tab-textbox').val();
-            $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
-            thisTab.children('.name-tab').text(nameValue);
-            thisTab.popover('hide');
+            var nameValue = $('#change-name-tab-textbox').val().trim();
+            if(nameValue.length !== 0) {
+                $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
+                thisTab.children('.name-tab').text(nameValue);
+                thisTab.popover('hide');
+            }
         });
 
         $('#change-name-tab-textbox').on('keyup', function (e) {
             if(e.key == "Enter") {
-                var nameValue = $('#change-name-tab-textbox').val();
-                $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
-                thisTab.children('.name-tab').text(nameValue);
-                thisTab.popover('hide');
+                $('#change-name-tab').trigger('click');
             }
         });
     });
@@ -1118,7 +1128,10 @@ function setUpAce(ideditor, text) {
         fontSize: 15,
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
-        enableSnippets: true
+        enableSnippets: true,
+        cursorStyle: "smooth",
+        copyWithEmptySelection: true,
+        scrollPastEnd: 0.5
     });
 
     inizializeSnippets();

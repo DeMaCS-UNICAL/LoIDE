@@ -1609,9 +1609,9 @@ function inizializePopovers(){
         $('.popover-body').html('' +
             '<div class="popover-share-content">\n' +
                 '<div class="input-group">' +
-                    '<input id="link-to-share" type="text" class="form-control">' +
+                    '<input id="link-to-share" type="text" class="form-control" readonly>' +
                     '<div class="input-group-append">'+
-                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
+                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share" disabled><i class="fa fa-clipboard"></i></button>'+
                     '</div>'+
                 '</div>' +
                 '<div class="text-center mt-2 mb-2"> or </div>' +
@@ -1619,10 +1619,9 @@ function inizializePopovers(){
                 // '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
             '</div>');
 
-        var urlToShare = createURLtoShare(editors[idEditor].getValue());
-        $('#link-to-share').val(urlToShare);
-        $('#link-to-share').prop('readonly',true);
-            
+        $('#link-to-share').val("Loading...");
+        createURLtoShare(editors[idEditor].getValue());
+
         $('#share-btn-download').on('click',function () {
             var text = editors[idEditor].getValue();
             var TabToDownload = $('#' + idEditor).parent().attr('id');
@@ -1990,9 +1989,26 @@ function giveBrackets(value) {
 
 function createURLtoShare(program) {
     var URL = window.location.host + "/?program=";
-    URL += encodeURIComponent(program);
-
-    return URL;
+    var encodedProg = encodeURIComponent(program);
+    URL += encodeURIComponent(encodedProg);
+    $.ajax({
+        method: "POST",
+        url: "https://is.gd/create.php?format=json&url=" + URL,
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            if(data.shorturl == undefined){
+                $('#link-to-share').val("Ops. Something went wrong");
+            }
+            else{
+                $('#link-to-share').val(data.shorturl);
+                $('#btn-copy-link').prop('disabled',false);
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
 }
 
 function getParameterByName(name, url) {
@@ -2005,21 +2021,13 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function getTinyURL(longURL, success) {
-
-    var API = 'http://json-tinyurl.appspot.com/?url=',
-        URL = API + encodeURIComponent(longURL) + '&callback=?';
-
-    $.getJSON(URL, function(data){
-        success && success(data.tinyurl);
-    });
-
-}
-
 function laodFromURL() {
     var thisURL = window.location.href;
-    var program = getParameterByName('program', thisURL);
-    editors[idEditor].setValue(program);
+    var param = getParameterByName('program', thisURL);
+    if(param !=null){
+        var program = decodeURIComponent(param);
+        editors[idEditor].setValue(program);
+    }
 }
 
 function setTooltip(btn, message) {

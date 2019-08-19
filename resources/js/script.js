@@ -375,7 +375,7 @@ $(document).ready(function () {
 
     addCommand(idEditor);
 
-    laodFromURL(); //load program from url
+    loadFromURL(); //load program from url
 
     inizializeSnippets();
     $('#inputLanguage').on('change', function() {
@@ -1989,7 +1989,7 @@ function giveBrackets(value) {
 
 function createURLtoShare(program) {
     var URL = window.location.host + "/?program=";
-    var encodedProg = encodeURIComponent(program);
+    var encodedProg = btoa(program);
     URL += encodeURIComponent(encodedProg);
     $.ajax({
         method: "POST",
@@ -1999,6 +1999,9 @@ function createURLtoShare(program) {
         success: function (data) {
             if(data.shorturl == undefined){
                 $('#link-to-share').val("Ops. Something went wrong");
+                if(URL.length >= 5000){
+                    operation_alert({reason: "The logic program is too long to be shared."})
+                }
             }
             else{
                 $('#link-to-share').val(data.shorturl);
@@ -2021,11 +2024,11 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function laodFromURL() {
+function loadFromURL() {
     var thisURL = window.location.href;
     var param = getParameterByName('program', thisURL);
     if(param !=null){
-        var program = decodeURIComponent(param);
+        var program = atob(param);
         editors[idEditor].setValue(program);
     }
 }

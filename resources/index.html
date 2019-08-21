@@ -17,6 +17,17 @@
 </head>
 
 <body>
+	<div class="toast hidden" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="toast-header">
+			<i class="fa fa-exclamation-circle"></i>
+			<strong class="mr-auto ml-2">LoIDE</strong>
+			<small>Now</small>
+			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="toast-body"></div>
+	</div>
 	<nav class="navbar navbar-expand-sm navbar-light bg-light ">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<a class="navbar-brand">
@@ -24,11 +35,16 @@
 			<span id="beta">(Beta)</span>
 		</a>
 
-        <ul class="navbar-nav ml-2">
+        <ul class="navbar-nav">
             <li class="nav-item">
-                <button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip" data-html="true">Run!
-                    <i class="fa fa-play"></i>
-                </button>
+				<div class="btn-group btn-block" role="group">
+                    <button id="btn-option" class="btn btn-secondary" data-toggle="tooltip" data-html="true" data-html="true" data-placement="top" title="Run options">
+                    	<i class="fa fa-cogs"></i>
+                	</button>
+					<button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip" data-html="true">Run!
+						<i class="fa fa-play"></i>
+					</button>
+				</div>
             </li>
         </ul>
 
@@ -59,9 +75,6 @@
 		</div>
 		<!-- /.navbar-collapse -->
 	</nav>
-	<div tabindex="-1" id="result-auto-close-alert" class="alert hidden">
-		<p id="result-alert-text"></p>
-	</div>
 	<div id="upload-container" class="collapse" aria-expanded="false">
 		<div id="drop_zone">
 			<p class="text-center">Drag and Drop here.
@@ -75,81 +88,77 @@
 	</div>
 	<div class="container">
 		<form id="input">
-			<div class="left-panel">
-				<div class="text-center">
-					<a role="button" id="btn-option" data-toggle="tooltip" data-html="true" data-html="true" data-placement="top" title="Options " href="#">
-						<i class="fa fa-cogs"></i>
-					</a>
-				</div>
+			<div class="left-panel" style="height: auto">
 				<div class="option-solver">
-					<div class="hidden" >
-						<label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
-						<select name="language" id="inputLanguage" class="form-control">
-							<option value="asp">ASP</option>
-						</select>
-						<label for="inputEngine" class="col-sm-12 col-xs-12 text-center">Solver</label>
-						<select name="engine" id="inputengine" class="form-control">
-							<option value="dlv">DLV</option>
-							<option value="clingo">Clingo</option>
-							<option value="dlv2">DLV2</option>
-						</select>
-						<div class="row row-option">
-							<div class="col-md-12 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<label for="option" class="col-sm-12 col-xs-12 text-center">Options</label>
-									<div class="input-group opname">
-										<select name="option[0][name]" class="form-control form-control-option">
-											<option></option>
-											<option value="free choice">Free choice</option>
-											<option value="filter">Filter</option>
-											<option value="nofacts">Nofacts</option>
-											<option value="silent">Silent</option>
-											<option value="query">Query</option>
-										</select>
-										<span class="input-group-btn btn-add-option">
-											<button type="button" class="btn btn-outline-secondary">+</button>
-										</span>
-									</div>
-								</div>
-								<div class="option-value">
-								</div>
-							</div>
-						</div>
-						<div class="checkbox">
-							<p class="text-center">
-								<strong> Execution options </strong>
-							</p>
-							<label>
-								<input type="checkbox" value="true" id="run-dot"> Run automatically
-							</label>
-							<div id="tab-execute">
-								<p class="text-center">
-									<strong>Choose tab to execute</strong>
-								</p>
-								<label>
-									<input type="checkbox" value="editor1">
-									<span>Tab1</span>
-								</label>
-							</div>
-							<div class="text-center" id="reset-container">
-								<p class="text-center">
-									<strong> Reset all options </strong>
-								</p>
-								<button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>
-							</div>
-						</div>
-						<div>
-						</div>
-					</div>
+                    <div class="text-center left-panel-title mt-2 mb-2">
+                        <h5>Run options</h5>
+                    </div>
+                    <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
+                    <select name="language" id="inputLanguage" class="form-control selectpicker">
+                        <option value="asp">ASP</option>
+                    </select>
+                    <label for="inputEngine" class="col-sm-12 col-xs-12 text-center">Solver</label>
+                    <select name="engine" id="inputengine" class="form-control selectpicker">
+                        <option value="dlv">DLV</option>
+                        <option value="clingo">Clingo</option>
+                        <option value="dlv2">DLV2</option>
+                    </select>
+                    <div class="row row-option">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label for="option" class="col-sm-12 col-xs-12 text-center">Options</label>
+                                <div class="input-group opname">
+                                    <select name="option[0][name]" class="form-control form-control-option selectpicker">
+                                        <option></option>
+                                        <option value="free choice">Free choice</option>
+                                        <option value="filter">Filter</option>
+                                        <option value="nofacts">Nofacts</option>
+                                        <option value="silent">Silent</option>
+                                        <option value="query">Query</option>
+                                    </select>
+                                    <span class="input-group-btn btn-add-option">
+                                        <button type="button" class="btn btn-outline-secondary">+</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="option-value">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <p class="text-center">
+                            <strong> Execution options </strong>
+                        </p>
+                        <label>
+                            <input type="checkbox" value="true" id="run-dot"> Run automatically
+                        </label>
+                        <div id="tab-execute">
+                            <p class="text-center">
+                                <strong>Choose tab to execute</strong>
+                            </p>
+                            <label>
+                                <input type="checkbox" value="editor1">
+                                <span>Tab1</span>
+                            </label>
+                        </div>
+                        <div class="text-center" id="reset-container">
+                            <p class="text-center">
+                                <strong> Reset all options </strong>
+                            </p>
+                            <button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>
+                        </div>
+                    </div>
+                    <div>
+                    </div>
 				</div>
 			</div>
-			<div class="layout">
+			<div class="layout center-panel" style="overflow: visible">
 				<input type="hidden" name="program[0]" id="program" class="programs" value="" >
 				<input type="hidden" id="output-form" value="" >
 				<button id="btn-download" type="submit" class="hidden"></button>
 				<button id="run" type="submit" class="hidden"></button>
 				<button id="save-options" type="submit" class="hidden"></button>
-				<div class="pane ui-layout-center">
+				<div class="pane ui-layout-center" >
 					<div role="tabpanel">
 						<!-- Nav tabs -->
 						<div class="d-flex row-tabpanel-toolbar">
@@ -165,7 +174,7 @@
 
 								</li>
 								<li class="nav-item" >
-									<a role="tab" data-toggle="tab" class="add-tab nav-link">+</a>
+									<a role="tab" data-toggle="tab" class="add-tab nav-link btn-light"><i class="fa fa-plus"></i></a>
 								</li>
 							</ul>
 							<div class="ml-auto text-center toolbar">
@@ -268,7 +277,7 @@
 						<div class="col-md-4 col-xs-4">
 							<label for="theme">Change theme Editor</label>
 							<div class="input-group opname">
-								<select id="theme" style="width: 100%;">
+								<select id="theme" style="width: 100%;" class="selectpicker">
 									<optgroup label="Bright">
 										<option value="ace/theme/tomorrow">Tomorrow</option>
 										<option value="ace/theme/solarized_light">Solarized Light</option>
@@ -327,6 +336,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.19.1/URI.min.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
 </body>
 
 </html>

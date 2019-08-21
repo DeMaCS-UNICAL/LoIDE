@@ -74,13 +74,8 @@
  * @description Open a container to display the result 
  */
 function operation_alert(result) {
-    $("#result-auto-close-alert").focus();
-    $("#result-alert-text").html("<strong>" + result.reason + "</strong>");
-    $("#result-auto-close-alert").removeClass("hidden").addClass("alert-danger fade in");
-    $("#result-auto-close-alert").fadeTo(1500, 750).slideUp(800, function () {
-        $(this).removeClass("alert-danger fade in");
-    });
-
+    $(".toast-body").html("<strong>" + result.reason + "</strong>");
+    $('.toast').toast('show');
 }
 
 /**
@@ -168,6 +163,8 @@ $(window).resize(function () {
 });
 
 $(document).ready(function () {
+    setNotifications();
+
     setClipboard();
     
     inizializePopovers();
@@ -191,7 +188,10 @@ $(document).ready(function () {
                 editors[idE].resize();
             }
         },
-        south__minSize: 125
+        south__minSize: 125,
+        resizeWhileDragging: true,
+        resizable: true,
+        slidable: true,
 
     });
 
@@ -358,7 +358,7 @@ $(document).ready(function () {
 
     $("#btn-option").click(function () {
         $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
-        $('.option-solver > div').toggleClass("hidden show"); // add class to show option components
+        $('.option-solver > div').toggleClass(" show"); // add class to show option components
         $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
             function() {
                 $(window).trigger('resize');
@@ -563,6 +563,7 @@ function inizializeChangeNameContextmenu(){
 }
 
 $(document).on('click', '.btn-add-option', function () {
+    console.log($(this));
     addOptionDOM($(this));
     $(this).empty();
 });
@@ -1010,7 +1011,7 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value=""></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
+    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option selectpicker"><option value=""></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
@@ -1338,7 +1339,9 @@ function restoreOptions() {
         var obj = JSON.parse(opt);
         $('#inputLanguage').val(obj.language).change();
         $('#inputengine').val(obj.engine).change();
-        setOptions(obj);
+        if(obj.option != undefined) {
+            setOptions(obj);
+        }
         if (obj.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);
         }
@@ -1611,7 +1614,7 @@ function inizializePopovers(){
                 '<div class="input-group">' +
                     '<input id="link-to-share" type="text" class="form-control" readonly>' +
                     '<div class="input-group-append">'+
-                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share" disabled><i class="fa fa-clipboard"></i></button>'+
+                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
                     '</div>'+
                 '</div>' +
                 '<div class="text-center mt-2 mb-2"> or </div>' +
@@ -1997,6 +2000,7 @@ function createURLtoShare(program) {
         dataType: 'json',
         crossDomain: true,
         success: function (data) {
+            console.log(data);
             if(data.shorturl == undefined){
                 $('#link-to-share').val("Ops. Something went wrong");
                 if(URL.length >= 5000){
@@ -2064,3 +2068,14 @@ function setClipboard() {
     });
 }
 
+function setNotifications() {
+    $('.toast').toast({
+        delay: 1500,
+    });
+    $('.toast').on('show.bs.toast',function () {
+        $('.toast').removeClass('hidden');
+    });
+    $('.toast').on('hidden.bs.toast',function () {
+        $('.toast').addClass('hidden');
+    });
+}

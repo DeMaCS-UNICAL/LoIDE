@@ -16,7 +16,7 @@
 
 </head>
 
-<body>
+<body class="dark">
 	<div class="toast hidden" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="toast-header">
 			<i class="fa fa-exclamation-circle"></i>
@@ -28,7 +28,7 @@
 		</div>
 		<div class="toast-body"></div>
 	</div>
-	<nav class="navbar navbar-expand-sm navbar-light bg-light ">
+	<nav class="navbar navbar-expand-sm navbar-light ">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<a class="navbar-brand">
 			<img src="img/logo_LoIDE.png" alt="logo">
@@ -297,18 +297,21 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-4 col-xs-4 col-md-offset-2 col-xs-offset-2">
-							<label>Reset all editor options</label>
-							<button id="reset-editor" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>
-						</div>
-					</div>
+                        <div class="col-md-4 col-xs-4">
+                            <label for="dark-light-mode">Change LoIDE mode</label>
+                            <button id="dark-light-mode" type="button" class="btn btn-outline-dark ">Dark</button>
+
+                        </div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="reset-editor" type="button" class="btn btn-outline btn-outline-danger">Reset options</button>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
 	</div>
+
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -336,6 +339,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.19.1/URI.min.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+
 </body>
 
 </html>

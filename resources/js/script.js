@@ -101,6 +101,7 @@ var defaultFontSize = 15;
  * @description default ace theme
  */
 var defaultTheme = "ace/theme/tomorrow";
+var defaultDarkTheme = "ace/theme/kr_theme"
 
 /**
  * set up ace editors into object
@@ -377,6 +378,7 @@ $(document).ready(function () {
         inizializeAutoComplete();
     });
 
+    setLoideDarkLightMode();
 });
 
 /**
@@ -1116,7 +1118,11 @@ function setUpAce(ideditor, text) {
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
     editors[ideditor].session.setMode("ace/mode/asp");
-    editors[ideditor].setTheme(defaultTheme);
+    if(localStorage.getItem('mode') === 'dark')
+        editors[ideditor].setTheme(defaultDarkTheme);
+    else{
+        editors[ideditor].setTheme(defaultTheme);
+    }
     editors[ideditor].setValue(text);
     editors[ideditor].resize();
     editors[ideditor].setBehavioursEnabled(true);
@@ -2076,12 +2082,53 @@ function setNotifications() {
 }
 
 function setWindowResizeTrigger() {
-
     $('#loide-collapse').on('hidden.bs.collapse',function () {
         $(window).trigger('resize');
     });
     $('#loide-collapse').on('shown.bs.collapse',function () {
         $(window).trigger('resize');
     });
+}
 
+function setLoideDarkLightMode() {
+    $('#dark-light-mode').click(function () {
+        localStorage.setItem('mode', (localStorage.getItem('mode') || 'dark') === 'dark' ? 'light' : 'dark');
+        localStorage.getItem('mode') === 'dark' ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
+        setColorMode();
+    });
+
+    ((localStorage.getItem('mode') || 'dark') === 'dark') ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
+    setColorMode();
+}
+
+function setColorMode() {
+    var length = $(".nav-tabs").children().length;
+    if(localStorage.getItem('mode') === 'dark'){
+
+        $('#dark-light-mode').text("Light");
+        $(".btn-light").each(function () {
+            $(this).removeClass('btn-light');
+            $(this).addClass('btn-dark');
+        });
+        $('#dark-light-mode').removeClass('btn-outline-dark');
+        $('#dark-light-mode').addClass('btn-outline-light');
+
+        for (var index = 1; index <= length - 1; index++) {
+            var idE = "editor" + index;
+            editors[idE].setTheme(defaultDarkTheme);
+        }
+    }
+    else{
+        $('#dark-light-mode').text("Dark");
+        $(".btn-dark").each(function () {
+            $(this).removeClass('btn-dark');
+            $(this).addClass('btn-light');
+        });
+        $('#dark-light-mode').addClass('btn-outline-dark');
+        $('#dark-light-mode').removeClass('btn-outline-light');
+        for (var index = 1; index <= length - 1; index++) {
+            var idE = "editor" + index;
+            editors[idE].setTheme(defaultTheme);
+        }
+    }
 }

@@ -407,7 +407,12 @@ function callSocketServer(onlyActiveTab) {
         if (response.error == "") {
             console.log(response.model); // debug string
             $('#output').text(response.model); // append the response in the container 
-            $('#output').css('color', 'black');
+            if(localStorage.getItem('mode') === 'dark') {
+                $('#output').css('color','white');
+            }
+            else{
+                $('#output').css('color','black');
+            }
         } else {
             $('#output').text(response.model+response.error);
             $('#output').css('color', 'red');
@@ -1510,6 +1515,7 @@ function inizializePopovers(){
         $('#loide-navbar-toogler').on('click',function () {
             $('.popover-download').popover('hide');
         })
+
         // set what happens when user clicks on the button
         $('.popover-header').html('');
         $('.popover-body').html('<div class="popover-download-content">\n' +
@@ -2156,6 +2162,7 @@ function setColorMode() {
             var idE = "editor" + index;
             editors[idE].setTheme(defaultDarkTheme);
         }
+        $('#output').css('color','white');
     }
     else{
         $('#dark-light-mode').text("Dark");
@@ -2174,5 +2181,6 @@ function setColorMode() {
             var idE = "editor" + index;
             editors[idE].setTheme(defaultTheme);
         }
+        $('#output').css('color','black');
     }
 }

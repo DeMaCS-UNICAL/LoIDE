@@ -477,6 +477,7 @@ select{
 
 .navbar{
     background-color: white;
+    transition: 0.5s;
 }
 
     /*DARK-MODE SECTION*/
@@ -531,4 +532,27 @@ body.dark li.nav-item:hover > a.add-tab {
 
 body.dark .pull-right{
     color: #DDDDDD;
+}
+
+body.dark .popover{
+    background-color: rgb(83, 83, 83);
+    color: white;
+}
+
+body.dark .popover-body{
+    color: white;
+}
+
+body.dark .popover-header{
+    background-color: rgb(128, 128, 128);
+    border-bottom: 1px solid #7e7e7e;
+}
+
+body.dark .toast{
+    background-color: transparent;
+}
+
+body.dark .toast-header{
+    color: #f9f9f9;
+    background-color: rgba(130, 130, 130, 0.85);
 }

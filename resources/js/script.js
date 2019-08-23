@@ -512,6 +512,14 @@ function inizializeChangeNameContextmenu(){
             '        <button class="btn btn-light" type="button" id="change-name-tab"><i class="fa fa-chevron-right"></i></button>\n' +
             '      </span>\n' +
             '    </div>');
+        if(localStorage.getItem('mode') === 'dark') {
+            $('#change-name-tab').removeClass('btn-light');
+            $('#change-name-tab').addClass('btn-dark');
+        }
+        else{
+            $('#change-name-tab').removeClass('btn-light');
+            $('#change-name-tab').addClass('btn-dark');
+        }
         $('#change-name-tab-textbox').focus();
         var thisTab = $(this);
         var idTabEditor = $(this).attr('data-target');
@@ -1514,11 +1522,24 @@ function inizializePopovers(){
             '<div class="save-content">\n' +
             '<div class="mt-2 mb-2"> Save to:\n </div>' +
             '<div class="save-btn text-center">\n' +
-            '<button id="local-download" class="btn btn-outline-primary btn-saver ">Local</button>\n' +
-            '<button id="cloud-download" class="btn btn-outline-primary btn-saver" disabled>Cloud</button>\n' +
+            '<button id="local-download" class="btn btn-outline-dark btn-saver ">Local</button>\n' +
+            '<button id="cloud-download" class="btn btn-outline-dark btn-saver" disabled>Cloud</button>\n' +
             '</div>\n' +
             '</div>\n' +
             '</div>');
+
+        if(localStorage.getItem('mode') === 'dark') {
+            $('#local-download').removeClass('btn-outline-dark');
+            $('#local-download').addClass('btn-outline-light');
+            $('#cloud-download').removeClass('btn-outline-dark');
+            $('#cloud-download').addClass('btn-outline-light');
+        }
+        else{
+            $('#local-download').removeClass('btn-outline-light');
+            $('#local-download').addClass('btn-outline-dark');
+            $('#cloud-download').removeClass('btn-outline-light');
+            $('#cloud-download').addClass('btn-outline-dark');
+        }
 
         $("#local-download").on('click', function(){
             if($('#only-output').is(":checked")){
@@ -1622,6 +1643,19 @@ function inizializePopovers(){
                 '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
                 // '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
             '</div>');
+
+        if(localStorage.getItem('mode') === 'dark') {
+            $('#btn-copy-link').removeClass('btn-outline-dark');
+            $('#btn-copy-link').addClass('btn-outline-light');
+            $('#share-btn-download').removeClass('btn-outline-dark');
+            $('#share-btn-download').addClass('btn-outline-light');
+        }
+        else{
+            $('#btn-copy-link').removeClass('btn-outline-light');
+            $('#btn-copy-link').addClass('btn-outline-dark');
+            $('#share-btn-download').removeClass('btn-outline-light');
+            $('#share-btn-download').addClass('btn-outline-dark');
+        }
 
         $('#link-to-share').val("Loading...");
         createURLtoShare(editors[idEditor].getValue());
@@ -2071,7 +2105,7 @@ function setClipboard() {
 
 function setNotifications() {
     $('.toast').toast({
-        delay: 1500,
+        delay: 150000,
     });
     $('.toast').on('show.bs.toast',function () {
         $('.toast').removeClass('hidden');
@@ -2106,9 +2140,14 @@ function setColorMode() {
     if(localStorage.getItem('mode') === 'dark'){
 
         $('#dark-light-mode').text("Light");
+        $('#theme').val(defaultDarkTheme);
         $(".btn-light").each(function () {
             $(this).removeClass('btn-light');
             $(this).addClass('btn-dark');
+        });
+        $(".btn-outline-dark").each(function () {
+            $(this).removeClass('btn-outline-dark');
+            $(this).addClass('btn-outline-light');
         });
         $('#dark-light-mode').removeClass('btn-outline-dark');
         $('#dark-light-mode').addClass('btn-outline-light');
@@ -2120,9 +2159,14 @@ function setColorMode() {
     }
     else{
         $('#dark-light-mode').text("Dark");
+        $('#theme').val(defaultTheme);
         $(".btn-dark").each(function () {
             $(this).removeClass('btn-dark');
             $(this).addClass('btn-light');
+        });
+        $(".btn-outline-light").each(function () {
+            $(this).addClass('btn-outline-dark');
+            $(this).removeClass('btn-outline-light');
         });
         $('#dark-light-mode').addClass('btn-outline-dark');
         $('#dark-light-mode').removeClass('btn-outline-light');

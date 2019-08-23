@@ -173,12 +173,7 @@ $(document).ready(function () {
 
     inizializeToolbar();
 
-    $('#loide-collapse').on('hidden.bs.collapse',function () {
-        $(window).trigger('resize');
-    });
-    $('#loide-collapse').on('shown.bs.collapse',function () {
-        $(window).trigger('resize');
-    });
+    setWindowResizeTrigger();
 
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
@@ -361,7 +356,7 @@ $(document).ready(function () {
         $('.option-solver > div').toggleClass(" show"); // add class to show option components
         $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
             function() {
-                $(window).trigger('resize');
+            $(window).trigger('resize');
             });
     });
 
@@ -1011,7 +1006,7 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option selectpicker"><option value=""></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
+    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value="Nothing select"></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
@@ -2078,4 +2073,15 @@ function setNotifications() {
     $('.toast').on('hidden.bs.toast',function () {
         $('.toast').addClass('hidden');
     });
+}
+
+function setWindowResizeTrigger() {
+
+    $('#loide-collapse').on('hidden.bs.collapse',function () {
+        $(window).trigger('resize');
+    });
+    $('#loide-collapse').on('shown.bs.collapse',function () {
+        $(window).trigger('resize');
+    });
+
 }

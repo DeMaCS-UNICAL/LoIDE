@@ -121,7 +121,6 @@ a[role="button"]:focus {
 }
 
 #upload-container {
-    padding-bottom: 1%;
     transition: 0.5s;
 }
 
@@ -135,10 +134,13 @@ a[role="button"]:focus {
 
 #drop_zone {
     border-style: dashed;
-    border-color: grey;
+    border-color: #DDDDDD;
     margin-left: 1%;
     margin-right: 1%;
     height: 100px;
+    border-radius: 8px;
+    margin-top: 1%;
+
 }
 
 #drop_zone>p {

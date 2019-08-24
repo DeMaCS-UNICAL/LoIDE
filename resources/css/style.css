@@ -557,3 +557,7 @@ body.dark .toast-header{
     color: #f9f9f9;
     background-color: rgba(130, 130, 130, 0.85);
 }
+
+body.dark img[alt=logo]{
+    filter: invert(100%);
+}

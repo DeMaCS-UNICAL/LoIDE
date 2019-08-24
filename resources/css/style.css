@@ -49,6 +49,13 @@ body {
 }
 
 @media screen and (max-width: 576px) {
+    img[alt=logo] {
+        width: 55%;
+    }
+
+    .navbar-brand{
+        width: 40%;
+    }
     .left-panel {
         height: auto !important;
         z-index: 1053;
@@ -73,6 +80,10 @@ body {
 }
 
 @media screen and (min-width: 577px) {
+    img[alt=logo] {
+        width: 35%;
+    }
+
     .left-panel {
         position: relative;
         width: 0%;
@@ -219,12 +230,6 @@ a[role="button"]:focus {
     margin-top: 5%;
 }
 
-.navbar-header>img {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 5px;
-}
-
 .opname {
     width: 100%;
 }
@@ -350,10 +355,6 @@ mark {
 
 label[for=btn-download] {
     margin-bottom: 0px;
-}
-
-img[alt=logo] {
-    width: 44%;
 }
 
 .popover {

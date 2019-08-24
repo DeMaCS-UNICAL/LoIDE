@@ -178,6 +178,14 @@ $(document).ready(function () {
 
     setWindowResizeTrigger();
 
+    $('.logo').mousedown(function (e) {
+            return false;
+    });
+
+    $('.logo').on('contextmenu',function (e) {
+            return false;
+    });
+
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
             var length = $(".nav-tabs").children().length;
@@ -2116,7 +2124,7 @@ function setClipboard() {
 
 function setNotifications() {
     $('.toast').toast({
-        delay: 150000,
+        delay: 2000,
     });
     $('.toast').on('show.bs.toast',function () {
         $('.toast').removeClass('hidden');

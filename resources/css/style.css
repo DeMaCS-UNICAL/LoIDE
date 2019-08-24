@@ -558,6 +558,6 @@ body.dark .toast-header{
     background-color: rgba(130, 130, 130, 0.85);
 }
 
-body.dark img[alt=logo]{
+body.dark .navbar-brand{
     filter: invert(100%);
 }

@@ -174,6 +174,8 @@ $(document).ready(function () {
 
     inizializeToolbar();
 
+    inizializeButtonLoideMode();
+
     setWindowResizeTrigger();
 
     layout = $('body > .container > form > .layout').layout({
@@ -378,7 +380,7 @@ $(document).ready(function () {
         inizializeAutoComplete();
     });
 
-    setLoideDarkLightMode();
+    setLoideStyleMode();
 });
 
 /**
@@ -522,8 +524,8 @@ function inizializeChangeNameContextmenu(){
             $('#change-name-tab').addClass('btn-dark');
         }
         else{
-            $('#change-name-tab').removeClass('btn-light');
-            $('#change-name-tab').addClass('btn-dark');
+            $('#change-name-tab').removeClass('btn-dark');
+            $('#change-name-tab').addClass('btn-light');
         }
         $('#change-name-tab-textbox').focus();
         var thisTab = $(this);
@@ -1471,6 +1473,8 @@ function resetEditorOptions() {
     $("#font-output").val(defaultFontSize);
     saveOption("fontSizeO", defaultFontSize);
     $('#output').css('font-size', defaultFontSize + "px");
+
+    setLoideStyleMode('light');
 }
 
 /**
@@ -1600,7 +1604,7 @@ function inizializePopovers(){
                 // createFileToDownload(stringify, "dropbox", "json")
             }
             else{
-                alert("Dropbox not supported on your browser!");
+                operation_alert({result: "Dropbox not supported on your browser!"});
             }
         });
     });
@@ -1636,6 +1640,7 @@ function inizializePopovers(){
     $('.popover-share').on('inserted.bs.popover', function() {
         //close contestmenu popovers
         $('.btn-tab').popover('hide');
+        $('.popover-download').popover('hide');
 
         $('.popover-body').html('' +
             '<div class="popover-share-content">\n' +
@@ -2130,57 +2135,87 @@ function setWindowResizeTrigger() {
     });
 }
 
-function setLoideDarkLightMode() {
+function inizializeButtonLoideMode() {
     $('#dark-light-mode').click(function () {
         localStorage.setItem('mode', (localStorage.getItem('mode') || 'dark') === 'dark' ? 'light' : 'dark');
         localStorage.getItem('mode') === 'dark' ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
         setColorMode();
     });
+}
 
-    ((localStorage.getItem('mode') || 'dark') === 'dark') ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
+function setLoideStyleMode(mode) {
+
+    switch(mode){
+        case 'light':
+            localStorage.setItem('mode','light');
+            document.querySelector('body').classList.remove('dark');
+            break;
+
+        case 'dark':
+            localStorage.setItem('mode','dark');
+            document.querySelector('body').classList.add('dark');
+            break;
+
+        default:
+            ((localStorage.getItem('mode') || 'dark') === 'dark') ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
+            break;
+    }
+
     setColorMode();
 }
 
 function setColorMode() {
+    switch (localStorage.getItem('mode')) {
+        case 'light':
+            setLightStyleToUIElements();
+            break;
+
+        case 'dark':
+            setDarkStyleToUIElements();
+            break;
+    }
+}
+
+function setLightStyleToUIElements() {
     var length = $(".nav-tabs").children().length;
-    if(localStorage.getItem('mode') === 'dark'){
 
-        $('#dark-light-mode').text("Light");
-        $('#theme').val(defaultDarkTheme);
-        $(".btn-light").each(function () {
-            $(this).removeClass('btn-light');
-            $(this).addClass('btn-dark');
-        });
-        $(".btn-outline-dark").each(function () {
-            $(this).removeClass('btn-outline-dark');
-            $(this).addClass('btn-outline-light');
-        });
-        $('#dark-light-mode').removeClass('btn-outline-dark');
-        $('#dark-light-mode').addClass('btn-outline-light');
+    $('#dark-light-mode').text("Dark");
+    $('#theme').val(defaultTheme);
+    $(".btn-dark").each(function () {
+        $(this).removeClass('btn-dark');
+        $(this).addClass('btn-light');
+    });
+    $(".btn-outline-light").each(function () {
+        $(this).addClass('btn-outline-dark');
+        $(this).removeClass('btn-outline-light');
+    });
+    $('#dark-light-mode').addClass('btn-outline-dark');
+    $('#dark-light-mode').removeClass('btn-outline-light');
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].setTheme(defaultTheme);
+    }
+    $('#output').css('color','black');
+}
 
-        for (var index = 1; index <= length - 1; index++) {
-            var idE = "editor" + index;
-            editors[idE].setTheme(defaultDarkTheme);
-        }
-        $('#output').css('color','white');
+function setDarkStyleToUIElements() {
+    var length = $(".nav-tabs").children().length;
+    $('#dark-light-mode').text("Light");
+    $('#theme').val(defaultDarkTheme);
+    $(".btn-light").each(function () {
+        $(this).removeClass('btn-light');
+        $(this).addClass('btn-dark');
+    });
+    $(".btn-outline-dark").each(function () {
+        $(this).removeClass('btn-outline-dark');
+        $(this).addClass('btn-outline-light');
+    });
+    $('#dark-light-mode').removeClass('btn-outline-dark');
+    $('#dark-light-mode').addClass('btn-outline-light');
+
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].setTheme(defaultDarkTheme);
     }
-    else{
-        $('#dark-light-mode').text("Dark");
-        $('#theme').val(defaultTheme);
-        $(".btn-dark").each(function () {
-            $(this).removeClass('btn-dark');
-            $(this).addClass('btn-light');
-        });
-        $(".btn-outline-light").each(function () {
-            $(this).addClass('btn-outline-dark');
-            $(this).removeClass('btn-outline-light');
-        });
-        $('#dark-light-mode').addClass('btn-outline-dark');
-        $('#dark-light-mode').removeClass('btn-outline-light');
-        for (var index = 1; index <= length - 1; index++) {
-            var idE = "editor" + index;
-            editors[idE].setTheme(defaultTheme);
-        }
-        $('#output').css('color','black');
-    }
+    $('#output').css('color','white');
 }

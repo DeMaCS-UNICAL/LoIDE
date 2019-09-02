@@ -74,8 +74,8 @@
  * @description Open a container to display the result 
  */
 function operation_alert(result) {
-    $(".toast-body").html("<strong>" + result.reason + "</strong>");
-    $('.toast').toast('show');
+    $("#notidication-body").html("<strong>" + result.reason + "</strong>");
+    $('#notification').toast('show');
 }
 
 /**
@@ -129,6 +129,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
 window.onbeforeunload = function () {
     $('#save-options').trigger('click');
+    saveProjectToLocalStorage();
 };
 
 $(window).resize(function () {
@@ -389,6 +390,7 @@ $(document).ready(function () {
     });
 
     setLoideStyleMode();
+    checkProjectOnLocalStorage();
 });
 
 /**
@@ -1110,7 +1112,7 @@ function handleFileSelect(evt) {
             if (!setJSONInput(jsontext)) {
                 editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
             }
-
+            inizializeChangeNameContextmenu();
         } else {
             editors[idEditor].setValue(text);
         }
@@ -2123,14 +2125,22 @@ function setClipboard() {
 }
 
 function setNotifications() {
-    $('.toast').toast({
+    $('#notification').toast({
         delay: 2000,
+    });
+    $('#notification-project').toast({
+        delay: 10000,
     });
     $('.toast').on('show.bs.toast',function () {
         $('.toast').removeClass('hidden');
     });
     $('.toast').on('hidden.bs.toast',function () {
         $('.toast').addClass('hidden');
+    });
+
+    $('#load-project').on('click',function () {
+       loadProjectFromLocalStorage();
+       $('#notification-project').toast('hide');
     });
 }
 
@@ -2165,6 +2175,8 @@ function setLoideStyleMode(mode) {
             break;
 
         default:
+            if(localStorage.getItem('mode') == null)
+                localStorage.setItem('mode','light');
             ((localStorage.getItem('mode') || 'dark') === 'dark') ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
             break;
     }
@@ -2225,4 +2237,63 @@ function setDarkStyleToUIElements() {
         editors[idE].setTheme(defaultDarkTheme);
     }
     $('#output').css('color','white');
+}
+
+function saveProjectToLocalStorage() {
+    var nameTabs = [];
+    var logicProgEditors = [];
+
+    $('.name-tab').each(function () {
+        nameTabs.push($(this).text());
+    });
+    var length = $(".nav-tabs").children().length;
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        logicProgEditors.push(editors[idE].getValue());
+    }
+
+    saveOption("nameTabs",JSON.stringify(nameTabs));
+    saveOption("logicProgEditors",JSON.stringify(logicProgEditors));
+}
+
+function checkProjectOnLocalStorage() {
+    if(supportLocalStorage()) {
+        var nameTabs = [];
+        var logicProgEditors = [];
+        if(localStorage.getItem("nameTabs") != undefined && localStorage.getItem("logicProgEditors") != undefined)
+        {
+            nameTabs = JSON.parse(localStorage.getItem("nameTabs"));
+            logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
+
+            if(nameTabs.length > 1 || logicProgEditors[0].trim().length > 0){
+                $('#notification-project').toast('show');
+            }
+        }
+    }
+}
+
+function loadProjectFromLocalStorage() {
+    if(supportLocalStorage()){
+        var nameTabs = [];
+        var logicProgEditors = [];
+        nameTabs = JSON.parse(localStorage.getItem("nameTabs"));
+        logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
+
+        for (var index = 1; index <= nameTabs.length ; index++) {
+            if(index > 1)
+                $('.add-tab').trigger('click');
+            var idE = "editor" + index;
+            editors[idE].setValue(logicProgEditors[index-1]);
+        }
+
+        $('.name-tab').each(function (index) {
+            $(this).text(nameTabs[index]);
+            var id = index + 1;
+            var editor = "editor" + id;
+            $(':checkbox[value="' + editor + '"]').siblings('span').text(nameTabs[index]);
+
+        });
+
+        $("a[data-target='#tab1']").trigger('click');
+    }
 }

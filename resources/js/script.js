@@ -101,7 +101,7 @@ var defaultFontSize = 15;
  * @description default ace theme
  */
 var defaultTheme = "ace/theme/tomorrow";
-var defaultDarkTheme = "ace/theme/kr_theme"
+var defaultDarkTheme = "ace/theme/idle_fingers";
 
 /**
  * set up ace editors into object
@@ -178,11 +178,11 @@ $(document).ready(function () {
 
     setWindowResizeTrigger();
 
-    $('.logo').mousedown(function (e) {
+    $('img[alt=logo]').mousedown(function (e) {
             return false;
     });
 
-    $('.logo').on('contextmenu',function (e) {
+    $('img[alt=logo]').on('contextmenu',function (e) {
             return false;
     });
 
@@ -567,10 +567,6 @@ function inizializeChangeNameContextmenu(){
         });
     });
 
-    $('.btn-tab').on('hidden.bs.popover', function(){
-        $('#change-name-tab').off('click');
-    });
-
     $('.btn-tab').on('contextmenu',function (e) { //needed to hide the other context menu opened
         $('.btn-tab').each(function () {
             if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
@@ -583,14 +579,15 @@ function inizializeChangeNameContextmenu(){
 }
 
 $(document).on('click', '.btn-add-option', function () {
-    console.log($(this));
     addOptionDOM($(this));
     $(this).empty();
+    setElementsColorMode();
 });
 
 $(document).on('click', '.btn-del-option', function () {
     $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-light">+</button>');
     delOptionDOM($(this));
+    setElementsColorMode();
 });
 
 $(document).on('click', '.btn-del-value', function () {
@@ -598,11 +595,13 @@ $(document).on('click', '.btn-del-value', function () {
         $(this).parent().parent().prev().find(".input-group-btn").last().append('<button type="button" class="btn btn-light btn-add">+</button>');
     }
     deleteInputValue($(this));
+    setElementsColorMode();
 });
 
 $(document).on('click', '.btn-add', function () {
     addInpuValue($(this));
     $(this).parent().empty();
+    setElementsColorMode();
 });
 
 $(document).on('mouseup', '#output', function () {
@@ -670,6 +669,7 @@ $(document).on('change', '.form-control-option', function () { //add or remove t
     if (val === 'free choice' || val === 'filter') {
         if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
             addInpuValue($(this).closest('.row-option'));
+        setElementsColorMode();
     } else {
         $(this).closest('.row-option').find('.option-value').remove();
         $(this).closest('.col-sm-12').append("<div class='option-value'></div>");
@@ -1540,8 +1540,8 @@ function inizializePopovers(){
             '<div class="save-content">\n' +
             '<div class="mt-2 mb-2"> Save to:\n </div>' +
             '<div class="save-btn text-center">\n' +
-            '<button id="local-download" class="btn btn-outline-dark btn-saver ">Local</button>\n' +
-            '<button id="cloud-download" class="btn btn-outline-dark btn-saver" disabled>Cloud</button>\n' +
+            '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
+            // '<button id="cloud-download" class="btn btn-outline-dark btn-saver" disabled>Cloud</button>\n' +
             '</div>\n' +
             '</div>\n' +
             '</div>');
@@ -2147,7 +2147,7 @@ function inizializeButtonLoideMode() {
     $('#dark-light-mode').click(function () {
         localStorage.setItem('mode', (localStorage.getItem('mode') || 'dark') === 'dark' ? 'light' : 'dark');
         localStorage.getItem('mode') === 'dark' ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
-        setColorMode();
+        setElementsColorMode();
     });
 }
 
@@ -2168,11 +2168,10 @@ function setLoideStyleMode(mode) {
             ((localStorage.getItem('mode') || 'dark') === 'dark') ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
             break;
     }
-
-    setColorMode();
+    setElementsColorMode();
 }
 
-function setColorMode() {
+function setElementsColorMode() {
     switch (localStorage.getItem('mode')) {
         case 'light':
             setLightStyleToUIElements();

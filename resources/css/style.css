@@ -170,11 +170,6 @@ a[role="button"]:focus {
     margin-top: 1%;
 }
 
-#input{
-    margin-top: 0.5%;
-    margin-bottom: 1%;
-}
-
 #input-select {
     text-align: center;
     vertical-align: middle;
@@ -224,6 +219,8 @@ a[role="button"]:focus {
     margin-left: 0px;
     display: flex;
     align-items: center;
+    padding-bottom: 5px;
+    padding-top: 5px;
 }
 
 #tab-execute {
@@ -385,6 +382,7 @@ label[for=btn-download] {
     left: -500px;
     overflow-y: hidden;
     padding-bottom: 2%;
+    margin-bottom: 0.5%;
 }
 .left-panel:hover{
     overflow-y: auto;
@@ -447,11 +445,13 @@ li.nav-item:hover > a:not(.active){
 }
 
 .ui-layout-center{
-transition: 0.5s;
+    transition: 0.5s;
+    padding-top: 0px;
 }
 
 .navbar{
     margin-top: 0.5%;
+    margin-bottom: 0.5%;
     margin-left: 1%;
     margin-right: 1%;
     border-radius: 8px;
@@ -479,6 +479,16 @@ select{
 .navbar{
     background-color: white;
     transition: 0.5s;
+}
+
+.left-panel > .input-group>.custom-select:not(:last-child), .input-group>.form-control:not(:last-child) {
+     border-top-right-radius: .25rem;
+     border-bottom-right-radius: .25rem;
+}
+
+#change-name-tab-textbox{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
 
     /*DARK-MODE SECTION*/
@@ -555,9 +565,21 @@ body.dark .toast{
 
 body.dark .toast-header{
     color: #f9f9f9;
-    background-color: rgba(130, 130, 130, 0.85);
+    background-color: rgba(144, 144, 144, 0.85);
 }
 
 body.dark .navbar-brand{
     filter: invert(100%);
+}
+
+body.dark .form-control{
+    background-color: #d8d8d8;
+}
+
+body.dark .bs-popover-auto[x-placement^=bottom]>.arrow::after, body.dark .bs-popover-bottom>.arrow::after {
+    border-bottom-color: #555;
+}
+
+body.dark .bs-popover-auto[x-placement^=right]>.arrow::after, body.dark .bs-popover-right>.arrow::after {
+    border-right-color: rgb(128, 128, 128);
 }

@@ -168,6 +168,15 @@ a[role="button"]:focus {
     margin-right: 5px;
 }
 
+.nav-tabs {
+    border-bottom: 0px;
+}
+
+.row-tabpanel-toolbar{
+    margin-right:0px;
+    margin-left: 0px;
+}
+
 #tab-execute {
     margin-top: 5%;
 }
@@ -196,19 +205,15 @@ mark {
 }
 
 .ui-layout-pane-east {
-    overflow: hidden;
-}
+     overflow: hidden;
+ }
 
-.ui-layout-pane-east:hover {
-    overflow-y: scroll;
+.ui-layout-pane-east:hover{
+    overflow-y: auto;
 }
 
 .ui-layout-pane-center {
     overflow: hidden;
-}
-
-.ui-layout-pane-center:hover {
-    overflow-y: auto;
 }
 
 #seeting-output {
@@ -244,8 +249,23 @@ mark {
     width: 20%;
 }
 
+.popover-download-content {
+    padding: 10px;
+    /*border: 2px solid #8cd6ff;*/
+    border-radius: 5px;
+}
+
 .nav.navbar-nav .btn {
     margin-top: 12.5px;
+}
+
+.btn-saver {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.save-content {
+    margin-top: 4px;
 }
 
 @media screen and (max-width: 767px) {
@@ -280,8 +300,4 @@ mark {
     .navbar-header {
         width: 30%;
     }
-}
-
-#beta {
-    font-family: 
 }

@@ -1392,29 +1392,31 @@ function setOptions(obj) {
         $(this).remove();
     });
     $(obj.option).each(function (indexInArray, item) { // create option's form
-        addOption(indexInArray, item.name);
-        var currentOption;
-        if (indexInArray !== 0) {
-            currentOption = $('.row-option').get(indexInArray);
-            $(currentOption).find('label').empty();
-        }
-        if (indexInArray < obj.option.length - 1) { //deletes all 'btn-add' except in the last option
-            currentOption = $('.row-option').get(indexInArray);
-            $(currentOption).find('.btn-add-option').empty();
-        }
-        if (item['value']) {
-            currentClass = $('.option-value').eq(indexInArray);
-            $(item.value).each(function (indexInArray, itemValue) {
-                if (indexInArray !== 0)
-                    addInpuValue(currentClass);
-                $('.input-group-value').last().find('.form-control-value').val(itemValue);
-                if (indexInArray < item.value.length - 1) { //deletes all 'btn-add' except the last in the input type value
-                    $('.input-group-value').last().find('.btn-add').parent().empty();
-                }
-            });
-        }
-        if (indexInArray != $(obj.option).length - 1) {
-            $("<hr>").insertAfter($('.row-option').get(indexInArray));
+        if (item !== null) {
+            addOption(indexInArray, item.name);
+            var currentOption;
+            if (indexInArray !== 0) {
+                currentOption = $('.row-option').get(indexInArray);
+                $(currentOption).find('label').empty();
+            }
+            if (indexInArray < obj.option.length - 1) { //deletes all 'btn-add' except in the last option
+                currentOption = $('.row-option').get(indexInArray);
+                $(currentOption).find('.btn-add-option').empty();
+            }
+            if (item['value']) {
+                currentClass = $('.option-value').eq(indexInArray);
+                $(item.value).each(function (indexInArray, itemValue) {
+                    if (indexInArray !== 0)
+                        addInpuValue(currentClass);
+                    $('.input-group-value').last().find('.form-control-value').val(itemValue);
+                    if (indexInArray < item.value.length - 1) { //deletes all 'btn-add' except the last in the input type value
+                        $('.input-group-value').last().find('.btn-add').parent().empty();
+                    }
+                });
+            }
+            if (indexInArray != $(obj.option).length - 1) {
+                $("<hr>").insertAfter($('.row-option').get(indexInArray));
+            }
         }
 
     });

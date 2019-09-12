@@ -5,7 +5,6 @@
 }
 
 .ace {
-    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
@@ -28,9 +27,10 @@ body {
 }
 
 .container {
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
     padding-right: 1%;
+    padding-left: 1%;
     width: 100%;
 }
 
@@ -49,10 +49,6 @@ body {
     }
     .left-panel-show {
         width: 40%;
-    }
-    #btn-upload {
-        display: block;
-        margin-bottom: 2%;
     }
 }
 
@@ -222,6 +218,10 @@ mark {
     padding: 5px 5px 20px 5px;
 }
 
+#btn-upload {
+    color: white;
+}
+
 .btn-outline {
     background-color: transparent;
     border: 1px solid red;
@@ -241,12 +241,10 @@ mark {
     margin-top: 5%;
 }
 
-#btn-run-nav {
-    margin-left: 17%;
-}
-
-.navbar-header {
-    width: 20%;
+.popover-download-content {
+    padding: 10px;
+    /*border: 2px solid #8cd6ff;*/
+    border-radius: 5px;
 }
 
 .popover-download-content {
@@ -268,36 +266,68 @@ mark {
     margin-top: 4px;
 }
 
-@media screen and (max-width: 767px) {
-    #btn-run-nav {
-        margin-left: 2%;
-    }
-    .navbar-header {
-        width: 103%;
+
+@media (min-width: 1200px){
+    .container {
+                max-width: 100%;
+            }
+}
+
+@media (min-width: 992px){
+    .container {
+        max-width: 100%;
     }
 
-    .nav.navbar-nav .btn:not(#dropdown) {
-        margin-left: 10px;
+}
+
+@media (min-width: 768px){
+    .container {
+        max-width: 100%;
     }
 }
 
-@media screen and (min-width: 768px){
-
-    .navbar-header {
-        width: 41%;
+@media (min-width: 576px){
+    .container {
+        max-width: 100%;
     }
 }
 
-@media screen and (min-width: 1036px){
-
-    .navbar-header {
-        width: 25%;
+@media (max-width: 576px){
+    .container {
+        max-width: 100%;
     }
+    #a{
+        margin-top: 1%;
+        margin-bottom: 1%;
+    }
+
 }
 
-@media screen and (max-width: 1183px) and (min-width: 1024px){
-
-    .navbar-header {
-        width: 30%;
-    }
+.hidden{
+    display: none;
 }
+
+.toolbar {
+
+}
+
+#change-name-tab {
+    border-radius: 0px 4px 4px 0px;
+    border-color: #ced4da;
+}
+
+.delete-tab {
+    transition: 1s;
+}
+
+label[for=btn-download] {
+    margin-bottom: 0px;
+}
+
+img[alt=logo] {
+    width: 44%;
+}
+
+
+
+

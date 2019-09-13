@@ -313,8 +313,10 @@ $(document).ready(function () {
         });
         $('#share-btn-download').on('click',function () {
             var text = editors[idEditor].getValue();
-            console.log(text);
-            createFileToDownload(text,"local","LogicProgram","txt");
+            var TabToDownload = $('#' + idEditor).parent().attr('id');
+            var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
+            var string = nameTab.text().replace(/\s/g,'');
+            createFileToDownload(text,"local","LogicProgram_" + string,"txt");
         });
         $('#share-btn-save-on-cloud').on('click',function(){
             console.log("Download this on cloud");
@@ -326,12 +328,14 @@ $(document).ready(function () {
         $('#share-btn-save-on-cloud').off('click');
     });
 
+    //popover tab
+    inizializeChangeNameContextmenu();
+
     $('#btn-undo').on('click',function () {
         var undoManager = editors[idEditor].session.getUndoManager();
         if(undoManager.hasUndo()){
             undoManager.undo(true);
         }
-
     });
 
     $('#btn-redo').on('click',function () {
@@ -638,6 +642,77 @@ function destroyClickedElement(event) {
     document.body.removeChild(event.target);
 }
 
+function inizializeChangeNameContextmenu(){
+
+    $(".btn-tab").popover({
+        title: 'Change the tab name',
+        container: 'body',
+        trigger : 'manual',
+        html: 'true',
+        placement: 'right',
+        content:'<div class="input-group">\n' +
+            '      <input type="text" class="form-control" id="change-name-tab-textbox" placeholder="Type a name">\n' +
+            '      <span class="input-group-btn">\n' +
+            '        <button class="btn btn-default" type="button" id="change-name-tab"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></button>\n' +
+            '      </span>\n' +
+            '    </div>'
+    });
+
+    $('body').on('click', function (e) {
+        $('.btn-tab').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+
+    });
+
+    $('body').on('contextmenu', function (e) {
+        $('.btn-tab').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+
+    });
+
+    $('.btn-tab').on('shown.bs.popover', function() {
+        var thisTab = $(this);
+        var idTabEditor = $(this).attr('data-target');
+        idEditorToChangeTabName = $(idTabEditor).children().attr('id');
+
+        $('#change-name-tab').on('click',function () {
+            var nameValue = $('#change-name-tab-textbox').val();
+            $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
+            thisTab.children('.name-tab').text(nameValue);
+
+        });
+
+        $('#change-name-tab-textbox').on('keyup', function (e) {
+            if(e.key == "Enter") {
+                var nameValue = $('#change-name-tab-textbox').val();
+                $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
+                thisTab.children('.name-tab').text(nameValue);
+                thisTab.popover('hide');
+            }
+        });
+    });
+
+    $('.btn-tab').on('hidden.bs.popover', function(){
+        $('#change-name-tab').off('click');
+    });
+
+    $('.btn-tab').on('contextmenu',function (e) { //needed to hide the other context menu opened
+        $('.btn-tab').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+        $(this).popover('show');
+        return false; //don't show the contest menu of the browser
+    });
+}
+
 $(document).on('click', '.btn-add-option', function () {
     addOptionDOM($(this));
     $(this).empty();
@@ -730,6 +805,7 @@ $(document).on('change', '.form-control-option', function () { //add or remove t
 $(document).on('click', '.add-tab', function () { // add new tab 
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
+    inizializeChangeNameContextmenu();
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -754,18 +830,20 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             var parent = $('.add-tab').parent();
             idEditor = 'editor1';
             ideditor = 'editor1';
-            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab">Tab1 <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
+            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab"><span class="name-tab">Tab1</span><span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor, "");
-            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"> Tab1</label>');
+            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"><span class="name-tab">Tab1</span></label>');
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
-        } else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
-            $('.nav-tabs').find('li:not(:last)').each(function (index) {
-                $(this).find('a').text('Tab' + (index + 1));
-                $(this).find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
-            });
+            inizializeChangeNameContextmenu();
+        }
+        else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
+            // $('.nav-tabs').find('li:not(:last)').each(function (index) {
+            //     $(this).find('a').text('Tab' + (index + 1));
+            //     $(this).find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
+            // });
             $('.tab-content').find("[role='tabpanel']").each(function (index) {
                 ideditor = 'editor' + (index + 1);
                 var currentEditor = $(this).find('.ace').attr('id');
@@ -774,10 +852,17 @@ $(document).on('click', '.delete-tab', function () { // delete tab
                     editors[ideditor] = editors[currentEditor];
                     delete editors[currentEditor];
                     var parent = $(':checkbox[value="' + currentEditor + '"]').parent().empty();
-                    $(parent).append('<input type="checkbox" value="' + ideditor + '">Tab' + (index + 1));
+                    $(parent).append('<input type="checkbox" value="' + ideditor + '"> <span class="name-tab">Tab' + (index + 1) + '</span>');
                 }
+                $('.btn-tab').each(function (index) {
+                    var thisTab = $(this);
+                    var idTabEditor = $(this).attr('data-target');
+                    idEditorToChangeTabName = $(idTabEditor).children().attr('id');
+                    var nameValue =thisTab.children('.name-tab').text();
+                    $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
+                });
             });
-        }
+            }
         if ($(".nav-tabs").children().length === 2) {
             $(':checkbox[value="editor1"]').prop('checked', true);
             idEditor = "editor1";
@@ -1533,10 +1618,10 @@ function addTab(obj, text) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
     var editorId = "editor" + id;
-    $('<li role="presentation"><a data-target="#' + tabId + '" role="tab" data-toggle="tab">Tab' + id + ' <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
+    $('<li role="presentation"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab"> <span class="name-tab">Tab' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
-    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> Tab' + id + ' </label>');
+    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> <span>Tab' + id + '</span></label>');
     addCommand(editorId);
     return tabId;
 }

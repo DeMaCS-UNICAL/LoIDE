@@ -7,83 +7,54 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>LoIDE</title>
 	<!-- Bootstrap CSS -->
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 	<link href="css/layout-default-latest.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+
 </head>
 
 <body>
-	<nav class="navbar navbar-default">
+	<nav class="navbar navbar-expand-sm navbar-light bg-light ">
 		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
+		<a class="navbar-brand">
 			<img src="img/logo_LoIDE.png" alt="logo">
 			<span id="beta">(Beta)</span>
-			<button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip">Run!
-				<i class="glyphicon glyphicon-play"></i>
-			</button>
-		</div>
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse navbar-ex1-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#upload-container" id="btn-upload" rel="tooltip"
-				 data-placement="bottom" title="">Upload File
-					<i class="glyphicon glyphicon-upload"></i>
-				</button>
-				<a class="popover-download">
-					<label for="btn-download" role="button" class="btn btn-info" rel="tooltip" data-placement="bottom" title="">Download
-						<i class="glyphicon glyphicon-download"></i>
-					</label>
-				</a>
-<!--				<div class="popover-download-content hide">-->
-<!--					<div class="popover-download-content row">-->
-<!--						<div class="col-sm-12">-->
-<!--							<div class="row">-->
-<!--								<div class="col-sm-9">-->
-<!--									<p>Only output: </p>-->
-<!--								</div>-->
-<!--								<div class="col-sm-3">-->
-<!--									<input class="only-output" type="checkbox">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--						<div class="col-sm-12 save-content">-->
-<!--							Save to:-->
-<!--							<div class="save-btn text-center">-->
-<!--								<button class="btn btn-default btn-saver local-download">Local</button>-->
-<!--								<button class="btn btn-default btn-saver cloud-download">Cloud</button>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
+		</a>
 
-<!--					<div class="btn-group btn-group-info">-->
-<!--					-->
-<!--					<button data-toggle="dropdown" id="dropdown" class="btn btn-info dropdown-toggle" type="button">-->
-<!--						<span id="choice"></span>-->
-<!--						<span class="caret"></span>-->
-<!--					</button>-->
-<!--					<ul class="dropdown-menu dropdown-menu-choice">-->
-<!--						<li>-->
-<!--							<a>Input</a>-->
-<!--						</li>-->
-<!--						<li>-->
-<!--							<a>Output</a>-->
-<!--						</li>-->
-<!--					</ul>-->
-<!--				</div>-->
-<!--				</div>-->
-			</ul>
-			<ul class="nav navbar-nav navbar-left">
-				<button id="a" type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-about">About </button>
+        <ul class="navbar-nav ml-2">
+            <li class="nav-item">
+                <button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip" data-html="true">Run!
+                    <i class="fa fa-play"></i>
+                </button>
+            </li>
+        </ul>
+
+        <button id="loide-navbar-toogler" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#loide-collapse" aria-controls="loide-collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div id="loide-collapse" class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto ml-auto">
+                <li class="nav-item">
+                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about">About </button>
+                </li>
+            </ul>
+
+			<ul class="navbar-nav ">
+				<li class="nav-item">
+                    <div class="btn-group btn-block" role="group">
+                        <button type="button" class="btn btn-warning " data-toggle="collapse" data-target="#upload-container" id="btn-upload" rel="tooltip" data-html="true" data-placement="bottom" title="">Upload File
+                            <span><i class="fa fa-arrow-circle-o-up"></i></span>
+                        </button>
+                        <label for="btn-download" role="button" class="btn btn-info popover-download " rel="tooltip" data-placement="bottom" title="">Download
+                            <i class="fa fa-arrow-circle-o-down"></i>
+                        </label>
+                    </div>
+				</li>
 			</ul>
 		</div>
 		<!-- /.navbar-collapse -->
@@ -106,12 +77,12 @@
 		<form id="input">
 			<div class="left-panel">
 				<div class="text-center">
-					<a role="button" id="btn-option" data-toggle="tooltip" data-placement="top" title="Options ">
-						<i class="glyphicon glyphicon-cog"></i>
+					<a role="button" id="btn-option" data-toggle="tooltip" data-html="true" data-html="true" data-placement="top" title="Options " href="#">
+						<i class="fa fa-cogs"></i>
 					</a>
 				</div>
 				<div class="option-solver">
-					<div class="hidden">
+					<div class="hidden" >
 						<label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
 						<select name="language" id="inputLanguage" class="form-control">
 							<option value="asp">ASP</option>
@@ -136,7 +107,7 @@
 											<option value="query">Query</option>
 										</select>
 										<span class="input-group-btn btn-add-option">
-											<button type="button" class="btn btn-default">+</button>
+											<button type="button" class="btn btn-outline-secondary">+</button>
 										</span>
 									</div>
 								</div>
@@ -173,35 +144,37 @@
 				</div>
 			</div>
 			<div class="layout">
-				<input type="hidden" name="program[0]" id="program" class="programs" value="">
-				<input type="hidden" id="output-form" value="">
+				<input type="hidden" name="program[0]" id="program" class="programs" value="" >
+				<input type="hidden" id="output-form" value="" >
 				<button id="btn-download" type="submit" class="hidden"></button>
 				<button id="run" type="submit" class="hidden"></button>
 				<button id="save-options" type="submit" class="hidden"></button>
 				<div class="pane ui-layout-center">
 					<div role="tabpanel">
 						<!-- Nav tabs -->
-						<div class="row row-tabpanel-toolbar">
-							<ul class="col-lg-8 col-md-8 col-xs-8 nav nav-tabs" role="tablist">
-								<li role="presentation" class="active">
-									<a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab">
+						<div class="d-flex row-tabpanel-toolbar">
+							<ul class=" nav nav-tabs" role="tablist">
+								<li class="nav-item">
+									<a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link">
 										<span class="name-tab">Tab1</span>
 										<span class="delete-tab">
 											<i class="fa fa-times"></i>
 										</span>
 									</a>
+<!--									<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>-->
+
 								</li>
-								<li role="presentation">
-									<a role="button" class="add-tab">+</a>
+								<li class="nav-item" >
+									<a role="tab" data-toggle="tab" class="add-tab nav-link">+</a>
 								</li>
 							</ul>
-							<div class="col-lg-4 col-md-4 col-xs-4 text-right toolbar">
+							<div class="ml-auto text-center toolbar">
 								<div class="undo-redo btn-group" role="group">
-									<button id="btn-undo" type="button" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
-									<button id="btn-redo" type="button" class="btn btn-default"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+									<button id="btn-undo" type="button" class="btn btn-light"><i class="fa fa-arrow-left"></i></button>
+									<button id="btn-redo" type="button" class="btn btn-light"><i class="fa fa-arrow-right"></i></button>
 								</div>
-								<button id="btn-run-thistab" type="button" class="btn btn-default"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
-								<button id="btn-share-tab" type="button" class="btn btn-default popover-share"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></button>
+								<button id="btn-run-thistab" type="button" class="btn btn-light"><i class="fa fa-play"></i></button>
+								<button id="btn-share-tab" type="button" class="btn btn-light popover-share" data-content="<div class='popover-share-content'><button id='share-btn-telegram' type='button' class='btn btn-default btn-block'>Share on Telegram</button><button id='share-btn-whatsapp' type='button' class='btn btn-default btn-block'>Share on Whatsapp</button><button id='share-btn-download' type='button' class='btn btn-default btn-block'>Download</button><button id='share-btn-save-on-cloud' type='button' class='btn btn-default btn-block' disabled>Save on cloud</button></div>"><i class="fa fa-share-square-o"></i></button>
 							</div>
 						</div>
 						<!-- Tab panes -->
@@ -218,7 +191,7 @@
 							<i class="fa fa-cog"></i>
 						</a>
 						<a role="button" id="split" class="pull-right">
-							<i class="glyphicon glyphicon-menu-down"></i>
+							<i class="fa fa-arrow-circle-down"></i>
 						</a>
 					</div>
 					<div id="output" class="output"></div>
@@ -230,12 +203,13 @@
 			</div>
 		</form>
 	</div>
-	<div class="modal fade" id="modal-about" role="dialog" tabindex="-1">
+	<div class="modal fade" id="modal-about" role="dialog" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title">About LoIDE</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+					</button>
 				</div>
 				<div class="modal-body">
 					<p>LoIDE is a web-based IDE for Logic Programming
@@ -265,17 +239,19 @@
 					</p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="setting-editor" role="dialog" tabindex="-1">
+	<div class="modal fade" id="setting-editor" role="dialog" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title">Editor Options</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -292,7 +268,7 @@
 						<div class="col-md-4 col-xs-4">
 							<label for="theme">Change theme Editor</label>
 							<div class="input-group opname">
-								<select id="theme">
+								<select id="theme" style="width: 100%;">
 									<optgroup label="Bright">
 										<option value="ace/theme/tomorrow">Tomorrow</option>
 										<option value="ace/theme/solarized_light">Solarized Light</option>
@@ -319,7 +295,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
@@ -329,13 +305,16 @@
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<!-- Bootstrap JavaScript -->
 	<script src="js/jquery.layout-latest.js" type="text/javascript"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js"></script>
 	<!-- Ace editor-->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ext-language_tools.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.6.1/jquery.mark.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.6.1/jquery.mark.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="js/keymaster.js" type="text/javascript"></script>
 	<script src="js/bimap.js" type="text/javascript"></script>

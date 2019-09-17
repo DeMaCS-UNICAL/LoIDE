@@ -16,8 +16,8 @@
 
 </head>
 
-<body class="">
-	<div class="toast hidden" role="alert" aria-live="assertive" aria-atomic="true">
+<body>
+	<div id="notification" class="toast hidden" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="toast-header">
 			<i class="fa fa-exclamation-circle"></i>
 			<strong class="mr-auto ml-2">LoIDE</strong>
@@ -26,7 +26,23 @@
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
-		<div class="toast-body"></div>
+		<div id="notidication-body" class="toast-body"></div>
+	</div>
+	<div id="notification-project" class="toast hidden" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="toast-header">
+			<i class="fa fa-exclamation-circle"></i>
+			<strong class="mr-auto ml-2">LoIDE - Project found</strong>
+			<small>Now</small>
+			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="toast-body">
+			<p>Maybe you were working on a project.
+				Do you wish to continue? </p>
+			<button id="load-project" type="button" class="btn btn-primary btn-sm btn-block">Yes</button>
+			<button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="toast" aria-label="Close">No</button>
+		</div>
 	</div>
 	<nav class="navbar navbar-expand-sm navbar-light ">
 		<!-- Brand and toggle get grouped for better mobile display -->
@@ -161,8 +177,8 @@
 				<div class="pane ui-layout-center" >
 					<div role="tabpanel">
 						<!-- Nav tabs -->
-						<div class="d-flex row-tabpanel-toolbar">
-							<ul class=" nav nav-tabs" role="tablist">
+						<div class="d-flex row-tabpanel-toolbar row">
+							<ul class=" col-xs-12 nav nav-tabs" role="tablist">
 								<li class="nav-item">
 									<a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link">
 										<span class="name-tab">Tab1</span>
@@ -177,7 +193,7 @@
 									<a role="tab" data-toggle="tab" class="add-tab nav-link btn-light"><i class="fa fa-plus"></i></a>
 								</li>
 							</ul>
-							<div class="ml-auto text-center toolbar">
+							<div class="col-xs-12 ml-auto text-center toolbar">
 								<div class="undo-redo btn-group" role="group">
 									<button id="btn-undo" type="button" class="btn btn-light"><i class="fa fa-arrow-left"></i></button>
 									<button id="btn-redo" type="button" class="btn btn-light"><i class="fa fa-arrow-right"></i></button>

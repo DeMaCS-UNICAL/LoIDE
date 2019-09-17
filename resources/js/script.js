@@ -74,13 +74,8 @@
  * @description Open a container to display the result 
  */
 function operation_alert(result) {
-    $("#result-auto-close-alert").focus();
-    $("#result-alert-text").html("<strong>" + result.reason + "</strong>");
-    $("#result-auto-close-alert").removeClass("hidden").addClass("alert-danger fade in");
-    $("#result-auto-close-alert").fadeTo(1500, 750).slideUp(800, function () {
-        $(this).removeClass("alert-danger fade in");
-    });
-
+    $(".toast-body").html("<strong>" + result.reason + "</strong>");
+    $('.toast').toast('show');
 }
 
 /**
@@ -106,6 +101,7 @@ var defaultFontSize = 15;
  * @description default ace theme
  */
 var defaultTheme = "ace/theme/tomorrow";
+var defaultDarkTheme = "ace/theme/idle_fingers";
 
 /**
  * set up ace editors into object
@@ -168,17 +164,26 @@ $(window).resize(function () {
 });
 
 $(document).ready(function () {
+    setNotifications();
+
+    setClipboard();
+    
     inizializePopovers();
 
     inizializeChangeNameContextmenu();
 
     inizializeToolbar();
 
-    $('#loide-collapse').on('hidden.bs.collapse',function () {
-        $(window).trigger('resize');
+    inizializeButtonLoideMode();
+
+    setWindowResizeTrigger();
+
+    $('img[alt=logo]').mousedown(function (e) {
+            return false;
     });
-    $('#loide-collapse').on('shown.bs.collapse',function () {
-        $(window).trigger('resize');
+
+    $('img[alt=logo]').on('contextmenu',function (e) {
+            return false;
     });
 
     layout = $('body > .container > form > .layout').layout({
@@ -189,7 +194,10 @@ $(document).ready(function () {
                 editors[idE].resize();
             }
         },
-        south__minSize: 125
+        south__minSize: 125,
+        resizeWhileDragging: true,
+        resizable: true,
+        slidable: true,
 
     });
 
@@ -356,10 +364,10 @@ $(document).ready(function () {
 
     $("#btn-option").click(function () {
         $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
-        $('.option-solver > div').toggleClass("hidden show"); // add class to show option components
+        $('.option-solver > div').toggleClass(" show"); // add class to show option components
         $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
             function() {
-                $(window).trigger('resize');
+            $(window).trigger('resize');
             });
     });
 
@@ -373,11 +381,14 @@ $(document).ready(function () {
 
     addCommand(idEditor);
 
+    loadFromURL(); //load program from url
+
     inizializeSnippets();
     $('#inputLanguage').on('change', function() {
         inizializeAutoComplete();
     });
 
+    setLoideStyleMode();
 });
 
 /**
@@ -406,7 +417,12 @@ function callSocketServer(onlyActiveTab) {
         if (response.error == "") {
             console.log(response.model); // debug string
             $('#output').text(response.model); // append the response in the container 
-            $('#output').css('color', 'black');
+            if(localStorage.getItem('mode') === 'dark') {
+                $('#output').css('color','white');
+            }
+            else{
+                $('#output').css('color','black');
+            }
         } else {
             $('#output').text(response.model+response.error);
             $('#output').css('color', 'red');
@@ -511,29 +527,44 @@ function inizializeChangeNameContextmenu(){
             '        <button class="btn btn-light" type="button" id="change-name-tab"><i class="fa fa-chevron-right"></i></button>\n' +
             '      </span>\n' +
             '    </div>');
+        if(localStorage.getItem('mode') === 'dark') {
+            $('#change-name-tab').removeClass('btn-light');
+            $('#change-name-tab').addClass('btn-dark');
+        }
+        else{
+            $('#change-name-tab').removeClass('btn-dark');
+            $('#change-name-tab').addClass('btn-light');
+        }
+        $('#change-name-tab-textbox').focus();
         var thisTab = $(this);
         var idTabEditor = $(this).attr('data-target');
         idEditorToChangeTabName = $(idTabEditor).children().attr('id');
+        $('#change-name-tab').prop('disabled',true);
 
-        $('#change-name-tab').on('click',function () {
-            var nameValue = $('#change-name-tab-textbox').val();
-            $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
-            thisTab.children('.name-tab').text(nameValue);
-            thisTab.popover('hide');
+        $('#change-name-tab-textbox').on('input',function () {
+            var nameValue = $('#change-name-tab-textbox').val().trim();
+            if(nameValue.length === 0){
+                $('#change-name-tab').prop('disabled',true);
+            }
+            else{
+                $('#change-name-tab').prop('disabled',false);
+            }
         });
 
-        $('#change-name-tab-textbox').on('keyup', function (e) {
-            if(e.key == "Enter") {
-                var nameValue = $('#change-name-tab-textbox').val();
+        $('#change-name-tab').on('click',function () {
+            var nameValue = $('#change-name-tab-textbox').val().trim();
+            if(nameValue.length !== 0) {
                 $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
                 thisTab.children('.name-tab').text(nameValue);
                 thisTab.popover('hide');
             }
         });
-    });
 
-    $('.btn-tab').on('hidden.bs.popover', function(){
-        $('#change-name-tab').off('click');
+        $('#change-name-tab-textbox').on('keyup', function (e) {
+            if(e.key == "Enter") {
+                $('#change-name-tab').trigger('click');
+            }
+        });
     });
 
     $('.btn-tab').on('contextmenu',function (e) { //needed to hide the other context menu opened
@@ -550,11 +581,13 @@ function inizializeChangeNameContextmenu(){
 $(document).on('click', '.btn-add-option', function () {
     addOptionDOM($(this));
     $(this).empty();
+    setElementsColorMode();
 });
 
 $(document).on('click', '.btn-del-option', function () {
     $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-light">+</button>');
     delOptionDOM($(this));
+    setElementsColorMode();
 });
 
 $(document).on('click', '.btn-del-value', function () {
@@ -562,11 +595,13 @@ $(document).on('click', '.btn-del-value', function () {
         $(this).parent().parent().prev().find(".input-group-btn").last().append('<button type="button" class="btn btn-light btn-add">+</button>');
     }
     deleteInputValue($(this));
+    setElementsColorMode();
 });
 
 $(document).on('click', '.btn-add', function () {
     addInpuValue($(this));
     $(this).parent().empty();
+    setElementsColorMode();
 });
 
 $(document).on('mouseup', '#output', function () {
@@ -634,6 +669,7 @@ $(document).on('change', '.form-control-option', function () { //add or remove t
     if (val === 'free choice' || val === 'filter') {
         if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
             addInpuValue($(this).closest('.row-option'));
+        setElementsColorMode();
     } else {
         $(this).closest('.row-option').find('.option-value').remove();
         $(this).closest('.col-sm-12').append("<div class='option-value'></div>");
@@ -995,7 +1031,7 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value=""></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
+    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value="Nothing select"></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
@@ -1105,7 +1141,11 @@ function setUpAce(ideditor, text) {
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
     editors[ideditor].session.setMode("ace/mode/asp");
-    editors[ideditor].setTheme(defaultTheme);
+    if(localStorage.getItem('mode') === 'dark')
+        editors[ideditor].setTheme(defaultDarkTheme);
+    else{
+        editors[ideditor].setTheme(defaultTheme);
+    }
     editors[ideditor].setValue(text);
     editors[ideditor].resize();
     editors[ideditor].setBehavioursEnabled(true);
@@ -1113,7 +1153,10 @@ function setUpAce(ideditor, text) {
         fontSize: 15,
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
-        enableSnippets: true
+        enableSnippets: true,
+        cursorStyle: "smooth",
+        copyWithEmptySelection: true,
+        scrollPastEnd: 0.5
     });
 
     inizializeSnippets();
@@ -1320,7 +1363,9 @@ function restoreOptions() {
         var obj = JSON.parse(opt);
         $('#inputLanguage').val(obj.language).change();
         $('#inputengine').val(obj.engine).change();
-        setOptions(obj);
+        if(obj.option != undefined) {
+            setOptions(obj);
+        }
         if (obj.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);
         }
@@ -1436,6 +1481,8 @@ function resetEditorOptions() {
     $("#font-output").val(defaultFontSize);
     saveOption("fontSizeO", defaultFontSize);
     $('#output').css('font-size', defaultFontSize + "px");
+
+    setLoideStyleMode('light');
 }
 
 /**
@@ -1458,17 +1505,14 @@ function resetSolverOptions() {
 }
 
 function inizializePopovers(){
-    // var a = $('#btn-upload').html();
     $(".popover-download").popover({
         trigger : 'manual',
         html: true,
         placement: 'bottom',
         // content: ' ',
     }).click(function(e) {
-
         $(this).popover('toggle');
         $('.popover-download').not(this).popover('hide');
-
         e.stopPropagation();
     });
 
@@ -1483,6 +1527,7 @@ function inizializePopovers(){
         $('#loide-navbar-toogler').on('click',function () {
             $('.popover-download').popover('hide');
         })
+
         // set what happens when user clicks on the button
         $('.popover-header').html('');
         $('.popover-body').html('<div class="popover-download-content">\n' +
@@ -1495,11 +1540,24 @@ function inizializePopovers(){
             '<div class="save-content">\n' +
             '<div class="mt-2 mb-2"> Save to:\n </div>' +
             '<div class="save-btn text-center">\n' +
-            '<button id="local-download" class="btn btn-outline-primary btn-saver ">Local</button>\n' +
-            '<button id="cloud-download" class="btn btn-outline-primary btn-saver" disabled>Cloud</button>\n' +
+            '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
+            // '<button id="cloud-download" class="btn btn-outline-dark btn-saver" disabled>Cloud</button>\n' +
             '</div>\n' +
             '</div>\n' +
             '</div>');
+
+        if(localStorage.getItem('mode') === 'dark') {
+            $('#local-download').removeClass('btn-outline-dark');
+            $('#local-download').addClass('btn-outline-light');
+            $('#cloud-download').removeClass('btn-outline-dark');
+            $('#cloud-download').addClass('btn-outline-light');
+        }
+        else{
+            $('#local-download').removeClass('btn-outline-light');
+            $('#local-download').addClass('btn-outline-dark');
+            $('#cloud-download').removeClass('btn-outline-light');
+            $('#cloud-download').addClass('btn-outline-dark');
+        }
 
         $("#local-download").on('click', function(){
             if($('#only-output').is(":checked")){
@@ -1554,7 +1612,7 @@ function inizializePopovers(){
                 // createFileToDownload(stringify, "dropbox", "json")
             }
             else{
-                alert("Dropbox not supported on your browser!");
+                operation_alert({result: "Dropbox not supported on your browser!"});
             }
         });
     });
@@ -1565,7 +1623,6 @@ function inizializePopovers(){
         $("#cloud-download").off('click');
         $('.navbar-toggler').off('click');
     });
-
 
     $(".popover-share").popover({
         container: 'body',
@@ -1591,19 +1648,37 @@ function inizializePopovers(){
     $('.popover-share').on('inserted.bs.popover', function() {
         //close contestmenu popovers
         $('.btn-tab').popover('hide');
+        $('.popover-download').popover('hide');
 
-        $('.popover-body').html('<div class="popover-share-content">\n' +
-            // '\t<button id="share-btn-telegram" type="button" class="btn btn-outline-dark btn-block">Share on Telegram</button>\n' +
-            '<button id="share-btn-whatsapp" type="button" class="btn btn-outline-dark btn-block">Share on Whatsapp</button>\n' +
-            '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
-            '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
+        $('.popover-body').html('' +
+            '<div class="popover-share-content">\n' +
+                '<div class="input-group">' +
+                    '<input id="link-to-share" type="text" class="form-control" readonly>' +
+                    '<div class="input-group-append">'+
+                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
+                    '</div>'+
+                '</div>' +
+                '<div class="text-center mt-2 mb-2"> or </div>' +
+                '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
+                // '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
             '</div>');
-        $('#share-btn-telegram').on('click',function () {
-            window.open('https://t.me/share/url?url='+ editors[idEditor].getValue());
-        });
-        $('#share-btn-whatsapp').on('click',function () {
-            window.open("whatsapp://send?text="+ editors[idEditor].getValue());
-        });
+
+        if(localStorage.getItem('mode') === 'dark') {
+            $('#btn-copy-link').removeClass('btn-outline-dark');
+            $('#btn-copy-link').addClass('btn-outline-light');
+            $('#share-btn-download').removeClass('btn-outline-dark');
+            $('#share-btn-download').addClass('btn-outline-light');
+        }
+        else{
+            $('#btn-copy-link').removeClass('btn-outline-light');
+            $('#btn-copy-link').addClass('btn-outline-dark');
+            $('#share-btn-download').removeClass('btn-outline-light');
+            $('#share-btn-download').addClass('btn-outline-dark');
+        }
+
+        $('#link-to-share').val("Loading...");
+        createURLtoShare(editors[idEditor].getValue());
+
         $('#share-btn-download').on('click',function () {
             var text = editors[idEditor].getValue();
             var TabToDownload = $('#' + idEditor).parent().attr('id');
@@ -1617,6 +1692,7 @@ function inizializePopovers(){
     });
 
     $('.popover-share').on('hidden.bs.popover', function(){
+        $('#btn-copy-link').off('click');
         $('#share-btn-download').off('click');
         $('#share-btn-save-on-cloud').off('click');
     });
@@ -1931,8 +2007,6 @@ function inizializeAutoComplete() {
 
                 });
 
-                console.log(completions);
-
                 var completer = {
                     getCompletions: function(editor, session, pos, prefix, callback) {
 
@@ -1970,3 +2044,185 @@ function giveBrackets(value) {
 
 }
 
+function createURLtoShare(program) {
+    var URL = window.location.host + "/?program=";
+    var encodedProg = btoa(program);
+    URL += encodeURIComponent(encodedProg);
+    $.ajax({
+        method: "POST",
+        url: "https://is.gd/create.php?format=json&url=" + URL,
+        dataType: 'json',
+        crossDomain: true,
+        success: function (data) {
+            console.log(data);
+            if(data.shorturl == undefined){
+                $('#link-to-share').val("Ops. Something went wrong");
+                if(URL.length >= 5000){
+                    operation_alert({reason: "The logic program is too long to be shared."})
+                }
+            }
+            else{
+                $('#link-to-share').val(data.shorturl);
+                $('#btn-copy-link').prop('disabled',false);
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function loadFromURL() {
+    var thisURL = window.location.href;
+    var param = getParameterByName('program', thisURL);
+    if(param !=null){
+        var program = atob(param);
+        editors[idEditor].setValue(program);
+    }
+}
+
+function setTooltip(btn, message) {
+    $(btn).tooltip('hide')
+        .attr('data-original-title', message)
+        .tooltip('show');
+}
+
+function hideTooltip(btn) {
+    setTimeout(function() {
+        $(btn).tooltip('hide');
+    }, 1000);
+}
+
+function setClipboard() {
+    $('#btn-copy-link').tooltip({
+        trigger: 'click',
+        placement: 'bottom'
+    });
+
+    var clipboard = new ClipboardJS('#btn-copy-link');
+
+    clipboard.on('success', function(e) {
+        setTooltip(e.trigger, 'Copied!');
+        hideTooltip(e.trigger);
+    });
+
+    clipboard.on('error', function(e) {
+        setTooltip(e.trigger, 'Failed!');
+        hideTooltip(e.trigger);
+    });
+}
+
+function setNotifications() {
+    $('.toast').toast({
+        delay: 2000,
+    });
+    $('.toast').on('show.bs.toast',function () {
+        $('.toast').removeClass('hidden');
+    });
+    $('.toast').on('hidden.bs.toast',function () {
+        $('.toast').addClass('hidden');
+    });
+}
+
+function setWindowResizeTrigger() {
+    $('#loide-collapse').on('hidden.bs.collapse',function () {
+        $(window).trigger('resize');
+    });
+    $('#loide-collapse').on('shown.bs.collapse',function () {
+        $(window).trigger('resize');
+    });
+}
+
+function inizializeButtonLoideMode() {
+    $('#dark-light-mode').click(function () {
+        localStorage.setItem('mode', (localStorage.getItem('mode') || 'dark') === 'dark' ? 'light' : 'dark');
+        localStorage.getItem('mode') === 'dark' ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
+        setElementsColorMode();
+    });
+}
+
+function setLoideStyleMode(mode) {
+
+    switch(mode){
+        case 'light':
+            localStorage.setItem('mode','light');
+            document.querySelector('body').classList.remove('dark');
+            break;
+
+        case 'dark':
+            localStorage.setItem('mode','dark');
+            document.querySelector('body').classList.add('dark');
+            break;
+
+        default:
+            ((localStorage.getItem('mode') || 'dark') === 'dark') ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
+            break;
+    }
+    setElementsColorMode();
+}
+
+function setElementsColorMode() {
+    switch (localStorage.getItem('mode')) {
+        case 'light':
+            setLightStyleToUIElements();
+            break;
+
+        case 'dark':
+            setDarkStyleToUIElements();
+            break;
+    }
+}
+
+function setLightStyleToUIElements() {
+    var length = $(".nav-tabs").children().length;
+
+    $('#dark-light-mode').text("Dark");
+    $('#theme').val(defaultTheme);
+    $(".btn-dark").each(function () {
+        $(this).removeClass('btn-dark');
+        $(this).addClass('btn-light');
+    });
+    $(".btn-outline-light").each(function () {
+        $(this).addClass('btn-outline-dark');
+        $(this).removeClass('btn-outline-light');
+    });
+    $('#dark-light-mode').addClass('btn-outline-dark');
+    $('#dark-light-mode').removeClass('btn-outline-light');
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].setTheme(defaultTheme);
+    }
+    $('#output').css('color','black');
+}
+
+function setDarkStyleToUIElements() {
+    var length = $(".nav-tabs").children().length;
+    $('#dark-light-mode').text("Light");
+    $('#theme').val(defaultDarkTheme);
+    $(".btn-light").each(function () {
+        $(this).removeClass('btn-light');
+        $(this).addClass('btn-dark');
+    });
+    $(".btn-outline-dark").each(function () {
+        $(this).removeClass('btn-outline-dark');
+        $(this).addClass('btn-outline-light');
+    });
+    $('#dark-light-mode').removeClass('btn-outline-dark');
+    $('#dark-light-mode').addClass('btn-outline-light');
+
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].setTheme(defaultDarkTheme);
+    }
+    $('#output').css('color','white');
+}

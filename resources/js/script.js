@@ -206,7 +206,7 @@ $(document).ready(function () {
 
     inizializeShortcuts();
 
-    restoreOptions();
+    // restoreOptions();
 
     $('#font-output').change(function (e) {
         var size = $(this).val();

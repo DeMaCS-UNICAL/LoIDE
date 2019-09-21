@@ -179,12 +179,8 @@ $(document).ready(function () {
 
     setWindowResizeTrigger();
 
-    $('img[alt=logo]').mousedown(function (e) {
-            return false;
-    });
-
-    $('img[alt=logo]').on('contextmenu',function (e) {
-            return false;
+    $('img[alt=logo]').on('click',function (e) {
+            location.reload();
     });
 
     layout = $('body > .container > form > .layout').layout({
@@ -206,7 +202,7 @@ $(document).ready(function () {
 
     inizializeShortcuts();
 
-    // restoreOptions();
+    restoreOptions();
 
     $('#font-output').change(function (e) {
         var size = $(this).val();
@@ -653,15 +649,19 @@ $(document).on('change', '#inputengine', function () {
     if (val === "clingo" || val === "dlv2") {
         $('.form-control-option').each(function (index, element) {
             $(this).find("option").each(function (index, element) {
-                if ($(this).val() !== "free choice" && $(this).val() !== "")
+                if ($(this).val() !== "free choice" && $(this).val() !== "nothing select")
                     $(this).remove();
             });
             if ($(this).val() !== 'free choice')
-                $(this).val("").change();
+                $(this).val("nothing select").change();
         });
-
-    } else if ($('.form-control-option').find("option[value='filter']").length === 0) {
-        $('.form-control-option').append('</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
+    }
+    else if ($('.form-control-option').find("option[value='filter']").length === 0) {
+        $('.form-control-option').append('</option>' +
+            '<option value="filter">Filter</option>' +
+            '<option value="nofacts">Nofacts</option>' +
+            '<option value="silent">Silent</option>' +
+            '<option value="query">Query</option>');
     }
     inizializeSnippets();
 });
@@ -1033,11 +1033,29 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value="Nothing select"></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
+    var clone = '<div class="row row-option">' +
+        '<div class="col-sm-12">' +
+        '<div class="form-group">' +
+        '<label for="option" class="col-sm-12 text-center">Options</label>' +
+        '<div class="input-group opname">' +
+        '<select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option">' +
+        '<option value="nothing select"></option>' +
+        '<option value="free choice">Free choice</option>' +
+        '<option value="filter">Filter</option>' +
+        '<option value="nofacts">Nofacts</option>' +
+        '<option value="silent">Silent</option>' +
+        '<option value="query">Query</option>' +
+        '</select>' +
+        '<span class="input-group-btn btn-add-option">' +
+        '<button type="button" class="btn btn-light">+</button>' +
+        '</span>' +
+        '</div>' +
+        '</div>' +
+        '<div class="option-value">' +
+        '</div></div></div>';
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
-
 }
 
 /**
@@ -1365,7 +1383,7 @@ function restoreOptions() {
         var obj = JSON.parse(opt);
         $('#inputLanguage').val(obj.language).change();
         $('#inputengine').val(obj.engine).change();
-        if(obj.option != undefined) {
+        if(obj.option != null) {
             setOptions(obj);
         }
         if (obj.hasOwnProperty('runAuto')) {
@@ -1429,10 +1447,9 @@ function setOptions(obj) {
 
     if (obj.engine === "clingo" || obj.engine === "dlv2") {
         $('.form-control-option').find('option').each(function (index, element) {
-            if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
+            if ($(this).val() !== 'free choice' && $(this).val() !== "nothing select")
                 $(this).remove();
         });
-
     }
 }
 

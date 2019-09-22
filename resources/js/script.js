@@ -315,7 +315,7 @@ $(document).ready(function () {
 
     });
 
-    $("#btn-run-nav").click(function (e) { 
+    $("#btn-run-nav").click(function (e) {
         e.preventDefault();
         $("#output").empty();
         $("#output").text("Sending..");
@@ -403,18 +403,23 @@ function callSocketServer(onlyActiveTab) {
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
     var form = $('#input').serializeFormJSON();
+    for (var i=0; i<form.option.length; i++){
+        if(form.option[i].name === "nothing select") {
+            form.option[i].name = "";
+        }
+    }
     destroyPrograms();
     destroyOptions();
     var socket = io.connect();
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
         operation_alert(response);
-        console.log(response); // debug string 
+        console.log(response); // debug string
     });
     socket.on('output', function (response) {
         if (response.error == "") {
             console.log(response.model); // debug string
-            $('#output').text(response.model); // append the response in the container 
+            $('#output').text(response.model); // append the response in the container
             if(localStorage.getItem('mode') === 'dark') {
                 $('#output').css('color','white');
             }
@@ -706,11 +711,11 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             var parent = $('.add-tab').parent();
             idEditor = 'editor1';
             ideditor = 'editor1';
-            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"><span class="name-tab">Tab1</span><span class="delete-tab"><i class="fa fa-times"></i></span></a> </li>').insertBefore(parent);
+            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"><span class="name-tab">L P 1</span><span class="delete-tab"><i class="fa fa-times"></i></span></a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor, "");
-            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"><span class="name-tab">Tab1</span></label>');
+            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"><span class="name-tab">L P 1</span></label>');
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
             inizializeChangeNameContextmenu();
@@ -718,7 +723,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         }
         else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
             // $('.nav-tabs').find('li:not(:last)').each(function (index) {
-            //     $(this).find('a').text('Tab' + (index + 1));
+            //     $(this).find('a').text('L P ' + (index + 1));
             //     $(this).find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
             // });
             $('.tab-content').find("[role='tabpanel']").each(function (index) {
@@ -729,7 +734,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
                     editors[ideditor] = editors[currentEditor];
                     delete editors[currentEditor];
                     var parent = $(':checkbox[value="' + currentEditor + '"]').parent().empty();
-                    $(parent).append('<input type="checkbox" value="' + ideditor + '"> <span class="name-tab">Tab' + (index + 1) + '</span>');
+                    $(parent).append('<input type="checkbox" value="' + ideditor + '"> <span class="name-tab">L P ' + (index + 1) + '</span>');
                 }
                 $('.btn-tab').each(function (index) {
                     var thisTab = $(this);
@@ -962,7 +967,7 @@ function configureOptions() {
             optionDLV.init();
             $('.form-control-option').each(function (indexInArray) {
                 var currentVal = $(this).val();
-                if (currentVal !== "free choice" && currentVal.length !== 0) {
+                if (currentVal !== "free choice" && currentVal !== "nothing select") {
                     var val = optionDLV.map.key(currentVal);
                     $(this).append('<option value="' + val + '"></option>');
                     $(this).val(val);
@@ -983,7 +988,7 @@ function destroyOptions() {
     optionDLV.init();
     $('.form-control-option').each(function (indexInArray) {
         var currentVal = $(this).val();
-        if (currentVal !== "free choice" && currentVal.length !== 0) {
+        if (currentVal !== "free choice" && currentVal !== "nothing select") {
             var val = optionDLV.map.val(currentVal);
             $(this).val(val).change();
             $(this).find('option[value="' + currentVal + '"]').remove();
@@ -1463,10 +1468,10 @@ function addTab(obj, text) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
     editorId = "editor" + id;
-    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <span class="name-tab">Tab' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
+    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <span class="name-tab">L P ' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
-    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> <span>Tab' + id + '</span></label>');
+    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> <span>L P ' + id + '</span></label>');
     addCommand(editorId);
     return tabId;
 }

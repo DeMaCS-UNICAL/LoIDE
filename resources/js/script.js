@@ -179,12 +179,8 @@ $(document).ready(function () {
 
     setWindowResizeTrigger();
 
-    $('img[alt=logo]').mousedown(function (e) {
-            return false;
-    });
-
-    $('img[alt=logo]').on('contextmenu',function (e) {
-            return false;
+    $('img[alt=logo]').on('click',function (e) {
+            location.reload();
     });
 
     layout = $('body > .container > form > .layout').layout({
@@ -206,7 +202,7 @@ $(document).ready(function () {
 
     inizializeShortcuts();
 
-    // restoreOptions();
+    restoreOptions();
 
     $('#font-output').change(function (e) {
         var size = $(this).val();
@@ -319,7 +315,7 @@ $(document).ready(function () {
 
     });
 
-    $("#btn-run-nav").click(function (e) { 
+    $("#btn-run-nav").click(function (e) {
         e.preventDefault();
         $("#output").empty();
         $("#output").text("Sending..");
@@ -407,18 +403,23 @@ function callSocketServer(onlyActiveTab) {
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
     var form = $('#input').serializeFormJSON();
+    for (var i=0; i<form.option.length; i++){
+        if(form.option[i].name === "nothing select") {
+            form.option[i].name = "";
+        }
+    }
     destroyPrograms();
     destroyOptions();
     var socket = io.connect();
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
         operation_alert(response);
-        console.log(response); // debug string 
+        console.log(response); // debug string
     });
     socket.on('output', function (response) {
         if (response.error == "") {
             console.log(response.model); // debug string
-            $('#output').text(response.model); // append the response in the container 
+            $('#output').text(response.model); // append the response in the container
             if(localStorage.getItem('mode') === 'dark') {
                 $('#output').css('color','white');
             }
@@ -653,15 +654,19 @@ $(document).on('change', '#inputengine', function () {
     if (val === "clingo" || val === "dlv2") {
         $('.form-control-option').each(function (index, element) {
             $(this).find("option").each(function (index, element) {
-                if ($(this).val() !== "free choice" && $(this).val() !== "")
+                if ($(this).val() !== "free choice" && $(this).val() !== "nothing select")
                     $(this).remove();
             });
             if ($(this).val() !== 'free choice')
-                $(this).val("").change();
+                $(this).val("nothing select").change();
         });
-
-    } else if ($('.form-control-option').find("option[value='filter']").length === 0) {
-        $('.form-control-option').append('</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option>');
+    }
+    else if ($('.form-control-option').find("option[value='filter']").length === 0) {
+        $('.form-control-option').append('</option>' +
+            '<option value="filter">Filter</option>' +
+            '<option value="nofacts">Nofacts</option>' +
+            '<option value="silent">Silent</option>' +
+            '<option value="query">Query</option>');
     }
     inizializeSnippets();
 });
@@ -706,11 +711,11 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             var parent = $('.add-tab').parent();
             idEditor = 'editor1';
             ideditor = 'editor1';
-            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"><span class="name-tab">Tab1</span><span class="delete-tab"><i class="fa fa-times"></i></span></a> </li>').insertBefore(parent);
+            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"><span class="name-tab">L P 1</span><span class="delete-tab"><i class="fa fa-times"></i></span></a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor, "");
-            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"><span class="name-tab">Tab1</span></label>');
+            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"><span class="name-tab">L P 1</span></label>');
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
             inizializeChangeNameContextmenu();
@@ -718,7 +723,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         }
         else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
             // $('.nav-tabs').find('li:not(:last)').each(function (index) {
-            //     $(this).find('a').text('Tab' + (index + 1));
+            //     $(this).find('a').text('L P ' + (index + 1));
             //     $(this).find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
             // });
             $('.tab-content').find("[role='tabpanel']").each(function (index) {
@@ -729,7 +734,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
                     editors[ideditor] = editors[currentEditor];
                     delete editors[currentEditor];
                     var parent = $(':checkbox[value="' + currentEditor + '"]').parent().empty();
-                    $(parent).append('<input type="checkbox" value="' + ideditor + '"> <span class="name-tab">Tab' + (index + 1) + '</span>');
+                    $(parent).append('<input type="checkbox" value="' + ideditor + '"> <span class="name-tab">L P ' + (index + 1) + '</span>');
                 }
                 $('.btn-tab').each(function (index) {
                     var thisTab = $(this);
@@ -962,7 +967,7 @@ function configureOptions() {
             optionDLV.init();
             $('.form-control-option').each(function (indexInArray) {
                 var currentVal = $(this).val();
-                if (currentVal !== "free choice" && currentVal.length !== 0) {
+                if (currentVal !== "free choice" && currentVal !== "nothing select") {
                     var val = optionDLV.map.key(currentVal);
                     $(this).append('<option value="' + val + '"></option>');
                     $(this).val(val);
@@ -983,7 +988,7 @@ function destroyOptions() {
     optionDLV.init();
     $('.form-control-option').each(function (indexInArray) {
         var currentVal = $(this).val();
-        if (currentVal !== "free choice" && currentVal.length !== 0) {
+        if (currentVal !== "free choice" && currentVal !== "nothing select") {
             var val = optionDLV.map.val(currentVal);
             $(this).val(val).change();
             $(this).find('option[value="' + currentVal + '"]').remove();
@@ -1033,11 +1038,29 @@ function setJSONInput(config) {
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
 function addOption(index, valueOption) {
-    var clone = '<div class="row row-option"><div class="col-sm-12"><div class="form-group"><label for="option" class="col-sm-12 text-center">Options</label><div class="input-group opname"><select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option"><option value="Nothing select"></option><option value="free choice">Free choice</option><option value="filter">Filter</option><option value="nofacts">Nofacts</option><option value="silent">Silent</option><option value="query">Query</option></select><span class="input-group-btn btn-add-option"><button type="button" class="btn btn-light">+</button></span></div></div><div class="option-value"></div></div></div>';
+    var clone = '<div class="row row-option">' +
+        '<div class="col-sm-12">' +
+        '<div class="form-group">' +
+        '<label for="option" class="col-sm-12 text-center">Options</label>' +
+        '<div class="input-group opname">' +
+        '<select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option">' +
+        '<option value="nothing select"></option>' +
+        '<option value="free choice">Free choice</option>' +
+        '<option value="filter">Filter</option>' +
+        '<option value="nofacts">Nofacts</option>' +
+        '<option value="silent">Silent</option>' +
+        '<option value="query">Query</option>' +
+        '</select>' +
+        '<span class="input-group-btn btn-add-option">' +
+        '<button type="button" class="btn btn-light">+</button>' +
+        '</span>' +
+        '</div>' +
+        '</div>' +
+        '<div class="option-value">' +
+        '</div></div></div>';
     $(clone).insertBefore('.checkbox');
     var id = "#op" + index;
     $(id).val(valueOption).change();
-
 }
 
 /**
@@ -1365,7 +1388,7 @@ function restoreOptions() {
         var obj = JSON.parse(opt);
         $('#inputLanguage').val(obj.language).change();
         $('#inputengine').val(obj.engine).change();
-        if(obj.option != undefined) {
+        if(obj.option != null) {
             setOptions(obj);
         }
         if (obj.hasOwnProperty('runAuto')) {
@@ -1429,10 +1452,9 @@ function setOptions(obj) {
 
     if (obj.engine === "clingo" || obj.engine === "dlv2") {
         $('.form-control-option').find('option').each(function (index, element) {
-            if ($(this).val() !== 'free choice' && $(this).val().length !== 0)
+            if ($(this).val() !== 'free choice' && $(this).val() !== "nothing select")
                 $(this).remove();
         });
-
     }
 }
 
@@ -1446,10 +1468,10 @@ function addTab(obj, text) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
     editorId = "editor" + id;
-    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <span class="name-tab">Tab' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
+    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <span class="name-tab">L P ' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
-    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> <span>Tab' + id + '</span></label>');
+    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> <span>L P ' + id + '</span></label>');
     addCommand(editorId);
     return tabId;
 }
@@ -2083,7 +2105,7 @@ function getParameterByName(name, url) {
         results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    return results[2];
 }
 
 function loadFromURL() {

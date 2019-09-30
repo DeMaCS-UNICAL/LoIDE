@@ -1481,8 +1481,8 @@ function resetSolverOptions() {
 
     $(".row-option:not(:first)").remove();
     var $select = $(".row-option").find("select");
-    $select.val("").change();
-    $(".show").find("hr").remove();
+    $select.val("nothing select").change();
+    $(".option-solver").find("hr").remove();
     var $btn = $("<button/>").attr("class", "btn btn-light").text("+");
     var $span = $(".row-option").find("span");
         if (!$span.has("button").length) {

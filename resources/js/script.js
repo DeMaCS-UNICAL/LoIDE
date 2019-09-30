@@ -605,6 +605,7 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
     }
     idTab = $(currentTab).attr('data-target');
     idEditor = $(idTab).find('.ace').attr("id");
+    editors[idEditor].focus();
 });
 
 $(document).on('click', '#split', function () {

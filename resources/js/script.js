@@ -277,33 +277,6 @@ $(document).ready(function () {
         $('#split').attr('id', 'split-up');
     }
 
-    // now it will never be used
-    $('.dropdown-menu-choice').find('a').click(function (e) {
-        var concept = $(this).text();
-        $('#choice').text(concept); // append to the DOM the choice for download
-        var stringify, form, chose;
-        if (concept === 'Input') {
-            addProgramsToDownload();
-            form = $('#input').serializeFormJSON();
-            stringify = JSON.stringify(form);
-            chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
-            createFileToDownload(stringify,"local","LoIDE_Project","json");
-            destroyPrograms();
-        } else {
-            $('#program').removeAttr('name', 'program[0]');
-            $('#output-form').attr('name', 'output');
-            var text = $("#output").text();
-            $('#output-form').val(text);
-            form = $('#input').serializeFormJSON();
-            stringify = JSON.stringify(form);
-            chose = $('#choice').text();
-            createFileToDownload(stringify,"local","LoIDE_Project","json");
-            $('#program').attr('name', 'program[0]');
-            $('#output-form').removeAttr('name', 'output');
-        }
-        $('#choice').text("");
-    });
-
     /**
      * @global
      * @description id of the clicked button 'submit'  
@@ -332,11 +305,7 @@ $(document).ready(function () {
             $("#output").empty();
             $("#output").text("Sending..");
             callSocketServer(false);
-
         }
-        // else if (clkBtn === 'btn-download') { //tutto questo farla nella funzione se clicco in locale e output e true
-
-        // }
         else if (clkBtn === 'save-options') {
             i = 0;
             $("#tab-execute input").each(function (index, element) {
@@ -356,7 +325,6 @@ $(document).ready(function () {
             });
             $("#run-dot").removeAttr("name");
         }
-
     });
 
     $("#btn-option").click(function () {
@@ -507,7 +475,6 @@ function inizializeChangeNameContextmenu(){
                 $(this).popover('hide');
             }
         });
-
     });
 
     $('body').on('contextmenu', function (e) {
@@ -516,7 +483,6 @@ function inizializeChangeNameContextmenu(){
                 $(this).popover('hide');
             }
         });
-
     });
 
     $('.btn-tab').on('inserted.bs.popover', function() {
@@ -719,7 +685,6 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             $(':checkbox[value="editor1"]').prop('checked', true);
             $("[data-target='#tab1']").trigger('click');
             inizializeChangeNameContextmenu();
-
         }
         else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
             // $('.nav-tabs').find('li:not(:last)').each(function (index) {
@@ -888,7 +853,6 @@ function addOptionDOM(optionClassBtn) {
         addInpuValue($(clone).find('.form-control-option').closest('.row-option'));
     }
     clone.find('label').empty();
-
 }
 
 /**
@@ -953,7 +917,6 @@ function OptionDLV() {
         this.map.push("silent", "-silent");
         this.map.push("query", "-FC");
     };
-
 }
 
 /**
@@ -1002,7 +965,7 @@ function destroyOptions() {
  * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor   
  */
 function setJSONInput(config) {
-    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output')) {
+    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output') || config.hasOwnProperty('tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
@@ -1026,6 +989,7 @@ function setJSONInput(config) {
         $('#inputengine').val(config.engine).change();
         $('#output').text(config.output);
         setOptions(config);
+        setTabsName(config);
         return true;
     } else {
         return false;
@@ -1090,7 +1054,6 @@ function setHeightComponents(expanded,open) {
         $('.layout').css('height', height - navbarHeight);
         $('.ui-layout-pane-east').css('height', height - navbarHeight);
         $('.ui-layout-pane-center').css('height', height - navbarHeight);
-
     }
 
     editors[idEditor].resize();
@@ -1117,7 +1080,6 @@ function createTextArea(layout) {
     $("#setting-output").remove();
     $("#output").remove();
     $(layout).append('<div id="setting-output"> Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right" href="#"><i class="fa fa-chevron-down"></i></a></div><div id="output" class="output"></div>');
-
 }
 
 function handleFileSelect(evt) {
@@ -1244,7 +1206,6 @@ function inizializeShortcuts() {
         $('#btn-upload').attr('data-original-title', '{ ctrl + u }');
         $('[for="btn-download"]').attr('data-original-title', '{ ctrl + d }');
     }
-
 }
 
 /**
@@ -1266,7 +1227,6 @@ function addMorePrograms() {
         $('#program').remove();
     }
     return check;
-
 }
 
 /**
@@ -1288,7 +1248,6 @@ function destroyPrograms() {
         $(this).remove();
     });
     $('.layout').prepend('<input type="hidden" name="program[0]" id="program" class="programs" value="">');
-
 }
 
 /**
@@ -1593,13 +1552,13 @@ function inizializePopovers(){
                 $('#output-form').val(text);
                 form = $('#input').serializeFormJSON();
                 stringify = JSON.stringify(form);
-                chose = $('#choice').text();
                 createFileToDownload(stringify, "local","LoIDE_Output", "json");
                 $('#program').attr('name', 'program[0]');
                 $('#output-form').removeAttr('name', 'output');
             }
             else {
                     addProgramsToDownload();
+                    addTabsNameToDownload();
                     $('#output-form').attr('name', 'output');
                     var text = $("#output").text();
                     $('#output-form').val(text);
@@ -1613,15 +1572,14 @@ function inizializePopovers(){
                     $("#run-dot").attr("name", "runAuto");
                     form = $('#input').serializeFormJSON();
                     stringify = JSON.stringify(form);
-                    var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable
                     createFileToDownload(stringify,"local","LoIDE_Project","json");
                     $('#output-form').removeAttr('name');
                     destroyPrograms();
+                    destroyTabsName();
                     $("#tab-execute input").each(function (index, element) {
                         $(this).removeAttr("name");
                     });
                     $("#run-dot").removeAttr("name");
-
             }
         });
 
@@ -1668,7 +1626,6 @@ function inizializePopovers(){
                 $(this).popover('hide');
             }
         });
-
     });
 
     $('.popover-share').on('inserted.bs.popover', function() {
@@ -1940,7 +1897,6 @@ function inizializeSnippets() {
                                     meta: "body/constraint"
                                 }
                             ];
-                            // completions.push();
                             callback(null, completions);
                         }
                     }
@@ -1992,7 +1948,6 @@ function inizializeSnippets() {
                                     meta: "body/constraint"
                                 }
                             ];
-                            // completions.push();
                             callback(null, completions);
                         }
                     }
@@ -2020,22 +1975,18 @@ function inizializeAutoComplete() {
                     var name = word.match(/[^_](([a-zA-Z_]+[0-9]*)*)/)[0];
                     var arities = word.match(/\(.+?\)/)[0].split(",").length;
                     map.set(name,arities);
-
                 });
                 var completions = [];
                 map.forEach(function (key, value) {
-
                     completions.push({
                         caption: value,
                         snippet: value+giveBrackets(key),
                         meta: "atom"
                     });
-
                 });
 
                 var completer = {
                     getCompletions: function(editor, session, pos, prefix, callback) {
-
                         callback(null, completions);
                     }
                 }
@@ -2049,7 +2000,6 @@ function inizializeAutoComplete() {
 }
 
 function giveBrackets(value) {
-
     var par="(";
     var LETTER = "A";
     var limit = 0;
@@ -2067,7 +2017,6 @@ function giveBrackets(value) {
     }
     par+=")";
     return par;
-
 }
 
 function createURLtoShare(program) {
@@ -2264,11 +2213,11 @@ function setDarkStyleToUIElements() {
 }
 
 function saveProjectToLocalStorage() {
-    var nameTabs = [];
+    var tabsName = [];
     var logicProgEditors = [];
 
     $('.name-tab').each(function () {
-        nameTabs.push($(this).text());
+        tabsName.push($(this).text());
     });
     var length = $(".nav-tabs").children().length;
     for (var index = 1; index <= length - 1; index++) {
@@ -2276,20 +2225,20 @@ function saveProjectToLocalStorage() {
         logicProgEditors.push(editors[idE].getValue());
     }
 
-    saveOption("nameTabs",JSON.stringify(nameTabs));
+    saveOption("tabsName",JSON.stringify(tabsName));
     saveOption("logicProgEditors",JSON.stringify(logicProgEditors));
 }
 
 function checkProjectOnLocalStorage() {
     if(supportLocalStorage()) {
-        var nameTabs = [];
+        var tabsName = [];
         var logicProgEditors = [];
-        if(localStorage.getItem("nameTabs") != undefined && localStorage.getItem("logicProgEditors") != undefined)
+        if(localStorage.getItem("tabsName") != undefined && localStorage.getItem("logicProgEditors") != undefined)
         {
-            nameTabs = JSON.parse(localStorage.getItem("nameTabs"));
+            tabsName = JSON.parse(localStorage.getItem("tabsName"));
             logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-            if(nameTabs.length > 1 || logicProgEditors[0].trim().length > 0){
+            if(tabsName.length > 1 || logicProgEditors[0].trim().length > 0){
                 $('#notification-project').toast('show');
             }
         }
@@ -2298,12 +2247,12 @@ function checkProjectOnLocalStorage() {
 
 function loadProjectFromLocalStorage() {
     if(supportLocalStorage()){
-        var nameTabs = [];
+        var tabsName = [];
         var logicProgEditors = [];
-        nameTabs = JSON.parse(localStorage.getItem("nameTabs"));
+        tabsName = JSON.parse(localStorage.getItem("tabsName"));
         logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-        for (var index = 1; index <= nameTabs.length ; index++) {
+        for (var index = 1; index <= tabsName.length ; index++) {
             if(index > 1)
                 $('.add-tab').trigger('click');
             var idE = "editor" + index;
@@ -2311,13 +2260,34 @@ function loadProjectFromLocalStorage() {
         }
 
         $('.name-tab').each(function (index) {
-            $(this).text(nameTabs[index]);
+            $(this).text(tabsName[index]);
             var id = index + 1;
             var editor = "editor" + id;
-            $(':checkbox[value="' + editor + '"]').siblings('span').text(nameTabs[index]);
-
+            $(':checkbox[value="' + editor + '"]').siblings('span').text(tabsName[index]);
         });
 
         $("a[data-target='#tab1']").trigger('click');
     }
+}
+
+function addTabsNameToDownload() {
+    $('.name-tab').each(function (index) {
+        $('.layout').prepend("<input type='hidden' name='tabname[" + index + "]' id='tabname" + index + "' value='" + $(this).text() + "' class='tabsname'>");
+    });
+}
+
+function destroyTabsName() {
+    $('.tabsname').each(function (index) {
+        $(this).remove();
+    });
+}
+
+function setTabsName(config) {
+    var tabsName = config.tabname;
+    $('.name-tab').each(function (index) {
+        $(this).text(tabsName[index]);
+        var id = index + 1;
+        var editor = "editor" + id;
+        $(':checkbox[value="' + editor + '"]').siblings('span').text(tabsName[index]);
+    });
 }

@@ -1999,31 +1999,35 @@ function giveBrackets(value) {
 }
 
 function createURLtoShare(program) {
-    var URL = window.location.host + "/?program=";
-    var encodedProg = btoa(program);
-    URL += encodeURIComponent(encodedProg);
-    $.ajax({
-        method: "POST",
-        url: "https://is.gd/create.php?format=json&url=" + URL,
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            console.log(data);
-            if(data.shorturl == undefined){
-                $('#link-to-share').val("Ops. Something went wrong");
-                if(URL.length >= 5000){
-                    operation_alert({reason: "The logic program is too long to be shared."})
+    if(program.trim().length == 0){
+        $('#link-to-share').val(window.location.href);
+    }
+    else {
+        var URL = window.location.host + "/?program=";
+        var encodedProg = btoa(program);
+        URL += encodeURIComponent(encodedProg);
+        $.ajax({
+            method: "POST",
+            url: "https://is.gd/create.php?format=json&url=" + URL,
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+                console.log(data);
+                if (data.shorturl == undefined) {
+                    $('#link-to-share').val("Ops. Something went wrong");
+                    if (URL.length >= 5000) {
+                        operation_alert({reason: "The logic program is too long to be shared."})
+                    }
+                } else {
+                    $('#link-to-share').val(data.shorturl);
+                    $('#btn-copy-link').prop('disabled', false);
                 }
+            },
+            error: function (err) {
+                console.log(err);
             }
-            else{
-                $('#link-to-share').val(data.shorturl);
-                $('#btn-copy-link').prop('disabled',false);
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
+        });
+    }
 }
 
 function getParameterByName(name, url) {

@@ -1172,7 +1172,7 @@ function setUpAce(ideditor, text) {
 function inizializeShortcuts() {
     if (window.navigator.userAgent.indexOf("Mac") !== -1) {
         key('command + d', function () {
-            $('#btn-download').trigger('click');
+            downloadLoDIEProject();
             return false;
         });
         key('command + enter', function () {
@@ -1557,29 +1557,7 @@ function inizializePopovers(){
                 $('#output-form').removeAttr('name', 'output');
             }
             else {
-                    addProgramsToDownload();
-                    addTabsNameToDownload();
-                    $('#output-form').attr('name', 'output');
-                    var text = $("#output").text();
-                    $('#output-form').val(text);
-                    i = 0;
-                    $("#tab-execute input").each(function (index, element) {
-                        if ($(this).prop('checked')) {
-                            $(this).attr("name", "tab[" + i + "]");
-                            i++;
-                        }
-                    });
-                    $("#run-dot").attr("name", "runAuto");
-                    form = $('#input').serializeFormJSON();
-                    stringify = JSON.stringify(form);
-                    createFileToDownload(stringify,"local","LoIDE_Project","json");
-                    $('#output-form').removeAttr('name');
-                    destroyPrograms();
-                    destroyTabsName();
-                    $("#tab-execute input").each(function (index, element) {
-                        $(this).removeAttr("name");
-                    });
-                    $("#run-dot").removeAttr("name");
+                    downloadLoDIEProject();
             }
         });
 
@@ -2290,4 +2268,30 @@ function setTabsName(config) {
         var editor = "editor" + id;
         $(':checkbox[value="' + editor + '"]').siblings('span').text(tabsName[index]);
     });
+}
+
+function downloadLoDIEProject() {
+    addProgramsToDownload();
+    addTabsNameToDownload();
+    $('#output-form').attr('name', 'output');
+    var text = $("#output").text();
+    $('#output-form').val(text);
+    i = 0;
+    $("#tab-execute input").each(function (index, element) {
+        if ($(this).prop('checked')) {
+            $(this).attr("name", "tab[" + i + "]");
+            i++;
+        }
+    });
+    $("#run-dot").attr("name", "runAuto");
+    form = $('#input').serializeFormJSON();
+    stringify = JSON.stringify(form);
+    createFileToDownload(stringify,"local","LoIDE_Project","json");
+    $('#output-form').removeAttr('name');
+    destroyPrograms();
+    destroyTabsName();
+    $("#tab-execute input").each(function (index, element) {
+        $(this).removeAttr("name");
+    });
+    $("#run-dot").removeAttr("name");
 }

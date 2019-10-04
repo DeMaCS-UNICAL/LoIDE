@@ -481,14 +481,56 @@ select{
     transition: 0.5s;
 }
 
-.left-panel > .input-group>.custom-select:not(:last-child), .input-group>.form-control:not(:last-child) {
-     border-top-right-radius: .25rem;
-     border-bottom-right-radius: .25rem;
-}
-
 #change-name-tab-textbox{
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
+}
+
+#btn-add-option{
+    margin-top: 10px;
+}
+
+.btn-del-option{
+    margin-top: 5px;
+}
+
+.btn-add{
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: 0;
+    border-bottom: 1px solid #ced4da;
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+}
+
+select.not-alone{
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.option-value{
+    border-top: 0px;
+    border-radius: 0px;
+    padding-right: 37px;
+}
+
+.btn-del-option{
+    cursor: pointer;
+}
+
+.btn-del-value{
+    position: absolute;
+    right: 15px;
+    top: 6px;
+    bottom: 4px;z-index:9;
+    color: red;
+    cursor: pointer;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.input-group:hover>.btn-del-value{
+    opacity: 1;
 }
 
     /*DARK-MODE SECTION*/
@@ -582,4 +624,18 @@ body.dark .bs-popover-auto[x-placement^=bottom]>.arrow::after, body.dark .bs-pop
 
 body.dark .bs-popover-auto[x-placement^=right]>.arrow::after, body.dark .bs-popover-right>.arrow::after {
     border-right-color: rgb(128, 128, 128);
+}
+
+body.dark .btn-add{
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+body.dark .form-control-option{
+    border-bottom-width: 1.5px;
+}
+
+body.dark .form-control{
+    border-color: #343a40;
 }

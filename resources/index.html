@@ -119,28 +119,12 @@
                         <option value="clingo">Clingo</option>
                         <option value="dlv2">DLV2</option>
                     </select>
-                    <div class="row row-option">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label for="option" class="col-sm-12 col-xs-12 text-center">Options</label>
-                                <div class="input-group opname">
-                                    <select name="option[0][name]" class="form-control form-control-option">
-										<option value="nothing select"></option>
-                                        <option value="free choice">Free choice</option>
-                                        <option value="filter">Filter</option>
-                                        <option value="nofacts">Nofacts</option>
-                                        <option value="silent">Silent</option>
-                                        <option value="query">Query</option>
-                                    </select>
-                                    <span class="input-group-btn btn-add-option">
-                                        <button type="button" class="btn btn-light">+</button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="option-value">
-                            </div>
-                        </div>
-                    </div>
+					<label class="col-sm-12 text-center">Options</label>
+					<div id="solver-options">
+					</div>
+					<span class="input-group-btn">
+						<button id="btn-add-option" type="button" class="btn btn-primary btn-block">+ Add option</button>
+					</span>
                     <div class="checkbox">
                         <p class="text-center">
                             <strong> Execution options </strong>
@@ -163,8 +147,6 @@
                             </p>
                             <button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>
                         </div>
-                    </div>
-                    <div>
                     </div>
 				</div>
 			</div>
@@ -356,8 +338,8 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js"></script>
 	<!-- Ace editor-->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-language_tools.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.6.1/jquery.mark.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>

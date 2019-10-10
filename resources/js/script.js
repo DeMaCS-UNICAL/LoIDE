@@ -255,8 +255,6 @@ $(document).ready(function () {
     dropZone.addEventListener('drop', handleFileSelect, false);
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
-    $(':checkbox[value="editor1"]').prop('checked', true);
-
     $("[rel='tooltip']").tooltip();
 
     /**
@@ -265,6 +263,7 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').on('click', function () {
         $(this).tooltip('hide');
     });
+
     $('[rel="tooltip"]').on('click', function () {
         $(this).tooltip('hide');
     });
@@ -307,7 +306,6 @@ $(document).ready(function () {
 
     $('button[type="submit"]').click(function (evt) {
         clkBtn = evt.target.id;
-
     });
 
     $("#btn-run-nav").click(function (e) {
@@ -684,8 +682,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor, "");
-            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"><span class="name-tab">L P 1</span></label>');
-            $(':checkbox[value="editor1"]').prop('checked', true);
+            $('#tab-execute').append(' <label class="check-run-lp"><input type="checkbox" value="' + ideditor + '"> <span>L P 1</span></label>');
             $("[data-target='#tab1']").trigger('click');
             inizializeChangeNameContextmenu();
         }
@@ -714,7 +711,6 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             });
             }
         if ($(".nav-tabs").children().length === 2) {
-            $(':checkbox[value="editor1"]').prop('checked', true);
             idEditor = "editor1";
         }
     }
@@ -858,8 +854,8 @@ function addInpuValue(inputClass) {
      */
     var replaceName = currentName.replace('name', 'value');
     replaceName += '[]';
-    inputClass.closest('.row-option').find('.option-values').append('<div class="input-group"><input type="text" class="form-control form-control-value option-value" name=' + replaceName + '><span class="btn-del-value"><i class="fa fa-trash-o"></i></span></div>');
-    $(inputClass).siblings('.option-values').after('<button type="button" class="btn btn-light btn-add btn-block">+ Add value</button>');
+    inputClass.closest('.row-option').find('.option-values').append('<div class="input-group"><input type="text" class="form-control form-control-value option-value" name=' + replaceName + '><span class="btn-del-value"><i class="fa fa-trash"></i></span></div>');
+    $(inputClass).siblings('.option-values').after('<button type="button" class="btn btn-light btn-add btn-block"> <i class="fa fa-plus"></i> Add value</button>');
 }
 
 /**
@@ -1352,7 +1348,7 @@ function addTab(obj, text) {
     $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <span class="name-tab">L P ' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
-    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> <span>L P ' + id + '</span></label>');
+    $('#tab-execute').append(' <label class="check-run-lp"><input type="checkbox" value="' + editorId + '"> <span>L P ' + id + '</span></label>');
     addCommand(editorId);
     return tabId;
 }

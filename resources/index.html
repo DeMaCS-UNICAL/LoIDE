@@ -21,7 +21,6 @@
 		<div class="toast-header">
 			<i class="fa fa-exclamation-circle"></i>
 			<strong class="mr-auto ml-2">LoIDE</strong>
-			<small>Now</small>
 			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
@@ -32,14 +31,12 @@
 		<div class="toast-header">
 			<i class="fa fa-exclamation-circle"></i>
 			<strong class="mr-auto ml-2">LoIDE - Project found</strong>
-			<small>Now</small>
 			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
 		<div class="toast-body">
-			<p>Maybe you were working on a project.
-				Do you wish to continue? </p>
+			<p>Maybe you were working on a project.<br>Do you wish to continue? </p>
 			<button id="load-project" type="button" class="btn btn-primary btn-sm btn-block">Yes</button>
 			<button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="toast" aria-label="Close">No</button>
 		</div>
@@ -57,8 +54,9 @@
                     <button id="btn-option" class="btn btn-secondary" data-toggle="tooltip" data-html="true" data-html="true" data-placement="top" title="Run options">
                     	<i class="fa fa-cogs"></i>
                 	</button>
-					<button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip" data-html="true">Run!
+					<button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip" data-html="true">
 						<i class="fa fa-play"></i>
+                        Run!
 					</button>
 				</div>
             </li>
@@ -79,11 +77,13 @@
 			<ul class="navbar-nav ">
 				<li class="nav-item">
                     <div class="btn-group btn-block" role="group">
-                        <button type="button" class="btn btn-warning " data-toggle="collapse" data-target="#upload-container" id="btn-upload" rel="tooltip" data-html="true" data-placement="bottom" title="">Upload File
-                            <span><i class="fa fa-arrow-circle-o-up"></i></span>
+                        <button type="button" class="btn btn-warning " data-toggle="collapse" data-target="#upload-container" id="btn-upload" rel="tooltip" data-html="true" data-placement="bottom" title="">
+                            <i class="fa fa-upload"></i>
+                            Upload File
                         </button>
-                        <label for="btn-download" role="button" class="btn btn-info popover-download " rel="tooltip" data-placement="bottom" title="">Download
-                            <i class="fa fa-arrow-circle-o-down"></i>
+                        <label for="btn-download" role="button" class="btn btn-info popover-download " rel="tooltip" data-placement="bottom" title="">
+                            <i class="fa fa-download"></i>
+                            Download
                         </label>
                     </div>
 				</li>
@@ -113,17 +113,17 @@
                     <select name="language" id="inputLanguage" class="form-control">
                         <option value="asp">ASP</option>
                     </select>
-                    <label for="inputEngine" class="col-sm-12 col-xs-12 text-center">Solver</label>
+                    <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
                     <select name="engine" id="inputengine" class="form-control">
-                        <option value="dlv">DLV</option>
-                        <option value="clingo">Clingo</option>
                         <option value="dlv2">DLV2</option>
+                        <option value="clingo">Clingo</option>
+                        <option value="dlv">DLV</option>
                     </select>
-					<label class="col-sm-12 text-center">Options</label>
+					<label class="col-sm-12 mt-2 mb-1 text-center">Options</label>
 					<div id="solver-options">
 					</div>
 					<span class="input-group-btn">
-						<button id="btn-add-option" type="button" class="btn btn-primary btn-block">+ Add option</button>
+						<button id="btn-add-option" type="button" class="btn btn-primary btn-block"> <i class="fa fa-plus"></i> Add option</button>
 					</span>
                     <div class="checkbox">
                         <p class="text-center">
@@ -136,7 +136,7 @@
                             <p class="text-center">
                                 <strong>Choose tab to execute</strong>
                             </p>
-                            <label>
+                            <label class="check-run-lp">
                                 <input type="checkbox" value="editor1">
                                 <span>L P 1</span>
                             </label>
@@ -179,7 +179,7 @@
 									<button id="btn-redo" type="button" class="btn btn-light"><i class="fa fa-arrow-right"></i></button>
 								</div>
 								<button id="btn-run-thistab" type="button" class="btn btn-light"><i class="fa fa-play"></i></button>
-								<button id="btn-share-tab" type="button" class="btn btn-light popover-share" data-content="<div class='popover-share-content'><button id='share-btn-telegram' type='button' class='btn btn-default btn-block'>Share on Telegram</button><button id='share-btn-whatsapp' type='button' class='btn btn-default btn-block'>Share on Whatsapp</button><button id='share-btn-download' type='button' class='btn btn-default btn-block'>Download</button><button id='share-btn-save-on-cloud' type='button' class='btn btn-default btn-block' disabled>Save on cloud</button></div>"><i class="fa fa-share-square-o"></i></button>
+								<button id="btn-share-tab" type="button" class="btn btn-light popover-share" data-content="none"><i class="fa fa-share-alt"></i></button>
 							</div>
 						</div>
 						<!-- Tab panes -->
@@ -262,11 +262,11 @@
 					<div class="row">
 						<div class="col-md-4 col-xs-4">
 							<label for="font-editor">Font size Editor</label>
-							<input id="font-editor" type="number" min="15" max="60">
+							<input id="font-editor" class="form-control" type="number" min="15" max="60">
 						</div>
 						<div class="col-md-4 col-xs-4 col-md-offset-2 col-xs-offset-2">
 							<label for="font-output">Font size Output</label>
-							<input id="font-output" type="number" min="15" max="60">
+							<input id="font-output" class="form-control" type="number" min="15" max="60">
 						</div>
 					</div>
 					<div class="row">
@@ -314,16 +314,16 @@
 						</div>
                         <div class="col-md-4 col-xs-4">
                             <label for="dark-light-mode">Change LoIDE mode</label>
-                            <button id="dark-light-mode" type="button" class="btn btn-outline-dark ">Dark</button>
+                            <button id="dark-light-mode" type="button" class="btn btn-outline-dark btn-block">Dark</button>
 
                         </div>
 				</div>
-				<div class="modal-footer">
-                    <button id="reset-editor" type="button" class="btn btn-outline btn-outline-danger">Reset options</button>
 
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
 			</div>
+                <div class="modal-footer">
+                    <button id="reset-editor" type="button" class="btn btn-outline btn-outline-danger"> <i class="fa fa-eraser"></i> Reset options</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
 		</div>
 	</div>
 

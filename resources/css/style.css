@@ -48,6 +48,10 @@ body {
     margin-right: 0px;
 }
 
+img[alt=logo]{
+    cursor: pointer;
+}
+
 @media screen and (max-width: 576px) {
     img[alt=logo] {
         width: 55%;
@@ -520,9 +524,11 @@ select.not-alone{
 
 .btn-del-value{
     position: absolute;
-    right: 15px;
+    right: 5px;
     top: 6px;
     bottom: 4px;z-index:9;
+    padding-left: 10px;
+    padding-right: 10px;
     color: red;
     cursor: pointer;
     opacity: 0;
@@ -531,6 +537,10 @@ select.not-alone{
 
 .input-group:hover>.btn-del-value{
     opacity: 1;
+}
+
+.check-run-lp{
+    margin-right: 7px;
 }
 
     /*DARK-MODE SECTION*/
@@ -630,10 +640,6 @@ body.dark .btn-add{
     border-bottom: 0;
     border-left: 0;
     border-right: 0;
-}
-
-body.dark .form-control-option{
-    border-bottom-width: 1.5px;
 }
 
 body.dark .form-control{

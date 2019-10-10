@@ -109,11 +109,33 @@ var defaultDarkTheme = "ace/theme/idle_fingers";
 editors = {};
 setUpAce(idEditor, "");
 
+var solverOptionDOMTemplate = "" +
+    "<div class=\"row row-option\">" +
+        "<div class=\"col-sm-12 form-group\">" +
+            "<div class=\"badge-option mb-1\">" +
+                "<span class=\" text-center badge badge-info option-number\"></span>" +
+                "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
+            "</div>" +
+            "<div class=\"input-group opname\">" +
+                "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
+                    "<option value=\"free choice\">Free choice</option>" +
+                    "<option value=\"filter\">Filter</option>" +
+                    "<option value=\"nofacts\">Nofacts</option>" +
+                    "<option value=\"silent\">Silent</option>" +
+                    "<option value=\"query\">Query</option>" +
+                "</select>" +
+            "</div>" +
+            "<div class=\"option-values\">" +
+            "</div>" +
+        "</div>" +
+    "</div>"
 
-// $('.modal').modal({
-//     backdrop: false,
-//     show: false
-// });
+var solverOptionsSelectDOM = "" +
+    "<option value=\"free choice\">Free choice</option>" +
+    "<option value=\"filter\">Filter</option>" +
+    "<option value=\"nofacts\">Nofacts</option>" +
+    "<option value=\"silent\">Silent</option>" +
+    "<option value=\"query\">Query</option>";
 
 /**
  * set autofocus in modal
@@ -233,8 +255,6 @@ $(document).ready(function () {
     dropZone.addEventListener('drop', handleFileSelect, false);
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
-    $(':checkbox[value="editor1"]').prop('checked', true);
-
     $("[rel='tooltip']").tooltip();
 
     /**
@@ -243,6 +263,7 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').on('click', function () {
         $(this).tooltip('hide');
     });
+
     $('[rel="tooltip"]').on('click', function () {
         $(this).tooltip('hide');
     });
@@ -277,33 +298,6 @@ $(document).ready(function () {
         $('#split').attr('id', 'split-up');
     }
 
-    // now it will never be used
-    $('.dropdown-menu-choice').find('a').click(function (e) {
-        var concept = $(this).text();
-        $('#choice').text(concept); // append to the DOM the choice for download
-        var stringify, form, chose;
-        if (concept === 'Input') {
-            addProgramsToDownload();
-            form = $('#input').serializeFormJSON();
-            stringify = JSON.stringify(form);
-            chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable 
-            createFileToDownload(stringify,"local","LoIDE_Project","json");
-            destroyPrograms();
-        } else {
-            $('#program').removeAttr('name', 'program[0]');
-            $('#output-form').attr('name', 'output');
-            var text = $("#output").text();
-            $('#output-form').val(text);
-            form = $('#input').serializeFormJSON();
-            stringify = JSON.stringify(form);
-            chose = $('#choice').text();
-            createFileToDownload(stringify,"local","LoIDE_Project","json");
-            $('#program').attr('name', 'program[0]');
-            $('#output-form').removeAttr('name', 'output');
-        }
-        $('#choice').text("");
-    });
-
     /**
      * @global
      * @description id of the clicked button 'submit'  
@@ -312,7 +306,6 @@ $(document).ready(function () {
 
     $('button[type="submit"]').click(function (evt) {
         clkBtn = evt.target.id;
-
     });
 
     $("#btn-run-nav").click(function (e) {
@@ -332,11 +325,7 @@ $(document).ready(function () {
             $("#output").empty();
             $("#output").text("Sending..");
             callSocketServer(false);
-
         }
-        // else if (clkBtn === 'btn-download') { //tutto questo farla nella funzione se clicco in locale e output e true
-
-        // }
         else if (clkBtn === 'save-options') {
             i = 0;
             $("#tab-execute input").each(function (index, element) {
@@ -356,7 +345,6 @@ $(document).ready(function () {
             });
             $("#run-dot").removeAttr("name");
         }
-
     });
 
     $("#btn-option").click(function () {
@@ -403,10 +391,8 @@ function callSocketServer(onlyActiveTab) {
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
     var form = $('#input').serializeFormJSON();
-    for (var i=0; i<form.option.length; i++){
-        if(form.option[i].name === "nothing select") {
-            form.option[i].name = "";
-        }
+    if(form.option == null){
+        form.option = [{name:""}];
     }
     destroyPrograms();
     destroyOptions();
@@ -507,7 +493,6 @@ function inizializeChangeNameContextmenu(){
                 $(this).popover('hide');
             }
         });
-
     });
 
     $('body').on('contextmenu', function (e) {
@@ -516,7 +501,6 @@ function inizializeChangeNameContextmenu(){
                 $(this).popover('hide');
             }
         });
-
     });
 
     $('.btn-tab').on('inserted.bs.popover', function() {
@@ -581,29 +565,25 @@ function inizializeChangeNameContextmenu(){
     });
 }
 
-$(document).on('click', '.btn-add-option', function () {
-    addOptionDOM($(this));
-    $(this).empty();
+$(document).on('click', '#btn-add-option', function () {
+    addOptionDOM();
+    renameSelectOptionsAndBadge();
     setElementsColorMode();
+    updateSelectSolverOptions(true);
 });
 
 $(document).on('click', '.btn-del-option', function () {
-    $(this).parent().parent().parent().parent().prev().prev().find(".btn-add-option").append('<button type="button" class="btn btn-light">+</button>');
     delOptionDOM($(this));
     setElementsColorMode();
 });
 
 $(document).on('click', '.btn-del-value', function () {
-    if ($(this).parent().parent().is(":last-child")) {
-        $(this).parent().parent().prev().find(".input-group-btn").last().append('<button type="button" class="btn btn-light btn-add">+</button>');
-    }
     deleteInputValue($(this));
     setElementsColorMode();
 });
 
 $(document).on('click', '.btn-add', function () {
-    addInpuValue($(this));
-    $(this).parent().empty();
+    addInpuValue($(this).parent());
     setElementsColorMode();
 });
 
@@ -639,6 +619,7 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
     }
     idTab = $(currentTab).attr('data-target');
     idEditor = $(idTab).find('.ace').attr("id");
+    editors[idEditor].focus();
 });
 
 $(document).on('click', '#split', function () {
@@ -650,36 +631,22 @@ $(document).on('click', '#split-up', function () {
 });
 
 $(document).on('change', '#inputengine', function () {
-    var val = $(this).val();
-    if (val === "clingo" || val === "dlv2") {
-        $('.form-control-option').each(function (index, element) {
-            $(this).find("option").each(function (index, element) {
-                if ($(this).val() !== "free choice" && $(this).val() !== "nothing select")
-                    $(this).remove();
-            });
-            if ($(this).val() !== 'free choice')
-                $(this).val("nothing select").change();
-        });
-    }
-    else if ($('.form-control-option').find("option[value='filter']").length === 0) {
-        $('.form-control-option').append('</option>' +
-            '<option value="filter">Filter</option>' +
-            '<option value="nofacts">Nofacts</option>' +
-            '<option value="silent">Silent</option>' +
-            '<option value="query">Query</option>');
-    }
+    updateSelectSolverOptions(false);
     inizializeSnippets();
 });
 
 $(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
     var val = $(this).val();
     if (val === 'free choice' || val === 'filter') {
-        if (($(this).closest('.row-option').find('.option-value').find('.input-group-value').length) <= 0)
-            addInpuValue($(this).closest('.row-option'));
+        if (($(this).closest('.row-option').find('.option-values').find('.option-value').length) <= 0) {
+            addInpuValue($(this).parent());
+            $(this).addClass('not-alone');
+        }
         setElementsColorMode();
     } else {
+        $(this).removeClass('not-alone');
         $(this).closest('.row-option').find('.option-value').remove();
-        $(this).closest('.col-sm-12').append("<div class='option-value'></div>");
+        $(this).closest('.row-option').find('.btn-add').remove();
     }
 
 });
@@ -715,11 +682,9 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor, "");
-            $('#tab-execute').append(' <label><input type="checkbox" value="' + ideditor + '"><span class="name-tab">L P 1</span></label>');
-            $(':checkbox[value="editor1"]').prop('checked', true);
+            $('#tab-execute').append(' <label class="check-run-lp"><input type="checkbox" value="' + ideditor + '"> <span>L P 1</span></label>');
             $("[data-target='#tab1']").trigger('click');
             inizializeChangeNameContextmenu();
-
         }
         else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
             // $('.nav-tabs').find('li:not(:last)').each(function (index) {
@@ -746,7 +711,6 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             });
             }
         if ($(".nav-tabs").children().length === 2) {
-            $(':checkbox[value="editor1"]').prop('checked', true);
             idEditor = "editor1";
         }
     }
@@ -848,16 +812,9 @@ function getSelectionCharOffsetsWithin(element) {
  */
 function delOptionDOM(optionClassBtn) {
     var row = $(optionClassBtn).closest('.row-option');
-    $(row).prev().remove();
-    row.empty(); //delete option container
-    row.remove();
-    $('.form-control-option').each(function (index) {
-        $(this).attr('name', 'option[' + index + '][name]');
-
-        $(this).closest('.row-option').find('.form-control-value').each(function (index2) {
-            $(this).attr('name', 'option[' + index + '][value][]');
-
-        });
+    row.fadeOut(300, function () {
+        $(this).remove();
+        renameSelectOptionsAndBadge();
     });
 }
 
@@ -865,30 +822,10 @@ function delOptionDOM(optionClassBtn) {
  * @param optionClassBtn - class of the clicked button to find the closest row 
  * @description Clone the closest row with the option select to add it to the DOM and change 'name' with the correct value for json format
  */
-function addOptionDOM(optionClassBtn) {
-    var row = $(optionClassBtn).closest('.row-option');
-    var clone = row.clone();
-    var lenghtClass = $('.opname').length;
-    $(clone).insertAfter(row);
-    $("<hr>").insertBefore(clone);
-    var cloneOpname = $(clone).find('.opname');
-    if (lenghtClass > 0) {
-        $(cloneOpname).find('.btn-del-option').remove();
-
-        $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>'); //append button delete after first option block
-    }
-    lenghtClass -= 1;
-    $(clone).find('.form-control-option').attr('name', 'option[' + lenghtClass + '][name]');
-    var inputValueClone = $(clone).find('.input-group-value');
-
-    $(inputValueClone).remove(); // remove all input value forms
-
-    clone.find($('.center-btn-value')).remove(); // remove button to add input value, if present 
-    if ($(clone).find('.form-control-option').val() === 'free choice') {
-        addInpuValue($(clone).find('.form-control-option').closest('.row-option'));
-    }
-    clone.find('label').empty();
-
+function addOptionDOM() {
+ var solverOptions = $('#solver-options');
+ solverOptions.append(solverOptionDOMTemplate);
+ $('.row-option').last().find('select').val("free choice").change();
 }
 
 /**
@@ -896,13 +833,13 @@ function addOptionDOM(optionClassBtn) {
  * @description Delete input value to the DOM and if the lenght of the class is equal to one, append the button to add input value
  */
 function deleteInputValue(inputClass) {
-    var inputValue = $(inputClass).closest('.input-group-value');
-    var closestRow = inputValue.closest('.row-option');
-    var lenghtInputValue = closestRow.find('.input-group-value').length;
-    if (lenghtInputValue === 1) {
-        closestRow.find('.option-value').append('<div class="text-center center-btn-value"><button type="button" class="btn btn-info btn-info-value ">Add value</button></div>');
+    var inputValue = $(inputClass).closest('.row-option');
+    if(inputValue.find('.option-value').length > 1){
+        inputClass.parent().remove();
     }
-    inputValue.remove();
+    else{
+        inputClass.siblings('.option-value').val("");
+    }
 }
 
 /**
@@ -910,25 +847,15 @@ function deleteInputValue(inputClass) {
  * @description Add the input type to a correct class parent
  */
 function addInpuValue(inputClass) {
-    var optionValue = $(inputClass).find('.option-value');
-    if (optionValue.length === 0)
-        optionValue = $(inputClass).closest('.option-value');
     var currentName = $(inputClass).closest('.row-option').find('.form-control-option').attr('name');
-
     /**
      * replace 'name' in 'value' for correct json format
-     * @example currentName=option[0][name] , replaceName=option[0][value][] 
+     * @example currentName=option[0][name] , replaceName=option[0][value][]
      */
     var replaceName = currentName.replace('name', 'value');
     replaceName += '[]';
-    var clone;
-    if (optionValue.find('.input-group-value').length > 0) {
-        clone = '<div class="form-group input-group input-group-value"><span class="input-group-btn"><button type="button" class="btn btn-danger btn-del-value">-</button></span> <input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-light btn-add">+</button></span></div>';
-    } else {
-        clone = '<div class="form-group input-group input-group-value"><input type="text"class="form-control form-control-value" name=' + replaceName + '> <span class="input-group-btn"><button type="button" class="btn btn-light btn-add">+</button></span></div>';
-    }
-    $(optionValue).append(clone);
-    $(inputClass).closest('.center-btn-value').remove();
+    inputClass.closest('.row-option').find('.option-values').append('<div class="input-group"><input type="text" class="form-control form-control-value option-value" name=' + replaceName + '><span class="btn-del-value"><i class="fa fa-trash"></i></span></div>');
+    $(inputClass).siblings('.option-values').after('<button type="button" class="btn btn-light btn-add btn-block"> <i class="fa fa-plus"></i> Add value</button>');
 }
 
 /**
@@ -953,7 +880,6 @@ function OptionDLV() {
         this.map.push("silent", "-silent");
         this.map.push("query", "-FC");
     };
-
 }
 
 /**
@@ -967,7 +893,7 @@ function configureOptions() {
             optionDLV.init();
             $('.form-control-option').each(function (indexInArray) {
                 var currentVal = $(this).val();
-                if (currentVal !== "free choice" && currentVal !== "nothing select") {
+                if (currentVal !== "free choice") {
                     var val = optionDLV.map.key(currentVal);
                     $(this).append('<option value="' + val + '"></option>');
                     $(this).val(val);
@@ -988,7 +914,7 @@ function destroyOptions() {
     optionDLV.init();
     $('.form-control-option').each(function (indexInArray) {
         var currentVal = $(this).val();
-        if (currentVal !== "free choice" && currentVal !== "nothing select") {
+        if (currentVal !== "free choice") {
             var val = optionDLV.map.val(currentVal);
             $(this).val(val).change();
             $(this).find('option[value="' + currentVal + '"]').remove();
@@ -1002,7 +928,7 @@ function destroyOptions() {
  * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor   
  */
 function setJSONInput(config) {
-    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output')) {
+    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output') || config.hasOwnProperty('tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
@@ -1026,6 +952,7 @@ function setJSONInput(config) {
         $('#inputengine').val(config.engine).change();
         $('#output').text(config.output);
         setOptions(config);
+        setTabsName(config);
         return true;
     } else {
         return false;
@@ -1037,30 +964,24 @@ function setJSONInput(config) {
  * @param {string} valueOption - option's value
  * @description creates a option's form and append it to the DOM with the corresponding value
  */
-function addOption(index, valueOption) {
-    var clone = '<div class="row row-option">' +
-        '<div class="col-sm-12">' +
-        '<div class="form-group">' +
-        '<label for="option" class="col-sm-12 text-center">Options</label>' +
-        '<div class="input-group opname">' +
-        '<select id="op' + index + '" name="option[' + index + '][name]" class="form-control form-control-option">' +
-        '<option value="nothing select"></option>' +
-        '<option value="free choice">Free choice</option>' +
-        '<option value="filter">Filter</option>' +
-        '<option value="nofacts">Nofacts</option>' +
-        '<option value="silent">Silent</option>' +
-        '<option value="query">Query</option>' +
-        '</select>' +
-        '<span class="input-group-btn btn-add-option">' +
-        '<button type="button" class="btn btn-light">+</button>' +
-        '</span>' +
-        '</div>' +
-        '</div>' +
-        '<div class="option-value">' +
-        '</div></div></div>';
-    $(clone).insertBefore('.checkbox');
-    var id = "#op" + index;
-    $(id).val(valueOption).change();
+function addOption(option) {
+    $('#btn-add-option').trigger('click');
+    var lastOption = $('.row-option').last();
+    lastOption.find('.form-control-option').val(option.name).change();
+    if(option.value != null){
+        option.value.forEach(function (item,index) {
+           if(index == 0){
+               lastOption.find('.option-value').last().val(item);
+           }
+           else if(index >= 1){
+               lastOption.find('.btn-add').trigger('click');
+               lastOption.find('.option-value').last().val(item);
+           }
+        });
+    }
+
+
+
 }
 
 /**
@@ -1090,7 +1011,6 @@ function setHeightComponents(expanded,open) {
         $('.layout').css('height', height - navbarHeight);
         $('.ui-layout-pane-east').css('height', height - navbarHeight);
         $('.ui-layout-pane-center').css('height', height - navbarHeight);
-
     }
 
     editors[idEditor].resize();
@@ -1117,7 +1037,6 @@ function createTextArea(layout) {
     $("#setting-output").remove();
     $("#output").remove();
     $(layout).append('<div id="setting-output"> Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right" href="#"><i class="fa fa-chevron-down"></i></a></div><div id="output" class="output"></div>');
-
 }
 
 function handleFileSelect(evt) {
@@ -1210,7 +1129,7 @@ function setUpAce(ideditor, text) {
 function inizializeShortcuts() {
     if (window.navigator.userAgent.indexOf("Mac") !== -1) {
         key('command + d', function () {
-            $('#btn-download').trigger('click');
+            downloadLoDIEProject();
             return false;
         });
         key('command + enter', function () {
@@ -1244,7 +1163,6 @@ function inizializeShortcuts() {
         $('#btn-upload').attr('data-original-title', '{ ctrl + u }');
         $('[for="btn-download"]').attr('data-original-title', '{ ctrl + d }');
     }
-
 }
 
 /**
@@ -1266,7 +1184,6 @@ function addMorePrograms() {
         $('#program').remove();
     }
     return check;
-
 }
 
 /**
@@ -1288,7 +1205,6 @@ function destroyPrograms() {
         $(this).remove();
     });
     $('.layout').prepend('<input type="hidden" name="program[0]" id="program" class="programs" value="">');
-
 }
 
 /**
@@ -1411,51 +1327,12 @@ function restoreOptions() {
  * @description deletes all the options and add them to the DOM 
  */
 function setOptions(obj) {
-    $('.row-option').each(function (index) {
-        $(this).remove();
-    });
-    $(obj.option).each(function (indexInArray, item) { // create option's form
+    $('#solver-options').empty();
+    $(obj.option).each(function (index, item) { // create option's form
         if (item !== null) {
-            addOption(indexInArray, item.name);
-            var currentOption;
-            if (indexInArray !== 0) {
-                currentOption = $('.row-option').get(indexInArray);
-                $(currentOption).find('label').empty();
-            }
-            if (indexInArray < obj.option.length - 1) { //deletes all 'btn-add' except in the last option
-                currentOption = $('.row-option').get(indexInArray);
-                $(currentOption).find('.btn-add-option').empty();
-            }
-            if (item['value']) {
-                currentClass = $('.option-value').eq(indexInArray);
-                $(item.value).each(function (indexInArray, itemValue) {
-                    if (indexInArray !== 0)
-                        addInpuValue(currentClass);
-                    $('.input-group-value').last().find('.form-control-value').val(itemValue);
-                    if (indexInArray < item.value.length - 1) { //deletes all 'btn-add' except the last in the input type value
-                        $('.input-group-value').last().find('.btn-add').parent().empty();
-                    }
-                });
-            }
-            if (indexInArray != $(obj.option).length - 1) {
-                $("<hr>").insertAfter($('.row-option').get(indexInArray));
-            }
-        }
-
-    });
-    $('.row-option').each(function (index) { // add delete button after first option
-        if (index > 0) {
-            var cloneOpname = $(this).find('.opname');
-            $(cloneOpname).prepend('<span class="input-group-btn btn-del-option"><button type="button" class="btn btn-danger">-</button></span>');
+            addOption(item);
         }
     });
-
-    if (obj.engine === "clingo" || obj.engine === "dlv2") {
-        $('.form-control-option').find('option').each(function (index, element) {
-            if ($(this).val() !== 'free choice' && $(this).val() !== "nothing select")
-                $(this).remove();
-        });
-    }
 }
 
 /**
@@ -1471,7 +1348,7 @@ function addTab(obj, text) {
     $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <span class="name-tab">L P ' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
-    $('#tab-execute').append(' <label><input type="checkbox" value="' + editorId + '"> <span>L P ' + id + '</span></label>');
+    $('#tab-execute').append(' <label class="check-run-lp"><input type="checkbox" value="' + editorId + '"> <span>L P ' + id + '</span></label>');
     addCommand(editorId);
     return tabId;
 }
@@ -1518,16 +1395,7 @@ function resetSolverOptions() {
     $('#inputLanguage').val("asp").change();
     $('#inputengine').val("dlv").change();
     $("#run-dot").prop('checked', false);
-
-    $(".row-option:not(:first)").remove();
-    var $select = $(".row-option").find("select");
-    $select.val("").change();
-    $(".show").find("hr").remove();
-    var $btn = $("<button/>").attr("class", "btn btn-light").text("+");
-    var $span = $(".row-option").find("span");
-        if (!$span.has("button").length) {
-            $span.append($btn);
-    }    
+    $('#solver-options').empty();
 }
 
 function inizializePopovers(){
@@ -1593,35 +1461,12 @@ function inizializePopovers(){
                 $('#output-form').val(text);
                 form = $('#input').serializeFormJSON();
                 stringify = JSON.stringify(form);
-                chose = $('#choice').text();
                 createFileToDownload(stringify, "local","LoIDE_Output", "json");
                 $('#program').attr('name', 'program[0]');
                 $('#output-form').removeAttr('name', 'output');
             }
             else {
-                    addProgramsToDownload();
-                    $('#output-form').attr('name', 'output');
-                    var text = $("#output").text();
-                    $('#output-form').val(text);
-                    i = 0;
-                    $("#tab-execute input").each(function (index, element) {
-                        if ($(this).prop('checked')) {
-                            $(this).attr("name", "tab[" + i + "]");
-                            i++;
-                        }
-                    });
-                    $("#run-dot").attr("name", "runAuto");
-                    form = $('#input').serializeFormJSON();
-                    stringify = JSON.stringify(form);
-                    var chose = $('#choice').text(); // returns the value of what to download and place the value of the text editor into a 'text' variable
-                    createFileToDownload(stringify,"local","LoIDE_Project","json");
-                    $('#output-form').removeAttr('name');
-                    destroyPrograms();
-                    $("#tab-execute input").each(function (index, element) {
-                        $(this).removeAttr("name");
-                    });
-                    $("#run-dot").removeAttr("name");
-
+                    downloadLoDIEProject();
             }
         });
 
@@ -1668,7 +1513,6 @@ function inizializePopovers(){
                 $(this).popover('hide');
             }
         });
-
     });
 
     $('.popover-share').on('inserted.bs.popover', function() {
@@ -1940,7 +1784,6 @@ function inizializeSnippets() {
                                     meta: "body/constraint"
                                 }
                             ];
-                            // completions.push();
                             callback(null, completions);
                         }
                     }
@@ -1992,7 +1835,6 @@ function inizializeSnippets() {
                                     meta: "body/constraint"
                                 }
                             ];
-                            // completions.push();
                             callback(null, completions);
                         }
                     }
@@ -2020,22 +1862,18 @@ function inizializeAutoComplete() {
                     var name = word.match(/[^_](([a-zA-Z_]+[0-9]*)*)/)[0];
                     var arities = word.match(/\(.+?\)/)[0].split(",").length;
                     map.set(name,arities);
-
                 });
                 var completions = [];
                 map.forEach(function (key, value) {
-
                     completions.push({
                         caption: value,
                         snippet: value+giveBrackets(key),
                         meta: "atom"
                     });
-
                 });
 
                 var completer = {
                     getCompletions: function(editor, session, pos, prefix, callback) {
-
                         callback(null, completions);
                     }
                 }
@@ -2049,7 +1887,6 @@ function inizializeAutoComplete() {
 }
 
 function giveBrackets(value) {
-
     var par="(";
     var LETTER = "A";
     var limit = 0;
@@ -2067,35 +1904,38 @@ function giveBrackets(value) {
     }
     par+=")";
     return par;
-
 }
 
 function createURLtoShare(program) {
-    var URL = window.location.host + "/?program=";
-    var encodedProg = btoa(program);
-    URL += encodeURIComponent(encodedProg);
-    $.ajax({
-        method: "POST",
-        url: "https://is.gd/create.php?format=json&url=" + URL,
-        dataType: 'json',
-        crossDomain: true,
-        success: function (data) {
-            console.log(data);
-            if(data.shorturl == undefined){
-                $('#link-to-share').val("Ops. Something went wrong");
-                if(URL.length >= 5000){
-                    operation_alert({reason: "The logic program is too long to be shared."})
+    if(program.trim().length == 0){
+        $('#link-to-share').val(window.location.href);
+    }
+    else {
+        var URL = window.location.host + "/?program=";
+        var encodedProg = btoa(program);
+        URL += encodeURIComponent(encodedProg);
+        $.ajax({
+            method: "POST",
+            url: "https://is.gd/create.php?format=json&url=" + URL,
+            dataType: 'json',
+            crossDomain: true,
+            success: function (data) {
+                console.log(data);
+                if (data.shorturl == undefined) {
+                    $('#link-to-share').val("Ops. Something went wrong");
+                    if (URL.length >= 5000) {
+                        operation_alert({reason: "The logic program is too long to be shared."})
+                    }
+                } else {
+                    $('#link-to-share').val(data.shorturl);
+                    $('#btn-copy-link').prop('disabled', false);
                 }
+            },
+            error: function (err) {
+                console.log(err);
             }
-            else{
-                $('#link-to-share').val(data.shorturl);
-                $('#btn-copy-link').prop('disabled',false);
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
+        });
+    }
 }
 
 function getParameterByName(name, url) {
@@ -2264,11 +2104,11 @@ function setDarkStyleToUIElements() {
 }
 
 function saveProjectToLocalStorage() {
-    var nameTabs = [];
+    var tabsName = [];
     var logicProgEditors = [];
 
     $('.name-tab').each(function () {
-        nameTabs.push($(this).text());
+        tabsName.push($(this).text());
     });
     var length = $(".nav-tabs").children().length;
     for (var index = 1; index <= length - 1; index++) {
@@ -2276,20 +2116,20 @@ function saveProjectToLocalStorage() {
         logicProgEditors.push(editors[idE].getValue());
     }
 
-    saveOption("nameTabs",JSON.stringify(nameTabs));
+    saveOption("tabsName",JSON.stringify(tabsName));
     saveOption("logicProgEditors",JSON.stringify(logicProgEditors));
 }
 
 function checkProjectOnLocalStorage() {
     if(supportLocalStorage()) {
-        var nameTabs = [];
+        var tabsName = [];
         var logicProgEditors = [];
-        if(localStorage.getItem("nameTabs") != undefined && localStorage.getItem("logicProgEditors") != undefined)
+        if(localStorage.getItem("tabsName") != undefined && localStorage.getItem("logicProgEditors") != undefined)
         {
-            nameTabs = JSON.parse(localStorage.getItem("nameTabs"));
+            tabsName = JSON.parse(localStorage.getItem("tabsName"));
             logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-            if(nameTabs.length > 1 || logicProgEditors[0].trim().length > 0){
+            if(tabsName.length > 1 || logicProgEditors[0].trim().length > 0){
                 $('#notification-project').toast('show');
             }
         }
@@ -2298,12 +2138,12 @@ function checkProjectOnLocalStorage() {
 
 function loadProjectFromLocalStorage() {
     if(supportLocalStorage()){
-        var nameTabs = [];
+        var tabsName = [];
         var logicProgEditors = [];
-        nameTabs = JSON.parse(localStorage.getItem("nameTabs"));
+        tabsName = JSON.parse(localStorage.getItem("tabsName"));
         logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-        for (var index = 1; index <= nameTabs.length ; index++) {
+        for (var index = 1; index <= tabsName.length ; index++) {
             if(index > 1)
                 $('.add-tab').trigger('click');
             var idE = "editor" + index;
@@ -2311,13 +2151,95 @@ function loadProjectFromLocalStorage() {
         }
 
         $('.name-tab').each(function (index) {
-            $(this).text(nameTabs[index]);
+            $(this).text(tabsName[index]);
             var id = index + 1;
             var editor = "editor" + id;
-            $(':checkbox[value="' + editor + '"]').siblings('span').text(nameTabs[index]);
-
+            $(':checkbox[value="' + editor + '"]').siblings('span').text(tabsName[index]);
         });
 
         $("a[data-target='#tab1']").trigger('click');
     }
+}
+
+function addTabsNameToDownload() {
+    $('.name-tab').each(function (index) {
+        $('.layout').prepend("<input type='hidden' name='tabname[" + index + "]' id='tabname" + index + "' value='" + $(this).text() + "' class='tabsname'>");
+    });
+}
+
+function destroyTabsName() {
+    $('.tabsname').each(function (index) {
+        $(this).remove();
+    });
+}
+
+function setTabsName(config) {
+    var tabsName = config.tabname;
+    $('.name-tab').each(function (index) {
+        $(this).text(tabsName[index]);
+        var id = index + 1;
+        var editor = "editor" + id;
+        $(':checkbox[value="' + editor + '"]').siblings('span').text(tabsName[index]);
+    });
+}
+
+function downloadLoDIEProject() {
+    addProgramsToDownload();
+    addTabsNameToDownload();
+    $('#output-form').attr('name', 'output');
+    var text = $("#output").text();
+    $('#output-form').val(text);
+    i = 0;
+    $("#tab-execute input").each(function (index, element) {
+        if ($(this).prop('checked')) {
+            $(this).attr("name", "tab[" + i + "]");
+            i++;
+        }
+    });
+    $("#run-dot").attr("name", "runAuto");
+    form = $('#input').serializeFormJSON();
+    stringify = JSON.stringify(form);
+    createFileToDownload(stringify,"local","LoIDE_Project","json");
+    $('#output-form').removeAttr('name');
+    destroyPrograms();
+    destroyTabsName();
+    $("#tab-execute input").each(function (index, element) {
+        $(this).removeAttr("name");
+    });
+    $("#run-dot").removeAttr("name");
+}
+
+function renameSelectOptionsAndBadge() {
+    $('.form-control-option').each(function (index) {
+        $(this).attr('name', 'option[' + index + '][name]');
+        $(this).closest('.row-option').find('.form-control-value').each(function (index2) {
+            $(this).attr('name', 'option[' + index + '][value][]');
+        });
+    });
+
+    $('.option-number').each(function (index) {
+        var i = index + 1;
+        $(this).text("Option " + i);
+    });
+}
+
+function updateSelectSolverOptions(adding) {
+    var solver = $('#inputengine').val();
+    if(solver !== "dlv"){
+        $('.row-option .form-control-option option').each(function () {
+            if($(this).val() !== "free choice"){
+                $(this).remove();
+            }
+        });
+    }
+    else if(adding == null || adding === false){
+        $('.row-option .form-control-option').each(function () {
+            $(this).empty();
+            $(this).append(solverOptionsSelectDOM);
+        });
+    }
+
+    $('.row-option .form-control-option option').each(function () {
+        $(this).change();
+    });
 }

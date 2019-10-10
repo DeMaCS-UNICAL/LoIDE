@@ -15,7 +15,7 @@ var key = properties.get("path.key");
 var cert = properties.get("path.cert");
 var enableHTTPS = false;
 
-if (key !== 0 && cert !== 0) {
+if (key.length !== 0 && cert.length !== 0) {
     var options = {
         key: fs.readFileSync(key),
         cert: fs.readFileSync(cert)

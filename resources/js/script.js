@@ -1387,7 +1387,7 @@ function resetEditorOptions() {
  */
 function resetSolverOptions() {
     $('#inputLanguage').val("asp").change();
-    $('#inputengine').val("dlv").change();
+    $('#inputengine').val("dlv2").change();
     $("#run-dot").prop('checked', false);
     $('#solver-options').empty();
 }
@@ -1984,7 +1984,7 @@ function setClipboard() {
 
 function setNotifications() {
     $('#notification').toast({
-        delay: 2000,
+        delay: 4000,
     });
     $('#notification-project').toast({
         delay: 10000,

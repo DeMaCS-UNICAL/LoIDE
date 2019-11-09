@@ -2,6 +2,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/DeMaCS-UNICAL/LoIDE/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest)
 [![GitHub issues](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/issues)
+[![David](https://img.shields.io/david/DeMaCS-UNICAL/LoIDE)](https://david-dm.org/DeMaCS-UNICAL/LoIDE)
 [![Website](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=my-website)](https://www.mat.unical.it/calimeri/projects/loide)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/DeMaCS-UNICAL/LoIDE.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 
@@ -106,6 +107,7 @@ We use [Semantic Versioning](http://semver.org) for versioning. For the versions
 ## Credits
  - Stefano Germano
  - Eliana Palermiti
+ - Rocco Palermiti
  - Francesco Calimeri
 
 From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it)

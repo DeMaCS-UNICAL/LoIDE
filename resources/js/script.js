@@ -109,6 +109,12 @@ var defaultDarkTheme = "ace/theme/idle_fingers";
 editors = {};
 setUpAce(idEditor, "");
 
+/**
+ * @global
+ * @description default size of the mobile max window width
+ */
+var mobileMaxWidthScreen = 576;
+
 var solverOptionDOMTemplate = "" +
     "<div class=\"row row-option\">" +
         "<div class=\"col-sm-12 form-group\">" +
@@ -369,12 +375,16 @@ $(document).ready(function () {
     loadFromURL(); //load program from url
 
     inizializeSnippets();
+
     $('#inputLanguage').on('change', function() {
         inizializeAutoComplete();
     });
 
     setLoideStyleMode();
+
     checkProjectOnLocalStorage();
+
+    openRunOptions();
 });
 
 /**
@@ -979,9 +989,6 @@ function addOption(option) {
            }
         });
     }
-
-
-
 }
 
 /**
@@ -1299,19 +1306,6 @@ function restoreOptions() {
         $('#output').parent().css("width", outputSize);
     }
 
-    var opt = localStorage.getItem("solverOptions");
-    if (opt !== null) {
-        var obj = JSON.parse(opt);
-        $('#inputLanguage').val(obj.language).change();
-        $('#inputengine').val(obj.engine).change();
-        if(obj.option != null) {
-            setOptions(obj);
-        }
-        if (obj.hasOwnProperty('runAuto')) {
-            $("#run-dot").prop('checked', true);
-        }
-    }
-
     var layoutPos = localStorage.getItem("outputPos");
     layoutPos = layoutPos !== null ? layoutPos : "east";
 
@@ -1393,7 +1387,7 @@ function resetEditorOptions() {
  */
 function resetSolverOptions() {
     $('#inputLanguage').val("asp").change();
-    $('#inputengine').val("dlv").change();
+    $('#inputengine').val("dlv2").change();
     $("#run-dot").prop('checked', false);
     $('#solver-options').empty();
 }
@@ -1990,7 +1984,7 @@ function setClipboard() {
 
 function setNotifications() {
     $('#notification').toast({
-        delay: 2000,
+        delay: 4000,
     });
     $('#notification-project').toast({
         delay: 10000,
@@ -2158,6 +2152,19 @@ function loadProjectFromLocalStorage() {
         });
 
         $("a[data-target='#tab1']").trigger('click');
+        
+        var opt = localStorage.getItem("solverOptions");
+        if (opt !== null) {
+            var obj = JSON.parse(opt);
+            $('#inputLanguage').val(obj.language).change();
+            $('#inputengine').val(obj.engine).change();
+            if(obj.option != null) {
+                setOptions(obj);
+            }
+            if (obj.hasOwnProperty('runAuto')) {
+                $("#run-dot").prop('checked', true);
+            }
+        }
     }
 }
 
@@ -2242,4 +2249,10 @@ function updateSelectSolverOptions(adding) {
     $('.row-option .form-control-option option').each(function () {
         $(this).change();
     });
+}
+
+function openRunOptions() {
+    if($(window).width() > mobileMaxWidthScreen){
+        $('#btn-option').trigger('click');
+    }
 }

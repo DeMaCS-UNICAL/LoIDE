@@ -1,6 +1,6 @@
 {
   "name": "LoIDE",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "description": "Web-based IDE for Logic Programming",
   "main": "app.js",
   "scripts": {
@@ -13,12 +13,16 @@
   },
   "contributors": [
     {
+      "name": "Stefano Germano",
+      "email": "germano@mat.unical.it"
+    },
+    {
       "name": "Eliana Palermiti",
       "email": "eliana_palermiti@libero.it"
     },
     {
-      "name": "Stefano Germano",
-      "email": "germano@mat.unical.it"
+      "name": "Rocco Palermiti",
+      "email": "@"
     },
     {
       "name": "Francesco Calimeri",

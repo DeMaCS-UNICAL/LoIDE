@@ -163,6 +163,7 @@ window.onbeforeunload = function () {
 $(window).resize(function () {
     var currentVal;
     var fontSizeO = localStorage.getItem("fontSizeO");
+    fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     if (window.innerWidth > 450) {
         layout.removePane("south");
         currentVal = $('#output').text();
@@ -234,6 +235,9 @@ $(document).ready(function () {
 
     $('#font-output').change(function (e) {
         var size = $(this).val();
+        if( size === "") {
+            $(this).val(defaultFontSize);
+        }
         $('#output').css('font-size', size + "px");
         if (!saveOption("fontSizeO", size)) {
             alert("Sorry, this options will not save in your browser");
@@ -242,6 +246,9 @@ $(document).ready(function () {
 
     $('#font-editor').change(function (e) {
         var size = $(this).val();
+        if( size === "") {
+            $(this).val(defaultFontSize);
+        }
         setFontSizeEditors(size);
         if (!saveOption("fontSizeE", size)) {
             alert("Sorry, this options will not save in your browser");
@@ -737,7 +744,7 @@ function addEastLayout(layout) {
     layout.addPane("east");
     createTextArea($('.ui-layout-east'));
     var fontSizeO = localStorage.getItem("fontSizeO");
-    fontSizeO = fontSizeO !== null ? fontSizeO : defaultFontSize;
+    fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
     $('#output').text(currentVal);
@@ -754,7 +761,7 @@ function addSouthLayout(layout) {
     layout.addPane("south");
     createTextArea($('.ui-layout-south'));
     var fontSizeO = localStorage.getItem("fontSizeO");
-    fontSizeO = fontSizeO !== null ? fontSizeO : defaultFontSize;
+    fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
     $('#output').text(currentVal);
@@ -1292,12 +1299,12 @@ function restoreOptions() {
     setTheme(theme);
 
     var fontSizeE = localStorage.getItem("fontSizeE");
-    fontSizeE = fontSizeE !== null ? fontSizeE : defaultFontSize;
+    fontSizeE = fontSizeE !== "" ? fontSizeE : defaultFontSize;
     $('#font-editor').val(fontSizeE);
     setFontSizeEditors(fontSizeE);
 
     var fontSizeO = localStorage.getItem("fontSizeO");
-    fontSizeO = fontSizeO !== null ? fontSizeO : defaultFontSize;
+    fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
 

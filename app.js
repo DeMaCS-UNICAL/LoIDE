@@ -5,14 +5,21 @@ var http = require('http');
 var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
-var propertiesReader = require('properties-reader');
 
-var properties = propertiesReader('config/properties');
+// TODO REMOVE LIBRARY IF NOT USED
+// var propertiesReader = require('properties-reader');
+
+// SYSTEM CONFIG LOADING
+var properties  = require('./config/app-config.json');
+var ws_server   = properties.ws.server;
+var httpPort    = properties.port.http;
+var httpsPort   = properties.port.https;
+var key         = properties.path.key;
+var cert        = properties.path.cert;
+var maxAge      = properties.max_age;
 
 var app = express();
 
-var key = properties.get("path.key");
-var cert = properties.get("path.cert");
 var enableHTTPS = false;
 
 if (key.length !== 0 && cert.length !== 0) {
@@ -22,7 +29,7 @@ if (key.length !== 0 && cert.length !== 0) {
     };
 
     // Enable redirect from HTTP to HTTPS
-    var securePort = properties.get('port.https');
+    var securePort = httpsPort;
     app.use(forceSSL);
     app.set('forceSSLOptions', {
         httpsPort: securePort,
@@ -34,16 +41,13 @@ if (key.length !== 0 && cert.length !== 0) {
 
 // Sets "Strict-Transport-Security, by default maxAge is set 1 year in seconds
 app.use(helmet.hsts({
-    maxAge: properties.get("max.age")
+    maxAge: maxAge
 }));
 
 var server = http.createServer(app);
 
 var io = require('socket.io').listen(enableHTTPS ? secureServer : server);
-var ws_server = properties.get('ws.server');
 var pckg = require('./package.json');
-
-var port = properties.get('port.http');
 
 app.use(express.static('resources'));
 
@@ -91,8 +95,8 @@ if (enableHTTPS) {
         print_log('Version: ' + pckg.version);
     });
 }
-server.listen(port, function () {
-    print_log('App listening on port ' + port);
+server.listen(httpPort, function () {
+    print_log('App listening on port ' + httpPort);
     print_log('Version: ' + pckg.version);
 });
 

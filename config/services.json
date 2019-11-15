@@ -10,8 +10,8 @@
             "executors" : 
             [{
                 "protocol"  	: "ws",
-				"url"       	: "localhost",
-				"name"			: "EmbASPServerExecutor",
+                "url"       	: "localhost",
+                "name"			: "EmbASPServerExecutor",
                 "path"      	: "/EmbASPServerExecutor/home",
                 "port"      	: 8080
             }],
@@ -64,9 +64,9 @@
                 "value"         : "-FC",
                 "word_argument" : false,
                 "description"   : "Missing description"
-			}]
-		},
-		{
+            }]
+        },
+        {
             "name"      : "DLV2",
             "value"     : "dlv2",
             "executors" :
@@ -83,7 +83,7 @@
                 "value"         : "",
                 "word_argument" : true,
                 "description"   : "Missing description"
-			}]
+            }]
         }]
     }]
 }

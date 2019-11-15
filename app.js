@@ -62,33 +62,33 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     print_log('Opened connection')
 
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
-		print_log('Executed "run"')
+        print_log('Executed "run"')
 
-		// FIXME: this modification is needed because the client use 'solver' but the executor use 'engine'
-		data = data.replace('engine', 'solver');
-		
-		// THE FUNCTION RETURN THE HOST PATH OF ONE OF THE EXECUTORS FOR A PARTICULAR LANGUAGE AND SOLVER, IF KNOW
-		var host 	= getExcecutorURL( data );
-		
-		// CHECK IF THE CHOOSEN HOST IS CONFIGURED
-		if( host == undefined )
-		{
-			socket.emit( 'problem', {
+        // FIXME: this modification is needed because the client use 'solver' but the executor use 'engine'
+        data = data.replace('engine', 'solver');
+        
+        // THE FUNCTION RETURN THE HOST PATH OF ONE OF THE EXECUTORS FOR A PARTICULAR LANGUAGE AND SOLVER, IF KNOW
+        var host 	= getExcecutorURL( data );
+        
+        // CHECK IF THE CHOOSEN HOST IS CONFIGURED
+        if( host == undefined )
+        {
+            socket.emit( 'problem', {
                 reason: 'Internal server error!'
-			});
-			return;
-		}
+            });
+            return;
+        }
 
-		// CONNECT TO THE EXECUTOR
-		var client 	= new webSocket( host );
-		
+        // CONNECT TO THE EXECUTOR
+        var client 	= new webSocket( host );
+        
         print_log('Connecting to "' + host + '"')
 
         client.onopen = function () { // Opens the connection and send data
             print_log('Sending to EmbASPServerExecutor:\n' + JSON.stringify(JSON.parse(data), null, '\t'))
             client.send(data);
-		};
-		
+        };
+        
         client.onerror = function (error) {
             print_log('WebSocket problem:\n' + JSON.stringify(error, null, '\t'));
             socket.emit('problem', {
@@ -97,8 +97,8 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
             socket.emit('problem', {
                 reason: 'Execution error, please try again later!'
             });
-		};
-		
+        };
+        
         client.onmessage = function (output) { // Wait for the incoming data from the EmbASPServerExecutor
             var model = JSON.parse(output.data);
             print_log('From EmbASPServerExecutor:\nModel "' + model.model + '"\nError "' + model.error + '"'); // debug string

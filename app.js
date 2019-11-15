@@ -6,9 +6,6 @@ var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
 
-// FIXME REMOVE LIBRARY IF NOT USED
-// var propertiesReader = require('properties-reader');
-
 // SYSTEM CONFIG LOADING
 var properties  = require('./config/app-config.json');
 var httpPort    = properties.port.http;

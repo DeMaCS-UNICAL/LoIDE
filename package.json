@@ -1,6 +1,6 @@
 {
   "name": "LoIDE",
-  "version": "1.11.2",
+  "version": "1.12.0",
   "description": "Web-based IDE for Logic Programming",
   "main": "app.js",
   "scripts": {
@@ -23,6 +23,10 @@
     {
       "name": "Rocco Palermiti",
       "email": "@"
+    },
+    {
+      "name": "Alexander Karaulshchikov",
+      "email": "alexander.karaulshchikov@gmail.com"
     },
     {
       "name": "Francesco Calimeri",

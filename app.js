@@ -6,17 +6,19 @@ var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
 
-// TODO REMOVE LIBRARY IF NOT USED
+// FIXME REMOVE LIBRARY IF NOT USED
 // var propertiesReader = require('properties-reader');
 
 // SYSTEM CONFIG LOADING
 var properties  = require('./config/app-config.json');
-var ws_server   = properties.ws.server;
 var httpPort    = properties.port.http;
 var httpsPort   = properties.port.https;
 var key         = properties.path.key;
 var cert        = properties.path.cert;
 var maxAge      = properties.max_age;
+
+// SERVICES CONFIGURATION FILE
+var servicesConfig = require('./config/services.json');
 
 var app = express();
 
@@ -60,16 +62,33 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     print_log('Opened connection')
 
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
+		print_log('Executed "run"')
 
-        print_log('Executed "run"')
+		// FIXME: this modification is needed because the client use 'solver' but the executor use 'engine'
+		data = data.replace('engine', 'solver');
+		
+		// THE FUNCTION RETURN THE HOST PATH OF ONE OF THE EXECUTORS FOR A PARTICULAR LANGUAGE AND SOLVER, IF KNOW
+		var host 	= getExcecutorURL( data );
+		
+		// CHECK IF THE CHOOSEN HOST IS CONFIGURED
+		if( host == undefined )
+		{
+			socket.emit( 'problem', {
+                reason: 'Internal server error!'
+			});
+			return;
+		}
 
-        var client = new webSocket(ws_server); // connect to the EmbASPServerExecutor
-        print_log('Connecting to "' + ws_server + '"')
+		// CONNECT TO THE EXECUTOR
+		var client 	= new webSocket( host );
+		
+        print_log('Connecting to "' + host + '"')
 
         client.onopen = function () { // Opens the connection and send data
             print_log('Sending to EmbASPServerExecutor:\n' + JSON.stringify(JSON.parse(data), null, '\t'))
             client.send(data);
-        };
+		};
+		
         client.onerror = function (error) {
             print_log('WebSocket problem:\n' + JSON.stringify(error, null, '\t'));
             socket.emit('problem', {
@@ -78,14 +97,13 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
             socket.emit('problem', {
                 reason: 'Execution error, please try again later!'
             });
-        };
+		};
+		
         client.onmessage = function (output) { // Wait for the incoming data from the EmbASPServerExecutor
             var model = JSON.parse(output.data);
             print_log('From EmbASPServerExecutor:\nModel "' + model.model + '"\nError "' + model.error + '"'); // debug string
             socket.emit('output', model); // Socket.io calls emit() to send data to the browser.
-
         };
-
     });
 });
 
@@ -95,6 +113,7 @@ if (enableHTTPS) {
         print_log('Version: ' + pckg.version);
     });
 }
+
 server.listen(httpPort, function () {
     print_log('App listening on port ' + httpPort);
     print_log('Version: ' + pckg.version);
@@ -102,4 +121,21 @@ server.listen(httpPort, function () {
 
 function print_log(statement) {
     console.log('%s: %s', (new Date()).toLocaleString(), statement); // debug string
+}
+
+function getExcecutorURL(data) {
+    data = JSON.parse(data);
+    for(var i in servicesConfig.languages) {
+        if(servicesConfig.languages[i].value === data.language) {
+            var solvers = servicesConfig.languages[i].solvers;
+            for(var j in solvers) {
+                if(solvers[j].value === data.solver) {
+                    // TODO let the user choose the executor. atm this is a missing data
+                    // by default the first executor will be chosen
+                    var executor = solvers[j].executors[0];
+                    return executor.protocol + '://' + executor.url + ':' + executor.port + executor.path;
+                }
+            }
+        }
+    }
 }

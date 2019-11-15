@@ -1,8 +1,4 @@
 {
-	"ws"		:
-	{
-		"server"	: "ws://localhost:8080/EmbASPServerExecutor/home"
-	},
 	"port"  	:
 	{
 		"http"		: 8084,

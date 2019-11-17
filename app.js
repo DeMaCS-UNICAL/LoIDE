@@ -61,9 +61,6 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
         print_log('Executed "run"')
 
-        // FIXME: This replace is needed because the client use 'solver' but the executor use 'engine'
-        data = data.replace('engine', 'solver');
-        
         // The function return the host path of one of the executors for a particular language and solver, if know
         var host 	= getExcecutorURL( data );
         
@@ -126,7 +123,8 @@ function getExcecutorURL(data) {
         if(servicesConfig.languages[i].value === data.language) {
             var solvers = servicesConfig.languages[i].solvers;
             for(var j in solvers) {
-                if(solvers[j].value === data.solver) {
+                // FIXME: The client should pass 'solver' parameter and not 'engine'
+                if(solvers[j].value === data.engine) {
                     // TODO let the user choose the executor. atm this is a missing data
                     // by default the first executor will be chosen
                     var executor = solvers[j].executors[0];

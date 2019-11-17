@@ -6,7 +6,7 @@ var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
 
-// SYSTEM CONFIG LOADING
+// System config loading
 var properties  = require('./config/app-config.json');
 var httpPort    = properties.port.http;
 var httpsPort   = properties.port.https;
@@ -14,7 +14,7 @@ var key         = properties.path.key;
 var cert        = properties.path.cert;
 var maxAge      = properties.max_age;
 
-// SERVICES CONFIGURATION FILE
+// Services configuration file
 var servicesConfig = require('./config/services.json');
 
 var app = express();
@@ -61,22 +61,22 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
         print_log('Executed "run"')
 
-        // FIXME: this modification is needed because the client use 'solver' but the executor use 'engine'
+        // FIXME: This replace is needed because the client use 'solver' but the executor use 'engine'
         data = data.replace('engine', 'solver');
         
-        // THE FUNCTION RETURN THE HOST PATH OF ONE OF THE EXECUTORS FOR A PARTICULAR LANGUAGE AND SOLVER, IF KNOW
+        // The function return the host path of one of the executors for a particular language and solver, if know
         var host 	= getExcecutorURL( data );
         
-        // CHECK IF THE CHOOSEN HOST IS CONFIGURED
+        // Check if the choosen host is configured
         if( host == undefined )
         {
             socket.emit( 'problem', {
-                reason: 'Internal server error!'
+                reason: 'No Executor available for this solver!'
             });
             return;
         }
 
-        // CONNECT TO THE EXECUTOR
+        // Connect to the executor
         var client 	= new webSocket( host );
         
         print_log('Connecting to "' + host + '"')

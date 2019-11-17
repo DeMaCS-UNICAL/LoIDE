@@ -108,6 +108,7 @@ We use [Semantic Versioning](http://semver.org) for versioning. For the versions
  - Stefano Germano
  - Eliana Palermiti
  - Rocco Palermiti
+ - Alexander Karaulshchikov
  - Francesco Calimeri
 
 From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it)

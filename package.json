@@ -1,6 +1,6 @@
 {
   "name": "LoIDE",
-  "version": "1.11.2",
+  "version": "2.0.0",
   "description": "Web-based IDE for Logic Programming",
   "main": "app.js",
   "scripts": {
@@ -25,6 +25,10 @@
       "email": "@"
     },
     {
+      "name": "Alexander Karaulshchikov",
+      "email": "alexander.karaulshchikov@gmail.com"
+    },
+    {
       "name": "Francesco Calimeri",
       "email": "calimeri@mat.unical.it"
     }
@@ -37,7 +41,6 @@
     "express": "^4.17.1",
     "express-force-ssl": "^0.3.2",
     "helmet": "^3.21.1",
-    "properties-reader": "0.3.1",
     "socket.io": "^2.3.0",
     "websocket": "^1.0.30"
   },

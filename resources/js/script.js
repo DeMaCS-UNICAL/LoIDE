@@ -224,7 +224,6 @@ $(document).ready(function () {
         resizeWhileDragging: true,
         resizable: true,
         slidable: true,
-
     });
 
     $("[data-target='#tab1']").trigger('click'); //active the first tab
@@ -600,7 +599,7 @@ $(document).on('click', '.btn-del-value', function () {
 });
 
 $(document).on('click', '.btn-add', function () {
-    addInpuValue($(this).parent());
+    addInputValue($(this).parent());
     setElementsColorMode();
 });
 
@@ -652,21 +651,23 @@ $(document).on('change', '#inputengine', function () {
     inizializeSnippets();
 });
 
-$(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
+// Add or remove the 'input type value' based on the option
+$(document).on('change', '.form-control-option', function () {
     var val = $(this).val();
     if (val === 'free choice' || val === 'filter') {
         if (($(this).closest('.row-option').find('.option-values').find('.option-value').length) <= 0) {
-            addInpuValue($(this).parent());
+            addInputValue($(this).parent());
             $(this).addClass('not-alone');
         }
         setElementsColorMode();
-    } else {
+    } 
+    else {
         $(this).removeClass('not-alone');
         $(this).closest('.row-option').find('.option-value').remove();
         $(this).closest('.row-option').find('.btn-add').remove();
     }
-
 });
+
 $(document).on('click', '.add-tab', function () { // add new tab 
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
@@ -770,7 +771,6 @@ function addSouthLayout(layout) {
 }
 
 /**
- * 
  * @param {string} searchStr - string to search
  * @param {string} str - text where search the string
  * @param {boolean} caseSensitive 
@@ -793,7 +793,6 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 }
 
 /**
- * 
  * @param {*} element - container  where to search 
  * @description Returns the start and the end position of the selected string in the output container 
  */
@@ -840,9 +839,9 @@ function delOptionDOM(optionClassBtn) {
  * @description Clone the closest row with the option select to add it to the DOM and change 'name' with the correct value for json format
  */
 function addOptionDOM() {
- var solverOptions = $('#solver-options');
- solverOptions.append(solverOptionDOMTemplate);
- $('.row-option').last().find('select').val("free choice").change();
+    var solverOptions = $('#solver-options');
+    solverOptions.append(solverOptionDOMTemplate);
+    $('.row-option').last().find('select').val("free choice").change();
 }
 
 /**
@@ -863,7 +862,7 @@ function deleteInputValue(inputClass) {
  * @param inputClass - class of the clicked button to find the closest row
  * @description Add the input type to a correct class parent
  */
-function addInpuValue(inputClass) {
+function addInputValue(inputClass) {
     var currentName = $(inputClass).closest('.row-option').find('.form-control-option').attr('name');
     /**
      * replace 'name' in 'value' for correct json format
@@ -1567,8 +1566,6 @@ function inizializePopovers(){
         $('#share-btn-download').off('click');
         $('#share-btn-save-on-cloud').off('click');
     });
-
-
 }
 
 function inizializeToolbar() {

@@ -115,6 +115,7 @@ setUpAce(idEditor, "");
  */
 var mobileMaxWidthScreen = 576;
 
+// TODO
 var solverOptionDOMTemplate = "" +
     "<div class=\"row row-option\">" +
         "<div class=\"col-sm-12 form-group\">" +
@@ -124,8 +125,8 @@ var solverOptionDOMTemplate = "" +
             "</div>" +
             "<div class=\"input-group opname\">" +
                 "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
-                    "<option value=\"free choice\">Free choice</option>" +
-                    "<option value=\"filter\">Filter</option>" +
+                    "<option value=\"free choice\" word_argument=\"true\">Free choice</option>" +
+                    "<option value=\"filter\" word_argument=\"true\">Filter</option>" +
                     "<option value=\"nofacts\">Nofacts</option>" +
                     "<option value=\"silent\">Silent</option>" +
                     "<option value=\"query\">Query</option>" +
@@ -136,9 +137,10 @@ var solverOptionDOMTemplate = "" +
         "</div>" +
     "</div>"
 
+// TODO
 var solverOptionsSelectDOM = "" +
-    "<option value=\"free choice\">Free choice</option>" +
-    "<option value=\"filter\">Filter</option>" +
+    "<option value=\"free choice\" word_argument=\"true\">Free choice</option>" +
+    "<option value=\"filter\" word_argument=\"true\">Filter</option>" +
     "<option value=\"nofacts\">Nofacts</option>" +
     "<option value=\"silent\">Silent</option>" +
     "<option value=\"query\">Query</option>";
@@ -361,6 +363,7 @@ $(document).ready(function () {
 
     $("#btn-option").click(function () {
         $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
+        // TODO
         $('.option-solver > div').toggleClass(" show"); // add class to show option components
         $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
             function() {
@@ -581,6 +584,7 @@ function inizializeChangeNameContextmenu(){
     });
 }
 
+// TODO
 $(document).on('click', '#btn-add-option', function () {
     addOptionDOM();
     renameSelectOptionsAndBadge();
@@ -654,7 +658,8 @@ $(document).on('change', '#inputengine', function () {
 // Add or remove the 'input type value' based on the option
 $(document).on('change', '.form-control-option', function () {
     var val = $(this).val();
-    if (val === 'free choice' || val === 'filter') {
+
+    if ( $(this).find("[value='" + val + "']").attr('word_argument') == 'true' ) {
         if (($(this).closest('.row-option').find('.option-values').find('.option-value').length) <= 0) {
             addInputValue($(this).parent());
             $(this).addClass('not-alone');
@@ -838,6 +843,7 @@ function delOptionDOM(optionClassBtn) {
  * @param optionClassBtn - class of the clicked button to find the closest row 
  * @description Clone the closest row with the option select to add it to the DOM and change 'name' with the correct value for json format
  */
+// TODO
 function addOptionDOM() {
     var solverOptions = $('#solver-options');
     solverOptions.append(solverOptionDOMTemplate);
@@ -878,6 +884,7 @@ function addInputValue(inputClass) {
  * @class
  * @classdesc Creates dlv's options
  */
+// TODO
 function OptionDLV() {
     /**
      * bidirectional map
@@ -901,6 +908,7 @@ function OptionDLV() {
 /**
  * @description Based on the value 'engine', it creates a hidden option temporary with the corresponding value of the option name to set the value of the select option
  */
+// TODO
 function configureOptions() {
     var engine = $('#inputengine').val();
     switch (engine) {
@@ -925,6 +933,7 @@ function configureOptions() {
 /**
  * @description Destroy the temporary options and set the select option to the original value
  */
+// TODO
 function destroyOptions() {
     var optionDLV = new OptionDLV();
     optionDLV.init();
@@ -1391,6 +1400,7 @@ function resetEditorOptions() {
 /**
  * @description Reset solver options with default values
  */
+// TODO
 function resetSolverOptions() {
     $('#inputLanguage').val("asp").change();
     $('#inputengine').val("dlv2").change();
@@ -1591,6 +1601,7 @@ function inizializeToolbar() {
     });
 }
 
+// TODO: This must be loaded by the server in relation to the language and solver
 function inizializeSnippets() {
     var languageChosen = $('#inputLanguage').val();
     var solverChosen = $('#inputengine').val();
@@ -1838,7 +1849,6 @@ function inizializeSnippets() {
                     }
                     langTools.addCompleter(completer);
                     break;
-
                 case "clingo":
                     // add snippets
             }
@@ -1846,6 +1856,7 @@ function inizializeSnippets() {
     }
 }
 
+// TODO: This must be loaded by the server in relation to the language and solver
 function inizializeAutoComplete() {
     var languageChosen = $('#inputLanguage').val();
     var langTools = ace.require('ace/ext/language_tools');
@@ -1878,10 +1889,8 @@ function inizializeAutoComplete() {
 
                 langTools.addCompleter(completer);
             }
-
             break;
     }
-
 }
 
 function giveBrackets(value) {
@@ -2240,6 +2249,7 @@ function renameSelectOptionsAndBadge() {
     });
 }
 
+// TODO
 function updateSelectSolverOptions(adding) {
     var solver = $('#inputengine').val();
     if(solver !== "dlv"){

@@ -382,10 +382,6 @@ $(document).ready(function () {
 
     inizializeSnippets();
 
-    $('#inputLanguage').on('change', function() {
-        inizializeAutoComplete();
-    });
-
     setLoideStyleMode();
 
     checkProjectOnLocalStorage();
@@ -648,6 +644,43 @@ $(document).on('click', '#split-up', function () {
     addEastLayout(layout);
 });
 
+// Sets the solvers and options on language change
+$(document).on('change', '#inputLanguage', function(event, languageChanged) {
+    inizializeAutoComplete();
+
+    var val = $(this).val();
+
+    // Check if the value exists
+    if(val !== '') {
+        // Connection
+        var socket = io.connect();
+        socket.emit('changeLanguage', val);
+
+        // Success
+        socket.on('changeLanguageRes', function(data) {
+            // Clear the selected values
+            $('#inputengine').empty();
+            $('.form-control-option').empty();
+
+            // Load the solvers
+            loadlanguageSolvers( data );
+            
+            // Select the first solver
+            $('#inputengine').change();
+
+        });
+
+        // Error
+        socket.on('changeLanguageError', function () {
+            alert('The selected language doesn\'t exist!');
+
+            // Clear the selected values
+            $('#inputengine').empty();
+            $('.form-control-option').empty();
+        });
+    }
+});
+
 // Sets the options on solver change
 $(document).on('change', '#inputengine', function (event, solverChanged) {
     var val = $(this).val();
@@ -670,7 +703,7 @@ $(document).on('change', '#inputengine', function (event, solverChanged) {
             $('.form-control-option').empty();
 
             // Load the options
-            loadSolversOptions( data );
+            loadSolverOptions( data );
 
             // Select the first option
             $('.form-control-option').change();
@@ -689,10 +722,19 @@ $(document).on('change', '#inputengine', function (event, solverChanged) {
 });
 
 /**
+ * @description - Load the solvers
+ * @param {Object} options to load
+ */
+function loadlanguageSolvers( options ) {
+    for(var index = 0; index < options.length; index++)
+        $('<option>').val( options[index].value ).text( options[index].name ).appendTo('#inputengine');
+}
+
+/**
  * @description - Load the options
  * @param {Object} options to load
  */
-function loadSolversOptions( options ) {
+function loadSolverOptions( options ) {
     // Reset solver options
     solverOptionsDOM   = '';
 

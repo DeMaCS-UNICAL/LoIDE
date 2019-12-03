@@ -396,7 +396,6 @@ $(document).ready(function () {
  * @description Serialize form and send it to socket server and waits for the response
  */
 function callSocketServer(onlyActiveTab) {
-    configureOptions();
     $('.tab-pane').each(function (index, element) {
         var id = $(this).find('.ace').attr("id");
         editors[id].replaceAll("", {"needle":"'"});
@@ -410,7 +409,6 @@ function callSocketServer(onlyActiveTab) {
         form.option = [{name:""}];
     }
     destroyPrograms();
-    destroyOptions();
     var socket = io.connect();
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
@@ -975,70 +973,6 @@ function addInputValue(inputClass) {
     replaceName += '[]';
     inputClass.closest('.row-option').find('.option-values').append('<div class="input-group"><input type="text" class="form-control form-control-value option-value" name=' + replaceName + '><span class="btn-del-value"><i class="fa fa-trash"></i></span></div>');
     $(inputClass).siblings('.option-values').after('<button type="button" class="btn btn-light btn-add btn-block"> <i class="fa fa-plus"></i> Add value</button>');
-}
-
-/**
- * @class
- * @classdesc Creates dlv's options
- */
-function OptionDLV() {
-    /**
-     * bidirectional map
-     * @type {Object}
-     * @memberof OptionDLV#
-     */
-    this.map = new BiMap();
-
-    /**
-     * Add into the object map the value of dlv's options
-     * @memberof OptionDLV#
-     */
-    this.init = function () {
-        this.map.push("filter", "-filter=");
-        this.map.push("nofacts", "-nofacts");
-        this.map.push("silent", "-silent");
-        this.map.push("query", "-FC");
-    };
-}
-
-/**
- * @description Based on the value 'engine', it creates a hidden option temporary with the corresponding value of the option name to set the value of the select option
- */
-function configureOptions() {
-    var engine = $('#inputengine').val();
-    switch (engine) {
-        case 'dlv':
-            var optionDLV = new OptionDLV();
-            optionDLV.init();
-            $('.form-control-option').each(function (indexInArray) {
-                var currentVal = $(this).val();
-                if (currentVal !== "free choice") {
-                    var val = optionDLV.map.key(currentVal);
-                    $(this).append('<option value="' + val + '"></option>');
-                    $(this).val(val);
-                }
-            });
-            break;
-
-        default:
-            break;
-    }
-}
-
-/**
- * @description Destroy the temporary options and set the select option to the original value
- */
-function destroyOptions() {
-    var optionDLV = new OptionDLV();
-    optionDLV.init();
-    $('.form-control-option').each(function (indexInArray) {
-        var currentVal = $(this).val();
-        if (currentVal !== "free choice") {
-            var val = optionDLV.map.val(currentVal);
-            $(this).val(val).change();
-            $(this).find('option[value="' + currentVal + '"]').remove();
-        }
-    });
 }
 
 /**

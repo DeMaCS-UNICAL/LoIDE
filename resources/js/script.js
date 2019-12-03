@@ -391,6 +391,9 @@ $(document).ready(function () {
     checkProjectOnLocalStorage();
 
     openRunOptions();
+
+    // Trigger listeners
+    $('#inputengine').change( );
 });
 
 /**
@@ -585,7 +588,6 @@ $(document).on('click', '#btn-add-option', function () {
     addOptionDOM();
     renameSelectOptionsAndBadge();
     setElementsColorMode();
-    updateSelectSolverOptions(true);
 });
 
 $(document).on('click', '.btn-del-option', function () {
@@ -2295,27 +2297,6 @@ function renameSelectOptionsAndBadge() {
     $('.option-number').each(function (index) {
         var i = index + 1;
         $(this).text("Option " + i);
-    });
-}
-
-function updateSelectSolverOptions(adding) {
-    var solver = $('#inputengine').val();
-    if(solver !== "dlv"){
-        $('.row-option .form-control-option option').each(function () {
-            if($(this).val() !== "free choice"){
-                $(this).remove();
-            }
-        });
-    }
-    else if(adding == null || adding === false){
-        $('.row-option .form-control-option').each(function () {
-            $(this).empty();
-            $(this).append(solverOptionsSelectDOM);
-        });
-    }
-
-    $('.row-option .form-control-option option').each(function () {
-        $(this).change();
     });
 }
 

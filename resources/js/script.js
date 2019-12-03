@@ -115,33 +115,33 @@ setUpAce(idEditor, "");
  */
 var mobileMaxWidthScreen = 576;
 
-var solverOptionDOMTemplate = "" +
-    "<div class=\"row row-option\">" +
-        "<div class=\"col-sm-12 form-group\">" +
-            "<div class=\"badge-option mb-1\">" +
-                "<span class=\" text-center badge badge-info option-number\"></span>" +
-                "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
-            "</div>" +
-            "<div class=\"input-group opname\">" +
-                "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
-                    "<option value=\"free choice\" word_argument=\"true\">Free choice</option>" +
-                    "<option value=\"filter\" word_argument=\"true\">Filter</option>" +
-                    "<option value=\"nofacts\">Nofacts</option>" +
-                    "<option value=\"silent\">Silent</option>" +
-                    "<option value=\"query\">Query</option>" +
-                "</select>" +
-            "</div>" +
-            "<div class=\"option-values\">" +
-            "</div>" +
-        "</div>" +
-    "</div>"
+/**
+ * @global
+ * @description Global variable that will contain the solver's options
+ */
+var solverOptionsDOM = '';
 
-var solverOptionsSelectDOM = "" +
-    "<option value=\"free choice\" word_argument=\"true\">Free choice</option>" +
-    "<option value=\"filter\" word_argument=\"true\">Filter</option>" +
-    "<option value=\"nofacts\">Nofacts</option>" +
-    "<option value=\"silent\">Silent</option>" +
-    "<option value=\"query\">Query</option>";
+/**
+ * @description - Returns the DOM element for the solver's option
+ */
+function getSolverOptionDOMElement( ) {
+    return "" +
+        "<div class=\"row row-option\">" +
+            "<div class=\"col-sm-12 form-group\">" +
+                "<div class=\"badge-option mb-1\">" +
+                    "<span class=\" text-center badge badge-info option-number\"></span>" +
+                    "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
+                "</div>" +
+                "<div class=\"input-group opname\">" +
+                    "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
+                        solverOptionsDOM +
+                    "</select>" +
+                "</div>" +
+                "<div class=\"option-values\">" +
+                "</div>" +
+            "</div>" +
+        "</div>";
+}
 
 /**
  * set autofocus in modal
@@ -646,10 +646,65 @@ $(document).on('click', '#split-up', function () {
     addEastLayout(layout);
 });
 
-$(document).on('change', '#inputengine', function () {
-    updateSelectSolverOptions(false);
-    inizializeSnippets();
+// Sets the options on solver change
+$(document).on('change', '#inputengine', function (event, solverChanged) {
+    var val = $(this).val();
+
+    // Check if the value exists
+    if(val !== '') {
+        // Preparing the request
+        var request = {
+            language    : $('#inputLanguage').val(),
+            solver      : val
+        };
+
+        // Connection
+        var socket = io.connect();
+        socket.emit('changeSolver', request);
+
+        // Success
+        socket.on('changeSolverRes', function (data) {
+            // Clear the selected value
+            $('.form-control-option').empty();
+
+            // Load the options
+            loadSolversOptions( data );
+
+            // Select the first option
+            $('.form-control-option').change();
+
+            // Snippets
+            inizializeSnippets();
+        });
+        // Error
+        socket.on('changeSolverError', function () {
+            alert('The selected solver doesn\'t exist!');
+
+            // Clear the selected value
+            $('.form-control-option').empty();
+        });
+    }
 });
+
+/**
+ * @description - Load the options
+ * @param {Object} options to load
+ */
+function loadSolversOptions( options ) {
+    // Reset solver options
+    solverOptionsDOM   = '';
+
+    for (var index = 0; index < options.length; index++)
+    {
+        solverOptionsDOM   +=  '<option value=\"' + options[ index ].value + '\" ' +
+                            'word_argument=\"' + options[ index ].word_argument + '\" ' +
+                            'title=\"' + options[ index ].description + '\">' +
+                            options[ index ].name + '</option>';
+    }
+
+    // Append to the DOM
+    $('.row-option .form-control-option').append( solverOptionsDOM );
+}
 
 // Add or remove the 'input type value' based on the option
 $(document).on('change', '.form-control-option', function () {
@@ -836,13 +891,16 @@ function delOptionDOM(optionClassBtn) {
 }
 
 /**
- * @param optionClassBtn - class of the clicked button to find the closest row 
- * @description Clone the closest row with the option select to add it to the DOM and change 'name' with the correct value for json format
+ * @description Create a new DOM element for the solver's options
  */
-function addOptionDOM() {
+function addOptionDOM( ) {
     var solverOptions = $('#solver-options');
-    solverOptions.append(solverOptionDOMTemplate);
-    $('.row-option').last().find('select').val("free choice").change();
+
+    // Append the DOM element containing the solver's options
+    solverOptions.append( getSolverOptionDOMElement( ) );
+
+    // Select the first option
+    $('.row-option .form-control-option').last().change();
 }
 
 /**

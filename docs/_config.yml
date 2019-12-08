@@ -1,3 +1,4 @@
-theme: jekyll-theme-architect
+# theme: jekyll-theme-architect
+remote_theme: JugglerX/jekyll-serif-theme
 title: "LoIDE"
 description: "The official webpage of the LoIDE project, a web-based IDE for Logic Programming"

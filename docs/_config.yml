@@ -1,37 +1,37 @@
-# theme: jekyll-theme-architect
-remote_theme: JugglerX/jekyll-serif-theme
+theme: jekyll-theme-architect
+# remote_theme: JugglerX/jekyll-serif-theme
 title: "LoIDE"
 description: "The official webpage of the LoIDE project, a web-based IDE for Logic Programming"
 
 
 ## Jekyll Serif config
 
-baseurl: ''
-permalink: pretty
+# baseurl: 'LoIDE'
+# permalink: pretty
 
-collections:
-  team:
-    output: true
-    permalink: \#team
-  guidelines:
-    output: true
-    permalink: \#guidelines/:path/
+# collections:
+#   team:
+#     output: true
+#     permalink: \#team
+#   guidelines:
+#     output: true
+#     permalink: \#guidelines/:path/
 
-defaults:
-  - scope:
-      type: services
-    values:
-      layout: service
-      bodyClass: page-services-single
-  - scope:
-      path: 'images'
-    values:
-      image: true
+# defaults:
+#   - scope:
+#       type: services
+#     values:
+#       layout: service
+#       bodyClass: page-services-single
+#   - scope:
+#       path: 'images'
+#     values:
+#       image: true
 
-sass:
-  style: compact # possible values: nested expanded compact compressed
+# sass:
+#   style: compact # possible values: nested expanded compact compressed
 
-google_analytics_id: null
+# google_analytics_id: null
 
-plugins:
-  - jekyll-environment-variables
+# plugins:
+#   - jekyll-environment-variables

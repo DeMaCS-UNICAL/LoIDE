@@ -1,4 +1,6 @@
 source 'https://rubygems.org'
 gem 'github-pages', group: :jekyll_plugins
 # gem 'jekyll-environment-variables'
+gem 'octicons'
+gem 'octicons_helper'
 gem 'jekyll-octicons'

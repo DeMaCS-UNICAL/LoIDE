@@ -385,11 +385,14 @@ $(document).ready(function () {
 
     $('#inputLanguage').on('change', function() {
         inizializeAutoComplete();
+        setAceMode();
     });
 
     setLoideStyleMode();
 
     checkProjectOnLocalStorage();
+
+    setAceMode();
 
     openRunOptions();
 });
@@ -671,6 +674,7 @@ $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
     inizializeChangeNameContextmenu();
+    setAceMode();
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -1098,7 +1102,6 @@ function setUpAce(ideditor, text) {
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
-    editors[ideditor].session.setMode("ace/mode/asp");
     if(localStorage.getItem('mode') === 'dark')
         editors[ideditor].setTheme(defaultDarkTheme);
     else{
@@ -1846,6 +1849,9 @@ function inizializeSnippets() {
                     // add snippets
             }
             break;
+
+        default:
+            break;
     }
 }
 
@@ -1881,7 +1887,9 @@ function inizializeAutoComplete() {
 
                 langTools.addCompleter(completer);
             }
+            break;
 
+        default:
             break;
     }
 
@@ -2062,6 +2070,10 @@ function setElementsColorMode() {
 
         case 'dark':
             setDarkStyleToUIElements();
+            break;
+
+        default:
+            setLightStyleToUIElements();
             break;
     }
 }
@@ -2267,5 +2279,25 @@ function updateSelectSolverOptions(adding) {
 function openRunOptions() {
     if($(window).width() > mobileMaxWidthScreen){
         $('#btn-option').trigger('click');
+    }
+}
+
+function setAceMode() {
+    switch ($('#inputLanguage').val()) {
+        case 'asp':
+            var length = $(".nav-tabs").children().length;
+            for (var index = 1; index <= length - 1; index++) {
+                var idE = "editor" + index;
+                editors[idE].session.setMode("ace/mode/asp");
+            }
+            break;
+
+        default:
+            var length = $(".nav-tabs").children().length;
+            for (var index = 1; index <= length - 1; index++) {
+                var idE = "editor" + index;
+                editors[idE].session.setMode("ace/mode/text");
+            }
+            break;
     }
 }

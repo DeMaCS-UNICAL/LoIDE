@@ -1347,7 +1347,6 @@ function saveOption(key, value) {
 
 /**
  * @description Sets the saved options in the localStorage
- * TODO: Restore executor
  */
 function restoreOptions() {
     if (!supportLocalStorage) {

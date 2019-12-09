@@ -2141,20 +2141,19 @@ function saveProjectToLocalStorage() {
 }
 
 function checkProjectOnLocalStorage() {
-    // TODO The loading from local storage it's not working yet
-    // if(supportLocalStorage()) {
-    //     var tabsName = [];
-    //     var logicProgEditors = [];
-    //     if(localStorage.getItem("tabsName") != undefined && localStorage.getItem("logicProgEditors") != undefined)
-    //     {
-    //         tabsName = JSON.parse(localStorage.getItem("tabsName"));
-    //         logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
+    if(supportLocalStorage()) {
+        var tabsName = [];
+        var logicProgEditors = [];
+        if(localStorage.getItem("tabsName") != undefined && localStorage.getItem("logicProgEditors") != undefined)
+        {
+            tabsName = JSON.parse(localStorage.getItem("tabsName"));
+            logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-    //         if(tabsName.length > 1 || logicProgEditors[0].trim().length > 0){
-    //             $('#notification-project').toast('show');
-    //         }
-    //     }
-    // }
+            if(tabsName.length > 1 || logicProgEditors[0].trim().length > 0){
+                $('#notification-project').toast('show');
+            }
+        }
+    }
 }
 
 function loadProjectFromLocalStorage() {

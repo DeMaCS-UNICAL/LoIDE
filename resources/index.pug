@@ -125,6 +125,9 @@
                     <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
                     <select name="engine" id="inputengine" class="form-control">
                     </select>
+                    <label for="inputExecutor" class="col-sm-12 col-xs-12 mt-2 text-center">Executor</label>
+                    <select name="executor" id="inputExecutor" class="form-control">
+                    </select>
                     <label class="col-sm-12 mt-2 mb-1 text-center">Options</label>
                     <div id="solver-options">
                     </div>
@@ -340,6 +343,10 @@
             div(name="solvers" value=language.value)
                 each solver in language.solvers
                     option(value=solver.value) #{solver.name}
+                    //- Sets the executors
+                    div(name="executors" value=solver.value)
+                        each executor in solver.executors
+                            option(value=executor.value) #{executor.name}
                     //- Sets the options
                     div(name="options" value=solver.value)
                         each option in solver.options

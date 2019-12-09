@@ -2277,6 +2277,15 @@ function openRunOptions() {
     }
 }
 
+function getHTMLFromJQueryElement( jQueryElement ) {
+    var DOMElement  = '';
+
+    for( var i = 0; i < jQueryElement.length; i ++ )
+        DOMElement += jQueryElement.get( i ).outerHTML;
+
+    return DOMElement;
+}
+
 function setAceMode() {
     switch ($('#inputLanguage').val()) {
         case 'asp':

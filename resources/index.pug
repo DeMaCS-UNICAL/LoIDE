@@ -119,25 +119,11 @@
                     <div class="text-center left-panel-title mt-2 mb-2">
                         <h5>Run options</h5>
                     </div>
-                    <!-- Languages -->
                     <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
                     <select name="language" id="inputLanguage" class="form-control">
-                        //- Sets the languages
-                        - var firstLanguage = languages[0].value
-                        each language in languages
-                            - var selectedLanguage = (language.value === firstLanguage)
-                            option(value=language.value, selected=selectedLanguage) #{language.name}
                     </select>
-                    <!-- Solvers -->
                     <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
                     <select name="engine" id="inputengine" class="form-control">
-                        //- Sets the solvers
-                        each language in languages
-                            if language.value === firstLanguage
-                                - firstSolver = language.solvers[0].value
-                                each solver in language.solvers
-                                    - var selectedSolver = (solver.value === firstSolver)
-                                    option(value=solver.value, selected=selectedSolver) #{solver.name}
                     </select>
                     <label class="col-sm-12 mt-2 mb-1 text-center">Options</label>
                     <div id="solver-options">
@@ -343,6 +329,21 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
         </div>
+    </div>
+
+    <!-- Available servises -->
+    <div class="hidden" id="servicesContainer">
+        //- Sets the languages
+        each language in languages
+            option(value=language.value) #{language.name}
+            //- Sets the solvers
+            div(name="solvers" value=language.value)
+                each solver in language.solvers
+                    option(value=solver.value) #{solver.name}
+                    //- Sets the options
+                    div(name="options" value=solver.value)
+                        each option in solver.options
+                            option(value=option.value, word_argument=option.word_argument.toString(), title=option.description) #{option.name}
     </div>
 
     <!-- jQuery -->

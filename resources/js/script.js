@@ -116,12 +116,6 @@ setUpAce(idEditor, "");
 var mobileMaxWidthScreen = 576;
 
 /**
- * @global
- * @description Global variable that will contain the solver's options
- */
-var solverOptionsDOM = '';
-
-/**
  * @description - Returns the DOM element for the solver's option
  */
 function getSolverOptionDOMElement( ) {
@@ -134,7 +128,7 @@ function getSolverOptionDOMElement( ) {
                 "</div>" +
                 "<div class=\"input-group opname\">" +
                     "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
-                        solverOptionsDOM +
+                        getHTMLFromJQueryElement( getSolverOptions( $('#inputLanguage').val( ), $('#inputengine').val( ) ) ) +
                     "</select>" +
                 "</div>" +
                 "<div class=\"option-values\">" +
@@ -388,8 +382,8 @@ $(document).ready(function () {
 
     openRunOptions();
 
-    // Trigger listeners
-    $('#inputengine').change( );
+    // Set the default options
+    resetSolverOptions();
 });
 
 /**
@@ -643,110 +637,97 @@ $(document).on('click', '#split-up', function () {
 });
 
 // Sets the solvers and options on language change
-$(document).on('change', '#inputLanguage', function(event, languageChanged) {
-    inizializeAutoComplete();
+$(document).on('change', '#inputLanguage', function(event) {
+    inizializeAutoComplete( );
 
-    var val = $(this).val();
-
-    // Check if the value exists
-    if(val !== '') {
-        // Connection
-        var socket = io.connect();
-        socket.emit('changeLanguage', val);
-
-        // Success
-        socket.on('changeLanguageRes', function(data) {
-            // Clear the selected values
-            $('#inputengine').empty();
-            $('.form-control-option').empty();
-
-            // Load the solvers
-            loadlanguageSolvers( data );
-            
-            // Select the first solver
-            $('#inputengine').change();
-
-        });
-
-        // Error
-        socket.on('changeLanguageError', function () {
-            alert('The selected language doesn\'t exist!');
-
-            // Clear the selected values
-            $('#inputengine').empty();
-            $('.form-control-option').empty();
-        });
-    }
+    loadLanguageSolvers( );
 });
 
 // Sets the options on solver change
-$(document).on('change', '#inputengine', function (event, solverChanged) {
-    var val = $(this).val();
+$(document).on('change', '#inputengine', function (event) {
+    loadSolverOptions( );
 
-    // Check if the value exists
-    if(val !== '') {
-        // Preparing the request
-        var request = {
-            language    : $('#inputLanguage').val(),
-            solver      : val
-        };
-
-        // Connection
-        var socket = io.connect();
-        socket.emit('changeSolver', request);
-
-        // Success
-        socket.on('changeSolverRes', function (data) {
-            // Clear the selected value
-            $('.form-control-option').empty();
-
-            // Load the options
-            loadSolverOptions( data );
-
-            // Select the first option
-            $('.form-control-option').change();
-
-            // Snippets
-            inizializeSnippets();
-        });
-        // Error
-        socket.on('changeSolverError', function () {
-            alert('The selected solver doesn\'t exist!');
-
-            // Clear the selected value
-            $('.form-control-option').empty();
-        });
-    }
+    // Snippets
+    inizializeSnippets( );
 });
 
 /**
- * @description - Load the solvers
- * @param {Object} options to load
+ * @description - Load the languages
  */
-function loadlanguageSolvers( options ) {
-    for(var index = 0; index < options.length; index++)
-        $('<option>').val( options[index].value ).text( options[index].name ).appendTo('#inputengine');
+function loadLanguages( ) {
+    var inputLanguage   = $('#inputLanguage');
+
+    inputLanguage.empty( );
+    inputLanguage.append( getLanguages( ) );
+    inputLanguage.change( );
 }
 
 /**
- * @description - Load the options
- * @param {Object} options to load
+ * @description - Get avalable the languages
  */
-function loadSolverOptions( options ) {
-    // Reset solver options
-    solverOptionsDOM   = '';
-
-    for (var index = 0; index < options.length; index++)
-    {
-        solverOptionsDOM   +=  '<option value=\"' + options[ index ].value + '\" ' +
-                            'word_argument=\"' + options[ index ].word_argument + '\" ' +
-                            'title=\"' + options[ index ].description + '\">' +
-                            options[ index ].name + '</option>';
-    }
-
-    // Append to the DOM
-    $('.row-option .form-control-option').append( solverOptionsDOM );
+function getLanguages( ) {
+    return $('#servicesContainer > option').clone( );
 }
+
+/**
+ * @description - Load the solvers for a specific language
+ */
+function loadLanguageSolvers( ) {
+    var language    = $('#inputLanguage').val();
+    var inputSolver = $('#inputengine');
+
+    // Check that the value is not empty
+    if(language !== '') {
+        // Clear the values
+        inputSolver.empty();
+        $('.form-control-option').empty();
+   
+        // Load the solvers
+        inputSolver.append( getLanguageSolvers( language ) );
+        
+        // Call the listener and select the first value
+        inputSolver.change();
+    }
+}
+
+/**
+ * @description - Get the solvers for a specific language
+ * @param {Object} language
+ */
+function getLanguageSolvers( language ) {
+   return $('#servicesContainer [name="solvers"][value="' + language + '"] > option').clone( );
+}
+
+/**
+ * @description - Load the options for a specific solver
+ */
+function loadSolverOptions( ) {
+    var inputLanguage   = $('#inputLanguage');
+    var inputSolver     = $('#inputengine');
+
+    var language    = inputLanguage.val();
+    var solver      = inputSolver.val();
+
+    // Check that the value is not empty
+    if(language !== '' && solver !== '') {
+        $('.form-control-option').empty();
+
+        // Append the options to the DOM
+        $('.row-option .form-control-option').append( getSolverOptions( language, solver ) );
+
+        // Select the first option and refresh all input fields
+        $('.form-control-option').change();
+    }
+}
+
+/**
+ * @description - Get the options for a specific solver
+ * @param {Object} language
+ * @param {Object} solver
+ */
+function getSolverOptions( language, solver ) {
+    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="options"][value="' + solver + '"] > option').clone( );
+ }
 
 // Add or remove the 'input type value' based on the option
 $(document).on('change', '.form-control-option', function () {
@@ -1429,8 +1410,7 @@ function resetEditorOptions() {
  * @description Reset solver options with default values
  */
 function resetSolverOptions() {
-    $('#inputLanguage').val("asp").change();
-    $('#inputengine').val("dlv2").change();
+    loadLanguages( );
     $("#run-dot").prop('checked', false);
     $('#solver-options').empty();
 }
@@ -2281,4 +2261,13 @@ function openRunOptions() {
     if($(window).width() > mobileMaxWidthScreen){
         $('#btn-option').trigger('click');
     }
+}
+
+function getHTMLFromJQueryElement( jQueryElement ) {
+    var DOMElement  = '';
+
+    for( var i = 0; i < jQueryElement.length; i ++ )
+        DOMElement += jQueryElement.get( i ).outerHTML;
+
+    return DOMElement;
 }

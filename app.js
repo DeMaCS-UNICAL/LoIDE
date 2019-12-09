@@ -65,40 +65,6 @@ app.post('/version', function (req, res) { // send the version (and take it in p
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
     print_log('Opened connection')
 
-    // Check the services.json for the received language and sends solvers for this
-    socket.on('changeLanguage', function (data) {
-        var error = true;
-        for (var i = 0; i < servicesConfig.languages.length; i++) {
-            var language = servicesConfig.languages[i];
-            if(language.value === data) {
-                socket.emit('changeLanguageRes', language.solvers);
-                error = false;
-                break;
-           }
-       }
-       // Sends the error event if the received language is not found in services.json
-       if(error) socket.emit('changeLanguageError');
-    });
-
-    // Check the services.json for the received solver and sends options for this
-    socket.on('changeSolver', function (data) {
-        for (var i = 0; i < servicesConfig.languages.length; i++) {
-            var language = servicesConfig.languages[i];
-            if(language.value === data["language"]) {
-                for (var j = 0; j < language.solvers.length; j++) {
-                    var solver = language.solvers[j];
-                    if(solver.value === data["solver"]) {
-                        socket.emit('changeSolverRes', solver.options);
-                        return;
-                    }
-                }
-                break;
-            }
-        }
-        // Sends the error event if the received solver is not found in services.json
-        socket.emit('changeSolverError');
-    });
-
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data
         print_log('Executed "run"')
 

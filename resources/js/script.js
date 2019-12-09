@@ -376,9 +376,16 @@ $(document).ready(function () {
 
     inizializeSnippets();
 
+    $('#inputLanguage').on('change', function() {
+        inizializeAutoComplete();
+        setAceMode();
+    });
+
     setLoideStyleMode();
 
     checkProjectOnLocalStorage();
+
+    setAceMode();
 
     openRunOptions();
 
@@ -751,6 +758,7 @@ $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
     inizializeChangeNameContextmenu();
+    setAceMode();
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -1115,7 +1123,6 @@ function setUpAce(ideditor, text) {
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
-    editors[ideditor].session.setMode("ace/mode/asp");
     if(localStorage.getItem('mode') === 'dark')
         editors[ideditor].setTheme(defaultDarkTheme);
     else{
@@ -1608,7 +1615,6 @@ function inizializeToolbar() {
     });
 }
 
-// TODO: This must be loaded by the server in relation to the language and solver
 function inizializeSnippets() {
     var languageChosen = $('#inputLanguage').val();
     var solverChosen = $('#inputengine').val();
@@ -1860,10 +1866,12 @@ function inizializeSnippets() {
                     // add snippets
             }
             break;
+
+        default:
+            break;
     }
 }
 
-// TODO: This must be loaded by the server in relation to the language and solver
 function inizializeAutoComplete() {
     var languageChosen = $('#inputLanguage').val();
     var langTools = ace.require('ace/ext/language_tools');
@@ -1896,6 +1904,9 @@ function inizializeAutoComplete() {
 
                 langTools.addCompleter(completer);
             }
+            break;
+
+        default:
             break;
     }
 }
@@ -2075,6 +2086,10 @@ function setElementsColorMode() {
 
         case 'dark':
             setDarkStyleToUIElements();
+            break;
+
+        default:
+            setLightStyleToUIElements();
             break;
     }
 }
@@ -2262,11 +2277,22 @@ function openRunOptions() {
     }
 }
 
-function getHTMLFromJQueryElement( jQueryElement ) {
-    var DOMElement  = '';
+function setAceMode() {
+    switch ($('#inputLanguage').val()) {
+        case 'asp':
+            var length = $(".nav-tabs").children().length;
+            for (var index = 1; index <= length - 1; index++) {
+                var idE = "editor" + index;
+                editors[idE].session.setMode("ace/mode/asp");
+            }
+            break;
 
-    for( var i = 0; i < jQueryElement.length; i ++ )
-        DOMElement += jQueryElement.get( i ).outerHTML;
-
-    return DOMElement;
+        default:
+            var length = $(".nav-tabs").children().length;
+            for (var index = 1; index <= length - 1; index++) {
+                var idE = "editor" + index;
+                editors[idE].session.setMode("ace/mode/text");
+            }
+            break;
+    }
 }

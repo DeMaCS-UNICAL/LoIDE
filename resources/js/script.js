@@ -115,33 +115,27 @@ setUpAce(idEditor, "");
  */
 var mobileMaxWidthScreen = 576;
 
-var solverOptionDOMTemplate = "" +
-    "<div class=\"row row-option\">" +
-        "<div class=\"col-sm-12 form-group\">" +
-            "<div class=\"badge-option mb-1\">" +
-                "<span class=\" text-center badge badge-info option-number\"></span>" +
-                "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
+/**
+ * @description - Returns the DOM element for the solver's option
+ */
+function getSolverOptionDOMElement( ) {
+    return "" +
+        "<div class=\"row row-option\">" +
+            "<div class=\"col-sm-12 form-group\">" +
+                "<div class=\"badge-option mb-1\">" +
+                    "<span class=\" text-center badge badge-info option-number\"></span>" +
+                    "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
+                "</div>" +
+                "<div class=\"input-group opname\">" +
+                    "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
+                        getHTMLFromJQueryElement( getSolverOptions( $('#inputLanguage').val( ), $('#inputengine').val( ) ) ) +
+                    "</select>" +
+                "</div>" +
+                "<div class=\"option-values\">" +
+                "</div>" +
             "</div>" +
-            "<div class=\"input-group opname\">" +
-                "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
-                    "<option value=\"free choice\">Free choice</option>" +
-                    "<option value=\"filter\">Filter</option>" +
-                    "<option value=\"nofacts\">Nofacts</option>" +
-                    "<option value=\"silent\">Silent</option>" +
-                    "<option value=\"query\">Query</option>" +
-                "</select>" +
-            "</div>" +
-            "<div class=\"option-values\">" +
-            "</div>" +
-        "</div>" +
-    "</div>"
-
-var solverOptionsSelectDOM = "" +
-    "<option value=\"free choice\">Free choice</option>" +
-    "<option value=\"filter\">Filter</option>" +
-    "<option value=\"nofacts\">Nofacts</option>" +
-    "<option value=\"silent\">Silent</option>" +
-    "<option value=\"query\">Query</option>";
+        "</div>";
+}
 
 /**
  * set autofocus in modal
@@ -224,7 +218,6 @@ $(document).ready(function () {
         resizeWhileDragging: true,
         resizable: true,
         slidable: true,
-
     });
 
     $("[data-target='#tab1']").trigger('click'); //active the first tab
@@ -395,13 +388,15 @@ $(document).ready(function () {
     setAceMode();
 
     openRunOptions();
+
+    // Set the default options
+    resetSolverOptions();
 });
 
 /**
  * @description Serialize form and send it to socket server and waits for the response
  */
 function callSocketServer(onlyActiveTab) {
-    configureOptions();
     $('.tab-pane').each(function (index, element) {
         var id = $(this).find('.ace').attr("id");
         editors[id].replaceAll("", {"needle":"'"});
@@ -415,7 +410,6 @@ function callSocketServer(onlyActiveTab) {
         form.option = [{name:""}];
     }
     destroyPrograms();
-    destroyOptions();
     var socket = io.connect();
     socket.emit('run', JSON.stringify(form));
     socket.on('problem', function (response) {
@@ -589,7 +583,6 @@ $(document).on('click', '#btn-add-option', function () {
     addOptionDOM();
     renameSelectOptionsAndBadge();
     setElementsColorMode();
-    updateSelectSolverOptions(true);
 });
 
 $(document).on('click', '.btn-del-option', function () {
@@ -603,7 +596,7 @@ $(document).on('click', '.btn-del-value', function () {
 });
 
 $(document).on('click', '.btn-add', function () {
-    addInpuValue($(this).parent());
+    addInputValue($(this).parent());
     setElementsColorMode();
 });
 
@@ -650,26 +643,117 @@ $(document).on('click', '#split-up', function () {
     addEastLayout(layout);
 });
 
-$(document).on('change', '#inputengine', function () {
-    updateSelectSolverOptions(false);
-    inizializeSnippets();
+// Sets the solvers and options on language change
+$(document).on('change', '#inputLanguage', function(event) {
+    inizializeAutoComplete( );
+
+    loadLanguageSolvers( );
 });
 
-$(document).on('change', '.form-control-option', function () { //add or remove the 'input type value' based on the option
+// Sets the options on solver change
+$(document).on('change', '#inputengine', function (event) {
+    loadSolverOptions( );
+
+    // Snippets
+    inizializeSnippets( );
+});
+
+/**
+ * @description - Load the languages
+ */
+function loadLanguages( ) {
+    var inputLanguage   = $('#inputLanguage');
+
+    inputLanguage.empty( );
+    inputLanguage.append( getLanguages( ) );
+    inputLanguage.change( );
+}
+
+/**
+ * @description - Get avalable the languages
+ */
+function getLanguages( ) {
+    return $('#servicesContainer > option').clone( );
+}
+
+/**
+ * @description - Load the solvers for a specific language
+ */
+function loadLanguageSolvers( ) {
+    var language    = $('#inputLanguage').val();
+    var inputSolver = $('#inputengine');
+
+    // Check that the value is not empty
+    if(language !== '') {
+        // Clear the values
+        inputSolver.empty();
+        $('.form-control-option').empty();
+   
+        // Load the solvers
+        inputSolver.append( getLanguageSolvers( language ) );
+        
+        // Call the listener and select the first value
+        inputSolver.change();
+    }
+}
+
+/**
+ * @description - Get the solvers for a specific language
+ * @param {Object} language
+ */
+function getLanguageSolvers( language ) {
+   return $('#servicesContainer [name="solvers"][value="' + language + '"] > option').clone( );
+}
+
+/**
+ * @description - Load the options for a specific solver
+ */
+function loadSolverOptions( ) {
+    var inputLanguage   = $('#inputLanguage');
+    var inputSolver     = $('#inputengine');
+
+    var language    = inputLanguage.val();
+    var solver      = inputSolver.val();
+
+    // Check that the value is not empty
+    if(language !== '' && solver !== '') {
+        $('.form-control-option').empty();
+
+        // Append the options to the DOM
+        $('.row-option .form-control-option').append( getSolverOptions( language, solver ) );
+
+        // Select the first option and refresh all input fields
+        $('.form-control-option').change();
+    }
+}
+
+/**
+ * @description - Get the options for a specific solver
+ * @param {Object} language
+ * @param {Object} solver
+ */
+function getSolverOptions( language, solver ) {
+    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="options"][value="' + solver + '"] > option').clone( );
+ }
+
+// Add or remove the 'input type value' based on the option
+$(document).on('change', '.form-control-option', function () {
     var val = $(this).val();
-    if (val === 'free choice' || val === 'filter') {
+
+    if ( $(this).find("[value='" + val + "']").attr('word_argument') == 'true' ) {
         if (($(this).closest('.row-option').find('.option-values').find('.option-value').length) <= 0) {
-            addInpuValue($(this).parent());
+            addInputValue($(this).parent());
             $(this).addClass('not-alone');
         }
         setElementsColorMode();
-    } else {
+    } 
+    else {
         $(this).removeClass('not-alone');
         $(this).closest('.row-option').find('.option-value').remove();
         $(this).closest('.row-option').find('.btn-add').remove();
     }
-
 });
+
 $(document).on('click', '.add-tab', function () { // add new tab 
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
@@ -774,7 +858,6 @@ function addSouthLayout(layout) {
 }
 
 /**
- * 
  * @param {string} searchStr - string to search
  * @param {string} str - text where search the string
  * @param {boolean} caseSensitive 
@@ -797,7 +880,6 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 }
 
 /**
- * 
  * @param {*} element - container  where to search 
  * @description Returns the start and the end position of the selected string in the output container 
  */
@@ -840,13 +922,16 @@ function delOptionDOM(optionClassBtn) {
 }
 
 /**
- * @param optionClassBtn - class of the clicked button to find the closest row 
- * @description Clone the closest row with the option select to add it to the DOM and change 'name' with the correct value for json format
+ * @description Create a new DOM element for the solver's options
  */
-function addOptionDOM() {
- var solverOptions = $('#solver-options');
- solverOptions.append(solverOptionDOMTemplate);
- $('.row-option').last().find('select').val("free choice").change();
+function addOptionDOM( ) {
+    var solverOptions = $('#solver-options');
+
+    // Append the DOM element containing the solver's options
+    solverOptions.append( getSolverOptionDOMElement( ) );
+
+    // Select the first option
+    $('.row-option .form-control-option').last().change();
 }
 
 /**
@@ -867,7 +952,7 @@ function deleteInputValue(inputClass) {
  * @param inputClass - class of the clicked button to find the closest row
  * @description Add the input type to a correct class parent
  */
-function addInpuValue(inputClass) {
+function addInputValue(inputClass) {
     var currentName = $(inputClass).closest('.row-option').find('.form-control-option').attr('name');
     /**
      * replace 'name' in 'value' for correct json format
@@ -877,70 +962,6 @@ function addInpuValue(inputClass) {
     replaceName += '[]';
     inputClass.closest('.row-option').find('.option-values').append('<div class="input-group"><input type="text" class="form-control form-control-value option-value" name=' + replaceName + '><span class="btn-del-value"><i class="fa fa-trash"></i></span></div>');
     $(inputClass).siblings('.option-values').after('<button type="button" class="btn btn-light btn-add btn-block"> <i class="fa fa-plus"></i> Add value</button>');
-}
-
-/**
- * @class
- * @classdesc Creates dlv's options
- */
-function OptionDLV() {
-    /**
-     * bidirectional map
-     * @type {Object}
-     * @memberof OptionDLV#
-     */
-    this.map = new BiMap();
-
-    /**
-     * Add into the object map the value of dlv's options
-     * @memberof OptionDLV#
-     */
-    this.init = function () {
-        this.map.push("filter", "-filter=");
-        this.map.push("nofacts", "-nofacts");
-        this.map.push("silent", "-silent");
-        this.map.push("query", "-FC");
-    };
-}
-
-/**
- * @description Based on the value 'engine', it creates a hidden option temporary with the corresponding value of the option name to set the value of the select option
- */
-function configureOptions() {
-    var engine = $('#inputengine').val();
-    switch (engine) {
-        case 'dlv':
-            var optionDLV = new OptionDLV();
-            optionDLV.init();
-            $('.form-control-option').each(function (indexInArray) {
-                var currentVal = $(this).val();
-                if (currentVal !== "free choice") {
-                    var val = optionDLV.map.key(currentVal);
-                    $(this).append('<option value="' + val + '"></option>');
-                    $(this).val(val);
-                }
-            });
-            break;
-
-        default:
-            break;
-    }
-}
-
-/**
- * @description Destroy the temporary options and set the select option to the original value
- */
-function destroyOptions() {
-    var optionDLV = new OptionDLV();
-    optionDLV.init();
-    $('.form-control-option').each(function (indexInArray) {
-        var currentVal = $(this).val();
-        if (currentVal !== "free choice") {
-            var val = optionDLV.map.val(currentVal);
-            $(this).val(val).change();
-            $(this).find('option[value="' + currentVal + '"]').remove();
-        }
-    });
 }
 
 /**
@@ -1396,8 +1417,7 @@ function resetEditorOptions() {
  * @description Reset solver options with default values
  */
 function resetSolverOptions() {
-    $('#inputLanguage').val("asp").change();
-    $('#inputengine').val("dlv2").change();
+    loadLanguages( );
     $("#run-dot").prop('checked', false);
     $('#solver-options').empty();
 }
@@ -1570,8 +1590,6 @@ function inizializePopovers(){
         $('#share-btn-download').off('click');
         $('#share-btn-save-on-cloud').off('click');
     });
-
-
 }
 
 function inizializeToolbar() {
@@ -1844,7 +1862,6 @@ function inizializeSnippets() {
                     }
                     langTools.addCompleter(completer);
                     break;
-
                 case "clingo":
                     // add snippets
             }
@@ -1892,7 +1909,6 @@ function inizializeAutoComplete() {
         default:
             break;
     }
-
 }
 
 function giveBrackets(value) {
@@ -2255,31 +2271,19 @@ function renameSelectOptionsAndBadge() {
     });
 }
 
-function updateSelectSolverOptions(adding) {
-    var solver = $('#inputengine').val();
-    if(solver !== "dlv"){
-        $('.row-option .form-control-option option').each(function () {
-            if($(this).val() !== "free choice"){
-                $(this).remove();
-            }
-        });
-    }
-    else if(adding == null || adding === false){
-        $('.row-option .form-control-option').each(function () {
-            $(this).empty();
-            $(this).append(solverOptionsSelectDOM);
-        });
-    }
-
-    $('.row-option .form-control-option option').each(function () {
-        $(this).change();
-    });
-}
-
 function openRunOptions() {
     if($(window).width() > mobileMaxWidthScreen){
         $('#btn-option').trigger('click');
     }
+}
+
+function getHTMLFromJQueryElement( jQueryElement ) {
+    var DOMElement  = '';
+
+    for( var i = 0; i < jQueryElement.length; i ++ )
+        DOMElement += jQueryElement.get( i ).outerHTML;
+
+    return DOMElement;
 }
 
 function setAceMode() {

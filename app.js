@@ -5,6 +5,7 @@ var http = require('http');
 var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
+var pug = require('pug');
 
 // System config loading
 var properties  = require('./config/app-config.json');
@@ -49,13 +50,19 @@ var io = require('socket.io').listen(enableHTTPS ? secureServer : server);
 var pckg = require('./package.json');
 
 app.use(express.static('resources'));
+app.set('views', './resources');
+app.set('view engine', 'pug');
+
+// Load variables in to the .pug file
+app.get('/', function (req, res) {
+    res.render('index', {"languages": servicesConfig.languages});
+});
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
     res.send('{"version":"' + pckg.version + '"}');
 });
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
-
     print_log('Opened connection')
 
     socket.on('run', function (data) { // Wait for the incoming data with the 'run' event and send data

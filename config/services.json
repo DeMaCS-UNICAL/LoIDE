@@ -5,14 +5,34 @@
         "value"     : "asp",
         "solvers"   : 
         [{
+            "name"      : "DLV2",
+            "value"     : "dlv2",
+            "executors" :
+            [{
+                "protocol"      : "ws",
+                "url"           : "localhost",
+                "name"          : "EmbASPServerExecutor",
+                "value"         : "embAspServerExecutor",
+                "path"          : "/EmbASPServerExecutor/home",
+                "port"          : 8080
+            }],
+            "options"   : 
+            [{
+                "name"          : "Free choice",
+                "value"         : "",
+                "word_argument" : true,
+                "description"   : "Missing description"
+            }]
+        },
+        {
             "name"      : "Clingo",
             "value"     : "clingo",
             "executors" : 
             [{
                 "protocol"  	: "ws",
                 "url"       	: "localhost",
-                "name"			: "EmbASPServerExecutor",
-                "value"			: "embAspServerExecutor",
+                "name"          : "EmbASPServerExecutor",
+                "value"         : "embAspServerExecutor",
                 "path"      	: "/EmbASPServerExecutor/home",
                 "port"      	: 8080
             }],
@@ -31,8 +51,8 @@
             [{
                 "protocol"      : "ws",
                 "url"           : "localhost",
-                "name"			: "EmbASPServerExecutor",
-                "value"			: "embAspServerExecutor",
+                "name"          : "EmbASPServerExecutor",
+                "value"         : "embAspServerExecutor",
                 "path"          : "/EmbASPServerExecutor/home",
                 "port"          : 8080
             }],
@@ -65,26 +85,6 @@
                 "name"          : "Query",
                 "value"         : "-FC",
                 "word_argument" : false,
-                "description"   : "Missing description"
-            }]
-        },
-        {
-            "name"      : "DLV2",
-            "value"     : "dlv2",
-            "executors" :
-            [{
-                "protocol"      : "ws",
-                "url"           : "localhost",
-                "name"			: "EmbASPServerExecutor",
-                "value"			: "embAspServerExecutor",
-                "path"          : "/EmbASPServerExecutor/home",
-                "port"          : 8080
-            }],
-            "options"   : 
-            [{
-                "name"          : "Free choice",
-                "value"         : "",
-                "word_argument" : true,
                 "description"   : "Missing description"
             }]
         }]

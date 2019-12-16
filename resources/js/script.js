@@ -653,6 +653,7 @@ $(document).on('change', '#inputLanguage', function(event) {
 // Sets the options on solver change
 $(document).on('change', '#inputengine', function (event) {
     loadSolverOptions( );
+    loadSolverExecutors( );
 
     // Snippets
     inizializeSnippets( );
@@ -706,6 +707,38 @@ function getLanguageSolvers( language ) {
 }
 
 /**
+ * @description - Load the executors for a specific solver
+ */
+function loadSolverExecutors( ) {
+    var inputLanguage   = $('#inputLanguage');
+    var inputSolver     = $('#inputengine');
+    var inputExecutor   = $('#inputExecutor');
+
+    var language    = inputLanguage.val();
+    var solver      = inputSolver.val();
+
+    // Check that the value is not empty
+    if(language !== '' && solver !== '') {
+        inputExecutor.empty();
+
+        // Append the executors to the DOM
+        inputExecutor.append( getSolverExecutors( language, solver ) );
+
+        // Select the first executor
+        inputExecutor.change();
+    }
+}
+
+/**
+ * @description - Get the executors for a specific solver
+ * @param {Object} language
+ * @param {Object} solver
+ */
+function getSolverExecutors( language, solver ) {
+    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="executors"][value="' + solver + '"] > option').clone( );
+}
+
+/**
  * @description - Load the options for a specific solver
  */
 function loadSolverOptions( ) {
@@ -734,7 +767,7 @@ function loadSolverOptions( ) {
  */
 function getSolverOptions( language, solver ) {
     return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="options"][value="' + solver + '"] > option').clone( );
- }
+}
 
 // Add or remove the 'input type value' based on the option
 $(document).on('change', '.form-control-option', function () {
@@ -970,7 +1003,8 @@ function addInputValue(inputClass) {
  * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor   
  */
 function setJSONInput(config) {
-    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('option') || config.hasOwnProperty('program') || config.hasOwnProperty('output') || config.hasOwnProperty('tabname')) {
+    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option') 
+        || config.hasOwnProperty('program') || config.hasOwnProperty('output') || config.hasOwnProperty('tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
@@ -992,6 +1026,7 @@ function setJSONInput(config) {
         }
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
+        $('#inputExecutor').val(config.executor).change();
         $('#output').text(config.output);
         setOptions(config);
         setTabsName(config);
@@ -2199,6 +2234,7 @@ function loadProjectFromLocalStorage() {
             var obj = JSON.parse(opt);
             $('#inputLanguage').val(obj.language).change();
             $('#inputengine').val(obj.engine).change();
+            $('#inputExecutor').val(obj.executor).change();
             if(obj.option != null) {
                 setOptions(obj);
             }

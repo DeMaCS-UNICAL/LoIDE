@@ -132,10 +132,12 @@ function getExcecutorURL(data) {
             for(var j in solvers) {
                 // FIXME: The client should pass 'solver' parameter and not 'engine'
                 if(solvers[j].value === data.engine) {
-                    // TODO let the user choose the executor. atm this is a missing data
-                    // by default the first executor will be chosen
-                    var executor = solvers[j].executors[0];
-                    return executor.protocol + '://' + executor.url + ':' + executor.port + executor.path;
+                    var executors = solvers[j].executors;
+                    for(var k in executors) {
+                        if(executors[k].value === data.executor) {
+                            return executors[k].protocol + '://' + executors[k].url + ':' + executors[k].port + executors[k].path;
+                        }
+                    }
                 }
             }
         }

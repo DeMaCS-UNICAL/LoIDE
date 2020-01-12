@@ -19,7 +19,7 @@
             "options"   : 
             [{
                 "name"          : "Free choice",
-                "value"         : "",
+                "value"         : "free choice",
                 "word_argument" : true,
                 "description"   : "Missing description"
             }]
@@ -59,7 +59,7 @@
             "options"   : 
             [{
                 "name"          : "Free choice",
-                "value"         : "",
+                "value"         : "free choice",
                 "word_argument" : true,
                 "description"   : "Missing description"
             }, 

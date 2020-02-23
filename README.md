@@ -13,7 +13,7 @@
 
 **A web-based IDE for Logic Programming.**
 
-![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)
+[![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)](https://www.mat.unical.it/calimeri/projects/loide)
 
 <!-- ___
 

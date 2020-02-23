@@ -2,7 +2,9 @@
 
 LoIDE is a web-based IDE for Logic Programming.
 
-![LoIDE web GUI](screenshots/screenshot_3-col.png)
+[![LoIDE web GUI](screenshots/screenshot_3-col.png)](https://www.mat.unical.it/calimeri/projects/loide)
+
+Find a live beta version at www.mat.unical.it/calimeri/projects/loide
 
 ## Team
 

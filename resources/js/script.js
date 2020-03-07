@@ -118,7 +118,7 @@ var mobileMaxWidthScreen = 576;
 /**
  * @description - Returns the DOM element for the solver's option
  */
-function getSolverOptionDOMElement( ) {
+function getSolverOptionDOMElement() {
     return "" +
         "<div class=\"row row-option\">" +
             "<div class=\"col-sm-12 form-group\">" +
@@ -128,7 +128,7 @@ function getSolverOptionDOMElement( ) {
                 "</div>" +
                 "<div class=\"input-group opname\">" +
                     "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
-                        getHTMLFromJQueryElement( getSolverOptions( $('#inputLanguage').val( ), $('#inputengine').val( ) ) ) +
+                        getHTMLFromJQueryElement( getSolverOptions( $('#inputLanguage').val(), $('#inputengine').val() ) ) +
                     "</select>" +
                 "</div>" +
                 "<div class=\"option-values\">" +
@@ -191,7 +191,7 @@ $(document).ready(function () {
     setNotifications();
 
     setClipboard();
-    
+
     inizializePopovers();
 
     inizializeChangeNameContextmenu();
@@ -306,7 +306,7 @@ $(document).ready(function () {
 
     /**
      * @global
-     * @description id of the clicked button 'submit'  
+     * @description id of the clicked button 'submit'
      */
     var clkBtn = "";
 
@@ -372,8 +372,6 @@ $(document).ready(function () {
 
     addCommand(idEditor);
 
-    loadFromURL(); //load program from url
-
     inizializeSnippets();
 
     $('#inputLanguage').on('change', function() {
@@ -391,6 +389,9 @@ $(document).ready(function () {
 
     // Set the default options
     resetSolverOptions();
+
+    loadFromURL(); //load program from url
+
 });
 
 /**
@@ -485,7 +486,7 @@ function createFileToDownload(text,where,name,type) {
 }
 /**
  * @param {Object} event - reference to the object that dispatched the event
- * @description Remove the link from the DOM 
+ * @description Remove the link from the DOM
  */
 function destroyClickedElement(event) {
     document.body.removeChild(event.target);
@@ -645,42 +646,42 @@ $(document).on('click', '#split-up', function () {
 
 // Sets the solvers and options on language change
 $(document).on('change', '#inputLanguage', function(event) {
-    inizializeAutoComplete( );
+    inizializeAutoComplete();
 
-    loadLanguageSolvers( );
+    loadLanguageSolvers();
 });
 
 // Sets the options on solver change
 $(document).on('change', '#inputengine', function (event) {
-    loadSolverOptions( );
-    loadSolverExecutors( );
+    loadSolverOptions();
+    loadSolverExecutors();
 
     // Snippets
-    inizializeSnippets( );
+    inizializeSnippets();
 });
 
 /**
  * @description - Load the languages
  */
-function loadLanguages( ) {
+function loadLanguages() {
     var inputLanguage   = $('#inputLanguage');
 
-    inputLanguage.empty( );
-    inputLanguage.append( getLanguages( ) );
-    inputLanguage.change( );
+    inputLanguage.empty();
+    inputLanguage.append( getLanguages() );
+    inputLanguage.change();
 }
 
 /**
  * @description - Get avalable the languages
  */
-function getLanguages( ) {
-    return $('#servicesContainer > option').clone( );
+function getLanguages() {
+    return $('#servicesContainer > option').clone();
 }
 
 /**
  * @description - Load the solvers for a specific language
  */
-function loadLanguageSolvers( ) {
+function loadLanguageSolvers() {
     var language    = $('#inputLanguage').val();
     var inputSolver = $('#inputengine');
 
@@ -689,10 +690,10 @@ function loadLanguageSolvers( ) {
         // Clear the values
         inputSolver.empty();
         $('.form-control-option').empty();
-   
+
         // Load the solvers
         inputSolver.append( getLanguageSolvers( language ) );
-        
+
         // Call the listener and select the first value
         inputSolver.change();
     }
@@ -703,13 +704,13 @@ function loadLanguageSolvers( ) {
  * @param {Object} language
  */
 function getLanguageSolvers( language ) {
-   return $('#servicesContainer [name="solvers"][value="' + language + '"] > option').clone( );
+   return $('#servicesContainer [name="solvers"][value="' + language + '"] > option').clone();
 }
 
 /**
  * @description - Load the executors for a specific solver
  */
-function loadSolverExecutors( ) {
+function loadSolverExecutors() {
     var inputLanguage   = $('#inputLanguage');
     var inputSolver     = $('#inputengine');
     var inputExecutor   = $('#inputExecutor');
@@ -735,13 +736,13 @@ function loadSolverExecutors( ) {
  * @param {Object} solver
  */
 function getSolverExecutors( language, solver ) {
-    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="executors"][value="' + solver + '"] > option').clone( );
+    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="executors"][value="' + solver + '"] > option').clone();
 }
 
 /**
  * @description - Load the options for a specific solver
  */
-function loadSolverOptions( ) {
+function loadSolverOptions() {
     var inputLanguage   = $('#inputLanguage');
     var inputSolver     = $('#inputengine');
 
@@ -766,7 +767,7 @@ function loadSolverOptions( ) {
  * @param {Object} solver
  */
 function getSolverOptions( language, solver ) {
-    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="options"][value="' + solver + '"] > option').clone( );
+    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="options"][value="' + solver + '"] > option').clone();
 }
 
 // Add or remove the 'input type value' based on the option
@@ -779,7 +780,7 @@ $(document).on('change', '.form-control-option', function () {
             $(this).addClass('not-alone');
         }
         setElementsColorMode();
-    } 
+    }
     else {
         $(this).removeClass('not-alone');
         $(this).closest('.row-option').find('.option-value').remove();
@@ -787,7 +788,7 @@ $(document).on('change', '.form-control-option', function () {
     }
 });
 
-$(document).on('click', '.add-tab', function () { // add new tab 
+$(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
     inizializeChangeNameContextmenu();
@@ -893,7 +894,7 @@ function addSouthLayout(layout) {
 /**
  * @param {string} searchStr - string to search
  * @param {string} str - text where search the string
- * @param {boolean} caseSensitive 
+ * @param {boolean} caseSensitive
  * @returns {array}
  * @description Returns each position of the searched string
  */
@@ -913,8 +914,8 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 }
 
 /**
- * @param {*} element - container  where to search 
- * @description Returns the start and the end position of the selected string in the output container 
+ * @param {*} element - container  where to search
+ * @description Returns the start and the end position of the selected string in the output container
  */
 function getSelectionCharOffsetsWithin(element) {
     var start = 0,
@@ -943,7 +944,7 @@ function getSelectionCharOffsetsWithin(element) {
 }
 
 /**
- * @param optionClassBtn - class of the clicked button to find the closest row 
+ * @param optionClassBtn - class of the clicked button to find the closest row
  * @description Delete from the DOM an option block and iterates all of the form options to change their 'name' for a correct json format (if present, included input value)
  */
 function delOptionDOM(optionClassBtn) {
@@ -957,11 +958,11 @@ function delOptionDOM(optionClassBtn) {
 /**
  * @description Create a new DOM element for the solver's options
  */
-function addOptionDOM( ) {
+function addOptionDOM() {
     var solverOptions = $('#solver-options');
 
     // Append the DOM element containing the solver's options
-    solverOptions.append( getSolverOptionDOMElement( ) );
+    solverOptions.append( getSolverOptionDOMElement() );
 
     // Select the first option
     $('.row-option .form-control-option').last().change();
@@ -999,11 +1000,11 @@ function addInputValue(inputClass) {
 
 /**
  * @param {Object} text - configuration in json format
- * @returns {boolean} 
- * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor   
+ * @returns {boolean}
+ * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor
  */
 function setJSONInput(config) {
-    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option') 
+    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option')
         || config.hasOwnProperty('program') || config.hasOwnProperty('output') || config.hasOwnProperty('tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
@@ -1092,7 +1093,7 @@ function setHeightComponents(expanded,open) {
 
 /**
  * @param {string} str - string to check
- * @returns {boolean} 
+ * @returns {boolean}
  * @description check if a string is JSON
  */
 function isJosn(str) {
@@ -1151,7 +1152,7 @@ function handleDragOver(evt) {
 /**
  * @param {string} ideditor - current id editor
  * @param {string} text - value of the text editor
- * @description set up current editor 
+ * @description set up current editor
  */
 function setUpAce(ideditor, text) {
     editors[ideditor] = new ace.edit(ideditor);
@@ -1240,7 +1241,7 @@ function inizializeShortcuts() {
 
 /**
  * @returns {boolean}
- * @description add the programs into the input type hidden to serialize 
+ * @description add the programs into the input type hidden to serialize
  */
 function addMorePrograms() {
     var check = false;
@@ -1282,7 +1283,7 @@ function destroyPrograms() {
 
 /**
  * @returns {string}
- *@description generate unique id for the tabs 
+ *@description generate unique id for the tabs
  */
 function generateIDTab() {
     var id = $(".nav-tabs").children().length;
@@ -1383,8 +1384,8 @@ function restoreOptions() {
 }
 
 /**
- * @param {JSON} - obj 
- * @description deletes all the options and add them to the DOM 
+ * @param {JSON} - obj
+ * @description deletes all the options and add them to the DOM
  */
 function setOptions(obj) {
     $('#solver-options').empty();
@@ -1414,9 +1415,9 @@ function addTab(obj, text) {
 }
 
 /**
- * 
+ *
  * @param {int} ideditor - editor id
- * @description Add New Commands and Keybindings 
+ * @description Add New Commands and Keybindings
  */
 function addCommand(ideditor) {
     editors[ideditor].commands.addCommand({
@@ -1452,7 +1453,7 @@ function resetEditorOptions() {
  * @description Reset solver options with default values
  */
 function resetSolverOptions() {
-    loadLanguages( );
+    loadLanguages();
     $("#run-dot").prop('checked', false);
     $('#solver-options').empty();
 }
@@ -1483,34 +1484,44 @@ function inizializePopovers(){
 
         // set what happens when user clicks on the button
         $('.popover-header').html('');
-        $('.popover-body').html('<div class="popover-download-content">\n' +
-            '<div class="d-flex">\n' +
-            '<div>Only output: </div>\n' +
-            '<div class="ml-2">\n' +
-            '<input id="only-output" type="checkbox">\n' +
-            '</div>\n' +
-            '</div>\n' +
-            '<div class="save-content">\n' +
-            '<div class="mt-2 mb-2"> Save to:\n </div>' +
-            '<div class="save-btn text-center">\n' +
-            '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
-            // '<button id="cloud-download" class="btn btn-outline-dark btn-saver" disabled>Cloud</button>\n' +
-            '</div>\n' +
-            '</div>\n' +
+        $('.popover-body').html(
+            '<div class="popover-download-content">\n' +
+            '<div class="mt-2 mb-2"> Share the project:\n </div>' +
+
+            '<div class="input-group">' +
+                    '<input id="link-to-share" type="text" class="form-control" readonly>' +
+                    '<div class="input-group-append">'+
+                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
+                    '</div>'+
+                '</div>' +
+                '<div class="save-content">\n' +
+                    '<div class="mt-2 mb-2"> Save the project to:\n </div>' +
+                    '<div class="save-btn text-center">\n' +
+                        '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
+                        '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
+                    '</div>\n' +
+                '</div>\n' +
             '</div>');
 
         if(localStorage.getItem('mode') === 'dark') {
             $('#local-download').removeClass('btn-outline-dark');
             $('#local-download').addClass('btn-outline-light');
+            $('#btn-copy-link').removeClass('btn-outline-dark');
+            $('#btn-copy-link').addClass('btn-outline-light');
             $('#cloud-download').removeClass('btn-outline-dark');
             $('#cloud-download').addClass('btn-outline-light');
         }
         else{
             $('#local-download').removeClass('btn-outline-light');
             $('#local-download').addClass('btn-outline-dark');
+            $('#btn-copy-link').removeClass('btn-outline-light');
+            $('#btn-copy-link').addClass('btn-outline-dark');
             $('#cloud-download').removeClass('btn-outline-light');
             $('#cloud-download').addClass('btn-outline-dark');
         }
+
+        $('#link-to-share').val("Loading...");
+        createURL();
 
         $("#local-download").on('click', function(){
             if($('#only-output').is(":checked")){
@@ -1530,20 +1541,20 @@ function inizializePopovers(){
         });
 
         $("#cloud-download").on('click', function () {
-            if(Dropbox.isBrowserSupported()){
-                $('#program').removeAttr('name', 'program[0]');
-                $('#output-form').attr('name', 'output');
-                var text = $("#output").text();
-                $('#output-form').val(text);
-                form = $('#input').serializeFormJSON();
-                stringify = JSON.stringify(form);
-                chose = $('#choice').text();
-
-                // createFileToDownload(stringify, "dropbox", "json")
-            }
-            else{
-                operation_alert({result: "Dropbox not supported on your browser!"});
-            }
+            // if(Dropbox.isBrowserSupported()){
+            //     $('#program').removeAttr('name', 'program[0]');
+            //     $('#output-form').attr('name', 'output');
+            //     var text = $("#output").text();
+            //     $('#output-form').val(text);
+            //     form = $('#input').serializeFormJSON();
+            //     stringify = JSON.stringify(form);
+            //     chose = $('#choice').text();
+            //
+            //     // createFileToDownload(stringify, "dropbox", "json")
+            // }
+            // else{
+            //     operation_alert({result: "Dropbox not supported on your browser!"});
+            // }
         });
     });
 
@@ -1966,6 +1977,86 @@ function giveBrackets(value) {
     return par;
 }
 
+function createURL(){
+    var URL = "http://protty.mat.unical.it:1234" + "/?programs=";
+    var length = $(".nav-tabs").children().length;
+    var empty = true;
+
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+
+        URL +=  encodeURIComponent(editors[idE].getValue().trim()) ;
+        if(index < length - 1)
+        {
+            URL += ','
+        }
+
+        if(editors[idE].getValue().length > 0)
+            empty = false;
+    }
+
+    if(empty){
+        $('#link-to-share').val(window.location.href);
+    }
+    else {
+        // put the name of the tabs
+        URL += '&tabnames=';
+        var idx = 1
+        $('.name-tab').each(function () {
+            URL += encodeURIComponent($(this).text());
+            if(idx < length - 1)
+            {
+                URL += ','
+            }
+            idx++;
+        });
+
+        //put the language
+        URL += '&lang=' + $('#inputLanguage').val();
+
+        //put the solver
+        URL += '&solver=' + $('#inputengine').val();
+
+        $('#save-options').trigger('click');
+        var opt = localStorage.getItem("solverOptions");
+        if (opt !== null) {
+            var obj = JSON.parse(opt);
+            if(obj.option != null) {
+                //put the options
+               URL += '&options=' + encodeURIComponent(JSON.stringify( obj.option ));
+            }
+        }
+
+        try {
+            $.ajax({
+                method: "POST",
+                url: "https://is.gd/create.php?format=json&url=" + encodeURIComponent(URL),
+                dataType: 'json',
+                crossDomain: true,
+                success: function (data) {
+                    console.log(data);
+                    if (data.shorturl == undefined) {
+                        $('#link-to-share').val("Ops. Something went wrong");
+                        if (URL.length >= 5000) {
+                            operation_alert({reason: "The logic program is too long to be shared."})
+                        }
+                    } else {
+                        $('#link-to-share').val(data.shorturl);
+                        $('#btn-copy-link').prop('disabled', false);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                    $('#link-to-share').val("Ops. Something went wrong");
+                }
+            });
+        }
+        catch (e) {
+            $('#link-to-share').val("Ops. Something went wrong");
+        }
+    }
+}
+
 function createURLtoShare(program) {
     if(program.trim().length == 0){
         $('#link-to-share').val(window.location.href);
@@ -2016,11 +2107,65 @@ function getParameterByName(name, url) {
 
 function loadFromURL() {
     var thisURL = window.location.href;
-    var param = getParameterByName('program', thisURL);
-    if(param !=null){
-        var program = atob(param);
-        editors[idEditor].setValue(program);
+
+    if(getParameterByName('programs', thisURL) != null){
+        // get params from url
+        var logicPr = getParameterByName('programs', thisURL).split(',');
+        console.log('LogicPrograms:',logicPr);
+
+        var tabNames = getParameterByName('tabnames', thisURL).split(',');
+        console.log('TabNames:',tabNames);
+
+        var language = getParameterByName('lang', thisURL);
+        console.log('lang:',language);
+
+        var solver = getParameterByName('solver', thisURL);
+        console.log('solver:',solver);
+
+        var options = getParameterByName('options', thisURL);
+        console.log('options:',options);
+
+        // decode params
+        for(var i=0; i<logicPr.length; i++){
+            logicPr[i] = decodeURIComponent(logicPr[i]);
+        }
+        console.log('LogicPrograms decoded:',logicPr);
+
+        for(var i=0; i<tabNames.length; i++){
+            tabNames[i] = decodeURIComponent(tabNames[i]);
+        }
+        console.log('TabNames decoded:',tabNames);
+
+        options = JSON.parse(decodeURIComponent(options));
+        console.log('Options decoded:', options);
+
+        // set params
+        for (var index = 1; index <= tabNames.length ; index++) {
+            if(index > 1)
+                $('.add-tab').trigger('click');
+            var idE = "editor" + index;
+            editors[idE].setValue(logicPr[index-1]);
+        }
+
+        $('.name-tab').each(function (index) {
+            $(this).text(tabNames[index]);
+            var id = index + 1;
+            var editor = "editor" + id;
+            $(':checkbox[value="' + editor + '"]').siblings('span').text(tabNames[index]);
+        });
+
+        $('#inputLanguage').val(language).change();
+        $('#inputengine').val(solver).change();
+
+        if(options != null) {
+            $(options).each(function (index, item) {
+                if (item !== null) {
+                    addOption(item);
+                }
+            });
+        }
     }
+
 }
 
 function setTooltip(btn, message) {

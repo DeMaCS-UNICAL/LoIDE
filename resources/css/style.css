@@ -303,6 +303,10 @@ mark {
     margin-right: 2px;
 }
 
+#cloud-download {
+    margin-top: 0;
+}
+
 .save-content {
     margin-top: 4px;
 }
@@ -541,6 +545,10 @@ select.not-alone{
 
 .check-run-lp{
     margin-right: 7px;
+}
+
+.save-btn {
+    display: flex;
 }
 
     /*DARK-MODE SECTION*/

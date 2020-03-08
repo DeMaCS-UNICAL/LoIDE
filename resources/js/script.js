@@ -1117,30 +1117,118 @@ function createTextArea(layout) {
 function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-    files = document.getElementById("files").files[0];
+    files = document.getElementById("files").files;
+    console.log(document.getElementById("files").files.length);
     if (files === undefined) {
-        files = evt.dataTransfer.files[0];
+        files = evt.dataTransfer.files;
     }
-    var reader = new FileReader();
-    reader.onload = function (event) {
-        var text = event.target.result;
-        if (isJosn(text)) {
-            var jsontext = JSON.parse(text); // takes content of the file in the response
-            if (!setJSONInput(jsontext)) {
-                editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
+
+    if (files.length == 1) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var text = event.target.result;
+            if (isJosn(text)) {
+                var jsontext = JSON.parse(text); // takes content of the file in the response
+                if (!setJSONInput(jsontext)) {
+                    editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
+                }
+                inizializeChangeNameContextmenu();
+            } else {
+                editors[idEditor].setValue(text);
             }
-            inizializeChangeNameContextmenu();
-        } else {
-            editors[idEditor].setValue(text);
-        }
-        /**
-         * remove and close container after success upload
-         */
-        $('.collapse').collapse('hide');
-        setHeightComponents();
-    };
-    reader.readAsText(files);
+        };
+        reader.readAsText(files[0]);
+    } else {
+        getValidFileList(files, onDone)
+    }
+
+    /**
+     * remove and close container after success upload
+     */
+    $('.collapse').collapse('hide');
+    setHeightComponents();
     $('#files').val("");
+}
+
+function getValidFileList(files, callback) {
+    var count = files.length;              // total number of files
+    var data = {
+        names: [],
+        texts : []
+    };                     // accepted files
+
+    //Get the selected files
+    for(var i = 0; i < count; i++) {       // invoke readers
+        checkFile(files[i]);
+    }
+
+    function checkFile(file) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            var text = this.result;
+            //Here I parse and check the data and if valid append it to texts
+            data.texts.push(text);        // or the original `file` blob..
+            data.names.push(file.name);
+
+            if (!--count) callback(data);  // when done, invoke callback
+        };
+        reader.readAsText(file);
+    }
+};
+
+function onDone(data) {
+    var tabOpened = $('.btn-tab').length;
+    var tabID;
+    console.log('data',data);
+    var openOnFirst = false;
+    for (var index = 0; index < data.texts.length ; index++) {
+        if( tabOpened == 1) {
+            if(index == 0){
+                if(editors[idEditor].getValue().trim() === ''){
+                    editors[idEditor].setValue(data.texts[index]);
+                    openOnFirst = true;
+                }
+                else {
+                    tabID = addTab($(".add-tab"), data.texts[index]);
+                }
+            }
+            else {
+                tabID = addTab($(".add-tab"), data.texts[index]);
+            }
+        }
+        else {
+            tabID = addTab($(".add-tab"), data.texts[index]);
+        }
+    }
+    if( tabOpened == 1) {
+        $("a[data-target='#tab1']").trigger('click');
+    }
+    else {
+        $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
+    }
+
+    $('.name-tab').each(function (index) {
+        if(openOnFirst){
+            var id = index + 1;
+            $(this).text(data.names[index]);
+            var id = index + 1 ;
+            var editor = "editor" + id;
+            $(':checkbox[value="' + editor + '"]').siblings('span').text(data.names[index]);
+        }
+        else {
+            if(index > tabOpened -1 ) {
+                console.log('sono alla tab: ', index);
+                $(this).text(data.names[index - tabOpened]);
+                var id = index + 1 ;
+                var editor = "editor" + id;
+                $(':checkbox[value="' + editor + '"]').siblings('span').text(data.names[index - tabOpened]);
+            }
+        }
+
+    });
+
+    inizializeChangeNameContextmenu();
+    setAceMode();
 }
 
 function handleDragOver(evt) {

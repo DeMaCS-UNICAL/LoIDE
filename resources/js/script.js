@@ -1485,37 +1485,23 @@ function inizializePopovers(){
         // set what happens when user clicks on the button
         $('.popover-header').html('');
         $('.popover-body').html(
-            '<div class="popover-download-content">\n' +
-            '<div class="mt-2 mb-2"> Share the project:\n </div>' +
-
-            '<div class="input-group">' +
-                    '<input id="link-to-share" type="text" class="form-control" readonly>' +
-                    '<div class="input-group-append">'+
-                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
-                    '</div>'+
-                '</div>' +
-                '<div class="save-content">\n' +
-                    '<div class="mt-2 mb-2"> Save the project to:\n </div>' +
-                    '<div class="save-btn text-center">\n' +
-                        '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
-                        '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
-                    '</div>\n' +
+            '<div class="save-content">\n' +
+                '<div class="mb-2"> Save the project to:\n </div>' +
+                '<div class="save-btn text-center">\n' +
+                    '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
+                    '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
                 '</div>\n' +
             '</div>');
 
         if(localStorage.getItem('mode') === 'dark') {
             $('#local-download').removeClass('btn-outline-dark');
             $('#local-download').addClass('btn-outline-light');
-            $('#btn-copy-link').removeClass('btn-outline-dark');
-            $('#btn-copy-link').addClass('btn-outline-light');
             $('#cloud-download').removeClass('btn-outline-dark');
             $('#cloud-download').addClass('btn-outline-light');
         }
         else{
             $('#local-download').removeClass('btn-outline-light');
             $('#local-download').addClass('btn-outline-dark');
-            $('#btn-copy-link').removeClass('btn-outline-light');
-            $('#btn-copy-link').addClass('btn-outline-dark');
             $('#cloud-download').removeClass('btn-outline-light');
             $('#cloud-download').addClass('btn-outline-dark');
         }
@@ -1524,23 +1510,24 @@ function inizializePopovers(){
         createURL();
 
         $("#local-download").on('click', function(){
-            if($('#only-output').is(":checked")){
-                $('#program').removeAttr('name', 'program[0]');
-                $('#output-form').attr('name', 'output');
-                var text = $("#output").text();
-                $('#output-form').val(text);
-                form = $('#input').serializeFormJSON();
-                stringify = JSON.stringify(form);
-                createFileToDownload(stringify, "local","LoIDE_Output", "json");
-                $('#program').attr('name', 'program[0]');
-                $('#output-form').removeAttr('name', 'output');
-            }
-            else {
-                    downloadLoDIEProject();
-            }
+            downloadLoDIEProject();
+
+            // TO MOVE ON OUTPUT DOWNLOAD
+            // if($('#only-output').is(":checked")){
+            //     $('#program').removeAttr('name', 'program[0]');
+            //     $('#output-form').attr('name', 'output');
+            //     var text = $("#output").text();
+            //     $('#output-form').val(text);
+            //     form = $('#input').serializeFormJSON();
+            //     stringify = JSON.stringify(form);
+            //     createFileToDownload(stringify, "local","LoIDE_Output", "json");
+            //     $('#program').attr('name', 'program[0]');
+            //     $('#output-form').removeAttr('name', 'output');
+            // }
         });
 
         $("#cloud-download").on('click', function () {
+            console.log('Save on cloud');
             // if(Dropbox.isBrowserSupported()){
             //     $('#program').removeAttr('name', 'program[0]');
             //     $('#output-form').attr('name', 'output');
@@ -1570,10 +1557,10 @@ function inizializePopovers(){
         trigger : 'manual',
         html: true,
         placement: 'bottom',
+
     }).click(function(e) {
         $(this).popover('toggle');
         $('.popover-share').not(this).popover('hide');
-
         e.stopPropagation();
     });
 
@@ -1592,49 +1579,50 @@ function inizializePopovers(){
 
         $('.popover-body').html('' +
             '<div class="popover-share-content">\n' +
-                '<div class="input-group">' +
+            '<div class="mb-2"> Share the project:\n </div>' +
+            '<div class="input-group">' +
                     '<input id="link-to-share" type="text" class="form-control" readonly>' +
                     '<div class="input-group-append">'+
                         '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
                     '</div>'+
                 '</div>' +
-                '<div class="text-center mt-2 mb-2"> or </div>' +
-                '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
+                // '<div class="text-center mt-2 mb-2"> or </div>' +
+                // '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
                 // '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
             '</div>');
 
         if(localStorage.getItem('mode') === 'dark') {
             $('#btn-copy-link').removeClass('btn-outline-dark');
             $('#btn-copy-link').addClass('btn-outline-light');
-            $('#share-btn-download').removeClass('btn-outline-dark');
-            $('#share-btn-download').addClass('btn-outline-light');
+            // $('#share-btn-download').removeClass('btn-outline-dark');
+            // $('#share-btn-download').addClass('btn-outline-light');
         }
         else{
             $('#btn-copy-link').removeClass('btn-outline-light');
             $('#btn-copy-link').addClass('btn-outline-dark');
-            $('#share-btn-download').removeClass('btn-outline-light');
-            $('#share-btn-download').addClass('btn-outline-dark');
+            // $('#share-btn-download').removeClass('btn-outline-light');
+            // $('#share-btn-download').addClass('btn-outline-dark');
         }
 
         $('#link-to-share').val("Loading...");
-        createURLtoShare(editors[idEditor].getValue());
+        createURL();
 
-        $('#share-btn-download').on('click',function () {
-            var text = editors[idEditor].getValue();
-            var TabToDownload = $('#' + idEditor).parent().attr('id');
-            var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
-            var string = nameTab.text().replace(/\s/g,'');
-            createFileToDownload(text,"local","LogicProgram_" + string,"txt");
-        });
-        $('#share-btn-save-on-cloud').on('click',function(){
-            console.log("Download this on cloud");
-        });
+        // $('#share-btn-download').on('click',function () {
+        //     var text = editors[idEditor].getValue();
+        //     var TabToDownload = $('#' + idEditor).parent().attr('id');
+        //     var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
+        //     var string = nameTab.text().replace(/\s/g,'');
+        //     createFileToDownload(text,"local","LogicProgram_" + string,"txt");
+        // });
+        // $('#share-btn-save-on-cloud').on('click',function(){
+        //     console.log("Download this on cloud");
+        // });
     });
 
     $('.popover-share').on('hidden.bs.popover', function(){
         $('#btn-copy-link').off('click');
-        $('#share-btn-download').off('click');
-        $('#share-btn-save-on-cloud').off('click');
+        // $('#share-btn-download').off('click');
+        // $('#share-btn-save-on-cloud').off('click');
     });
 }
 

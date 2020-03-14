@@ -220,7 +220,7 @@ $(document).ready(function () {
         slidable: true,
     });
 
-    $("[data-target='#tab1']").trigger('click'); //active the first tab
+    $("[data-target='#tab1']").trigger('click'); // active the first tab
 
     inizializeShortcuts();
 
@@ -386,7 +386,7 @@ $(document).ready(function () {
     // Set the default options
     resetSolverOptions();
 
-    loadFromURL(); //load program from url
+    loadFromURL(); // load program from url
 
 });
 
@@ -522,8 +522,7 @@ function inizializeChangeNameContextmenu(){
     });
 
     $('.btn-tab').on('inserted.bs.popover', function() {
-
-        $('.popover-body').html('<div class="input-group">\n' +
+        $('.popover-body').last().html('<div class="input-group">\n' +
             '      <input type="text" class="form-control" id="change-name-tab-textbox" placeholder="Type a name">\n' +
             '      <span class="input-group-btn">\n' +
             '        <button class="btn btn-light" type="button" id="change-name-tab"><i class="fa fa-chevron-right"></i></button>\n' +
@@ -569,20 +568,10 @@ function inizializeChangeNameContextmenu(){
         });
     });
 
-    $('.btn-tab').on('contextmenu',function (e) { //needed to hide the other context menu opened
-        $('.btn-tab').each(function () {
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
-
-        //close other popovers 'click'
-        $('.popover-download').popover('hide');
-        $('.popover-share').popover('hide');
-
+    $('.btn-tab').on('contextmenu',function (e) {
+        closeAllPopovers();
         $(this).popover('show');
-
-        return false; //don't show the contest menu of the browser
+        return false; // don't show the contest menu of the browser
     });
 }
 
@@ -1022,7 +1011,7 @@ function setJSONInput(config) {
         $(config.program).each(function (index, element) {
             tabID = addTab($(".add-tab"), config.program[index]);
         });
-        $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
+        $("[data-target='#" + tabID + "']").trigger('click'); // active last tab inserted
         if (config.hasOwnProperty('tab')) {
             $(config.tab).each(function (index, element) {
                 $(':checkbox[value="' + element + '"]').prop('checked', true);
@@ -1164,7 +1153,7 @@ function getValidFileList(files, callback) {
         texts : []
     };                     // accepted files
 
-    //Get the selected files
+    // Get the selected files
     for(var i = 0; i < count; i++) {       // invoke readers
         checkFile(files[i]);
     }
@@ -1173,7 +1162,7 @@ function getValidFileList(files, callback) {
         var reader = new FileReader();
         reader.onload = function(event) {
             var text = this.result;
-            //Here I parse and check the data and if valid append it to texts
+            // Here I parse and check the data and if valid append it to texts
             data.texts.push(text);        // or the original `file` blob..
             data.names.push(file.name);
 
@@ -1211,7 +1200,7 @@ function onDone(data) {
         $("a[data-target='#tab1']").trigger('click');
     }
     else {
-        $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
+        $("[data-target='#" + tabID + "']").trigger('click'); // active last tab inserted
     }
 
     $('.name-tab').each(function (index) {
@@ -1553,6 +1542,13 @@ function resetSolverOptions() {
     $('#solver-options').empty();
 }
 
+function closeAllPopovers() {
+    // close contestmenu popovers
+    $('.btn-tab').popover('hide');
+    $('.popover-download').popover('hide');
+    $('.popover-share').popover('hide');
+}
+
 function inizializePopovers(){
 
     $(".popover-download").popover({
@@ -1561,31 +1557,18 @@ function inizializePopovers(){
         placement: 'bottom',
         // content: ' ',
     }).click(function(e) {
-        //close contestmenu popovers
-        $('.btn-tab').popover('hide');
-
-        $('.popover-share').popover('hide');
-
-
-        $('#loide-navbar-toogler').on('click',function () {
-            $('.popover-download').popover('hide');
-        })
-
+        closeAllPopovers();
         $(this).popover('toggle');
         $('.popover-download').not(this).popover('hide');
 
         e.stopPropagation();
     });
 
-    // $('body').on('click', function (e) {
-    //     $('.popover-download').popover('hide');
-    // });
-
     $('.popover-download').on('inserted.bs.popover', function() {
 
         // set what happens when user clicks on the button
-        $('.popover-header').html('');
-        $('.popover-body').html(
+        $('.popover-header').last().html('');
+        $('.popover-body').last().html(
             '<div class="save-content">\n' +
                 '<div class="mb-2"> Save the project to:\n </div>' +
                 '<div class="save-btn text-center">\n' +
@@ -1657,27 +1640,15 @@ function inizializePopovers(){
         placement: 'bottom',
 
     }).click(function(e) {
-        //close contestmenu popovers
-        $('.btn-tab').popover('hide');
-
-        $('.popover-download').popover('hide');
-
+        closeAllPopovers();
         $(this).popover('toggle');
         $('.popover-share').not(this).popover('hide');
         e.stopPropagation();
     });
 
-    // $('body').on('click', function (e) {
-    //     $('.popover-share').each(function () {
-    //         if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-    //             $(this).popover('hide');
-    //         }
-    //     });
-    // });
-
     $('.popover-share').on('inserted.bs.popover', function() {
 
-        $('.popover-body').html('' +
+        $('.popover-body').last().html('' +
             '<div class="popover-share-content">\n' +
             '<div class="mb-2"> Share the project:\n </div>' +
             '<div class="input-group">' +
@@ -1755,7 +1726,7 @@ function inizializeSnippets() {
 
     var langTools = ace.require('ace/ext/language_tools');
 
-    langTools.setCompleters([]); //reset completers.
+    langTools.setCompleters([]); // reset completers.
 
     // completer that include snippets and some keywords
     var completer;
@@ -1764,7 +1735,7 @@ function inizializeSnippets() {
         case "asp":
             switch (solverChosen) {
                 case "dlv":
-                    completer = { //
+                    completer = {
                         getCompletions: function(editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
@@ -1947,7 +1918,7 @@ function inizializeSnippets() {
                     break;
 
                 case "dlv2":
-                    completer = { //
+                    completer = {
                         getCompletions: function(editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
@@ -2099,10 +2070,10 @@ function createURL(){
             idx++;
         });
 
-        //put the language
+        // put the language
         URL += '&lang=' + $('#inputLanguage').val();
 
-        //put the solver
+        // put the solver
         URL += '&solver=' + $('#inputengine').val();
 
         $('#save-options').trigger('click');
@@ -2110,7 +2081,7 @@ function createURL(){
         if (opt !== null) {
             var obj = JSON.parse(opt);
             if(obj.option != null) {
-                //put the options
+                // put the options
                URL += '&options=' + encodeURIComponent(JSON.stringify( obj.option ));
             }
         }

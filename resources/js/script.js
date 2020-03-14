@@ -256,10 +256,7 @@ $(document).ready(function () {
         }
     });
 
-    var dropZone = document.getElementById('drop_zone');
-    dropZone.addEventListener('dragover', handleDragOver, false);
-    dropZone.addEventListener('drop', handleFileSelect, false);
-    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    inizializeDropzone();
 
     $("[rel='tooltip']").tooltip();
 
@@ -320,7 +317,6 @@ $(document).ready(function () {
         $("#output").text("Sending..");
         callSocketServer();
     });
-
 
     $('#input').submit(function (e) {
         e.preventDefault();
@@ -492,6 +488,13 @@ function destroyClickedElement(event) {
     document.body.removeChild(event.target);
 }
 
+function inizializeDropzone() {
+    var dropZone = document.getElementById('drop_zone');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('drop', handleFileSelect, false);
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+}
+
 function inizializeChangeNameContextmenu(){
 
     $(".btn-tab").popover({
@@ -519,9 +522,6 @@ function inizializeChangeNameContextmenu(){
     });
 
     $('.btn-tab').on('inserted.bs.popover', function() {
-        //close other popovers 'click'
-        $('.popover-download').popover('hide');
-        $('.popover-share').popover('hide');
 
         $('.popover-body').html('<div class="input-group">\n' +
             '      <input type="text" class="form-control" id="change-name-tab-textbox" placeholder="Type a name">\n' +
@@ -575,7 +575,13 @@ function inizializeChangeNameContextmenu(){
                 $(this).popover('hide');
             }
         });
+
+        //close other popovers 'click'
+        $('.popover-download').popover('hide');
+        $('.popover-share').popover('hide');
+
         $(this).popover('show');
+
         return false; //don't show the contest menu of the browser
     });
 }
@@ -1117,9 +1123,10 @@ function createTextArea(layout) {
 function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
+
     files = document.getElementById("files").files;
-    console.log(document.getElementById("files").files.length);
-    if (files === undefined) {
+
+    if (files.length === 0) {
         files = evt.dataTransfer.files;
     }
 
@@ -1547,14 +1554,26 @@ function resetSolverOptions() {
 }
 
 function inizializePopovers(){
+
     $(".popover-download").popover({
         trigger : 'manual',
         html: true,
         placement: 'bottom',
         // content: ' ',
     }).click(function(e) {
+        //close contestmenu popovers
+        $('.btn-tab').popover('hide');
+
+        $('.popover-share').popover('hide');
+
+
+        $('#loide-navbar-toogler').on('click',function () {
+            $('.popover-download').popover('hide');
+        })
+
         $(this).popover('toggle');
         $('.popover-download').not(this).popover('hide');
+
         e.stopPropagation();
     });
 
@@ -1563,12 +1582,6 @@ function inizializePopovers(){
     // });
 
     $('.popover-download').on('inserted.bs.popover', function() {
-
-        //close contestmenu popovers
-        $('.btn-tab').popover('hide');
-        $('#loide-navbar-toogler').on('click',function () {
-            $('.popover-download').popover('hide');
-        })
 
         // set what happens when user clicks on the button
         $('.popover-header').html('');
@@ -1593,9 +1606,6 @@ function inizializePopovers(){
             $('#cloud-download').removeClass('btn-outline-light');
             $('#cloud-download').addClass('btn-outline-dark');
         }
-
-        $('#link-to-share').val("Loading...");
-        createURL();
 
         $("#local-download").on('click', function(){
             downloadLoDIEProject();
@@ -1647,23 +1657,25 @@ function inizializePopovers(){
         placement: 'bottom',
 
     }).click(function(e) {
+        //close contestmenu popovers
+        $('.btn-tab').popover('hide');
+
+        $('.popover-download').popover('hide');
+
         $(this).popover('toggle');
         $('.popover-share').not(this).popover('hide');
         e.stopPropagation();
     });
 
-    $('body').on('click', function (e) {
-        $('.popover-share').each(function () {
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
-    });
+    // $('body').on('click', function (e) {
+    //     $('.popover-share').each(function () {
+    //         if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+    //             $(this).popover('hide');
+    //         }
+    //     });
+    // });
 
     $('.popover-share').on('inserted.bs.popover', function() {
-        //close contestmenu popovers
-        $('.btn-tab').popover('hide');
-        $('.popover-download').popover('hide');
 
         $('.popover-body').html('' +
             '<div class="popover-share-content">\n' +
@@ -2124,44 +2136,6 @@ function createURL(){
                 error: function (err) {
                     console.log(err);
                     $('#link-to-share').val("Ops. Something went wrong");
-                }
-            });
-        }
-        catch (e) {
-            $('#link-to-share').val("Ops. Something went wrong");
-        }
-    }
-}
-
-function createURLtoShare(program) {
-    if(program.trim().length == 0){
-        $('#link-to-share').val(window.location.href);
-    }
-    else {
-        var URL = window.location.host + "/?program=";
-        var encodedProg;
-        try {
-            encodedProg = btoa(program);
-            URL += encodeURIComponent(encodedProg);
-            $.ajax({
-                method: "POST",
-                url: "https://is.gd/create.php?format=json&url=" + URL,
-                dataType: 'json',
-                crossDomain: true,
-                success: function (data) {
-                    console.log(data);
-                    if (data.shorturl == undefined) {
-                        $('#link-to-share').val("Ops. Something went wrong");
-                        if (URL.length >= 5000) {
-                            operation_alert({reason: "The logic program is too long to be shared."})
-                        }
-                    } else {
-                        $('#link-to-share').val(data.shorturl);
-                        $('#btn-copy-link').prop('disabled', false);
-                    }
-                },
-                error: function (err) {
-                    console.log(err);
                 }
             });
         }

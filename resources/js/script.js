@@ -127,7 +127,7 @@ function getSolverOptionDOMElement() {
                     "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
                 "</div>" +
                 "<div class=\"input-group opname\">" +
-                    "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
+                    "<select name=\"option[0][name]\" class=\"form-control form-control-option custom-select not-alone\">" +
                         getHTMLFromJQueryElement( getSolverOptions( $('#inputLanguage').val(), $('#inputengine').val() ) ) +
                     "</select>" +
                 "</div>" +
@@ -186,6 +186,24 @@ $(window).resize(function () {
         editors[idE].resize();
     }
 });
+
+function saveOptions() {
+    $("#tab-execute input").each(function (index, element) {
+        if ($(this).prop('checked')) {
+            $(this).attr("name", "tab[" + index + "]");
+        }
+    });
+    $("#run-dot").attr("name", "runAuto");
+    form = $('#input').serializeFormJSON();
+    stringify = JSON.stringify(form);
+    if (!saveOption("solverOptions", stringify)) {
+        alert("Sorry, this options will not save in your browser");
+    }
+    $("#tab-execute input").each(function (index, element) {
+        $(this).removeAttr("name");
+    });
+    $("#run-dot").removeAttr("name");
+}
 
 $(document).ready(function () {
     setNotifications();
@@ -322,30 +340,13 @@ $(document).ready(function () {
         e.preventDefault();
         var form;
         var stringify;
-        var i = 0;
         if (clkBtn === "run") {
             $("#output").empty();
             $("#output").text("Sending..");
             callSocketServer(false);
         }
         else if (clkBtn === 'save-options') {
-            i = 0;
-            $("#tab-execute input").each(function (index, element) {
-                if ($(this).prop('checked')) {
-                    $(this).attr("name", "tab[" + index + "]");
-                    i++;
-                }
-            });
-            $("#run-dot").attr("name", "runAuto");
-            form = $('#input').serializeFormJSON();
-            stringify = JSON.stringify(form);
-            if (!saveOption("solverOptions", stringify)) {
-                alert("Sorry, this options will not save in your browser");
-            }
-            $("#tab-execute input").each(function (index, element) {
-                $(this).removeAttr("name");
-            });
-            $("#run-dot").removeAttr("name");
+            saveOptions();
         }
     });
 
@@ -2097,7 +2098,8 @@ function createURL(){
         // put the solver
         URL += '&solver=' + $('#inputengine').val();
 
-        $('#save-options').trigger('click');
+        saveOptions();
+
         var opt = localStorage.getItem("solverOptions");
         if (opt !== null) {
             var obj = JSON.parse(opt);

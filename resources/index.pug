@@ -113,7 +113,8 @@
         <div id="list">
         </div>
         <div id="input-select">
-            <input type="file" id="files" name="files[]" multiple />
+            <input class="custom-file-input" type="file" id="files" name="files[]" multiple />
+            <label class="custom-file-label" for="files">Choose file</label>
         </div>
     </div>
     <div class="container">
@@ -124,13 +125,13 @@
                         <h5>Run options</h5>
                     </div>
                     <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
-                    <select name="language" id="inputLanguage" class="form-control">
+                    <select name="language" id="inputLanguage" class="custom-select">
                     </select>
                     <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
-                    <select name="engine" id="inputengine" class="form-control">
+                    <select name="engine" id="inputengine" class="custom-select">
                     </select>
                     <label for="inputExecutor" class="col-sm-12 col-xs-12 mt-2 text-center">Executor</label>
-                    <select name="executor" id="inputExecutor" class="form-control">
+                    <select name="executor" id="inputExecutor" class="custom-select">
                     </select>
                     <label class="col-sm-12 mt-2 mb-1 text-center">Options</label>
                     <div id="solver-options">
@@ -286,7 +287,7 @@
                         <div class="col-md-4 col-xs-4 mb-3">
                             <label for="theme">Change theme Editor</label>
                             <div class="input-group opname">
-                                <select id="theme" class="form-control" style="width: 100%;">
+                                <select id="theme" class="custom-select" style="width: 100%;">
                                     <optgroup label="Bright">
                                         <option value="ace/theme/tomorrow">Tomorrow</option>
                                         <option value="ace/theme/solarized_light">Solarized Light</option>
@@ -367,15 +368,19 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <!-- Ace editor-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-language_tools.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ext-language_tools.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.6.1/jquery.mark.min.js"></script>
+
     <script src="/socket.io/socket.io.js"></script>
+
     <script src="js/keymaster.js" type="text/javascript"></script>
+
     <script src="js/script.js" type="text/javascript"></script>
+
     <!-- Dropbox API-->
-    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="nz9r7ab35gqs3su"></script>
+<!--    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="nz9r7ab35gqs3su"></script>-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
 </body>

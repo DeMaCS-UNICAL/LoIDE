@@ -2037,7 +2037,7 @@ function giveBrackets(value) {
 }
 
 function createURL(){
-    var URL = "http://protty.mat.unical.it:1234" + "/?programs=";
+    var URL = window.location.host + "/?programs=";
     var length = $(".nav-tabs").children().length;
     var empty = true;
 

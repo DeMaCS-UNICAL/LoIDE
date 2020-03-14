@@ -1542,11 +1542,16 @@ function resetSolverOptions() {
     $('#solver-options').empty();
 }
 
-function closeAllPopovers() {
+function closeAllPopovers(iam) {
     // close contestmenu popovers
     $('.btn-tab').popover('hide');
-    $('.popover-download').popover('hide');
-    $('.popover-share').popover('hide');
+    if(iam != popoverType.SAVE) $('.popover-download').popover('hide');
+    if(iam != popoverType.SHARE) $('.popover-share').popover('hide');
+}
+
+const popoverType = {
+    SAVE: 'save',
+    SHARE: 'share'
 }
 
 function inizializePopovers(){
@@ -1557,11 +1562,19 @@ function inizializePopovers(){
         placement: 'bottom',
         // content: ' ',
     }).click(function(e) {
-        closeAllPopovers();
+        closeAllPopovers(popoverType.SAVE);
         $(this).popover('toggle');
         $('.popover-download').not(this).popover('hide');
 
         e.stopPropagation();
+    });
+
+    $('body').on('click', function (e) {
+        $('.popover-download').each(function () {
+            if ( e.target.id !== 'btn-download' && !$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
     });
 
     $('.popover-download').on('inserted.bs.popover', function() {
@@ -1640,10 +1653,18 @@ function inizializePopovers(){
         placement: 'bottom',
 
     }).click(function(e) {
-        closeAllPopovers();
+        closeAllPopovers(popoverType.SHARE);
         $(this).popover('toggle');
         $('.popover-share').not(this).popover('hide');
         e.stopPropagation();
+    });
+
+    $('body').on('click', function (e) {
+        $('.popover-share').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
     });
 
     $('.popover-share').on('inserted.bs.popover', function() {

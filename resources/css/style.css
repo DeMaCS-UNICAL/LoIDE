@@ -632,3 +632,11 @@ body.dark .btn-add{
 body.dark .form-control{
     border-color: #343a40;
 }
+
+body.dark .custom-select {
+    background-color: #d8d8d8;
+}
+
+body.dark .custom-file-label {
+    background-color: #d8d8d8;
+}

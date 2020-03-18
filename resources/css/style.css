@@ -1,3 +1,99 @@
+@media (max-width: 576px){
+    .container {
+        max-width: 100%;
+    }
+
+    #a{
+        margin-top: 1%;
+        margin-bottom: 1%;
+    }
+
+    #input-select {
+        margin-right: 1%;
+        margin-left: 1%;
+    }
+
+    img[alt=logo] {
+        width: 55%;
+    }
+
+    .navbar-brand{
+        width: 40%;
+    }
+    .left-panel {
+        height: auto !important;
+        z-index: 1053;
+        position: absolute;
+        width: 0%;
+        overflow-x: hidden;
+        float: left;
+        transition: 0.5s;
+    }
+    .left-panel-show {
+        width: 87%;
+        padding: 3%;
+        margin: 5%;
+        background: rgba(255,245,238,0.4);
+        box-shadow: 0 .25rem .75rem rgba(0,0,0,0.4);
+        margin-bottom: .75rem;
+    }
+
+    body.dark .left-panel-show {
+        background: rgba(83, 83, 83, 0.4);
+    }
+
+    #input-select {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+}
+
+@media (min-width: 577px) {
+    .container {
+        max-width: 100%;
+    }
+
+    img[alt=logo] {
+        width: 35%;
+    }
+
+    .left-panel {
+        position: relative;
+        width: 0%;
+        z-index: 1;
+        overflow-x: hidden;
+        float: left;
+        transition: 0.5s;
+    }
+    .left-panel-show {
+        width: 18%;
+        background: rgba(255,245,238,1);
+        box-shadow: 0 .25rem .75rem rgba(0,0,0,0.1);
+    }
+
+    body.dark .left-panel-show {
+        background-color: rgb(83, 83, 83);
+    }
+}
+
+@media (min-width: 1700px) {
+    .left-panel {
+        width: 0%;
+        z-index: 1;
+        overflow-x: hidden;
+        float: left;
+        background: seashell;
+        transition: 0.5s;
+    }
+    .left-panel-show {
+        width: 12%;
+    }
+
+    body.dark .left-panel-show {
+        background-color: rgb(83, 83, 83);
+    }
+}
+
 #beta {
     font-family: 'Dancing Script', cursive;
     font-size: 22px;
@@ -52,79 +148,6 @@ img[alt=logo]{
     cursor: pointer;
 }
 
-@media screen and (max-width: 576px) {
-    img[alt=logo] {
-        width: 55%;
-    }
-
-    .navbar-brand{
-        width: 40%;
-    }
-    .left-panel {
-        height: auto !important;
-        z-index: 1053;
-        position: absolute;
-        width: 0%;
-        overflow-x: hidden;
-        float: left;
-        transition: 0.5s;
-    }
-    .left-panel-show {
-        width: 87%;
-        padding: 3%;
-        margin: 5%;
-        background: rgba(255,245,238,0.4);
-        box-shadow: 0 .25rem .75rem rgba(0,0,0,0.4);
-        margin-bottom: .75rem;
-    }
-
-    body.dark .left-panel-show {
-        background: rgba(83, 83, 83, 0.4);
-    }
-}
-
-@media screen and (min-width: 577px) {
-    img[alt=logo] {
-        width: 35%;
-    }
-
-    .left-panel {
-        position: relative;
-        width: 0%;
-        z-index: 1;
-        overflow-x: hidden;
-        float: left;
-        transition: 0.5s;
-    }
-    .left-panel-show {
-        width: 18%;
-        background: rgba(255,245,238,1);
-        box-shadow: 0 .25rem .75rem rgba(0,0,0,0.1);
-    }
-
-    body.dark .left-panel-show {
-        background-color: rgb(83, 83, 83);
-    }
-}
-
-@media screen and (min-width: 1700px) {
-    .left-panel {
-        width: 0%;
-        z-index: 1;
-        overflow-x: hidden;
-        float: left;
-        background: seashell;
-        transition: 0.5s;
-    }
-    .left-panel-show {
-        width: 12%;
-    }
-
-    body.dark .left-panel-show {
-        background-color: rgb(83, 83, 83);
-    }
-}
-
 .panel-right {
     transition: margin-left .5s;
     padding: 16px;
@@ -145,10 +168,6 @@ a[role="button"]:focus {
 
 [href="#setting-editor"] {
     padding-left: 5px;
-}
-
-#upload-container {
-    transition: 0.5s;
 }
 
 .btn:focus {
@@ -175,10 +194,12 @@ a[role="button"]:focus {
 }
 
 #input-select {
+    position: relative;
     text-align: center;
     vertical-align: middle;
-    margin-left: 1%;
-    margin-top: 2%;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 1%;
     margin-bottom: 1%;
 }
 
@@ -289,6 +310,10 @@ mark {
     margin-top: 5%;
 }
 
+.popover-download {
+    cursor: pointer;
+}
+
 .popover-download-content {
     padding: 10px;
     border-radius: 5px;
@@ -303,42 +328,12 @@ mark {
     margin-right: 2px;
 }
 
+#cloud-download {
+    margin-top: 0;
+}
+
 .save-content {
     margin-top: 4px;
-}
-
-@media (min-width: 1200px){
-    .container {
-                max-width: 100%;
-            }
-}
-
-@media (min-width: 992px){
-    .container {
-        max-width: 100%;
-    }
-}
-
-@media (min-width: 768px){
-    .container {
-        max-width: 100%;
-    }
-}
-
-@media (min-width: 576px){
-    .container {
-        max-width: 100%;
-    }
-}
-
-@media (max-width: 576px){
-    .container {
-        max-width: 100%;
-    }
-    #a{
-        margin-top: 1%;
-        margin-bottom: 1%;
-    }
 }
 
 .hidden{
@@ -405,6 +400,7 @@ label[for=btn-download] {
 }
 
 .add-tab{
+    cursor: pointer;
     margin-left: 5px;
     padding: 3.5px 10px;
     border-bottom-left-radius: .25rem;
@@ -414,6 +410,7 @@ label[for=btn-download] {
 }
 
 .btn-tab{
+    cursor: pointer;
     padding: .35rem .6rem;
     margin: .3rem .1rem;
     background-color: #f8f9fa;
@@ -460,24 +457,6 @@ li.nav-item:hover > a:not(.active){
     margin-right: 1%;
     border-radius: 8px;
     box-shadow: 0 .25rem .75rem rgba(0,0,0,0.1);
-}
-
-select{
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image:
-            linear-gradient(45deg, transparent 50%, gray 50%),
-            linear-gradient(135deg, gray 50%, transparent 50%);
-    background-position:
-            calc(100% - 20px) calc(1em + 2px),
-            calc(100% - 15px) calc(1em + 2px),
-            calc(100% - 2.5em) 0.5em;
-    background-size:
-            5px 5px,
-            5px 5px,
-            1px 1.5em;
-    background-repeat: no-repeat;
 }
 
 .navbar{
@@ -541,6 +520,14 @@ select.not-alone{
 
 .check-run-lp{
     margin-right: 7px;
+}
+
+.save-btn {
+    display: flex;
+}
+
+.custom-file-label {
+    text-align: start;
 }
 
     /*DARK-MODE SECTION*/
@@ -644,4 +631,12 @@ body.dark .btn-add{
 
 body.dark .form-control{
     border-color: #343a40;
+}
+
+body.dark .custom-select {
+    background-color: #d8d8d8;
+}
+
+body.dark .custom-file-label {
+    background-color: #d8d8d8;
 }

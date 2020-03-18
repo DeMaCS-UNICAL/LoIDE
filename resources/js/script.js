@@ -118,7 +118,7 @@ var mobileMaxWidthScreen = 576;
 /**
  * @description - Returns the DOM element for the solver's option
  */
-function getSolverOptionDOMElement( ) {
+function getSolverOptionDOMElement() {
     return "" +
         "<div class=\"row row-option\">" +
             "<div class=\"col-sm-12 form-group\">" +
@@ -127,8 +127,8 @@ function getSolverOptionDOMElement( ) {
                     "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
                 "</div>" +
                 "<div class=\"input-group opname\">" +
-                    "<select name=\"option[0][name]\" class=\"form-control form-control-option not-alone\">" +
-                        getHTMLFromJQueryElement( getSolverOptions( $('#inputLanguage').val( ), $('#inputengine').val( ) ) ) +
+                    "<select name=\"option[0][name]\" class=\"form-control form-control-option custom-select not-alone\">" +
+                        getHTMLFromJQueryElement( getSolverOptions( $('#inputLanguage').val(), $('#inputengine').val() ) ) +
                     "</select>" +
                 "</div>" +
                 "<div class=\"option-values\">" +
@@ -187,11 +187,29 @@ $(window).resize(function () {
     }
 });
 
+function saveOptions() {
+    $("#tab-execute input").each(function (index, element) {
+        if ($(this).prop('checked')) {
+            $(this).attr("name", "tab[" + index + "]");
+        }
+    });
+    $("#run-dot").attr("name", "runAuto");
+    form = $('#input').serializeFormJSON();
+    stringify = JSON.stringify(form);
+    if (!saveOption("solverOptions", stringify)) {
+        alert("Sorry, this options will not save in your browser");
+    }
+    $("#tab-execute input").each(function (index, element) {
+        $(this).removeAttr("name");
+    });
+    $("#run-dot").removeAttr("name");
+}
+
 $(document).ready(function () {
     setNotifications();
 
     setClipboard();
-    
+
     inizializePopovers();
 
     inizializeChangeNameContextmenu();
@@ -220,7 +238,7 @@ $(document).ready(function () {
         slidable: true,
     });
 
-    $("[data-target='#tab1']").trigger('click'); //active the first tab
+    $("[data-target='#tab1']").trigger('click'); // active the first tab
 
     inizializeShortcuts();
 
@@ -256,10 +274,7 @@ $(document).ready(function () {
         }
     });
 
-    var dropZone = document.getElementById('drop_zone');
-    dropZone.addEventListener('dragover', handleDragOver, false);
-    dropZone.addEventListener('drop', handleFileSelect, false);
-    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    inizializeDropzone();
 
     $("[rel='tooltip']").tooltip();
 
@@ -306,7 +321,7 @@ $(document).ready(function () {
 
     /**
      * @global
-     * @description id of the clicked button 'submit'  
+     * @description id of the clicked button 'submit'
      */
     var clkBtn = "";
 
@@ -321,35 +336,17 @@ $(document).ready(function () {
         callSocketServer();
     });
 
-
     $('#input').submit(function (e) {
         e.preventDefault();
         var form;
         var stringify;
-        var i = 0;
         if (clkBtn === "run") {
             $("#output").empty();
             $("#output").text("Sending..");
             callSocketServer(false);
         }
         else if (clkBtn === 'save-options') {
-            i = 0;
-            $("#tab-execute input").each(function (index, element) {
-                if ($(this).prop('checked')) {
-                    $(this).attr("name", "tab[" + index + "]");
-                    i++;
-                }
-            });
-            $("#run-dot").attr("name", "runAuto");
-            form = $('#input').serializeFormJSON();
-            stringify = JSON.stringify(form);
-            if (!saveOption("solverOptions", stringify)) {
-                alert("Sorry, this options will not save in your browser");
-            }
-            $("#tab-execute input").each(function (index, element) {
-                $(this).removeAttr("name");
-            });
-            $("#run-dot").removeAttr("name");
+            saveOptions();
         }
     });
 
@@ -372,8 +369,6 @@ $(document).ready(function () {
 
     addCommand(idEditor);
 
-    loadFromURL(); //load program from url
-
     inizializeSnippets();
 
     $('#inputLanguage').on('change', function() {
@@ -391,6 +386,9 @@ $(document).ready(function () {
 
     // Set the default options
     resetSolverOptions();
+
+    loadFromURL(); // load program from url
+
 });
 
 /**
@@ -485,10 +483,17 @@ function createFileToDownload(text,where,name,type) {
 }
 /**
  * @param {Object} event - reference to the object that dispatched the event
- * @description Remove the link from the DOM 
+ * @description Remove the link from the DOM
  */
 function destroyClickedElement(event) {
     document.body.removeChild(event.target);
+}
+
+function inizializeDropzone() {
+    var dropZone = document.getElementById('drop_zone');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('drop', handleFileSelect, false);
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
 }
 
 function inizializeChangeNameContextmenu(){
@@ -518,11 +523,7 @@ function inizializeChangeNameContextmenu(){
     });
 
     $('.btn-tab').on('inserted.bs.popover', function() {
-        //close other popovers 'click'
-        $('.popover-download').popover('hide');
-        $('.popover-share').popover('hide');
-
-        $('.popover-body').html('<div class="input-group">\n' +
+        $('.popover-body').last().html('<div class="input-group">\n' +
             '      <input type="text" class="form-control" id="change-name-tab-textbox" placeholder="Type a name">\n' +
             '      <span class="input-group-btn">\n' +
             '        <button class="btn btn-light" type="button" id="change-name-tab"><i class="fa fa-chevron-right"></i></button>\n' +
@@ -568,14 +569,10 @@ function inizializeChangeNameContextmenu(){
         });
     });
 
-    $('.btn-tab').on('contextmenu',function (e) { //needed to hide the other context menu opened
-        $('.btn-tab').each(function () {
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
+    $('.btn-tab').on('contextmenu',function (e) {
+        closeAllPopovers();
         $(this).popover('show');
-        return false; //don't show the contest menu of the browser
+        return false; // don't show the contest menu of the browser
     });
 }
 
@@ -645,42 +642,42 @@ $(document).on('click', '#split-up', function () {
 
 // Sets the solvers and options on language change
 $(document).on('change', '#inputLanguage', function(event) {
-    inizializeAutoComplete( );
+    inizializeAutoComplete();
 
-    loadLanguageSolvers( );
+    loadLanguageSolvers();
 });
 
 // Sets the options on solver change
 $(document).on('change', '#inputengine', function (event) {
-    loadSolverOptions( );
-    loadSolverExecutors( );
+    loadSolverOptions();
+    loadSolverExecutors();
 
     // Snippets
-    inizializeSnippets( );
+    inizializeSnippets();
 });
 
 /**
  * @description - Load the languages
  */
-function loadLanguages( ) {
+function loadLanguages() {
     var inputLanguage   = $('#inputLanguage');
 
-    inputLanguage.empty( );
-    inputLanguage.append( getLanguages( ) );
-    inputLanguage.change( );
+    inputLanguage.empty();
+    inputLanguage.append( getLanguages() );
+    inputLanguage.change();
 }
 
 /**
  * @description - Get avalable the languages
  */
-function getLanguages( ) {
-    return $('#servicesContainer > option').clone( );
+function getLanguages() {
+    return $('#servicesContainer > option').clone();
 }
 
 /**
  * @description - Load the solvers for a specific language
  */
-function loadLanguageSolvers( ) {
+function loadLanguageSolvers() {
     var language    = $('#inputLanguage').val();
     var inputSolver = $('#inputengine');
 
@@ -689,10 +686,10 @@ function loadLanguageSolvers( ) {
         // Clear the values
         inputSolver.empty();
         $('.form-control-option').empty();
-   
+
         // Load the solvers
         inputSolver.append( getLanguageSolvers( language ) );
-        
+
         // Call the listener and select the first value
         inputSolver.change();
     }
@@ -703,13 +700,13 @@ function loadLanguageSolvers( ) {
  * @param {Object} language
  */
 function getLanguageSolvers( language ) {
-   return $('#servicesContainer [name="solvers"][value="' + language + '"] > option').clone( );
+   return $('#servicesContainer [name="solvers"][value="' + language + '"] > option').clone();
 }
 
 /**
  * @description - Load the executors for a specific solver
  */
-function loadSolverExecutors( ) {
+function loadSolverExecutors() {
     var inputLanguage   = $('#inputLanguage');
     var inputSolver     = $('#inputengine');
     var inputExecutor   = $('#inputExecutor');
@@ -735,13 +732,13 @@ function loadSolverExecutors( ) {
  * @param {Object} solver
  */
 function getSolverExecutors( language, solver ) {
-    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="executors"][value="' + solver + '"] > option').clone( );
+    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="executors"][value="' + solver + '"] > option').clone();
 }
 
 /**
  * @description - Load the options for a specific solver
  */
-function loadSolverOptions( ) {
+function loadSolverOptions() {
     var inputLanguage   = $('#inputLanguage');
     var inputSolver     = $('#inputengine');
 
@@ -766,7 +763,7 @@ function loadSolverOptions( ) {
  * @param {Object} solver
  */
 function getSolverOptions( language, solver ) {
-    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="options"][value="' + solver + '"] > option').clone( );
+    return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="options"][value="' + solver + '"] > option').clone();
 }
 
 // Add or remove the 'input type value' based on the option
@@ -779,7 +776,7 @@ $(document).on('change', '.form-control-option', function () {
             $(this).addClass('not-alone');
         }
         setElementsColorMode();
-    } 
+    }
     else {
         $(this).removeClass('not-alone');
         $(this).closest('.row-option').find('.option-value').remove();
@@ -787,7 +784,7 @@ $(document).on('change', '.form-control-option', function () {
     }
 });
 
-$(document).on('click', '.add-tab', function () { // add new tab 
+$(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
     inizializeChangeNameContextmenu();
@@ -893,7 +890,7 @@ function addSouthLayout(layout) {
 /**
  * @param {string} searchStr - string to search
  * @param {string} str - text where search the string
- * @param {boolean} caseSensitive 
+ * @param {boolean} caseSensitive
  * @returns {array}
  * @description Returns each position of the searched string
  */
@@ -913,8 +910,8 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 }
 
 /**
- * @param {*} element - container  where to search 
- * @description Returns the start and the end position of the selected string in the output container 
+ * @param {*} element - container  where to search
+ * @description Returns the start and the end position of the selected string in the output container
  */
 function getSelectionCharOffsetsWithin(element) {
     var start = 0,
@@ -943,7 +940,7 @@ function getSelectionCharOffsetsWithin(element) {
 }
 
 /**
- * @param optionClassBtn - class of the clicked button to find the closest row 
+ * @param optionClassBtn - class of the clicked button to find the closest row
  * @description Delete from the DOM an option block and iterates all of the form options to change their 'name' for a correct json format (if present, included input value)
  */
 function delOptionDOM(optionClassBtn) {
@@ -957,11 +954,11 @@ function delOptionDOM(optionClassBtn) {
 /**
  * @description Create a new DOM element for the solver's options
  */
-function addOptionDOM( ) {
+function addOptionDOM() {
     var solverOptions = $('#solver-options');
 
     // Append the DOM element containing the solver's options
-    solverOptions.append( getSolverOptionDOMElement( ) );
+    solverOptions.append( getSolverOptionDOMElement() );
 
     // Select the first option
     $('.row-option .form-control-option').last().change();
@@ -999,11 +996,11 @@ function addInputValue(inputClass) {
 
 /**
  * @param {Object} text - configuration in json format
- * @returns {boolean} 
- * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor   
+ * @returns {boolean}
+ * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor
  */
 function setJSONInput(config) {
-    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option') 
+    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option')
         || config.hasOwnProperty('program') || config.hasOwnProperty('output') || config.hasOwnProperty('tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
@@ -1015,7 +1012,7 @@ function setJSONInput(config) {
         $(config.program).each(function (index, element) {
             tabID = addTab($(".add-tab"), config.program[index]);
         });
-        $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
+        $("[data-target='#" + tabID + "']").trigger('click'); // active last tab inserted
         if (config.hasOwnProperty('tab')) {
             $(config.tab).each(function (index, element) {
                 $(':checkbox[value="' + element + '"]').prop('checked', true);
@@ -1092,7 +1089,7 @@ function setHeightComponents(expanded,open) {
 
 /**
  * @param {string} str - string to check
- * @returns {boolean} 
+ * @returns {boolean}
  * @description check if a string is JSON
  */
 function isJosn(str) {
@@ -1116,30 +1113,119 @@ function createTextArea(layout) {
 function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-    files = document.getElementById("files").files[0];
-    if (files === undefined) {
-        files = evt.dataTransfer.files[0];
+
+    files = document.getElementById("files").files;
+
+    if (files.length === 0) {
+        files = evt.dataTransfer.files;
     }
-    var reader = new FileReader();
-    reader.onload = function (event) {
-        var text = event.target.result;
-        if (isJosn(text)) {
-            var jsontext = JSON.parse(text); // takes content of the file in the response
-            if (!setJSONInput(jsontext)) {
-                editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
+
+    if (files.length == 1) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var text = event.target.result;
+            if (isJosn(text)) {
+                var jsontext = JSON.parse(text); // takes content of the file in the response
+                if (!setJSONInput(jsontext)) {
+                    editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
+                }
+                inizializeChangeNameContextmenu();
+            } else {
+                editors[idEditor].setValue(text);
             }
-            inizializeChangeNameContextmenu();
-        } else {
-            editors[idEditor].setValue(text);
-        }
-        /**
-         * remove and close container after success upload
-         */
-        $('.collapse').collapse('hide');
-        setHeightComponents();
-    };
-    reader.readAsText(files);
+        };
+        reader.readAsText(files[0]);
+    } else {
+        getValidFileList(files, onDone)
+    }
+
+    /**
+     * remove and close container after success upload
+     */
+    $('.collapse').collapse('hide');
+    setHeightComponents();
     $('#files').val("");
+}
+
+function getValidFileList(files, callback) {
+    var count = files.length;              // total number of files
+    var data = {
+        names: [],
+        texts : []
+    };                     // accepted files
+
+    // Get the selected files
+    for(var i = 0; i < count; i++) {       // invoke readers
+        checkFile(files[i]);
+    }
+
+    function checkFile(file) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            var text = this.result;
+            // Here I parse and check the data and if valid append it to texts
+            data.texts.push(text);        // or the original `file` blob..
+            data.names.push(file.name);
+
+            if (!--count) callback(data);  // when done, invoke callback
+        };
+        reader.readAsText(file);
+    }
+};
+
+function onDone(data) {
+    var tabOpened = $('.btn-tab').length;
+    var tabID;
+    console.log('data',data);
+    var openOnFirst = false;
+    for (var index = 0; index < data.texts.length ; index++) {
+        if( tabOpened == 1) {
+            if(index == 0){
+                if(editors[idEditor].getValue().trim() === ''){
+                    editors[idEditor].setValue(data.texts[index]);
+                    openOnFirst = true;
+                }
+                else {
+                    tabID = addTab($(".add-tab"), data.texts[index]);
+                }
+            }
+            else {
+                tabID = addTab($(".add-tab"), data.texts[index]);
+            }
+        }
+        else {
+            tabID = addTab($(".add-tab"), data.texts[index]);
+        }
+    }
+    if( tabOpened == 1) {
+        $("a[data-target='#tab1']").trigger('click');
+    }
+    else {
+        $("[data-target='#" + tabID + "']").trigger('click'); // active last tab inserted
+    }
+
+    $('.name-tab').each(function (index) {
+        if(openOnFirst){
+            var id = index + 1;
+            $(this).text(data.names[index]);
+            var id = index + 1 ;
+            var editor = "editor" + id;
+            $(':checkbox[value="' + editor + '"]').siblings('span').text(data.names[index]);
+        }
+        else {
+            if(index > tabOpened -1 ) {
+                console.log('sono alla tab: ', index);
+                $(this).text(data.names[index - tabOpened]);
+                var id = index + 1 ;
+                var editor = "editor" + id;
+                $(':checkbox[value="' + editor + '"]').siblings('span').text(data.names[index - tabOpened]);
+            }
+        }
+
+    });
+
+    inizializeChangeNameContextmenu();
+    setAceMode();
 }
 
 function handleDragOver(evt) {
@@ -1151,7 +1237,7 @@ function handleDragOver(evt) {
 /**
  * @param {string} ideditor - current id editor
  * @param {string} text - value of the text editor
- * @description set up current editor 
+ * @description set up current editor
  */
 function setUpAce(ideditor, text) {
     editors[ideditor] = new ace.edit(ideditor);
@@ -1240,7 +1326,7 @@ function inizializeShortcuts() {
 
 /**
  * @returns {boolean}
- * @description add the programs into the input type hidden to serialize 
+ * @description add the programs into the input type hidden to serialize
  */
 function addMorePrograms() {
     var check = false;
@@ -1282,7 +1368,7 @@ function destroyPrograms() {
 
 /**
  * @returns {string}
- *@description generate unique id for the tabs 
+ *@description generate unique id for the tabs
  */
 function generateIDTab() {
     var id = $(".nav-tabs").children().length;
@@ -1383,8 +1469,8 @@ function restoreOptions() {
 }
 
 /**
- * @param {JSON} - obj 
- * @description deletes all the options and add them to the DOM 
+ * @param {JSON} - obj
+ * @description deletes all the options and add them to the DOM
  */
 function setOptions(obj) {
     $('#solver-options').empty();
@@ -1414,9 +1500,9 @@ function addTab(obj, text) {
 }
 
 /**
- * 
+ *
  * @param {int} ideditor - editor id
- * @description Add New Commands and Keybindings 
+ * @description Add New Commands and Keybindings
  */
 function addCommand(ideditor) {
     editors[ideditor].commands.addCommand({
@@ -1452,51 +1538,57 @@ function resetEditorOptions() {
  * @description Reset solver options with default values
  */
 function resetSolverOptions() {
-    loadLanguages( );
+    loadLanguages();
     $("#run-dot").prop('checked', false);
     $('#solver-options').empty();
 }
 
+function closeAllPopovers(iam) {
+    // close contestmenu popovers
+    $('.btn-tab').popover('hide');
+    if(iam != popoverType.SAVE) $('.popover-download').popover('hide');
+    if(iam != popoverType.SHARE) $('.popover-share').popover('hide');
+}
+
+const popoverType = {
+    SAVE: 'save',
+    SHARE: 'share'
+}
+
 function inizializePopovers(){
+
     $(".popover-download").popover({
         trigger : 'manual',
         html: true,
         placement: 'bottom',
         // content: ' ',
     }).click(function(e) {
+        closeAllPopovers(popoverType.SAVE);
         $(this).popover('toggle');
         $('.popover-download').not(this).popover('hide');
+
         e.stopPropagation();
     });
 
-    // $('body').on('click', function (e) {
-    //     $('.popover-download').popover('hide');
-    // });
+    $('body').on('click', function (e) {
+        $('.popover-download').each(function () {
+            if ( e.target.id !== 'btn-download' && !$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+    });
 
     $('.popover-download').on('inserted.bs.popover', function() {
 
-        //close contestmenu popovers
-        $('.btn-tab').popover('hide');
-        $('#loide-navbar-toogler').on('click',function () {
-            $('.popover-download').popover('hide');
-        })
-
         // set what happens when user clicks on the button
-        $('.popover-header').html('');
-        $('.popover-body').html('<div class="popover-download-content">\n' +
-            '<div class="d-flex">\n' +
-            '<div>Only output: </div>\n' +
-            '<div class="ml-2">\n' +
-            '<input id="only-output" type="checkbox">\n' +
-            '</div>\n' +
-            '</div>\n' +
+        $('.popover-header').last().html('');
+        $('.popover-body').last().html(
             '<div class="save-content">\n' +
-            '<div class="mt-2 mb-2"> Save to:\n </div>' +
-            '<div class="save-btn text-center">\n' +
-            '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
-            // '<button id="cloud-download" class="btn btn-outline-dark btn-saver" disabled>Cloud</button>\n' +
-            '</div>\n' +
-            '</div>\n' +
+                '<div class="mb-2"> Save the project to:\n </div>' +
+                '<div class="save-btn text-center">\n' +
+                    '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
+                    '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
+                '</div>\n' +
             '</div>');
 
         if(localStorage.getItem('mode') === 'dark') {
@@ -1513,37 +1605,38 @@ function inizializePopovers(){
         }
 
         $("#local-download").on('click', function(){
-            if($('#only-output').is(":checked")){
-                $('#program').removeAttr('name', 'program[0]');
-                $('#output-form').attr('name', 'output');
-                var text = $("#output").text();
-                $('#output-form').val(text);
-                form = $('#input').serializeFormJSON();
-                stringify = JSON.stringify(form);
-                createFileToDownload(stringify, "local","LoIDE_Output", "json");
-                $('#program').attr('name', 'program[0]');
-                $('#output-form').removeAttr('name', 'output');
-            }
-            else {
-                    downloadLoDIEProject();
-            }
+            downloadLoDIEProject();
+
+            // TO MOVE ON OUTPUT DOWNLOAD
+            // if($('#only-output').is(":checked")){
+            //     $('#program').removeAttr('name', 'program[0]');
+            //     $('#output-form').attr('name', 'output');
+            //     var text = $("#output").text();
+            //     $('#output-form').val(text);
+            //     form = $('#input').serializeFormJSON();
+            //     stringify = JSON.stringify(form);
+            //     createFileToDownload(stringify, "local","LoIDE_Output", "json");
+            //     $('#program').attr('name', 'program[0]');
+            //     $('#output-form').removeAttr('name', 'output');
+            // }
         });
 
         $("#cloud-download").on('click', function () {
-            if(Dropbox.isBrowserSupported()){
-                $('#program').removeAttr('name', 'program[0]');
-                $('#output-form').attr('name', 'output');
-                var text = $("#output").text();
-                $('#output-form').val(text);
-                form = $('#input').serializeFormJSON();
-                stringify = JSON.stringify(form);
-                chose = $('#choice').text();
-
-                // createFileToDownload(stringify, "dropbox", "json")
-            }
-            else{
-                operation_alert({result: "Dropbox not supported on your browser!"});
-            }
+            console.log('Save on cloud');
+            // if(Dropbox.isBrowserSupported()){
+            //     $('#program').removeAttr('name', 'program[0]');
+            //     $('#output-form').attr('name', 'output');
+            //     var text = $("#output").text();
+            //     $('#output-form').val(text);
+            //     form = $('#input').serializeFormJSON();
+            //     stringify = JSON.stringify(form);
+            //     chose = $('#choice').text();
+            //
+            //     // createFileToDownload(stringify, "dropbox", "json")
+            // }
+            // else{
+            //     operation_alert({result: "Dropbox not supported on your browser!"});
+            // }
         });
     });
 
@@ -1559,10 +1652,11 @@ function inizializePopovers(){
         trigger : 'manual',
         html: true,
         placement: 'bottom',
+
     }).click(function(e) {
+        closeAllPopovers(popoverType.SHARE);
         $(this).popover('toggle');
         $('.popover-share').not(this).popover('hide');
-
         e.stopPropagation();
     });
 
@@ -1575,55 +1669,53 @@ function inizializePopovers(){
     });
 
     $('.popover-share').on('inserted.bs.popover', function() {
-        //close contestmenu popovers
-        $('.btn-tab').popover('hide');
-        $('.popover-download').popover('hide');
 
-        $('.popover-body').html('' +
+        $('.popover-body').last().html('' +
             '<div class="popover-share-content">\n' +
-                '<div class="input-group">' +
+            '<div class="mb-2"> Share the project:\n </div>' +
+            '<div class="input-group">' +
                     '<input id="link-to-share" type="text" class="form-control" readonly>' +
                     '<div class="input-group-append">'+
                         '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
                     '</div>'+
                 '</div>' +
-                '<div class="text-center mt-2 mb-2"> or </div>' +
-                '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
+                // '<div class="text-center mt-2 mb-2"> or </div>' +
+                // '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
                 // '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
             '</div>');
 
         if(localStorage.getItem('mode') === 'dark') {
             $('#btn-copy-link').removeClass('btn-outline-dark');
             $('#btn-copy-link').addClass('btn-outline-light');
-            $('#share-btn-download').removeClass('btn-outline-dark');
-            $('#share-btn-download').addClass('btn-outline-light');
+            // $('#share-btn-download').removeClass('btn-outline-dark');
+            // $('#share-btn-download').addClass('btn-outline-light');
         }
         else{
             $('#btn-copy-link').removeClass('btn-outline-light');
             $('#btn-copy-link').addClass('btn-outline-dark');
-            $('#share-btn-download').removeClass('btn-outline-light');
-            $('#share-btn-download').addClass('btn-outline-dark');
+            // $('#share-btn-download').removeClass('btn-outline-light');
+            // $('#share-btn-download').addClass('btn-outline-dark');
         }
 
         $('#link-to-share').val("Loading...");
-        createURLtoShare(editors[idEditor].getValue());
+        createURL();
 
-        $('#share-btn-download').on('click',function () {
-            var text = editors[idEditor].getValue();
-            var TabToDownload = $('#' + idEditor).parent().attr('id');
-            var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
-            var string = nameTab.text().replace(/\s/g,'');
-            createFileToDownload(text,"local","LogicProgram_" + string,"txt");
-        });
-        $('#share-btn-save-on-cloud').on('click',function(){
-            console.log("Download this on cloud");
-        });
+        // $('#share-btn-download').on('click',function () {
+        //     var text = editors[idEditor].getValue();
+        //     var TabToDownload = $('#' + idEditor).parent().attr('id');
+        //     var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
+        //     var string = nameTab.text().replace(/\s/g,'');
+        //     createFileToDownload(text,"local","LogicProgram_" + string,"txt");
+        // });
+        // $('#share-btn-save-on-cloud').on('click',function(){
+        //     console.log("Download this on cloud");
+        // });
     });
 
     $('.popover-share').on('hidden.bs.popover', function(){
         $('#btn-copy-link').off('click');
-        $('#share-btn-download').off('click');
-        $('#share-btn-save-on-cloud').off('click');
+        // $('#share-btn-download').off('click');
+        // $('#share-btn-save-on-cloud').off('click');
     });
 }
 
@@ -1656,7 +1748,7 @@ function inizializeSnippets() {
 
     var langTools = ace.require('ace/ext/language_tools');
 
-    langTools.setCompleters([]); //reset completers.
+    langTools.setCompleters([]); // reset completers.
 
     // completer that include snippets and some keywords
     var completer;
@@ -1665,7 +1757,7 @@ function inizializeSnippets() {
         case "asp":
             switch (solverChosen) {
                 case "dlv":
-                    completer = { //
+                    completer = {
                         getCompletions: function(editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
@@ -1848,7 +1940,7 @@ function inizializeSnippets() {
                     break;
 
                 case "dlv2":
-                    completer = { //
+                    completer = {
                         getCompletions: function(editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
@@ -1966,19 +2058,61 @@ function giveBrackets(value) {
     return par;
 }
 
-function createURLtoShare(program) {
-    if(program.trim().length == 0){
+function createURL(){
+    var URL = window.location.host + "/?programs=";
+    var length = $(".nav-tabs").children().length;
+    var empty = true;
+
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+
+        URL +=  encodeURIComponent(editors[idE].getValue().trim()) ;
+        if(index < length - 1)
+        {
+            URL += ','
+        }
+
+        if(editors[idE].getValue().length > 0)
+            empty = false;
+    }
+
+    if(empty){
         $('#link-to-share').val(window.location.href);
     }
     else {
-        var URL = window.location.host + "/?program=";
-        var encodedProg;
+        // put the name of the tabs
+        URL += '&tabnames=';
+        var idx = 1
+        $('.name-tab').each(function () {
+            URL += encodeURIComponent($(this).text());
+            if(idx < length - 1)
+            {
+                URL += ','
+            }
+            idx++;
+        });
+
+        // put the language
+        URL += '&lang=' + $('#inputLanguage').val();
+
+        // put the solver
+        URL += '&solver=' + $('#inputengine').val();
+
+        saveOptions();
+
+        var opt = localStorage.getItem("solverOptions");
+        if (opt !== null) {
+            var obj = JSON.parse(opt);
+            if(obj.option != null) {
+                // put the options
+               URL += '&options=' + encodeURIComponent(JSON.stringify( obj.option ));
+            }
+        }
+
         try {
-            encodedProg = btoa(program);
-            URL += encodeURIComponent(encodedProg);
             $.ajax({
                 method: "POST",
-                url: "https://is.gd/create.php?format=json&url=" + URL,
+                url: "https://is.gd/create.php?format=json&url=" + encodeURIComponent(URL),
                 dataType: 'json',
                 crossDomain: true,
                 success: function (data) {
@@ -1995,6 +2129,7 @@ function createURLtoShare(program) {
                 },
                 error: function (err) {
                     console.log(err);
+                    $('#link-to-share').val("Ops. Something went wrong");
                 }
             });
         }
@@ -2016,11 +2151,65 @@ function getParameterByName(name, url) {
 
 function loadFromURL() {
     var thisURL = window.location.href;
-    var param = getParameterByName('program', thisURL);
-    if(param !=null){
-        var program = atob(param);
-        editors[idEditor].setValue(program);
+
+    if(getParameterByName('programs', thisURL) != null){
+        // get params from url
+        var logicPr = getParameterByName('programs', thisURL).split(',');
+        console.log('LogicPrograms:',logicPr);
+
+        var tabNames = getParameterByName('tabnames', thisURL).split(',');
+        console.log('TabNames:',tabNames);
+
+        var language = getParameterByName('lang', thisURL);
+        console.log('lang:',language);
+
+        var solver = getParameterByName('solver', thisURL);
+        console.log('solver:',solver);
+
+        var options = getParameterByName('options', thisURL);
+        console.log('options:',options);
+
+        // decode params
+        for(var i=0; i<logicPr.length; i++){
+            logicPr[i] = decodeURIComponent(logicPr[i]);
+        }
+        console.log('LogicPrograms decoded:',logicPr);
+
+        for(var i=0; i<tabNames.length; i++){
+            tabNames[i] = decodeURIComponent(tabNames[i]);
+        }
+        console.log('TabNames decoded:',tabNames);
+
+        options = JSON.parse(decodeURIComponent(options));
+        console.log('Options decoded:', options);
+
+        // set params
+        for (var index = 1; index <= tabNames.length ; index++) {
+            if(index > 1)
+                $('.add-tab').trigger('click');
+            var idE = "editor" + index;
+            editors[idE].setValue(logicPr[index-1]);
+        }
+
+        $('.name-tab').each(function (index) {
+            $(this).text(tabNames[index]);
+            var id = index + 1;
+            var editor = "editor" + id;
+            $(':checkbox[value="' + editor + '"]').siblings('span').text(tabNames[index]);
+        });
+
+        $('#inputLanguage').val(language).change();
+        $('#inputengine').val(solver).change();
+
+        if(options != null) {
+            $(options).each(function (index, item) {
+                if (item !== null) {
+                    addOption(item);
+                }
+            });
+        }
     }
+
 }
 
 function setTooltip(btn, message) {

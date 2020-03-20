@@ -1765,14 +1765,12 @@ function inizializeToolbar() {
     $('#btn-copy').on('click', function () {
         copyStringToClipboard(editors[idEditor].getCopyText());
         editors[idEditor].focus();
-
     });
 
     $('#btn-cut').on('click', function () {
         copyStringToClipboard(editors[idEditor].getCopyText());
-        editors[idEditor].insert("");
+        editors[idEditor].execCommand("cut");
         editors[idEditor].focus();
-
     });
 
     var ok = false;
@@ -2323,7 +2321,6 @@ function setNotifications() {
     $('#notification-project').toast({
         delay: 10000,
     });
-
     $('#load-project').on('click',function () {
        loadProjectFromLocalStorage();
        $('#notification-project').toast('hide');

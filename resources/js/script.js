@@ -2323,12 +2323,6 @@ function setNotifications() {
     $('#notification-project').toast({
         delay: 10000,
     });
-    $('.toast').on('show.bs.toast',function () {
-        $('.toast').removeClass('hidden');
-    });
-    $('.toast').on('hidden.bs.toast',function () {
-        $('.toast').addClass('hidden');
-    });
 
     $('#load-project').on('click',function () {
        loadProjectFromLocalStorage();

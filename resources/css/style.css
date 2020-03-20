@@ -365,7 +365,7 @@ label[for=btn-download] {
      border-top-right-radius: 0.5rem;
 }
 
-.toast {
+#toast-container {
     position: absolute;
     z-index: 1060;
     top: 0;

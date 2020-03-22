@@ -27,28 +27,30 @@
 </head>
 
 <body>
-    <div id="notification" class="toast hidden" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <i class="fa fa-exclamation-circle"></i>
-            <strong class="mr-auto ml-2">LoIDE</strong>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+    <div id="toast-container">
+        <div id="notification-project" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fa fa-exclamation-circle"></i>
+                <strong class="mr-auto ml-2">LoIDE - Project found</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                <p>Maybe you were working on a project.<br>Do you wish to continue? </p>
+                <button id="load-project" type="button" class="btn btn-primary btn-sm btn-block">Yes</button>
+                <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="toast" aria-label="Close">No</button>
+            </div>
         </div>
-        <div id="notidication-body" class="toast-body"></div>
-    </div>
-    <div id="notification-project" class="toast hidden" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <i class="fa fa-exclamation-circle"></i>
-            <strong class="mr-auto ml-2">LoIDE - Project found</strong>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="toast-body">
-            <p>Maybe you were working on a project.<br>Do you wish to continue? </p>
-            <button id="load-project" type="button" class="btn btn-primary btn-sm btn-block">Yes</button>
-            <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="toast" aria-label="Close">No</button>
+        <div id="notification" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fa fa-exclamation-circle"></i>
+                <strong class="mr-auto ml-2">LoIDE</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="notidication-body" class="toast-body"></div>
         </div>
     </div>
     <nav class="navbar navbar-expand-sm navbar-light ">
@@ -188,12 +190,17 @@
                                 </li>
                             </ul>
                             <div class="col-xs-12 ml-auto text-center toolbar">
+                                <button id="btn-dwn-this-lp" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Download this logic program" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-download" aria-hidden="true"></i></button>
                                 <div class="undo-redo btn-group" role="group">
-                                    <button id="btn-undo" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Undo" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-arrow-left"></i></button>
-                                    <button id="btn-redo" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Redo" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-arrow-right"></i></button>
+                                    <button id="btn-cut" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Cut" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-scissors" aria-hidden="true"></i></button>
+                                    <button id="btn-copy" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Copy" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-files-o" aria-hidden="true"></i></button>
+                                    <button id="btn-paste" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Paste" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-clipboard" aria-hidden="true"></i></button>
                                 </div>
-                                <button id="btn-run-thistab" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Run this tab" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-play"></i></button>
-                                <!--<button id="btn-share-tab" type="button" class="btn btn-light popover-share" data-content="none"><i class="fa fa-share-alt"></i></button>-->
+                                <button id="btn-search" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Search / Replace" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-search" aria-hidden="true"></i></button>
+                                <div class="undo-redo btn-group" role="group">
+                                    <button id="btn-undo" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Undo" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-undo" aria-hidden="true"></i></button>
+                                    <button id="btn-redo" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Redo" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-repeat" aria-hidden="true"></i></button>
+                                </div>
                             </div>
                         </div>
                         <!-- Tab panes -->

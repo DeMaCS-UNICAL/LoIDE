@@ -70,6 +70,27 @@
 })(jQuery);
 
 /**
+ * @param {string} str - text to copy
+ * @description Copy a string to clipboard
+ */
+function copyStringToClipboard (str) {
+    // Create new element
+    var el = document.createElement('textarea');
+    // Set value (string to be copied)
+    el.value = str;
+    // Set non-editable to avoid focus and move outside of view
+    el.setAttribute('readonly', '');
+    el.style = {position: 'absolute', left: '-9999px'};
+    document.body.appendChild(el);
+    // Select text inside element
+    el.select();
+    // Copy text to clipboard
+    document.execCommand('copy');
+    // Remove temporary element
+    document.body.removeChild(el);
+}
+
+/**
  * @param {json} result - description of the problem 
  * @description Open a container to display the result 
  */
@@ -108,6 +129,9 @@ var defaultDarkTheme = "ace/theme/idle_fingers";
  */
 editors = {};
 setUpAce(idEditor, "");
+
+var searchBoxOpened = false;
+
 
 /**
  * @global
@@ -1687,39 +1711,24 @@ function inizializePopovers(){
         if(localStorage.getItem('mode') === 'dark') {
             $('#btn-copy-link').removeClass('btn-outline-dark');
             $('#btn-copy-link').addClass('btn-outline-light');
-            // $('#share-btn-download').removeClass('btn-outline-dark');
-            // $('#share-btn-download').addClass('btn-outline-light');
         }
         else{
             $('#btn-copy-link').removeClass('btn-outline-light');
             $('#btn-copy-link').addClass('btn-outline-dark');
-            // $('#share-btn-download').removeClass('btn-outline-light');
-            // $('#share-btn-download').addClass('btn-outline-dark');
         }
 
         $('#link-to-share').val("Loading...");
         createURL();
 
-        // $('#share-btn-download').on('click',function () {
-        //     var text = editors[idEditor].getValue();
-        //     var TabToDownload = $('#' + idEditor).parent().attr('id');
-        //     var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
-        //     var string = nameTab.text().replace(/\s/g,'');
-        //     createFileToDownload(text,"local","LogicProgram_" + string,"txt");
-        // });
-        // $('#share-btn-save-on-cloud').on('click',function(){
-        //     console.log("Download this on cloud");
-        // });
     });
 
     $('.popover-share').on('hidden.bs.popover', function(){
         $('#btn-copy-link').off('click');
-        // $('#share-btn-download').off('click');
-        // $('#share-btn-save-on-cloud').off('click');
     });
 }
 
 function inizializeToolbar() {
+
     $('#btn-undo').on('click',function () {
         var undoManager = editors[idEditor].session.getUndoManager();
         if(undoManager.hasUndo()){
@@ -1735,11 +1744,73 @@ function inizializeToolbar() {
 
     });
 
-    $('#btn-run-thistab').on('click',function () {
-        $("#output").empty();
-        $("#output").text("Sending..");
-        callSocketServer(true);
+    $('#btn-search').on('click',function () {
+
+        var searchPanel = $('#'+ idEditor).find('.ace_search');
+
+        if(searchPanel.length == 0) {
+            editors[idEditor].execCommand("find");
+        }
+        else {
+            if(searchPanel.css('display') == 'none') {
+                searchPanel.css('display', 'block');
+            }
+            else {
+                searchPanel.css('display', 'none');
+            }
+        }
+
     });
+
+    $('#btn-copy').on('click', function () {
+        copyStringToClipboard(editors[idEditor].getCopyText());
+        editors[idEditor].focus();
+    });
+
+    $('#btn-cut').on('click', function () {
+        copyStringToClipboard(editors[idEditor].getCopyText());
+        editors[idEditor].execCommand("cut");
+        editors[idEditor].focus();
+    });
+
+    var ok = false;
+    try {
+        navigator.clipboard.readText();
+        ok = true;
+    }
+    catch (e) {
+        console.error('Clipboard API is not supported in this browser',e);
+        $('#btn-paste').remove();
+    }
+
+    if(ok) {
+        $('#btn-paste').on('click', function () {
+            navigator.clipboard.readText()
+                .then(text => {
+                    editors[idEditor].insert(text);
+                })
+                .catch(err => {
+                    // maybe user didn't grant access to read from clipboard
+                    operation_alert({reason: 'Clipboard read error'});
+                    console.error((err));
+                });
+        });
+    }
+
+    $('#btn-dwn-this-lp').on('click', function () {
+        var text = editors[idEditor].getValue();
+        var TabToDownload = $('#' + idEditor).parent().attr('id');
+        var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
+        var string = nameTab.text().replace(/\s/g,'');
+        createFileToDownload(text,"local","LogicProgram_" + string,"txt");
+    });
+
+    // TO-DO
+    // $('#btn-run-thistab').on('click',function () {
+    //     $("#output").empty();
+    //     $("#output").text("Sending..");
+    //     callSocketServer(true);
+    // });
 }
 
 function inizializeSnippets() {
@@ -2250,13 +2321,6 @@ function setNotifications() {
     $('#notification-project').toast({
         delay: 10000,
     });
-    $('.toast').on('show.bs.toast',function () {
-        $('.toast').removeClass('hidden');
-    });
-    $('.toast').on('hidden.bs.toast',function () {
-        $('.toast').addClass('hidden');
-    });
-
     $('#load-project').on('click',function () {
        loadProjectFromLocalStorage();
        $('#notification-project').toast('hide');

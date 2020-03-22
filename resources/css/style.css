@@ -194,6 +194,7 @@ a[role="button"]:focus {
 }
 
 #input-select {
+    cursor: pointer;
     position: relative;
     text-align: center;
     vertical-align: middle;
@@ -209,6 +210,7 @@ a[role="button"]:focus {
 
 #files {
     display: inline-block;
+    cursor: pointer;
 }
 
 #setting-editor>.modal-dialog>.modal-content>.modal-body>.row {
@@ -363,7 +365,7 @@ label[for=btn-download] {
      border-top-right-radius: 0.5rem;
 }
 
-.toast {
+#toast-container {
     position: absolute;
     z-index: 1060;
     top: 0;

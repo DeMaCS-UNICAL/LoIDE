@@ -522,28 +522,75 @@ function inizializeDropzone() {
 
 function inizializeChangeNameContextmenu(){
 
+    $.contextMenu({
+        selector: '.btn-context-tab',
+        items: {
+            Rename: {
+                name: "Rename",
+                icon: function(opt, $itemElement, itemKey, item){
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    $itemElement.html('<i class="fa fa-pencil context-menu-item-icon" aria-hidden="true"></i>' + item.name);
+
+                    // Add the context-menu-icon-updated class to the item
+                    return 'context-menu-icon-updated';
+                },
+                callback: function(itemKey, opt, e){
+                    console.log(opt.$trigger.parent());
+                    closeAllPopovers();
+                    opt.$trigger.parent().popover('show');
+                }
+            },
+            RunThisTab: {
+                name: "Run this logic program",
+                icon: function(opt, $itemElement, itemKey, item){
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    $itemElement.html('<i class="fa fa-play context-menu-item-icon" aria-hidden="true"></i>' + item.name);
+
+                    // Add the context-menu-icon-updated class to the item
+                    return 'context-menu-icon-updated';
+                },
+                callback: function(itemKey, opt, e){
+                        $("#output").empty();
+                        $("#output").text("Sending..");
+                        callSocketServer(true);
+                }
+            }
+        },
+        events: {
+            show: function (e) {
+                console.log($(this).parent().trigger('click'));
+            }
+        }
+    });
+
+    $(".btn-context-tab").on('click', function (e) {
+        $(this).trigger('contextmenu');
+    });
+
     $(".btn-tab").popover({
         title: 'Change the tab name',
         container: 'body',
         trigger : 'manual',
         html: true,
-        placement: 'right'
+        placement: 'bottom'
     });
 
-    $('body').on('click', function (e) {
-        $('.btn-tab').each(function () {
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
+    $("html").on("mouseup", function (e) {
+        var l = $(e.target);
+        if (l[0].className.indexOf("popover") == -1) {
+            $(".popover").each(function () {
+                $(this).popover("hide");
+            });
+        }
     });
 
-    $('body').on('contextmenu', function (e) {
-        $('.btn-tab').each(function () {
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
+    $("html").on("contextmenu", function (e) {
+        var l = $(e.target);
+        if (l[0].className.indexOf("popover") == -1) {
+            $(".popover").each(function () {
+                $(this).popover("hide");
+            });
+        }
     });
 
     $('.btn-tab').on('inserted.bs.popover', function() {
@@ -593,9 +640,8 @@ function inizializeChangeNameContextmenu(){
         });
     });
 
-    $('.btn-tab').on('contextmenu',function (e) {
-        closeAllPopovers();
-        $(this).popover('show');
+    $('.name-tab').on('contextmenu',function (e) {
+        $(e.target).siblings( ".btn-context-tab" ).trigger('click');
         return false; // don't show the contest menu of the browser
     });
 }
@@ -813,6 +859,7 @@ $(document).on('click', '.add-tab', function () { // add new tab
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
     inizializeChangeNameContextmenu();
     setAceMode();
+    setElementsColorMode();
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -1515,7 +1562,7 @@ function addTab(obj, text) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
     editorId = "editor" + id;
-    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <span class="name-tab">L P ' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
+    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">L P ' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
     $('#tab-execute').append(' <label class="check-run-lp"><input type="checkbox" value="' + editorId + '"> <span>L P ' + id + '</span></label>');

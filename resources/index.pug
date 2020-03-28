@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="css/layout-default-latest.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
 
@@ -42,7 +43,7 @@
                 <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="toast" aria-label="Close">No</button>
             </div>
         </div>
-        <div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="notification" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <i class="fa fa-exclamation-circle"></i>
                 <strong class="mr-auto ml-2">LoIDE</strong>
@@ -179,7 +180,8 @@
                             <ul class=" col-xs-12 nav nav-tabs" role="tablist">
                                 <li class="nav-item">
                                     <a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link">
-                                        <span class="name-tab">L P 1</span>
+                                        <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button>
+                                        <span class="name-tab unselectable">L P 1</span>
                                         <span class="delete-tab">
                                             <i class="fa fa-times"></i>
                                         </span>
@@ -384,10 +386,14 @@
 
     <script src="js/keymaster.js" type="text/javascript"></script>
 
+    <!--    context menu     -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+
     <script src="js/script.js" type="text/javascript"></script>
 
     <!-- Dropbox API-->
-<!--    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="nz9r7ab35gqs3su"></script>-->
+    <!-- <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="nz9r7ab35gqs3su"></script> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
 </body>

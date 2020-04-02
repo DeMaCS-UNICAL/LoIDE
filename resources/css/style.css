@@ -182,10 +182,6 @@ a[role="button"]:focus {
   outline: none;
 }
 
-.checkbox {
-  margin-top: 20%;
-}
-
 #drop_zone {
   border-style: dashed;
   border-color: #dddddd;
@@ -609,8 +605,26 @@ select.not-alone {
   background-color: #a5a5a5;
   width: 100%;
   height: 1px;
-
   border: #dddddd dashed 0.5px;
+}
+
+.tab-execute-title {
+  font-size: 14px;
+}
+
+.run-auto-box {
+  /* padding: 0.375rem 0.75rem; */
+  border-radius: 0.25rem;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 0.375rem 0.75rem;
+}
+
+.option-container {
+  border-radius: 0.25rem;
+  background-color: antiquewhite;
+  border: 0;
+  padding: 0.375rem 0.75rem;
 }
 
 /*DARK-MODE SECTION*/
@@ -723,5 +737,18 @@ body.dark .custom-select {
 }
 
 body.dark .custom-file-label {
+  background-color: #d8d8d8;
+}
+
+body.dark .run-auto-box {
+  background-color: #696a6b;
+  border: 0;
+}
+
+body.dark .option-container {
+  background-color: #696a6b;
+}
+
+body.dark .list-group-item {
   background-color: #d8d8d8;
 }

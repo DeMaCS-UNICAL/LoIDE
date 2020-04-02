@@ -128,35 +128,39 @@
                         <h5>Run options</h5>
                     </div>
 
-                    <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
-                    <select name="language" id="inputLanguage" class="custom-select">
-                    </select>
-                    <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
-                    <select name="engine" id="inputengine" class="custom-select">
-                    </select>
-                    <label for="inputExecutor" class="col-sm-12 col-xs-12 mt-2 text-center">Executor</label>
-                    <select name="executor" id="inputExecutor" class="custom-select">
-                    </select>
-                    <label class="col-sm-12 mt-2 mb-1 text-center">Options</label>
-                    <div id="solver-options">
+                    <div class="option-container">
+                        <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
+                        <select name="language" id="inputLanguage" class="custom-select">
+                        </select>
+                        <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
+                        <select name="engine" id="inputengine" class="custom-select">
+                        </select>
+                        <label for="inputExecutor" class="col-sm-12 col-xs-12 mt-2 text-center">Executor</label>
+                        <select name="executor" id="inputExecutor" class="custom-select">
+                        </select>
+                        <label class="col-sm-12 mt-2 mb-1 text-center">Options</label>
+                        <div id="solver-options">
+                        </div>
+                        <span class="input-group-btn">
+                            <button id="btn-add-option" type="button" class="btn btn-primary btn-block"> <i class="fa fa-plus"></i> Add option</button>
+                        </span>
                     </div>
-                    <span class="input-group-btn">
-                        <button id="btn-add-option" type="button" class="btn btn-primary btn-block"> <i class="fa fa-plus"></i> Add option</button>
-                    </span>
-                    <div class="checkbox">
-                        <p class="text-center">
+                    
+                    <div class="mt-3">
+                        <div class="text-center mb-2">
                             <strong> Execution options </strong>
-                        </p>
-
-                        <div class="custom-control custom-switch text-center">
-                            <input type="checkbox" class="custom-control-input" id="run-dot">
-                            <label class="custom-control-label" for="run-dot">Run automatically</label>
+                        </div>
+                        <div class="run-auto-box">
+                            <div class="custom-control custom-switch text-center">
+                                <input type="checkbox" class="custom-control-input" id="run-dot">
+                                <label class="custom-control-label" for="run-dot">Run automatically</label>
+                            </div>
                         </div>
 
-                        <div id="tab-execute">
-                            <p class="text-center">
-                                <strong>Choose tab to execute</strong>
-                            </p>
+                        <div id="tab-execute" class="option-container">
+                            <div class="text-center mb-1">
+                                <strong class="tab-execute-title">Choose tab to execute</strong>
+                            </div>
                             <div id="tab-execute-new" class="list-group">
                                 <button type="button" class="list-group-item list-group-item-action check-auto-run-tab"> Execute the active tab </button>
                                 <div class="list-divider list-group-item">
@@ -165,7 +169,7 @@
                                 <button type="button" class="list-group-item list-group-item-action check-run-tab" value="editor1"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P 1</span> </button>
                             </div>
                         </div>
-                        <div class="text-center" id="reset-container">
+                        <div class="text-center run-auto-box" id="reset-container">
                             <p class="text-center">
                                 <strong> Reset all options </strong>
                             </p>

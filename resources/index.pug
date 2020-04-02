@@ -54,7 +54,7 @@
             <div id="notidication-body" class="toast-body"></div>
         </div>
     </div>
-    <nav class="navbar navbar-expand-sm navbar-light ">
+    <nav class="navbar navbar-expand-sm navbar-light">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-brand">
             <img src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
@@ -127,6 +127,7 @@
                     <div class="text-center left-panel-title mt-2 mb-2">
                         <h5>Run options</h5>
                     </div>
+
                     <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
                     <select name="language" id="inputLanguage" class="custom-select">
                     </select>
@@ -146,17 +147,23 @@
                         <p class="text-center">
                             <strong> Execution options </strong>
                         </p>
-                        <label>
-                            <input type="checkbox" value="true" id="run-dot"> Run automatically
-                        </label>
+
+                        <div class="custom-control custom-switch text-center">
+                            <input type="checkbox" class="custom-control-input" id="run-dot">
+                            <label class="custom-control-label" for="run-dot">Run automatically</label>
+                        </div>
+
                         <div id="tab-execute">
                             <p class="text-center">
                                 <strong>Choose tab to execute</strong>
                             </p>
-                            <label class="check-run-lp">
-                                <input type="checkbox" value="editor1">
-                                <span>L P 1</span>
-                            </label>
+                            <div id="tab-execute-new" class="list-group">
+                                <button type="button" class="list-group-item list-group-item-action check-auto-run-tab"> Execute the active tab </button>
+                                <div class="list-divider list-group-item">
+                                    <div class="divider"></div>
+                                </div>
+                                <button type="button" class="list-group-item list-group-item-action check-run-tab" value="editor1"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P 1</span> </button>
+                            </div>
                         </div>
                         <div class="text-center" id="reset-container">
                             <p class="text-center">
@@ -253,7 +260,7 @@
                         <strong>Use of all solvers and systems is provided under the respective licenses; we refrain from taking any responsibility for any use that goes out of the scopes of such licenses.</strong>
                     </p>
                     <p>LoIDE is an Open Source project available on
-                        <a href="https://github.com/DeMaCS-UNICAL/LoIDE">Github
+                        <a href="https://github.com/DeMaCS-UNICAL/LoIDE" target="_blank">Github
                             <i class="fa fa-github"></i>
                         </a>
                     </p>

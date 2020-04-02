@@ -212,20 +212,23 @@ $(window).resize(function () {
 });
 
 function saveOptions() {
-    $("#tab-execute input").each(function (index, element) {
-        if ($(this).prop('checked')) {
-            $(this).attr("name", "tab[" + index + "]");
-        }
-    });
     $("#run-dot").attr("name", "runAuto");
     form = $('#input').serializeFormJSON();
+    form.tab = [];
+
+    $('.check-run-tab.checked').each(function (index, element) {
+        form.tab.push($(this).val());
+    });
+
+    if(form.tab.length == 0) {
+        delete form.tab;
+    }
+
+    console.log('SAVE OPT', form);
     stringify = JSON.stringify(form);
     if (!saveOption("solverOptions", stringify)) {
         alert("Sorry, this options will not save in your browser");
     }
-    $("#tab-execute input").each(function (index, element) {
-        $(this).removeAttr("name");
-    });
     $("#run-dot").removeAttr("name");
 }
 
@@ -243,6 +246,8 @@ $(document).ready(function () {
     inizializeButtonLoideMode();
 
     setWindowResizeTrigger();
+
+    initializeCheckTabToRun();
 
     $('img[alt=logo]').on('click',function (e) {
             location.reload();
@@ -415,6 +420,24 @@ $(document).ready(function () {
 
 });
 
+function initializeCheckTabToRun() {
+    $('.check-run-tab').off();
+    $('.check-auto-run-tab').off();
+
+    $('.check-run-tab').on('click', function(e){
+        console.log('active button');
+        $(this).find('.check-icon').toggleClass('invisible');
+        $(this).toggleClass('checked');
+    });
+
+    $('.check-auto-run-tab').on('click', function(e){
+        $('.check-run-tab.checked').each(function () {
+            $(this).removeClass('checked');
+            $(this).find('.check-icon').toggleClass('invisible');
+        })
+    });
+}
+
 /**
  * @description Serialize form and send it to socket server and waits for the response
  */
@@ -428,6 +451,7 @@ function callSocketServer(onlyActiveTab) {
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
     var form = $('#input').serializeFormJSON();
+    console.log('RUN', form);
     if(form.option == null){
         form.option = [{name:""}];
     }
@@ -627,7 +651,7 @@ function inizializeChangeNameContextmenu(){
         $('#change-name-tab').on('click',function () {
             var nameValue = $('#change-name-tab-textbox').val().trim();
             if(nameValue.length !== 0) {
-                $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
+                $('.check-run-tab[value="' + idEditorToChangeTabName + '"]').find('.check-tab-name').text(nameValue);
                 thisTab.children('.name-tab').text(nameValue);
                 thisTab.popover('hide');
             }
@@ -858,8 +882,10 @@ $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
     inizializeChangeNameContextmenu();
+    initializeCheckTabToRun();
     setAceMode();
     setElementsColorMode();
+
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -879,16 +905,18 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         $(currentID).remove();
         delete editors[ideditor];
         $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
-        $($(':checkbox[value="' + ideditor + '"]')).parent().remove();
+        $('.check-run-tab[value="' + ideditor + '"]').remove();
+        console.log('item: ' + ideditor, $('.check-run-tab[value="' + ideditor + '"]'));
+
         if ($(".nav-tabs").children().length === 1) { // add a new tab if we delete the last
             var parent = $('.add-tab').parent();
             idEditor = 'editor1';
             ideditor = 'editor1';
-            $('<li role="presentation"><a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"><span class="name-tab">L P 1</span><span class="delete-tab"><i class="fa fa-times"></i></span></a> </li>').insertBefore(parent);
+            $('<li class="nav-item"> <a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">L P 1</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
             $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
             editors[ideditor] = new ace.edit(ideditor);
             setUpAce(ideditor, "");
-            $('#tab-execute').append(' <label class="check-run-lp"><input type="checkbox" value="' + ideditor + '"> <span>L P 1</span></label>');
+            $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + ideditor + '">  <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> L P 1 </span> </button>');
             $("[data-target='#tab1']").trigger('click');
             inizializeChangeNameContextmenu();
         }
@@ -904,15 +932,24 @@ $(document).on('click', '.delete-tab', function () { // delete tab
                     $(this).find('.ace').attr("id", ideditor);
                     editors[ideditor] = editors[currentEditor];
                     delete editors[currentEditor];
-                    var parent = $(':checkbox[value="' + currentEditor + '"]').parent().empty();
-                    $(parent).append('<input type="checkbox" value="' + ideditor + '"> <span class="name-tab">L P ' + (index + 1) + '</span>');
+                    var currentCheck = $('.check-run-tab[value="' + currentEditor + '"]');
+                    var wasInvisible = false;
+                    if(currentCheck.find('check-icon').hasClass('invisible')) {
+                        wasInvisible = true;
+                    }
+                    currentCheck.empty();
+                    currentCheck.attr('value', ideditor);
+                    currentCheck.append('<div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P ' + (index + 1) + '</span>');
+                    if(!wasInvisible) {
+                        currentCheck.find('check-icon').removeClass('invisible');
+                    }
                 }
                 $('.btn-tab').each(function (index) {
                     var thisTab = $(this);
                     var idTabEditor = $(this).attr('data-target');
                     idEditorToChangeTabName = $(idTabEditor).children().attr('id');
                     var nameValue =thisTab.children('.name-tab').text();
-                    $(':checkbox[value="' + idEditorToChangeTabName + '"]').siblings('span').text(nameValue);
+                    $('.check-run-tab[value="' + idEditorToChangeTabName + '"]').find('.check-tab-name').text(nameValue);
                 });
             });
             }
@@ -1077,7 +1114,8 @@ function setJSONInput(config) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
             $(id).remove();
-            $(':checkbox[value="editor' + (index + 1) + '"]').parent().remove();
+            console.log('remove', (index + 1));
+            $('.check-run-tab[value="editor' + (index + 1) + '"]').remove();
         });
         var tabID;
         $(config.program).each(function (index, element) {
@@ -1086,7 +1124,8 @@ function setJSONInput(config) {
         $("[data-target='#" + tabID + "']").trigger('click'); // active last tab inserted
         if (config.hasOwnProperty('tab')) {
             $(config.tab).each(function (index, element) {
-                $(':checkbox[value="' + element + '"]').prop('checked', true);
+                $('.check-run-tab[value="' + element + '"]').find('.check-icon').toggleClass('invisible');
+                $('.check-run-tab[value="' + element + '"]').toggleClass('checked');
             });
         }
         if (config.hasOwnProperty('runAuto')) {
@@ -1098,6 +1137,7 @@ function setJSONInput(config) {
         $('#output').text(config.output);
         setOptions(config);
         setTabsName(config);
+        initializeCheckTabToRun();
         return true;
     } else {
         return false;
@@ -1281,7 +1321,7 @@ function onDone(data) {
             $(this).text(data.names[index]);
             var id = index + 1 ;
             var editor = "editor" + id;
-            $(':checkbox[value="' + editor + '"]').siblings('span').text(data.names[index]);
+            $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(data.names[index]);
         }
         else {
             if(index > tabOpened -1 ) {
@@ -1289,12 +1329,10 @@ function onDone(data) {
                 $(this).text(data.names[index - tabOpened]);
                 var id = index + 1 ;
                 var editor = "editor" + id;
-                $(':checkbox[value="' + editor + '"]').siblings('span').text(data.names[index - tabOpened]);
+                $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(data.names[index - tabOpened]);
             }
         }
-
     });
-
     inizializeChangeNameContextmenu();
     setAceMode();
 }
@@ -1401,15 +1439,13 @@ function inizializeShortcuts() {
  */
 function addMorePrograms() {
     var check = false;
-    var index = 0;
-    $('#tab-execute').find('[type="checkbox"]').each(function (indexInArray) {
-        if ($(this).prop('checked')) {
-            check = true;
-            var p = editors[$(this).val()].getValue();
-            $('.layout').prepend("<input type='hidden' name='program[" + index + "]' id='program" + $(this).val() + "' value='" + p + "' class='programs'>");
-            index += 1;
-        }
+
+    $('.check-run-tab.checked').each(function (index, element) {
+        check = true;
+        var p = editors[$(this).val()].getValue();
+        $('.layout').prepend("<input type='hidden' name='program[" + index + "]' id='program" + $(this).val() + "' value='" + p + "' class='programs'>");
     });
+
     if (check) {
         $('#program').remove();
     }
@@ -1565,7 +1601,7 @@ function addTab(obj, text) {
     $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">L P ' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
-    $('#tab-execute').append(' <label class="check-run-lp"><input type="checkbox" value="' + editorId + '"> <span>L P ' + id + '</span></label>');
+    $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + editorId + '"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> L P ' + id + '</span> </button>');
     addCommand(editorId);
     return tabId;
 }
@@ -2313,7 +2349,7 @@ function loadFromURL() {
             $(this).text(tabNames[index]);
             var id = index + 1;
             var editor = "editor" + id;
-            $(':checkbox[value="' + editor + '"]').siblings('span').text(tabNames[index]);
+            $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabNames[index]);
         });
 
         $('#inputLanguage').val(language).change();
@@ -2524,7 +2560,7 @@ function loadProjectFromLocalStorage() {
             $(this).text(tabsName[index]);
             var id = index + 1;
             var editor = "editor" + id;
-            $(':checkbox[value="' + editor + '"]').siblings('span').text(tabsName[index]);
+            $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabsName[index]);
         });
 
         $("a[data-target='#tab1']").trigger('click');
@@ -2563,7 +2599,7 @@ function setTabsName(config) {
         $(this).text(tabsName[index]);
         var id = index + 1;
         var editor = "editor" + id;
-        $(':checkbox[value="' + editor + '"]').siblings('span').text(tabsName[index]);
+        $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabsName[index]);
     });
 }
 
@@ -2573,23 +2609,24 @@ function downloadLoDIEProject() {
     $('#output-form').attr('name', 'output');
     var text = $("#output").text();
     $('#output-form').val(text);
-    i = 0;
-    $("#tab-execute input").each(function (index, element) {
-        if ($(this).prop('checked')) {
-            $(this).attr("name", "tab[" + i + "]");
-            i++;
-        }
-    });
+
     $("#run-dot").attr("name", "runAuto");
     form = $('#input').serializeFormJSON();
+    form.tab = [];
+
+    $('.check-run-tab.checked').each(function (index, element) {
+        form.tab.push($(this).val());
+    });
+
+    if(form.tab.length == 0) {
+        delete form.tab;
+    }
+
     stringify = JSON.stringify(form);
     createFileToDownload(stringify,"local","LoIDE_Project","json");
     $('#output-form').removeAttr('name');
     destroyPrograms();
     destroyTabsName();
-    $("#tab-execute input").each(function (index, element) {
-        $(this).removeAttr("name");
-    });
     $("#run-dot").removeAttr("name");
 }
 

@@ -2548,7 +2548,7 @@ function loadProjectFromLocalStorage() {
         for (var index = 1; index <= tabsName.length; index++) {
             if (index > 1)
                 $('.add-tab').trigger('click');
-            var idE = "edÏitor" + index;
+            var idE = "editor" + index;
             editors[idE].setValue(logicProgEditors[index - 1]);
         }
 

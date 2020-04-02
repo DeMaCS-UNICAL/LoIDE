@@ -73,14 +73,14 @@
  * @param {string} str - text to copy
  * @description Copy a string to clipboard
  */
-function copyStringToClipboard (str) {
+function copyStringToClipboard(str) {
     // Create new element
     var el = document.createElement('textarea');
     // Set value (string to be copied)
     el.value = str;
     // Set non-editable to avoid focus and move outside of view
     el.setAttribute('readonly', '');
-    el.style = {position: 'absolute', left: '-9999px'};
+    el.style = { position: 'absolute', left: '-9999px' };
     document.body.appendChild(el);
     // Select text inside element
     el.select();
@@ -145,19 +145,19 @@ var mobileMaxWidthScreen = 576;
 function getSolverOptionDOMElement() {
     return "" +
         "<div class=\"row row-option\">" +
-            "<div class=\"col-sm-12 form-group\">" +
-                "<div class=\"badge-option mb-1\">" +
-                    "<span class=\" text-center badge badge-info option-number\"></span>" +
-                    "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
-                "</div>" +
-                "<div class=\"input-group opname\">" +
-                    "<select name=\"option[0][name]\" class=\"form-control form-control-option custom-select not-alone\">" +
-                        getHTMLFromJQueryElement( getSolverOptions( $('#inputLanguage').val(), $('#inputengine').val() ) ) +
-                    "</select>" +
-                "</div>" +
-                "<div class=\"option-values\">" +
-                "</div>" +
-            "</div>" +
+        "<div class=\"col-sm-12 form-group\">" +
+        "<div class=\"badge-option mb-1\">" +
+        "<span class=\" text-center badge badge-info option-number\"></span>" +
+        "<span class=\" text-center badge badge-danger btn-del-option ml-1\"> <i class=\"fa fa-trash-o\"></i></span>" +
+        "</div>" +
+        "<div class=\"input-group opname\">" +
+        "<select name=\"option[0][name]\" class=\"form-control form-control-option custom-select not-alone\">" +
+        getHTMLFromJQueryElement(getSolverOptions($('#inputLanguage').val(), $('#inputengine').val())) +
+        "</select>" +
+        "</div>" +
+        "<div class=\"option-values\">" +
+        "</div>" +
+        "</div>" +
         "</div>";
 }
 
@@ -220,7 +220,7 @@ function saveOptions() {
         form.tab.push($(this).val());
     });
 
-    if(form.tab.length == 0) {
+    if (form.tab.length == 0) {
         delete form.tab;
     }
 
@@ -249,8 +249,8 @@ $(document).ready(function () {
 
     initializeCheckTabToRun();
 
-    $('img[alt=logo]').on('click',function (e) {
-            location.reload();
+    $('img[alt=logo]').on('click', function (e) {
+        location.reload();
     });
 
     layout = $('body > .container > form > .layout').layout({
@@ -275,7 +275,7 @@ $(document).ready(function () {
 
     $('#font-output').change(function (e) {
         var size = $(this).val();
-        if( size === "") {
+        if (size === "") {
             $(this).val(defaultFontSize);
         }
         $('#output').css('font-size', size + "px");
@@ -286,7 +286,7 @@ $(document).ready(function () {
 
     $('#font-editor').change(function (e) {
         var size = $(this).val();
-        if( size === "") {
+        if (size === "") {
             $(this).val(defaultFontSize);
         }
         setFontSizeEditors(size);
@@ -332,7 +332,7 @@ $(document).ready(function () {
 
     $('#btn-upload').on('click', function () {
         var expandend = $('#btn-upload').attr('aria-expanded');
-        setHeightComponents(expandend,true);
+        setHeightComponents(expandend, true);
     });
 
     if (window.innerWidth > 450 && localStorage.getItem("outputPos") !== "south") {
@@ -383,8 +383,8 @@ $(document).ready(function () {
         $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
         $('.option-solver > div').toggleClass(" show"); // add class to show option components
         $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
-            function() {
-            $(window).trigger('resize');
+            function () {
+                $(window).trigger('resize');
             });
     });
 
@@ -400,7 +400,7 @@ $(document).ready(function () {
 
     inizializeSnippets();
 
-    $('#inputLanguage').on('change', function() {
+    $('#inputLanguage').on('change', function () {
         inizializeAutoComplete();
         setAceMode();
     });
@@ -424,13 +424,13 @@ function initializeCheckTabToRun() {
     $('.check-run-tab').off();
     $('.check-auto-run-tab').off();
 
-    $('.check-run-tab').on('click', function(e){
+    $('.check-run-tab').on('click', function (e) {
         console.log('active button');
         $(this).find('.check-icon').toggleClass('invisible');
         $(this).toggleClass('checked');
     });
 
-    $('.check-auto-run-tab').on('click', function(e){
+    $('.check-auto-run-tab').on('click', function (e) {
         $('.check-run-tab.checked').each(function () {
             $(this).removeClass('checked');
             $(this).find('.check-icon').toggleClass('invisible');
@@ -444,7 +444,7 @@ function initializeCheckTabToRun() {
 function callSocketServer(onlyActiveTab) {
     $('.tab-pane').each(function (index, element) {
         var id = $(this).find('.ace').attr("id");
-        editors[id].replaceAll("", {"needle":"'"});
+        editors[id].replaceAll("", { "needle": "'" });
     });
     if (onlyActiveTab || !addMorePrograms()) {
         var text = editors[idEditor].getValue();
@@ -452,8 +452,8 @@ function callSocketServer(onlyActiveTab) {
     }
     var form = $('#input').serializeFormJSON();
     console.log('RUN', form);
-    if(form.option == null){
-        form.option = [{name:""}];
+    if (form.option == null) {
+        form.option = [{ name: "" }];
     }
     destroyPrograms();
     var socket = io.connect();
@@ -466,14 +466,14 @@ function callSocketServer(onlyActiveTab) {
         if (response.error == "") {
             console.log(response.model); // debug string
             $('#output').text(response.model); // append the response in the container
-            if(localStorage.getItem('mode') === 'dark') {
-                $('#output').css('color','white');
+            if (localStorage.getItem('mode') === 'dark') {
+                $('#output').css('color', 'white');
             }
-            else{
-                $('#output').css('color','black');
+            else {
+                $('#output').css('color', 'black');
             }
         } else {
-            $('#output').text(response.model+response.error);
+            $('#output').text(response.model + response.error);
             $('#output').css('color', 'red');
         }
     });
@@ -491,15 +491,15 @@ function intervalRun() {
  * @description Create a new Blob that contains the data from your form feild, then create a link object to attach the file to download
  */
 
-function createFileToDownload(text,where,name,type) {
+function createFileToDownload(text, where, name, type) {
     var textFileAsBlob = new Blob([text], {
 
-        type: 'application/'+type
+        type: 'application/' + type
     });
     /**
      * specify the name of the file to be saved
      */
-    var fileNameToSaveAs = name+ "." + type;
+    var fileNameToSaveAs = name + "." + type;
     var downloadLink = document.createElement("a");
 
     /**
@@ -519,11 +519,10 @@ function createFileToDownload(text,where,name,type) {
     downloadLink.onclick = destroyClickedElement;
     downloadLink.style.display = "none";
     document.body.appendChild(downloadLink);
-    if(where == "local")
-    {
+    if (where == "local") {
         downloadLink.click();
     }
-    else if(where == "dropbox"){
+    else if (where == "dropbox") {
         // console.log(downloadLink.href);
         // var options = { error: function (errorMessage) { alert(errorMessage);}};
         // Dropbox.save(downloadLink.href, fileNameToSaveAs, options);
@@ -544,21 +543,21 @@ function inizializeDropzone() {
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
 }
 
-function inizializeChangeNameContextmenu(){
+function inizializeChangeNameContextmenu() {
 
     $.contextMenu({
         selector: '.btn-context-tab',
         items: {
             Rename: {
                 name: "Rename",
-                icon: function(opt, $itemElement, itemKey, item){
+                icon: function (opt, $itemElement, itemKey, item) {
                     // Set the content to the menu trigger selector and add an bootstrap icon to the item.
                     $itemElement.html('<i class="fa fa-pencil context-menu-item-icon" aria-hidden="true"></i>' + item.name);
 
                     // Add the context-menu-icon-updated class to the item
                     return 'context-menu-icon-updated';
                 },
-                callback: function(itemKey, opt, e){
+                callback: function (itemKey, opt, e) {
                     console.log(opt.$trigger.parent());
                     closeAllPopovers();
                     opt.$trigger.parent().popover('show');
@@ -566,17 +565,17 @@ function inizializeChangeNameContextmenu(){
             },
             RunThisTab: {
                 name: "Run this logic program",
-                icon: function(opt, $itemElement, itemKey, item){
+                icon: function (opt, $itemElement, itemKey, item) {
                     // Set the content to the menu trigger selector and add an bootstrap icon to the item.
                     $itemElement.html('<i class="fa fa-play context-menu-item-icon" aria-hidden="true"></i>' + item.name);
 
                     // Add the context-menu-icon-updated class to the item
                     return 'context-menu-icon-updated';
                 },
-                callback: function(itemKey, opt, e){
-                        $("#output").empty();
-                        $("#output").text("Sending..");
-                        callSocketServer(true);
+                callback: function (itemKey, opt, e) {
+                    $("#output").empty();
+                    $("#output").text("Sending..");
+                    callSocketServer(true);
                 }
             }
         },
@@ -594,7 +593,7 @@ function inizializeChangeNameContextmenu(){
     $(".btn-tab").popover({
         title: 'Change the tab name',
         container: 'body',
-        trigger : 'manual',
+        trigger: 'manual',
         html: true,
         placement: 'bottom'
     });
@@ -617,18 +616,18 @@ function inizializeChangeNameContextmenu(){
         }
     });
 
-    $('.btn-tab').on('inserted.bs.popover', function() {
+    $('.btn-tab').on('inserted.bs.popover', function () {
         $('.popover-body').last().html('<div class="input-group">\n' +
             '      <input type="text" class="form-control" id="change-name-tab-textbox" placeholder="Type a name">\n' +
             '      <span class="input-group-btn">\n' +
             '        <button class="btn btn-light" type="button" id="change-name-tab"><i class="fa fa-chevron-right"></i></button>\n' +
             '      </span>\n' +
             '    </div>');
-        if(localStorage.getItem('mode') === 'dark') {
+        if (localStorage.getItem('mode') === 'dark') {
             $('#change-name-tab').removeClass('btn-light');
             $('#change-name-tab').addClass('btn-dark');
         }
-        else{
+        else {
             $('#change-name-tab').removeClass('btn-dark');
             $('#change-name-tab').addClass('btn-light');
         }
@@ -636,21 +635,21 @@ function inizializeChangeNameContextmenu(){
         var thisTab = $(this);
         var idTabEditor = $(this).attr('data-target');
         idEditorToChangeTabName = $(idTabEditor).children().attr('id');
-        $('#change-name-tab').prop('disabled',true);
+        $('#change-name-tab').prop('disabled', true);
 
-        $('#change-name-tab-textbox').on('input',function () {
+        $('#change-name-tab-textbox').on('input', function () {
             var nameValue = $('#change-name-tab-textbox').val().trim();
-            if(nameValue.length === 0){
-                $('#change-name-tab').prop('disabled',true);
+            if (nameValue.length === 0) {
+                $('#change-name-tab').prop('disabled', true);
             }
-            else{
-                $('#change-name-tab').prop('disabled',false);
+            else {
+                $('#change-name-tab').prop('disabled', false);
             }
         });
 
-        $('#change-name-tab').on('click',function () {
+        $('#change-name-tab').on('click', function () {
             var nameValue = $('#change-name-tab-textbox').val().trim();
-            if(nameValue.length !== 0) {
+            if (nameValue.length !== 0) {
                 $('.check-run-tab[value="' + idEditorToChangeTabName + '"]').find('.check-tab-name').text(nameValue);
                 thisTab.children('.name-tab').text(nameValue);
                 thisTab.popover('hide');
@@ -658,14 +657,14 @@ function inizializeChangeNameContextmenu(){
         });
 
         $('#change-name-tab-textbox').on('keyup', function (e) {
-            if(e.key == "Enter") {
+            if (e.key == "Enter") {
                 $('#change-name-tab').trigger('click');
             }
         });
     });
 
-    $('.name-tab').on('contextmenu',function (e) {
-        $(e.target).siblings( ".btn-context-tab" ).trigger('click');
+    $('.name-tab').on('contextmenu', function (e) {
+        $(e.target).siblings(".btn-context-tab").trigger('click');
         return false; // don't show the contest menu of the browser
     });
 }
@@ -712,13 +711,13 @@ $(document).on('mouseup', '#output', function () {
         $("#output").empty();
         $("#output").html(text);
         var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-        $("mark").css("color", "#" + randomColor); 
+        $("mark").css("color", "#" + randomColor);
     }
 });
 
 $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
     currentTab = e.target;
-    if($(this).hasClass('add-tab')){
+    if ($(this).hasClass('add-tab')) {
         return;
     }
     idTab = $(currentTab).attr('data-target');
@@ -735,7 +734,7 @@ $(document).on('click', '#split-up', function () {
 });
 
 // Sets the solvers and options on language change
-$(document).on('change', '#inputLanguage', function(event) {
+$(document).on('change', '#inputLanguage', function (event) {
     inizializeAutoComplete();
 
     loadLanguageSolvers();
@@ -754,10 +753,10 @@ $(document).on('change', '#inputengine', function (event) {
  * @description - Load the languages
  */
 function loadLanguages() {
-    var inputLanguage   = $('#inputLanguage');
+    var inputLanguage = $('#inputLanguage');
 
     inputLanguage.empty();
-    inputLanguage.append( getLanguages() );
+    inputLanguage.append(getLanguages());
     inputLanguage.change();
 }
 
@@ -772,17 +771,17 @@ function getLanguages() {
  * @description - Load the solvers for a specific language
  */
 function loadLanguageSolvers() {
-    var language    = $('#inputLanguage').val();
+    var language = $('#inputLanguage').val();
     var inputSolver = $('#inputengine');
 
     // Check that the value is not empty
-    if(language !== '') {
+    if (language !== '') {
         // Clear the values
         inputSolver.empty();
         $('.form-control-option').empty();
 
         // Load the solvers
-        inputSolver.append( getLanguageSolvers( language ) );
+        inputSolver.append(getLanguageSolvers(language));
 
         // Call the listener and select the first value
         inputSolver.change();
@@ -793,27 +792,27 @@ function loadLanguageSolvers() {
  * @description - Get the solvers for a specific language
  * @param {Object} language
  */
-function getLanguageSolvers( language ) {
-   return $('#servicesContainer [name="solvers"][value="' + language + '"] > option').clone();
+function getLanguageSolvers(language) {
+    return $('#servicesContainer [name="solvers"][value="' + language + '"] > option').clone();
 }
 
 /**
  * @description - Load the executors for a specific solver
  */
 function loadSolverExecutors() {
-    var inputLanguage   = $('#inputLanguage');
-    var inputSolver     = $('#inputengine');
-    var inputExecutor   = $('#inputExecutor');
+    var inputLanguage = $('#inputLanguage');
+    var inputSolver = $('#inputengine');
+    var inputExecutor = $('#inputExecutor');
 
-    var language    = inputLanguage.val();
-    var solver      = inputSolver.val();
+    var language = inputLanguage.val();
+    var solver = inputSolver.val();
 
     // Check that the value is not empty
-    if(language !== '' && solver !== '') {
+    if (language !== '' && solver !== '') {
         inputExecutor.empty();
 
         // Append the executors to the DOM
-        inputExecutor.append( getSolverExecutors( language, solver ) );
+        inputExecutor.append(getSolverExecutors(language, solver));
 
         // Select the first executor
         inputExecutor.change();
@@ -825,7 +824,7 @@ function loadSolverExecutors() {
  * @param {Object} language
  * @param {Object} solver
  */
-function getSolverExecutors( language, solver ) {
+function getSolverExecutors(language, solver) {
     return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="executors"][value="' + solver + '"] > option').clone();
 }
 
@@ -833,18 +832,18 @@ function getSolverExecutors( language, solver ) {
  * @description - Load the options for a specific solver
  */
 function loadSolverOptions() {
-    var inputLanguage   = $('#inputLanguage');
-    var inputSolver     = $('#inputengine');
+    var inputLanguage = $('#inputLanguage');
+    var inputSolver = $('#inputengine');
 
-    var language    = inputLanguage.val();
-    var solver      = inputSolver.val();
+    var language = inputLanguage.val();
+    var solver = inputSolver.val();
 
     // Check that the value is not empty
-    if(language !== '' && solver !== '') {
+    if (language !== '' && solver !== '') {
         $('.form-control-option').empty();
 
         // Append the options to the DOM
-        $('.row-option .form-control-option').append( getSolverOptions( language, solver ) );
+        $('.row-option .form-control-option').append(getSolverOptions(language, solver));
 
         // Select the first option and refresh all input fields
         $('.form-control-option').change();
@@ -856,7 +855,7 @@ function loadSolverOptions() {
  * @param {Object} language
  * @param {Object} solver
  */
-function getSolverOptions( language, solver ) {
+function getSolverOptions(language, solver) {
     return $('#servicesContainer [name="solvers"][value="' + language + '"] [name="options"][value="' + solver + '"] > option').clone();
 }
 
@@ -864,7 +863,7 @@ function getSolverOptions( language, solver ) {
 $(document).on('change', '.form-control-option', function () {
     var val = $(this).val();
 
-    if ( $(this).find("[value='" + val + "']").attr('word_argument') == 'true' ) {
+    if ($(this).find("[value='" + val + "']").attr('word_argument') == 'true') {
         if (($(this).closest('.row-option').find('.option-values').find('.option-value').length) <= 0) {
             addInputValue($(this).parent());
             $(this).addClass('not-alone');
@@ -934,13 +933,13 @@ $(document).on('click', '.delete-tab', function () { // delete tab
                     delete editors[currentEditor];
                     var currentCheck = $('.check-run-tab[value="' + currentEditor + '"]');
                     var wasInvisible = false;
-                    if(currentCheck.find('check-icon').hasClass('invisible')) {
+                    if (currentCheck.find('check-icon').hasClass('invisible')) {
                         wasInvisible = true;
                     }
                     currentCheck.empty();
                     currentCheck.attr('value', ideditor);
                     currentCheck.append('<div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P ' + (index + 1) + '</span>');
-                    if(!wasInvisible) {
+                    if (!wasInvisible) {
                         currentCheck.find('check-icon').removeClass('invisible');
                     }
                 }
@@ -948,11 +947,11 @@ $(document).on('click', '.delete-tab', function () { // delete tab
                     var thisTab = $(this);
                     var idTabEditor = $(this).attr('data-target');
                     idEditorToChangeTabName = $(idTabEditor).children().attr('id');
-                    var nameValue =thisTab.children('.name-tab').text();
+                    var nameValue = thisTab.children('.name-tab').text();
                     $('.check-run-tab[value="' + idEditorToChangeTabName + '"]').find('.check-tab-name').text(nameValue);
                 });
             });
-            }
+        }
         if ($(".nav-tabs").children().length === 2) {
             idEditor = "editor1";
         }
@@ -1066,7 +1065,7 @@ function addOptionDOM() {
     var solverOptions = $('#solver-options');
 
     // Append the DOM element containing the solver's options
-    solverOptions.append( getSolverOptionDOMElement() );
+    solverOptions.append(getSolverOptionDOMElement());
 
     // Select the first option
     $('.row-option .form-control-option').last().change();
@@ -1078,10 +1077,10 @@ function addOptionDOM() {
  */
 function deleteInputValue(inputClass) {
     var inputValue = $(inputClass).closest('.row-option');
-    if(inputValue.find('.option-value').length > 1){
+    if (inputValue.find('.option-value').length > 1) {
         inputClass.parent().remove();
     }
-    else{
+    else {
         inputClass.siblings('.option-value').val("");
     }
 }
@@ -1153,15 +1152,15 @@ function addOption(option) {
     $('#btn-add-option').trigger('click');
     var lastOption = $('.row-option').last();
     lastOption.find('.form-control-option').val(option.name).change();
-    if(option.value != null){
-        option.value.forEach(function (item,index) {
-           if(index == 0){
-               lastOption.find('.option-value').last().val(item);
-           }
-           else if(index >= 1){
-               lastOption.find('.btn-add').trigger('click');
-               lastOption.find('.option-value').last().val(item);
-           }
+    if (option.value != null) {
+        option.value.forEach(function (item, index) {
+            if (index == 0) {
+                lastOption.find('.option-value').last().val(item);
+            }
+            else if (index >= 1) {
+                lastOption.find('.btn-add').trigger('click');
+                lastOption.find('.option-value').last().val(item);
+            }
         });
     }
 }
@@ -1170,7 +1169,7 @@ function addOption(option) {
  * @param {string} expanded - check if the upload container is expanded to resize the components
  * @description set the height of the components with the height of your browser
  */
-function setHeightComponents(expanded,open) {
+function setHeightComponents(expanded, open) {
     var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; // cross-browser solution
     var navbarHeight = $('.navbar').outerHeight(true);
     var tabpanel = $(".nav-tabs").outerHeight(true);
@@ -1185,7 +1184,7 @@ function setHeightComponents(expanded,open) {
         $('.ui-layout-pane-east').css('height', height - (navbarHeight + containerUpload));
         $('.ui-layout-pane-center').css('height', height - (navbarHeight + containerUpload + 10));
         $('.ace').css('height', height - (navbarHeight + tabpanel + containerUpload));
-        if(expanded === "true"){
+        if (expanded === "true") {
             $(window).trigger('resize');
         }
     } else {
@@ -1262,17 +1261,17 @@ function getValidFileList(files, callback) {
     var count = files.length;              // total number of files
     var data = {
         names: [],
-        texts : []
+        texts: []
     };                     // accepted files
 
     // Get the selected files
-    for(var i = 0; i < count; i++) {       // invoke readers
+    for (var i = 0; i < count; i++) {       // invoke readers
         checkFile(files[i]);
     }
 
     function checkFile(file) {
         var reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = function (event) {
             var text = this.result;
             // Here I parse and check the data and if valid append it to texts
             data.texts.push(text);        // or the original `file` blob..
@@ -1287,12 +1286,12 @@ function getValidFileList(files, callback) {
 function onDone(data) {
     var tabOpened = $('.btn-tab').length;
     var tabID;
-    console.log('data',data);
+    console.log('data', data);
     var openOnFirst = false;
-    for (var index = 0; index < data.texts.length ; index++) {
-        if( tabOpened == 1) {
-            if(index == 0){
-                if(editors[idEditor].getValue().trim() === ''){
+    for (var index = 0; index < data.texts.length; index++) {
+        if (tabOpened == 1) {
+            if (index == 0) {
+                if (editors[idEditor].getValue().trim() === '') {
                     editors[idEditor].setValue(data.texts[index]);
                     openOnFirst = true;
                 }
@@ -1308,7 +1307,7 @@ function onDone(data) {
             tabID = addTab($(".add-tab"), data.texts[index]);
         }
     }
-    if( tabOpened == 1) {
+    if (tabOpened == 1) {
         $("a[data-target='#tab1']").trigger('click');
     }
     else {
@@ -1316,18 +1315,18 @@ function onDone(data) {
     }
 
     $('.name-tab').each(function (index) {
-        if(openOnFirst){
+        if (openOnFirst) {
             var id = index + 1;
             $(this).text(data.names[index]);
-            var id = index + 1 ;
+            var id = index + 1;
             var editor = "editor" + id;
             $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(data.names[index]);
         }
         else {
-            if(index > tabOpened -1 ) {
+            if (index > tabOpened - 1) {
                 console.log('sono alla tab: ', index);
                 $(this).text(data.names[index - tabOpened]);
-                var id = index + 1 ;
+                var id = index + 1;
                 var editor = "editor" + id;
                 $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(data.names[index - tabOpened]);
             }
@@ -1353,9 +1352,9 @@ function setUpAce(ideditor, text) {
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
-    if(localStorage.getItem('mode') === 'dark')
+    if (localStorage.getItem('mode') === 'dark')
         editors[ideditor].setTheme(defaultDarkTheme);
-    else{
+    else {
         editors[ideditor].setTheme(defaultTheme);
     }
     editors[ideditor].setValue(text);
@@ -1383,8 +1382,8 @@ function setUpAce(ideditor, text) {
             }
         }
         if (e.lines[0] === "'") {
-            operation_alert({reason: "Single quotes not yet supported"});
-            editors[ideditor].replaceAll("", {"needle":"'"});
+            operation_alert({ reason: "Single quotes not yet supported" });
+            editors[ideditor].replaceAll("", { "needle": "'" });
         }
         inizializeAutoComplete();
     });
@@ -1614,8 +1613,8 @@ function addTab(obj, text) {
 function addCommand(ideditor) {
     editors[ideditor].commands.addCommand({
         name: 'myCommand',
-        bindKey: {win: 'Ctrl-enter',  mac: 'Command-enter'},
-        exec: function(editor) {
+        bindKey: { win: 'Ctrl-enter', mac: 'Command-enter' },
+        exec: function (editor) {
             intervalRun();
         },
         readOnly: true
@@ -1653,8 +1652,8 @@ function resetSolverOptions() {
 function closeAllPopovers(iam) {
     // close contestmenu popovers
     $('.btn-tab').popover('hide');
-    if(iam != popoverType.SAVE) $('.popover-download').popover('hide');
-    if(iam != popoverType.SHARE) $('.popover-share').popover('hide');
+    if (iam != popoverType.SAVE) $('.popover-download').popover('hide');
+    if (iam != popoverType.SHARE) $('.popover-share').popover('hide');
 }
 
 const popoverType = {
@@ -1662,14 +1661,14 @@ const popoverType = {
     SHARE: 'share'
 }
 
-function inizializePopovers(){
+function inizializePopovers() {
 
     $(".popover-download").popover({
-        trigger : 'manual',
+        trigger: 'manual',
         html: true,
         placement: 'bottom',
         // content: ' ',
-    }).click(function(e) {
+    }).click(function (e) {
         closeAllPopovers(popoverType.SAVE);
         $(this).popover('toggle');
         $('.popover-download').not(this).popover('hide');
@@ -1679,39 +1678,39 @@ function inizializePopovers(){
 
     $('body').on('click', function (e) {
         $('.popover-download').each(function () {
-            if ( e.target.id !== 'btn-download' && !$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            if (e.target.id !== 'btn-download' && !$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
                 $(this).popover('hide');
             }
         });
     });
 
-    $('.popover-download').on('inserted.bs.popover', function() {
+    $('.popover-download').on('inserted.bs.popover', function () {
 
         // set what happens when user clicks on the button
         $('.popover-header').last().html('');
         $('.popover-body').last().html(
             '<div class="save-content">\n' +
-                '<div class="mb-2"> Save the project to:\n </div>' +
-                '<div class="save-btn text-center">\n' +
-                    '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
-                    '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
-                '</div>\n' +
+            '<div class="mb-2"> Save the project to:\n </div>' +
+            '<div class="save-btn text-center">\n' +
+            '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
+            '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
+            '</div>\n' +
             '</div>');
 
-        if(localStorage.getItem('mode') === 'dark') {
+        if (localStorage.getItem('mode') === 'dark') {
             $('#local-download').removeClass('btn-outline-dark');
             $('#local-download').addClass('btn-outline-light');
             $('#cloud-download').removeClass('btn-outline-dark');
             $('#cloud-download').addClass('btn-outline-light');
         }
-        else{
+        else {
             $('#local-download').removeClass('btn-outline-light');
             $('#local-download').addClass('btn-outline-dark');
             $('#cloud-download').removeClass('btn-outline-light');
             $('#cloud-download').addClass('btn-outline-dark');
         }
 
-        $("#local-download").on('click', function(){
+        $("#local-download").on('click', function () {
             downloadLoDIEProject();
 
             // TO MOVE ON OUTPUT DOWNLOAD
@@ -1747,7 +1746,7 @@ function inizializePopovers(){
         });
     });
 
-    $('.popover-download').on('hidden.bs.popover', function(){
+    $('.popover-download').on('hidden.bs.popover', function () {
         // clear listeners
         $("#local-download").off('click');
         $("#cloud-download").off('click');
@@ -1756,11 +1755,11 @@ function inizializePopovers(){
 
     $(".popover-share").popover({
         container: 'body',
-        trigger : 'manual',
+        trigger: 'manual',
         html: true,
         placement: 'bottom',
 
-    }).click(function(e) {
+    }).click(function (e) {
         closeAllPopovers(popoverType.SHARE);
         $(this).popover('toggle');
         $('.popover-share').not(this).popover('hide');
@@ -1775,27 +1774,27 @@ function inizializePopovers(){
         });
     });
 
-    $('.popover-share').on('inserted.bs.popover', function() {
+    $('.popover-share').on('inserted.bs.popover', function () {
 
         $('.popover-body').last().html('' +
             '<div class="popover-share-content">\n' +
             '<div class="mb-2"> Share the project:\n </div>' +
             '<div class="input-group">' +
-                    '<input id="link-to-share" type="text" class="form-control" readonly>' +
-                    '<div class="input-group-append">'+
-                        '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>'+
-                    '</div>'+
-                '</div>' +
-                // '<div class="text-center mt-2 mb-2"> or </div>' +
-                // '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
-                // '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
+            '<input id="link-to-share" type="text" class="form-control" readonly>' +
+            '<div class="input-group-append">' +
+            '<button class="btn btn-outline-dark" type="button" id="btn-copy-link" data-clipboard-target="#link-to-share"><i class="fa fa-clipboard"></i></button>' +
+            '</div>' +
+            '</div>' +
+            // '<div class="text-center mt-2 mb-2"> or </div>' +
+            // '<button id="share-btn-download" type="button" class="btn btn-outline-dark btn-block">Download</button>\n' +
+            // '<button id="share-btn-save-on-cloud" type="button" class="btn btn-outline-dark btn-block" disabled>Save on cloud</button>\n' +
             '</div>');
 
-        if(localStorage.getItem('mode') === 'dark') {
+        if (localStorage.getItem('mode') === 'dark') {
             $('#btn-copy-link').removeClass('btn-outline-dark');
             $('#btn-copy-link').addClass('btn-outline-light');
         }
-        else{
+        else {
             $('#btn-copy-link').removeClass('btn-outline-light');
             $('#btn-copy-link').addClass('btn-outline-dark');
         }
@@ -1805,37 +1804,37 @@ function inizializePopovers(){
 
     });
 
-    $('.popover-share').on('hidden.bs.popover', function(){
+    $('.popover-share').on('hidden.bs.popover', function () {
         $('#btn-copy-link').off('click');
     });
 }
 
 function inizializeToolbar() {
 
-    $('#btn-undo').on('click',function () {
+    $('#btn-undo').on('click', function () {
         var undoManager = editors[idEditor].session.getUndoManager();
-        if(undoManager.hasUndo()){
+        if (undoManager.hasUndo()) {
             undoManager.undo();
         }
     });
 
-    $('#btn-redo').on('click',function () {
+    $('#btn-redo').on('click', function () {
         var undoManager = editors[idEditor].session.getUndoManager();
-        if(undoManager.hasRedo()){
+        if (undoManager.hasRedo()) {
             undoManager.redo();
         }
 
     });
 
-    $('#btn-search').on('click',function () {
+    $('#btn-search').on('click', function () {
 
-        var searchPanel = $('#'+ idEditor).find('.ace_search');
+        var searchPanel = $('#' + idEditor).find('.ace_search');
 
-        if(searchPanel.length == 0) {
+        if (searchPanel.length == 0) {
             editors[idEditor].execCommand("find");
         }
         else {
-            if(searchPanel.css('display') == 'none') {
+            if (searchPanel.css('display') == 'none') {
                 searchPanel.css('display', 'block');
             }
             else {
@@ -1862,11 +1861,11 @@ function inizializeToolbar() {
         ok = true;
     }
     catch (e) {
-        console.error('Clipboard API is not supported in this browser',e);
+        console.error('Clipboard API is not supported in this browser', e);
         $('#btn-paste').remove();
     }
 
-    if(ok) {
+    if (ok) {
         $('#btn-paste').on('click', function () {
             navigator.clipboard.readText()
                 .then(text => {
@@ -1874,7 +1873,7 @@ function inizializeToolbar() {
                 })
                 .catch(err => {
                     // maybe user didn't grant access to read from clipboard
-                    operation_alert({reason: 'Clipboard read error'});
+                    operation_alert({ reason: 'Clipboard read error' });
                     console.error((err));
                 });
         });
@@ -1883,9 +1882,9 @@ function inizializeToolbar() {
     $('#btn-dwn-this-lp').on('click', function () {
         var text = editors[idEditor].getValue();
         var TabToDownload = $('#' + idEditor).parent().attr('id');
-        var nameTab = $(".btn-tab[data-target='#" + TabToDownload +"']");
-        var string = nameTab.text().replace(/\s/g,'');
-        createFileToDownload(text,"local","LogicProgram_" + string,"txt");
+        var nameTab = $(".btn-tab[data-target='#" + TabToDownload + "']");
+        var string = nameTab.text().replace(/\s/g, '');
+        createFileToDownload(text, "local", "LogicProgram_" + string, "txt");
     });
 
     // TO-DO
@@ -1912,7 +1911,7 @@ function inizializeSnippets() {
             switch (solverChosen) {
                 case "dlv":
                     completer = {
-                        getCompletions: function(editor, session, pos, prefix, callback) {
+                        getCompletions: function (editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
                                     caption: "#const",
@@ -2095,7 +2094,7 @@ function inizializeSnippets() {
 
                 case "dlv2":
                     completer = {
-                        getCompletions: function(editor, session, pos, prefix, callback) {
+                        getCompletions: function (editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
                                     caption: "#int",
@@ -2144,7 +2143,7 @@ function inizializeSnippets() {
                     langTools.addCompleter(completer);
                     break;
                 case "clingo":
-                    // add snippets
+                // add snippets
             }
             break;
 
@@ -2161,24 +2160,24 @@ function inizializeAutoComplete() {
         case "asp":
             var splitRegex = /(([a-zA-Z_]+[0-9]*)*)(\(.+?\))/gi;
             var words = editors[idEditor].getValue().match(splitRegex);
-            if(words != null){
+            if (words != null) {
                 var map = new Map();
                 words.forEach(function (word) {
                     var name = word.match(/[^_](([a-zA-Z_]+[0-9]*)*)/)[0];
                     var arities = word.match(/\(.+?\)/)[0].split(",").length;
-                    map.set(name,arities);
+                    map.set(name, arities);
                 });
                 var completions = [];
                 map.forEach(function (key, value) {
                     completions.push({
                         caption: value,
-                        snippet: value+giveBrackets(key),
+                        snippet: value + giveBrackets(key),
                         meta: "atom"
                     });
                 });
 
                 var completer = {
-                    getCompletions: function(editor, session, pos, prefix, callback) {
+                    getCompletions: function (editor, session, pos, prefix, callback) {
                         callback(null, completions);
                     }
                 }
@@ -2193,26 +2192,26 @@ function inizializeAutoComplete() {
 }
 
 function giveBrackets(value) {
-    var par="(";
+    var par = "(";
     var LETTER = "A";
     var limit = 0;
-    if(value <= 26)
-        limit=value;
+    if (value <= 26)
+        limit = value;
     else
         limit = 26;
-    for(var i=0; i<limit; i++){
-        var num = i+1;
-        par += "${" + num +":"+ LETTER + "}" ;
-        if(i!==limit-1){
-            par+=","
+    for (var i = 0; i < limit; i++) {
+        var num = i + 1;
+        par += "${" + num + ":" + LETTER + "}";
+        if (i !== limit - 1) {
+            par += ","
         }
         LETTER = String.fromCharCode(LETTER.charCodeAt(0) + 1);
     }
-    par+=")";
+    par += ")";
     return par;
 }
 
-function createURL(){
+function createURL() {
     var URL = window.location.host + "/?programs=";
     var length = $(".nav-tabs").children().length;
     var empty = true;
@@ -2220,17 +2219,16 @@ function createURL(){
     for (var index = 1; index <= length - 1; index++) {
         var idE = "editor" + index;
 
-        URL +=  encodeURIComponent(editors[idE].getValue().trim()) ;
-        if(index < length - 1)
-        {
+        URL += encodeURIComponent(editors[idE].getValue().trim());
+        if (index < length - 1) {
             URL += ','
         }
 
-        if(editors[idE].getValue().length > 0)
+        if (editors[idE].getValue().length > 0)
             empty = false;
     }
 
-    if(empty){
+    if (empty) {
         $('#link-to-share').val(window.location.href);
     }
     else {
@@ -2239,8 +2237,7 @@ function createURL(){
         var idx = 1
         $('.name-tab').each(function () {
             URL += encodeURIComponent($(this).text());
-            if(idx < length - 1)
-            {
+            if (idx < length - 1) {
                 URL += ','
             }
             idx++;
@@ -2257,9 +2254,9 @@ function createURL(){
         var opt = localStorage.getItem("solverOptions");
         if (opt !== null) {
             var obj = JSON.parse(opt);
-            if(obj.option != null) {
+            if (obj.option != null) {
                 // put the options
-               URL += '&options=' + encodeURIComponent(JSON.stringify( obj.option ));
+                URL += '&options=' + encodeURIComponent(JSON.stringify(obj.option));
             }
         }
 
@@ -2274,7 +2271,7 @@ function createURL(){
                     if (data.shorturl == undefined) {
                         $('#link-to-share').val("Ops. Something went wrong");
                         if (URL.length >= 5000) {
-                            operation_alert({reason: "The logic program is too long to be shared."})
+                            operation_alert({ reason: "The logic program is too long to be shared." })
                         }
                     } else {
                         $('#link-to-share').val(data.shorturl);
@@ -2306,43 +2303,43 @@ function getParameterByName(name, url) {
 function loadFromURL() {
     var thisURL = window.location.href;
 
-    if(getParameterByName('programs', thisURL) != null){
+    if (getParameterByName('programs', thisURL) != null) {
         // get params from url
         var logicPr = getParameterByName('programs', thisURL).split(',');
-        console.log('LogicPrograms:',logicPr);
+        console.log('LogicPrograms:', logicPr);
 
         var tabNames = getParameterByName('tabnames', thisURL).split(',');
-        console.log('TabNames:',tabNames);
+        console.log('TabNames:', tabNames);
 
         var language = getParameterByName('lang', thisURL);
-        console.log('lang:',language);
+        console.log('lang:', language);
 
         var solver = getParameterByName('solver', thisURL);
-        console.log('solver:',solver);
+        console.log('solver:', solver);
 
         var options = getParameterByName('options', thisURL);
-        console.log('options:',options);
+        console.log('options:', options);
 
         // decode params
-        for(var i=0; i<logicPr.length; i++){
+        for (var i = 0; i < logicPr.length; i++) {
             logicPr[i] = decodeURIComponent(logicPr[i]);
         }
-        console.log('LogicPrograms decoded:',logicPr);
+        console.log('LogicPrograms decoded:', logicPr);
 
-        for(var i=0; i<tabNames.length; i++){
+        for (var i = 0; i < tabNames.length; i++) {
             tabNames[i] = decodeURIComponent(tabNames[i]);
         }
-        console.log('TabNames decoded:',tabNames);
+        console.log('TabNames decoded:', tabNames);
 
         options = JSON.parse(decodeURIComponent(options));
         console.log('Options decoded:', options);
 
         // set params
-        for (var index = 1; index <= tabNames.length ; index++) {
-            if(index > 1)
+        for (var index = 1; index <= tabNames.length; index++) {
+            if (index > 1)
                 $('.add-tab').trigger('click');
             var idE = "editor" + index;
-            editors[idE].setValue(logicPr[index-1]);
+            editors[idE].setValue(logicPr[index - 1]);
         }
 
         $('.name-tab').each(function (index) {
@@ -2355,7 +2352,7 @@ function loadFromURL() {
         $('#inputLanguage').val(language).change();
         $('#inputengine').val(solver).change();
 
-        if(options != null) {
+        if (options != null) {
             $(options).each(function (index, item) {
                 if (item !== null) {
                     addOption(item);
@@ -2373,7 +2370,7 @@ function setTooltip(btn, message) {
 }
 
 function hideTooltip(btn) {
-    setTimeout(function() {
+    setTimeout(function () {
         $(btn).tooltip('hide');
     }, 1000);
 }
@@ -2386,12 +2383,12 @@ function setClipboard() {
 
     var clipboard = new ClipboardJS('#btn-copy-link');
 
-    clipboard.on('success', function(e) {
+    clipboard.on('success', function (e) {
         setTooltip(e.trigger, 'Copied!');
         hideTooltip(e.trigger);
     });
 
-    clipboard.on('error', function(e) {
+    clipboard.on('error', function (e) {
         setTooltip(e.trigger, 'Failed!');
         hideTooltip(e.trigger);
     });
@@ -2404,17 +2401,17 @@ function setNotifications() {
     $('#notification-project').toast({
         delay: 10000,
     });
-    $('#load-project').on('click',function () {
-       loadProjectFromLocalStorage();
-       $('#notification-project').toast('hide');
+    $('#load-project').on('click', function () {
+        loadProjectFromLocalStorage();
+        $('#notification-project').toast('hide');
     });
 }
 
 function setWindowResizeTrigger() {
-    $('#loide-collapse').on('hidden.bs.collapse',function () {
+    $('#loide-collapse').on('hidden.bs.collapse', function () {
         $(window).trigger('resize');
     });
-    $('#loide-collapse').on('shown.bs.collapse',function () {
+    $('#loide-collapse').on('shown.bs.collapse', function () {
         $(window).trigger('resize');
     });
 }
@@ -2429,20 +2426,20 @@ function inizializeButtonLoideMode() {
 
 function setLoideStyleMode(mode) {
 
-    switch(mode){
+    switch (mode) {
         case 'light':
-            localStorage.setItem('mode','light');
+            localStorage.setItem('mode', 'light');
             document.querySelector('body').classList.remove('dark');
             break;
 
         case 'dark':
-            localStorage.setItem('mode','dark');
+            localStorage.setItem('mode', 'dark');
             document.querySelector('body').classList.add('dark');
             break;
 
         default:
-            if(localStorage.getItem('mode') == null)
-                localStorage.setItem('mode','light');
+            if (localStorage.getItem('mode') == null)
+                localStorage.setItem('mode', 'light');
             ((localStorage.getItem('mode') || 'dark') === 'dark') ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
             break;
     }
@@ -2484,7 +2481,7 @@ function setLightStyleToUIElements() {
         var idE = "editor" + index;
         editors[idE].setTheme(defaultTheme);
     }
-    $('#output').css('color','black');
+    $('#output').css('color', 'black');
 }
 
 function setDarkStyleToUIElements() {
@@ -2506,7 +2503,7 @@ function setDarkStyleToUIElements() {
         var idE = "editor" + index;
         editors[idE].setTheme(defaultDarkTheme);
     }
-    $('#output').css('color','white');
+    $('#output').css('color', 'white');
 }
 
 function saveProjectToLocalStorage() {
@@ -2522,20 +2519,19 @@ function saveProjectToLocalStorage() {
         logicProgEditors.push(editors[idE].getValue());
     }
 
-    saveOption("tabsName",JSON.stringify(tabsName));
-    saveOption("logicProgEditors",JSON.stringify(logicProgEditors));
+    saveOption("tabsName", JSON.stringify(tabsName));
+    saveOption("logicProgEditors", JSON.stringify(logicProgEditors));
 }
 
 function checkProjectOnLocalStorage() {
-    if(supportLocalStorage()) {
+    if (supportLocalStorage()) {
         var tabsName = [];
         var logicProgEditors = [];
-        if(localStorage.getItem("tabsName") != undefined && localStorage.getItem("logicProgEditors") != undefined)
-        {
+        if (localStorage.getItem("tabsName") != undefined && localStorage.getItem("logicProgEditors") != undefined) {
             tabsName = JSON.parse(localStorage.getItem("tabsName"));
             logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-            if(tabsName.length > 1 || logicProgEditors[0].trim().length > 0){
+            if (tabsName.length > 1 || logicProgEditors[0].trim().length > 0) {
                 $('#notification-project').toast('show');
             }
         }
@@ -2543,17 +2539,17 @@ function checkProjectOnLocalStorage() {
 }
 
 function loadProjectFromLocalStorage() {
-    if(supportLocalStorage()){
+    if (supportLocalStorage()) {
         var tabsName = [];
         var logicProgEditors = [];
         tabsName = JSON.parse(localStorage.getItem("tabsName"));
         logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-        for (var index = 1; index <= tabsName.length ; index++) {
-            if(index > 1)
+        for (var index = 1; index <= tabsName.length; index++) {
+            if (index > 1)
                 $('.add-tab').trigger('click');
-            var idE = "editor" + index;
-            editors[idE].setValue(logicProgEditors[index-1]);
+            var idE = "edÏitor" + index;
+            editors[idE].setValue(logicProgEditors[index - 1]);
         }
 
         $('.name-tab').each(function (index) {
@@ -2564,14 +2560,14 @@ function loadProjectFromLocalStorage() {
         });
 
         $("a[data-target='#tab1']").trigger('click');
-        
+
         var opt = localStorage.getItem("solverOptions");
         if (opt !== null) {
             var obj = JSON.parse(opt);
             $('#inputLanguage').val(obj.language).change();
             $('#inputengine').val(obj.engine).change();
             $('#inputExecutor').val(obj.executor).change();
-            if(obj.option != null) {
+            if (obj.option != null) {
                 setOptions(obj);
             }
             if (obj.hasOwnProperty('runAuto')) {
@@ -2618,12 +2614,12 @@ function downloadLoDIEProject() {
         form.tab.push($(this).val());
     });
 
-    if(form.tab.length == 0) {
+    if (form.tab.length == 0) {
         delete form.tab;
     }
 
     stringify = JSON.stringify(form);
-    createFileToDownload(stringify,"local","LoIDE_Project","json");
+    createFileToDownload(stringify, "local", "LoIDE_Project", "json");
     $('#output-form').removeAttr('name');
     destroyPrograms();
     destroyTabsName();
@@ -2645,16 +2641,16 @@ function renameSelectOptionsAndBadge() {
 }
 
 function openRunOptions() {
-    if($(window).width() > mobileMaxWidthScreen){
+    if ($(window).width() > mobileMaxWidthScreen) {
         $('#btn-option').trigger('click');
     }
 }
 
-function getHTMLFromJQueryElement( jQueryElement ) {
-    var DOMElement  = '';
+function getHTMLFromJQueryElement(jQueryElement) {
+    var DOMElement = '';
 
-    for( var i = 0; i < jQueryElement.length; i ++ )
-        DOMElement += jQueryElement.get( i ).outerHTML;
+    for (var i = 0; i < jQueryElement.length; i++)
+        DOMElement += jQueryElement.get(i).outerHTML;
 
     return DOMElement;
 }

@@ -90,7 +90,7 @@ define('ace/mode/asp_highlight_rules', [], function (require, exports, module) {
             ],
             "blocknext": [{
                 token: "text",
-                regex: "[,|.]*",
+                regex: "\\s*[,|.]*\\s*",
                 next: "blocktagproperties"
             }]
         };

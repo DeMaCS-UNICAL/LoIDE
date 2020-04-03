@@ -81,9 +81,15 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div id="loide-collapse" class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto ml-auto">
-                <li class="nav-item">
-                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about">About </button>
+            <ul class="navbar-nav mr-auto ml-auto" >
+                <li class="nav-item mr-2">
+                    <button class="btn btn-info btn-block" data-toggle="modal" href="#setting-editor">
+                        <i class="fa fa-paint-brush"></i>
+                        <span>Appearance</span>
+                    </button>
+                </li>
+                <li class="nav-item ml-2">
+                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about"> <i class="fa fa-info" aria-hidden="true"></i> About </button>
                 </li>
             </ul>
 
@@ -165,14 +171,14 @@
                                 <strong class="tab-execute-title">Choose tab to execute</strong>
                             </div>
                             <div id="tab-execute-new" class="list-group">
-                                <button type="button" class="list-group-item list-group-item-action check-auto-run-tab"> Execute the active tab </button>
+                                <button type="button" class="list-group-item list-group-item-action check-auto-run-tab"> Execute the opened tab only</button>
                                 <div class="list-divider list-group-item">
                                     <div class="divider"></div>
                                 </div>
                                 <button type="button" class="list-group-item list-group-item-action check-run-tab" value="editor1"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P 1</span> </button>
                             </div>
                         </div>
-                        <div class="text-center run-auto-box" id="reset-container">
+                        <div class="text-center option-container" id="reset-container">
                             <p class="text-center">
                                 <strong> Reset all options </strong>
                             </p>
@@ -205,6 +211,7 @@
                                     <a role="tab" data-toggle="tab" class="add-tab nav-link btn-light"><i class="fa fa-plus"></i></a>
                                 </li>
                             </ul>
+                            <!-- Toolbar  -->
                             <div class="col-xs-12 ml-auto text-center toolbar">
                                 <button id="btn-dwn-this-lp" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Download this logic program" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-download" aria-hidden="true"></i></button>
                                 <div class="undo-redo btn-group" role="group">
@@ -229,9 +236,6 @@
                 </div>
                 <div class="pane ui-layout-east">
                     <div id="setting-output"> Output
-                        <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor">
-                            <i class="fa fa-cog"></i>
-                        </a>
                         <a role="button" id="split" class="pull-right">
                             <i class="fa fa-chevron-down"></i>
                         </a>
@@ -290,7 +294,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Editor Options</h4>
+                    <h4 class="modal-title">Appearance</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

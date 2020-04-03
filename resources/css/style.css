@@ -511,6 +511,7 @@ li.nav-item:hover > a:not(.active) {
 
 .context-menu-item-icon {
   padding-right: 8px;
+  width: 25px;
 }
 
 select.not-alone {

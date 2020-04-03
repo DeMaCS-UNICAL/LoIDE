@@ -239,7 +239,7 @@ $(document).ready(function () {
 
     inizializePopovers();
 
-    inizializeChangeNameContextmenu();
+    inizializeTabContextmenu();
 
     inizializeToolbar();
 
@@ -543,13 +543,13 @@ function inizializeDropzone() {
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
 }
 
-function inizializeChangeNameContextmenu() {
+function inizializeTabContextmenu() {
 
     $.contextMenu({
         selector: '.btn-context-tab',
         items: {
             Rename: {
-                name: "Rename",
+                name: "Change tab name",
                 icon: function (opt, $itemElement, itemKey, item) {
                     // Set the content to the menu trigger selector and add an bootstrap icon to the item.
                     $itemElement.html('<i class="fa fa-pencil context-menu-item-icon" aria-hidden="true"></i>' + item.name);
@@ -573,9 +573,33 @@ function inizializeChangeNameContextmenu() {
                     return 'context-menu-icon-updated';
                 },
                 callback: function (itemKey, opt, e) {
-                    $("#output").empty();
-                    $("#output").text("Sending..");
-                    callSocketServer(true);
+                    runCurrentTab();
+                }
+            },
+            SaveTabContent: {
+                name: "Save tab content",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    $itemElement.html('<i class="fa fa-download context-menu-item-icon" aria-hidden="true"></i>' + item.name);
+
+                    // Add the context-menu-icon-updated class to the item
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (itemKey, opt, e) {
+                    downloadCurrentTabContent();
+                }
+            },
+            Delete: {
+                name: "Delete",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    $itemElement.html('<i class="fa fa-times context-menu-item-icon" aria-hidden="true"></i>' + item.name);
+
+                    // Add the context-menu-icon-updated class to the item
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (itemKey, opt, e) {
+                    opt.$trigger.parent().find('.delete-tab').trigger('click');
                 }
             }
         },
@@ -880,7 +904,7 @@ $(document).on('change', '.form-control-option', function () {
 $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
-    inizializeChangeNameContextmenu();
+    inizializeTabContextmenu();
     initializeCheckTabToRun();
     setAceMode();
     setElementsColorMode();
@@ -917,7 +941,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             setUpAce(ideditor, "");
             $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + ideditor + '">  <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> L P 1 </span> </button>');
             $("[data-target='#tab1']").trigger('click');
-            inizializeChangeNameContextmenu();
+            inizializeTabContextmenu();
         }
         else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
             // $('.nav-tabs').find('li:not(:last)').each(function (index) {
@@ -1217,7 +1241,7 @@ function isJosn(str) {
 function createTextArea(layout) {
     $("#setting-output").remove();
     $("#output").remove();
-    $(layout).append('<div id="setting-output"> Output <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor"><i class="fa fa-cog"></i></a> <a role="button" id="split" class="pull-right" href="#"><i class="fa fa-chevron-down"></i></a></div><div id="output" class="output"></div>');
+    $(layout).append('<div id="setting-output"> Output <a role="button" id="split" class="pull-right" href="#"><i class="fa fa-chevron-down"></i></a></div><div id="output" class="output"></div>');
 }
 
 function handleFileSelect(evt) {
@@ -1239,7 +1263,7 @@ function handleFileSelect(evt) {
                 if (!setJSONInput(jsontext)) {
                     editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
                 }
-                inizializeChangeNameContextmenu();
+                inizializeTabContextmenu();
             } else {
                 editors[idEditor].setValue(text);
             }
@@ -1332,7 +1356,7 @@ function onDone(data) {
             }
         }
     });
-    inizializeChangeNameContextmenu();
+    inizializeTabContextmenu();
     setAceMode();
 }
 
@@ -1880,19 +1904,22 @@ function inizializeToolbar() {
     }
 
     $('#btn-dwn-this-lp').on('click', function () {
-        var text = editors[idEditor].getValue();
-        var TabToDownload = $('#' + idEditor).parent().attr('id');
-        var nameTab = $(".btn-tab[data-target='#" + TabToDownload + "']");
-        var string = nameTab.text().replace(/\s/g, '');
-        createFileToDownload(text, "local", "LogicProgram_" + string, "txt");
+        downloadCurrentTabContent();
     });
+}
 
-    // TO-DO
-    // $('#btn-run-thistab').on('click',function () {
-    //     $("#output").empty();
-    //     $("#output").text("Sending..");
-    //     callSocketServer(true);
-    // });
+function downloadCurrentTabContent() {
+    var text = editors[idEditor].getValue();
+    var TabToDownload = $('#' + idEditor).parent().attr('id');
+    var nameTab = $(".btn-tab[data-target='#" + TabToDownload + "']");
+    var string = nameTab.text().replace(/\s/g, '');
+    createFileToDownload(text, "local", "LogicProgram_" + string, "txt");
+}
+
+function runCurrentTab() {
+    $("#output").empty();
+    $("#output").text("Sending..");
+    callSocketServer(true);
 }
 
 function inizializeSnippets() {

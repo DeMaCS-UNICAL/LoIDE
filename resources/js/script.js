@@ -224,7 +224,6 @@ function saveOptions() {
         delete form.tab;
     }
 
-    console.log('SAVE OPT', form);
     stringify = JSON.stringify(form);
     if (!saveOption("solverOptions", stringify)) {
         alert("Sorry, this options will not save in your browser");
@@ -425,7 +424,6 @@ function initializeCheckTabToRun() {
     $('.check-auto-run-tab').off();
 
     $('.check-run-tab').on('click', function (e) {
-        console.log('active button');
         $(this).find('.check-icon').toggleClass('invisible');
         $(this).toggleClass('checked');
     });
@@ -451,7 +449,6 @@ function callSocketServer(onlyActiveTab) {
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
     var form = $('#input').serializeFormJSON();
-    console.log('RUN', form);
     if (form.option == null) {
         form.option = [{ name: "" }];
     }
@@ -548,23 +545,8 @@ function inizializeTabContextmenu() {
     $.contextMenu({
         selector: '.btn-context-tab',
         items: {
-            Rename: {
-                name: "Change tab name",
-                icon: function (opt, $itemElement, itemKey, item) {
-                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-                    $itemElement.html('<i class="fa fa-pencil context-menu-item-icon" aria-hidden="true"></i>' + item.name);
-
-                    // Add the context-menu-icon-updated class to the item
-                    return 'context-menu-icon-updated';
-                },
-                callback: function (itemKey, opt, e) {
-                    console.log(opt.$trigger.parent());
-                    closeAllPopovers();
-                    opt.$trigger.parent().popover('show');
-                }
-            },
             RunThisTab: {
-                name: "Run this logic program",
+                name: "Run",
                 icon: function (opt, $itemElement, itemKey, item) {
                     // Set the content to the menu trigger selector and add an bootstrap icon to the item.
                     $itemElement.html('<i class="fa fa-play context-menu-item-icon" aria-hidden="true"></i>' + item.name);
@@ -576,8 +558,37 @@ function inizializeTabContextmenu() {
                     runCurrentTab();
                 }
             },
+            Rename: {
+                name: "Rename",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    $itemElement.html('<i class="fa fa-pencil context-menu-item-icon" aria-hidden="true"></i>' + item.name);
+
+                    // Add the context-menu-icon-updated class to the item
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (itemKey, opt, e) {
+                    closeAllPopovers();
+                    opt.$trigger.parent().popover('show');
+                }
+            },
+            Duplicate: {
+                name: "Duplicate",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    $itemElement.html('<i class="fa fa-clone context-menu-item-icon" aria-hidden="true"></i>' + item.name);
+
+                    // Add the context-menu-icon-updated class to the item
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (itemKey, opt, e) {
+                    var textToDuplicate = editors[idEditor].getValue();
+                    var tabID = addTab(null, textToDuplicate);
+                    $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
+                }
+            },
             SaveTabContent: {
-                name: "Save tab content",
+                name: "Save content",
                 icon: function (opt, $itemElement, itemKey, item) {
                     // Set the content to the menu trigger selector and add an bootstrap icon to the item.
                     $itemElement.html('<i class="fa fa-download context-menu-item-icon" aria-hidden="true"></i>' + item.name);
@@ -605,7 +616,7 @@ function inizializeTabContextmenu() {
         },
         events: {
             show: function (e) {
-                console.log($(this).parent().trigger('click'));
+                $(this).parent().trigger('click');
             }
         }
     });
@@ -929,7 +940,6 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         delete editors[ideditor];
         $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
         $('.check-run-tab[value="' + ideditor + '"]').remove();
-        console.log('item: ' + ideditor, $('.check-run-tab[value="' + ideditor + '"]'));
 
         if ($(".nav-tabs").children().length === 1) { // add a new tab if we delete the last
             var parent = $('.add-tab').parent();
@@ -1137,7 +1147,7 @@ function setJSONInput(config) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
             $(id).remove();
-            console.log('remove', (index + 1));
+            // console.log('remove', (index + 1));
             $('.check-run-tab[value="editor' + (index + 1) + '"]').remove();
         });
         var tabID;
@@ -1310,7 +1320,6 @@ function getValidFileList(files, callback) {
 function onDone(data) {
     var tabOpened = $('.btn-tab').length;
     var tabID;
-    console.log('data', data);
     var openOnFirst = false;
     for (var index = 0; index < data.texts.length; index++) {
         if (tabOpened == 1) {
@@ -1348,7 +1357,6 @@ function onDone(data) {
         }
         else {
             if (index > tabOpened - 1) {
-                console.log('sono alla tab: ', index);
                 $(this).text(data.names[index - tabOpened]);
                 var id = index + 1;
                 var editor = "editor" + id;
@@ -1617,15 +1625,22 @@ function setOptions(obj) {
  * @param {string} text - set value of the editor
  * @description Adds tab to the DOM
  */
-function addTab(obj, text) {
+function addTab(obj, text, name) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
     editorId = "editor" + id;
-    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">L P ' + id + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(obj.parent());
+    var tabName = name == null ? 'L P ' + id : name;
+    $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">' + tabName + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($('.add-tab').parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
-    $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + editorId + '"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> L P ' + id + '</span> </button>');
+    $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + editorId + '"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> ' + tabName + '</span> </button>');
     addCommand(editorId);
+
+    inizializeTabContextmenu();
+    initializeCheckTabToRun();
+    setAceMode();
+    setElementsColorMode();
+
     return tabId;
 }
 
@@ -2333,33 +2348,33 @@ function loadFromURL() {
     if (getParameterByName('programs', thisURL) != null) {
         // get params from url
         var logicPr = getParameterByName('programs', thisURL).split(',');
-        console.log('LogicPrograms:', logicPr);
+        // console.log('LogicPrograms:', logicPr);
 
         var tabNames = getParameterByName('tabnames', thisURL).split(',');
-        console.log('TabNames:', tabNames);
+        // console.log('TabNames:', tabNames);
 
         var language = getParameterByName('lang', thisURL);
-        console.log('lang:', language);
+        // console.log('lang:', language);
 
         var solver = getParameterByName('solver', thisURL);
-        console.log('solver:', solver);
+        // console.log('solver:', solver);
 
         var options = getParameterByName('options', thisURL);
-        console.log('options:', options);
+        // console.log('options:', options);
 
         // decode params
         for (var i = 0; i < logicPr.length; i++) {
             logicPr[i] = decodeURIComponent(logicPr[i]);
         }
-        console.log('LogicPrograms decoded:', logicPr);
+        // console.log('LogicPrograms decoded:', logicPr);
 
         for (var i = 0; i < tabNames.length; i++) {
             tabNames[i] = decodeURIComponent(tabNames[i]);
         }
-        console.log('TabNames decoded:', tabNames);
+        // console.log('TabNames decoded:', tabNames);
 
         options = JSON.parse(decodeURIComponent(options));
-        console.log('Options decoded:', options);
+        // console.log('Options decoded:', options);
 
         // set params
         for (var index = 1; index <= tabNames.length; index++) {

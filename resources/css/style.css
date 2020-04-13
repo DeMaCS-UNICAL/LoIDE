@@ -108,7 +108,8 @@
 
 #output {
   width: 100%;
-  min-height: 95%;
+  flex-grow: 1;
+  overflow: auto;
   border: 1px #d9dee4 dotted;
   border-radius: 8px;
   background: #f4f9ff;
@@ -274,11 +275,13 @@ mark {
   font-weight: bold;
 }
 
-.ui-layout-pane-east {
+.ui-layout-pane-east, .ui-layout-pane-south {
   overflow: hidden;
+  display: flex !important;
+  flex-direction: column;
 }
 
-.ui-layout-pane-east:hover {
+.ui-layout-pane-east:hover, .ui-layout-pane-east:hover {
   overflow-y: auto;
 }
 
@@ -632,6 +635,10 @@ select.not-alone {
   overflow: hidden;
 }
 
+select {
+  cursor: pointer;
+}
+
 /*DARK-MODE SECTION*/
 
 body.dark {
@@ -765,4 +772,22 @@ body.dark .list-divider {
 body.dark .divider {
   /* background-color: #9b9a9a; */
   border: #cccaca dashed 0.5px;
+}
+
+body.dark .context-menu-item {
+  background-color: #e8e8e8;
+}
+
+body.dark .context-menu-list {
+  background-color: #e8e8e8;
+
+}
+
+body.dark .context-menu-item.context-menu-hover {
+  background-color: #dbdbdb;
+
+}
+body.dark .list-group-item-action:focus, body.dark .list-group-item-action:hover {
+  background-color: rgb(233, 233, 233);
+
 }

@@ -88,12 +88,14 @@ If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS
 
 
 ## Built With
+ - [Socket.io](https://socket.io) - Used for executor server connection
  - [Ace](https://ace.c9.io) - The "base" of our editor
- - [Bootstrap](https://getbootstrap.com) - the front-end web framework used
+ - [Bootstrap](https://getbootstrap.com) - The front-end web framework used
  - [jQuery](https://jquery.com) and [its UI Layout plugin](http://plugins.jquery.com/layout) - Used to improve the UI
- - [BiMap](https://github.com/alethes/bimap) - Used to manage the options for solvers and languages
+ - [Pugjs](https://pugjs.org) - Used to create a dynamic html pages
+ - [jQuery contextMenu 2](https://swisnl.github.io/jQuery-contextMenu/) - Used for to create the context menus
  - [keymaster.js](https://github.com/madrobby/keymaster) - Used to implement keyboard shortcuts outside the editor
-
+ - [Clipboard.js](https://clipboardjs.com) - Used to create text boxes with copyable text
 <!-- 
 ## Contributing
 

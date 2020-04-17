@@ -38,13 +38,14 @@ if (key.length !== 0 && cert.length !== 0) {
     var secureServer = https.createServer(options, app);
     enableHTTPS = true;
 }
+else {
+    var server = http.createServer(app);
+}
 
 // Sets "Strict-Transport-Security, by default maxAge is set 1 year in seconds
 app.use(helmet.hsts({
     maxAge: maxAge
 }));
-
-var server = http.createServer(app);
 
 var io = require('socket.io').listen(enableHTTPS ? secureServer : server);
 var pckg = require('./package.json');
@@ -114,11 +115,12 @@ if (enableHTTPS) {
         print_log('Version: ' + pckg.version);
     });
 }
-
-server.listen(httpPort, function () {
-    print_log('App listening on port ' + httpPort);
-    print_log('Version: ' + pckg.version);
-});
+else {
+    server.listen(httpPort, function () {
+        print_log('App listening on port ' + httpPort);
+        print_log('Version: ' + pckg.version);
+    });
+}
 
 function print_log(statement) {
     console.log('%s: %s', (new Date()).toLocaleString(), statement); // debug string

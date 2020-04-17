@@ -88,14 +88,16 @@ If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS
 
 
 ## Built With
- - [Socket.io](https://socket.io) - Used for executor server connection
+ 
  - [Ace](https://ace.c9.io) - The "base" of our editor
  - [Bootstrap](https://getbootstrap.com) - The front-end web framework used
+ - [Clipboard.js](https://clipboardjs.com) - Used to create text boxes with copyable text
+ - [Font Awesome Icons 4.7](https://fontawesome.com/v4.7.0/icons/) - Icon set used
  - [jQuery](https://jquery.com) and [its UI Layout plugin](http://plugins.jquery.com/layout) - Used to improve the UI
- - [Pugjs](https://pugjs.org) - Used to create a dynamic html pages
  - [jQuery contextMenu 2](https://swisnl.github.io/jQuery-contextMenu/) - Used for to create the context menus
  - [keymaster.js](https://github.com/madrobby/keymaster) - Used to implement keyboard shortcuts outside the editor
- - [Clipboard.js](https://clipboardjs.com) - Used to create text boxes with copyable text
+ - [Pugjs](https://pugjs.org) - Used to create a dynamic html pages
+ - [Socket.io](https://socket.io) - Used for executor server connection
 <!-- 
 ## Contributing
 

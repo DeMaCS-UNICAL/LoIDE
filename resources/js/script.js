@@ -420,20 +420,39 @@ $(document).ready(function () {
 });
 
 function initializeCheckTabToRun() {
-    $('.check-run-tab').off();
+    $('.check-run-tab:not(.check-auto-run-tab)').off();
     $('.check-auto-run-tab').off();
 
-    $('.check-run-tab').on('click', function (e) {
+    checkEmptyTabSelected();
+
+    $('.check-run-tab:not(.check-auto-run-tab)').on('click', function (e) {
         $(this).find('.check-icon').toggleClass('invisible');
         $(this).toggleClass('checked');
+        checkEmptyTabSelected();
     });
 
     $('.check-auto-run-tab').on('click', function (e) {
-        $('.check-run-tab.checked').each(function () {
+        $('.check-run-tab.checked:not(.check-auto-run-tab)').each(function () {
             $(this).removeClass('checked');
             $(this).find('.check-icon').toggleClass('invisible');
+            console.log('unchecked');
         })
+        $(this).find('.check-icon').removeClass('invisible');
+        $(this).addClass('checked');
+        checkEmptyTabSelected();
     });
+}
+
+function checkEmptyTabSelected() {
+    var tot = $('.check-run-tab.checked:not(.check-auto-run-tab)').length;
+    if(tot === 0) {
+        $('.check-auto-run-tab').find('.check-icon').removeClass('invisible');
+        $('.check-auto-run-tab').addClass('checked');
+    }
+    else {
+        $('.check-auto-run-tab').find('.check-icon').addClass('invisible');
+        $('.check-auto-run-tab').removeClass('checked');
+    }
 }
 
 /**
@@ -626,7 +645,7 @@ function inizializeTabContextmenu() {
     });
 
     $(".btn-tab").popover({
-        title: 'Change the tab name',
+        title: 'Rename',
         container: 'body',
         trigger: 'manual',
         html: true,
@@ -758,6 +777,10 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
     idTab = $(currentTab).attr('data-target');
     idEditor = $(idTab).find('.ace').attr("id");
     editors[idEditor].focus();
+});
+
+$(document).on('click', '#dwn-output', function () {
+    downloadOutput()
 });
 
 $(document).on('click', '#split', function () {
@@ -1250,8 +1273,10 @@ function isJosn(str) {
  */
 function createTextArea(layout) {
     $("#setting-output").remove();
-    $("#output").remove();
-    $(layout).append('<div id="setting-output"> Output <a role="button" id="split" class="pull-right" href="#"><i class="fa fa-chevron-down"></i></a></div><div id="output" class="output"></div>');
+    $(".output-container").remove();
+    $(layout).append('<div class="output-container">  <div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down"></i> </button></div></div> <div id="output" class="output"></div> </div>');
+    setLoideStyleMode();
+    $('#dwn-output').tooltip();
 }
 
 function handleFileSelect(evt) {
@@ -1471,7 +1496,7 @@ function inizializeShortcuts() {
 function addMorePrograms() {
     var check = false;
 
-    $('.check-run-tab.checked').each(function (index, element) {
+    $('.check-run-tab.checked:not(.check-auto-run-tab)').each(function (index, element) {
         check = true;
         var p = editors[$(this).val()].getValue();
         $('.layout').prepend("<input type='hidden' name='program[" + index + "]' id='program" + $(this).val() + "' value='" + p + "' class='programs'>");
@@ -2715,4 +2740,9 @@ function setAceMode() {
             }
             break;
     }
+}
+
+function downloadOutput() {
+    var outputText = $('#output').text();
+    createFileToDownload(outputText, 'local', 'LoIDE_output', 'txt');
 }

@@ -110,8 +110,8 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
 });
 
 if (enableHTTPS) {
-    secureServer.listen(securePort, function () {
-        print_log('App listening on secure port ' + securePort);
+    secureServer.listen(httpsPortP, function () {
+        print_log('App listening on secure port ' + httpsPortP);
         print_log('Version: ' + pckg.version);
     });
 }

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="css/layout-default-latest.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
 
@@ -53,7 +54,7 @@
             <div id="notidication-body" class="toast-body"></div>
         </div>
     </div>
-    <nav class="navbar navbar-expand-sm navbar-light ">
+    <nav class="navbar navbar-expand-sm navbar-light">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-brand">
             <img src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
@@ -80,9 +81,15 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div id="loide-collapse" class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto ml-auto">
-                <li class="nav-item">
-                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about">About </button>
+            <ul class="navbar-nav mr-auto ml-auto" >
+                <li class="nav-item mr-sm-0 mr-md-2">
+                    <button class="btn btn-info btn-block" data-toggle="modal" href="#setting-editor">
+                        <i class="fa fa-paint-brush"></i>
+                        <span>Appearance</span>
+                    </button>
+                </li>
+                <li class="nav-item ml-sm-0 ml-md-2">
+                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about"> <i class="fa fa-info" aria-hidden="true"></i> About </button>
                 </li>
             </ul>
 
@@ -120,44 +127,58 @@
         </div>
     </div>
     <div class="container">
-        <form id="input">
+        <form id="input" style="position: relative;">
             <div class="left-panel" style="height: auto">
                 <div class="option-solver">
                     <div class="text-center left-panel-title mt-2 mb-2">
                         <h5>Run options</h5>
                     </div>
-                    <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
-                    <select name="language" id="inputLanguage" class="custom-select">
-                    </select>
-                    <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
-                    <select name="engine" id="inputengine" class="custom-select">
-                    </select>
-                    <label for="inputExecutor" class="col-sm-12 col-xs-12 mt-2 text-center">Executor</label>
-                    <select name="executor" id="inputExecutor" class="custom-select">
-                    </select>
-                    <label class="col-sm-12 mt-2 mb-1 text-center">Options</label>
-                    <div id="solver-options">
+
+                    <div class="option-container">
+                        <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
+                        <select name="language" id="inputLanguage" class="custom-select">
+                        </select>
+                        <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
+                        <select name="engine" id="inputengine" class="custom-select">
+                        </select>
+                        <label for="inputExecutor" class="col-sm-12 col-xs-12 mt-2 text-center">Executor</label>
+                        <select name="executor" id="inputExecutor" class="custom-select">
+                        </select>
                     </div>
-                    <span class="input-group-btn">
-                        <button id="btn-add-option" type="button" class="btn btn-primary btn-block"> <i class="fa fa-plus"></i> Add option</button>
-                    </span>
-                    <div class="checkbox">
-                        <p class="text-center">
-                            <strong> Execution options </strong>
-                        </p>
-                        <label>
-                            <input type="checkbox" value="true" id="run-dot"> Run automatically
-                        </label>
-                        <div id="tab-execute">
-                            <p class="text-center">
-                                <strong>Choose tab to execute</strong>
-                            </p>
-                            <label class="check-run-lp">
-                                <input type="checkbox" value="editor1">
-                                <span>L P 1</span>
-                            </label>
+                    
+                    <div class="option-container mt-2">
+                        <label class="col-sm-12 mb-1 text-center">Options</label>
+                        <div id="solver-options">
                         </div>
-                        <div class="text-center" id="reset-container">
+                        <span class="input-group-btn">
+                            <button id="btn-add-option" type="button" class="btn btn-primary btn-block"> <i class="fa fa-plus"></i> Add option</button>
+                        </span>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <div class="text-center mb-2">
+                            <strong> Execution options </strong>
+                        </div>
+                        <div class="run-auto-box">
+                            <div class="custom-control custom-switch text-center">
+                                <input type="checkbox" class="custom-control-input" id="run-dot">
+                                <label class="custom-control-label" for="run-dot">Run automatically</label>
+                            </div>
+                        </div>
+
+                        <div id="tab-execute" class="option-container">
+                            <div class="text-center mb-1">
+                                <strong class="tab-execute-title">Choose tab to execute</strong>
+                            </div>
+                            <div id="tab-execute-new" class="list-group">
+                                <button type="button" class="list-group-item list-group-item-action check-run-tab check-auto-run-tab"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">Current tab</span> </button>
+                                <div class="list-divider list-group-item">
+                                    <div class="divider"></div>
+                                </div>
+                                <button type="button" class="list-group-item list-group-item-action check-run-tab" value="editor1"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P 1</span> </button>
+                            </div>
+                        </div>
+                        <div class="text-center option-container" id="reset-container">
                             <p class="text-center">
                                 <strong> Reset all options </strong>
                             </p>
@@ -179,16 +200,18 @@
                             <ul class=" col-xs-12 nav nav-tabs" role="tablist">
                                 <li class="nav-item">
                                     <a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link">
-                                        <span class="name-tab">L P 1</span>
+                                        <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button>
+                                        <span class="name-tab unselectable">L P 1</span>
                                         <span class="delete-tab">
                                             <i class="fa fa-times"></i>
                                         </span>
                                     </a>
                                 </li>
                                 <li class="nav-item" >
-                                    <a role="tab" data-toggle="tab" class="add-tab nav-link btn-light"><i class="fa fa-plus"></i></a>
+                                    <a role="tab" data-toggle="tab" class="add-tab nav-link btn-light" title="Add new tab"><i class="fa fa-plus"></i></a>
                                 </li>
                             </ul>
+                            <!-- Toolbar  -->
                             <div class="col-xs-12 ml-auto text-center toolbar">
                                 <button id="btn-dwn-this-lp" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Download this logic program" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-download" aria-hidden="true"></i></button>
                                 <div class="undo-redo btn-group" role="group">
@@ -212,15 +235,19 @@
                     </div>
                 </div>
                 <div class="pane ui-layout-east">
-                    <div id="setting-output"> Output
-                        <a role="button" class="pull-right" data-toggle="modal" href="#setting-editor">
-                            <i class="fa fa-cog"></i>
-                        </a>
-                        <a role="button" id="split" class="pull-right">
-                            <i class="fa fa-chevron-down"></i>
-                        </a>
+                    <div class="output-container">
+                        <div id="setting-output"> Output
+                            <div role="group">
+                                <button type="button" id="dwn-output" class="btn btn-light btn-sm">
+                                    <i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Download output content" data-delay='{"show":"700", "hide":"0"}'></i>
+                                </button>
+                                <button type="button" id="split" class="btn btn-light btn-sm">
+                                    <i class="fa fa-chevron-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="output" class="output"></div>
                     </div>
-                    <div id="output" class="output"></div>
                 </div>
                 <div class="pane ui-layout-south">
                 </div>
@@ -251,7 +278,7 @@
                         <strong>Use of all solvers and systems is provided under the respective licenses; we refrain from taking any responsibility for any use that goes out of the scopes of such licenses.</strong>
                     </p>
                     <p>LoIDE is an Open Source project available on
-                        <a href="https://github.com/DeMaCS-UNICAL/LoIDE">Github
+                        <a href="https://github.com/DeMaCS-UNICAL/LoIDE" target="_blank">Github
                             <i class="fa fa-github"></i>
                         </a>
                     </p>
@@ -274,7 +301,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Editor Options</h4>
+                    <h4 class="modal-title">Appearance</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -384,10 +411,14 @@
 
     <script src="js/keymaster.js" type="text/javascript"></script>
 
+    <!--    context menu     -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+
     <script src="js/script.js" type="text/javascript"></script>
 
     <!-- Dropbox API-->
-<!--    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="nz9r7ab35gqs3su"></script>-->
+    <!-- <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="nz9r7ab35gqs3su"></script> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
 </body>

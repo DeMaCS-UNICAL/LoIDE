@@ -10,7 +10,7 @@ var pug = require('pug');
 // System config loading
 var properties  = require('./config/app-config.json');
 var httpPort    = properties.port.http;
-var httpsPort   = properties.port.https;
+var httpsPortP  = properties.port.https;
 var key         = properties.path.key;
 var cert        = properties.path.cert;
 var maxAge      = properties.max_age;
@@ -18,37 +18,35 @@ var maxAge      = properties.max_age;
 // Services configuration file
 var servicesConfig = require('./config/services.json');
 
+var pckg = require('./package.json');
+
 var app = express();
+
+var server = http.createServer(app);
 
 var enableHTTPS = false;
 
 if (key.length !== 0 && cert.length !== 0) {
+    enableHTTPS = true;
+
     var options = {
         key: fs.readFileSync(key),
         cert: fs.readFileSync(cert)
     };
 
     // Enable redirect from HTTP to HTTPS
-    var securePort = httpsPort;
     app.use(forceSSL);
     app.set('forceSSLOptions', {
-        httpsPort: securePort,
+        httpsPort: httpsPortP,
     });
 
     var secureServer = https.createServer(options, app);
-    enableHTTPS = true;
-}
-else {
-    var server = http.createServer(app);
 }
 
 // Sets "Strict-Transport-Security, by default maxAge is set 1 year in seconds
 app.use(helmet.hsts({
     maxAge: maxAge
 }));
-
-var io = require('socket.io').listen(enableHTTPS ? secureServer : server);
-var pckg = require('./package.json');
 
 app.use(express.static('resources'));
 app.set('views', './resources');
@@ -62,6 +60,8 @@ app.get('/', function (req, res) {
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
     res.send('{"version":"' + pckg.version + '"}');
 });
+
+var io = require('socket.io').listen(enableHTTPS ? secureServer : server);
 
 io.sockets.on('connection', function (socket) { // Wait for the incoming connection from the browser, the Socket.io client from index.html
     print_log('Opened connection')
@@ -110,17 +110,16 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
 });
 
 if (enableHTTPS) {
-    secureServer.listen(securePort, function () {
-        print_log('App listening on secure port ' + securePort);
+    secureServer.listen(httpsPortP, function () {
+        print_log('App listening on secure port ' + httpsPortP);
         print_log('Version: ' + pckg.version);
     });
 }
-else {
-    server.listen(httpPort, function () {
-        print_log('App listening on port ' + httpPort);
-        print_log('Version: ' + pckg.version);
-    });
-}
+
+server.listen(httpPort, function () {
+    print_log('App listening on port ' + httpPort);
+    print_log('Version: ' + pckg.version);
+});
 
 function print_log(statement) {
     console.log('%s: %s', (new Date()).toLocaleString(), statement); // debug string

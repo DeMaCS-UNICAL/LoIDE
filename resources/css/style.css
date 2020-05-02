@@ -38,7 +38,7 @@
   }
 
   body.dark .left-panel-show {
-    background: rgba(83, 83, 83, 0.4);
+    background: rgba(83, 83, 83, 1);
   }
 
   #input-select {

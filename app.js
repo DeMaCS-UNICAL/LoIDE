@@ -178,9 +178,6 @@ function validateSchema(jsonPath, schemaPath) {
         jsonPointers: true
     });
 
-    // Loading DRAFT 06
-    ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
-
     // Compiling the schema
     var compiledSchema  = ajv.compile(schema);
     var validated       = false;

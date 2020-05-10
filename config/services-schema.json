@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "services-schema.json",
     "self": {
         "vendor": "unical",
@@ -37,44 +37,29 @@
                     "type": "string"
                 },
                 "syntax-highlighter": {
-                    "title": "Syntax-Highlighter URL.",
-                    "description": "This property indicates the syntax highlighter URL corresponding to this language.",
+                    "title": "Syntax-Highlighter path.",
+                    "description": "This property indicates the syntax highlighter path corresponding to this language.",
                     "type": "object",
                     "properties": {
-                        "protocol": {
-                            "title": "Protocol name.",
-                            "description": "This property indicates the protocol name to use for the connection.",
-                            "enum": [ "ws", "http" ]
+                        "name": {
+                            "title": "Syntax-Highlighter name.",
+                            "description": "This property indicates the syntax-highlighter name.",
+                            "type": "string"
                         },
-                        "url": {
-                            "title": "Syntax-Highlighter URL.",
-                            "description": "This property indicates the syntax-highlighter URL.",
-                            "type": "string",
-                            "oneOf": [
-                                { "format": "hostname" },
-                                { "format": "ipv4" },
-                                { "format": "ipv6" }
-                            ]
+                        "description": {
+                            "title": "Syntax-Highlighter description.",
+                            "description": "This property indicates the syntax-highlighter description.",
+                            "type": "string"
                         },
                         "path": {
                             "title": "Syntax-Highlighter path.",
-                            "description": "This property indicates the syntax-highlighter path relative to its URL.",
-                            "type": "string",
-                            "_comment": "Add the pattern to match with the 'path'."
-                        },
-                        "port": {
-                            "title": "Connection port number.",
-                            "description": "This property indicates the port number.",
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 65535
+                            "description": "This property indicates the syntax-highlighter file path.",
+                            "type": "string"
                         }
                     },
                     "required": [
-                        "protocol",
-                        "url",
-                        "path",
-                        "port"
+                        "name",
+                        "path"
                     ],
                     "additionalProperties": false
                 },

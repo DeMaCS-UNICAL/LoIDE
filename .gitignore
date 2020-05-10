@@ -38,3 +38,7 @@ jspm_packages
 
 # OS 
 .DS_Store
+
+# intelliJ
+.idea
+*.iml

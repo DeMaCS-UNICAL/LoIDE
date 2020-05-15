@@ -45,6 +45,9 @@
     "socket.io": "^2.3.0",
     "websocket": "^1.0.30"
   },
+  "devDependencies": {
+    "compression": "^1.7.3"
+  },
   "analyze": true,
   "homepage": "https://github.com/DeMaCS-UNICAL/LoIDE#readme"
 }

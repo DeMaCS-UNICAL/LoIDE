@@ -106,6 +106,12 @@ function operation_alert(result) {
 var layout;
 
 /**
+ ** @global
+ * @description Status output panel position
+ */
+var outputPaneEast = true;
+
+/**
  * @global
  * @description place the id of the current shown editor
  */
@@ -183,25 +189,31 @@ $(window).resize(function () {
     var fontSizeO = localStorage.getItem("fontSizeO");
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     if (window.innerWidth > 450) {
-        layout.removePane("south");
-        currentVal = $('#output').text();
-        $(".ui-layout-south").empty();
-        layout.addPane("east");
-        createTextArea($('.ui-layout-east'));
-        $("#font-output").val(fontSizeO);
-        $('#output').css('font-size', fontSizeO + "px");
-        $('#output').text(currentVal);
+        if (!outputPaneEast) {
+            outputPaneEast = true;
+            layout.removePane("south");
+            currentVal = $('#output').text();
+            $(".ui-layout-south").empty();
+            layout.addPane("east");
+            createTextArea($('.ui-layout-east'));
+            $("#font-output").val(fontSizeO);
+            $('#output').css('font-size', fontSizeO + "px");
+            $('#output').text(currentVal);
+        }
     } else {
-        layout.removePane("east");
-        currentVal = $('#output').text();
-        $(".ui-layout-east").empty();
-        layout.addPane("south");
-        createTextArea($('.ui-layout-south'));
-        $("#font-output").val(fontSizeO);
-        $('#output').css('font-size', fontSizeO + "px");
-        $('#output').text(currentVal);
-        $('#split').children().attr('class', 'fa fa-chevron-up');
-        $('#split').attr('id', 'split-up');
+        if (outputPaneEast) {
+            outputPaneEast = false
+            layout.removePane("east");
+            currentVal = $('#output').text();
+            $(".ui-layout-east").empty();
+            layout.addPane("south");
+            createTextArea($('.ui-layout-south'));
+            $("#font-output").val(fontSizeO);
+            $('#output').css('font-size', fontSizeO + "px");
+            $('#output').text(currentVal);
+            $('#split').children().attr('class', 'fa fa-chevron-up');
+            $('#split').attr('id', 'split-up');
+        }
     }
     setHeightComponents();
     var length = $(".nav-tabs").children().length;
@@ -417,6 +429,7 @@ $(document).ready(function () {
 
     loadFromURL(); // load program from url
 
+    outputPaneEast = window.innerWidth > 450 ? true : false;
 });
 
 function initializeCheckTabToRun() {
@@ -445,7 +458,7 @@ function initializeCheckTabToRun() {
 
 function checkEmptyTabSelected() {
     var tot = $('.check-run-tab.checked:not(.check-auto-run-tab)').length;
-    if(tot === 0) {
+    if (tot === 0) {
         $('.check-auto-run-tab').find('.check-icon').removeClass('invisible');
         $('.check-auto-run-tab').addClass('checked');
     }

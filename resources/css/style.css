@@ -401,6 +401,7 @@ label[for="btn-download"] {
 
 .left-panel-title {
   border-bottom: 1px dashed #dddddd;
+  background-color: rgba(255, 245, 238, 1);
 }
 
 .add-tab {
@@ -637,6 +638,10 @@ select {
   cursor: pointer;
 }
 
+#run-dot, label[for=run-dot]{
+  cursor: pointer;
+}
+
 /*DARK-MODE SECTION*/
 
 body.dark {
@@ -788,4 +793,8 @@ body.dark .context-menu-item.context-menu-hover {
 body.dark .list-group-item-action:focus, body.dark .list-group-item-action:hover {
   background-color: rgb(233, 233, 233);
 
+}
+
+body.dark .left-panel-title {
+background-color: rgb(83, 83, 83);
 }

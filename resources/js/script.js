@@ -1991,6 +1991,7 @@ function inizializeSnippets() {
             switch (solverChosen) {
                 case "dlv":
                     completer = {
+                        identifierRegexps: [/[a-zA-Z_0-9\#\$\-\u00A2-\uFFFF]/],
                         getCompletions: function (editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
@@ -2174,6 +2175,7 @@ function inizializeSnippets() {
 
                 case "dlv2":
                     completer = {
+                        identifierRegexps: [/[a-zA-Z_0-9\#\$\-\u00A2-\uFFFF]/],
                         getCompletions: function (editor, session, pos, prefix, callback) {
                             var completions = [
                                 {

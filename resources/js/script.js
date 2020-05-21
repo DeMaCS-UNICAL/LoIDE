@@ -111,6 +111,8 @@ var layout;
  */
 var outputPaneEast = true;
 
+let breakpointOutputPane = 768
+
 /**
  * @global
  * @description place the id of the current shown editor
@@ -121,14 +123,14 @@ var idEditor = "editor1";
  * @global
  * @description default font size editor
  */
-var defaultFontSize = 15;
+let defaultFontSize = 15;
 
 /**
  * @global
  * @description default ace theme
  */
-var defaultTheme = "ace/theme/tomorrow";
-var defaultDarkTheme = "ace/theme/idle_fingers";
+let defaultTheme = "ace/theme/tomorrow";
+let defaultDarkTheme = "ace/theme/idle_fingers";
 
 /**
  * set up ace editors into object
@@ -143,7 +145,7 @@ var searchBoxOpened = false;
  * @global
  * @description default size of the mobile max window width
  */
-var mobileMaxWidthScreen = 576;
+let mobileMaxWidthScreen = 576;
 
 /**
  * @description - Returns the DOM element for the solver's option
@@ -188,7 +190,7 @@ $(window).resize(function () {
     var currentVal;
     var fontSizeO = localStorage.getItem("fontSizeO");
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
-    if (window.innerWidth > 450) {
+    if (window.innerWidth > breakpointOutputPane) {
         if (!outputPaneEast) {
             outputPaneEast = true;
             layout.removePane("south");
@@ -284,36 +286,6 @@ $(document).ready(function () {
 
     restoreOptions();
 
-    $('#font-output').change(function (e) {
-        var size = $(this).val();
-        if (size === "") {
-            $(this).val(defaultFontSize);
-        }
-        $('#output').css('font-size', size + "px");
-        if (!saveOption("fontSizeO", size)) {
-            alert("Sorry, this options will not save in your browser");
-        }
-    });
-
-    $('#font-editor').change(function (e) {
-        var size = $(this).val();
-        if (size === "") {
-            $(this).val(defaultFontSize);
-        }
-        setFontSizeEditors(size);
-        if (!saveOption("fontSizeE", size)) {
-            alert("Sorry, this options will not save in your browser");
-        }
-    });
-
-    $('#theme').change(function (e) {
-        var theme = $(this).val();
-        setTheme(theme);
-        if (!saveOption("theme", theme)) {
-            alert("Sorry, this options will not save in your browser");
-        }
-    });
-
     inizializeDropzone();
 
     $("[rel='tooltip']").tooltip();
@@ -346,7 +318,7 @@ $(document).ready(function () {
         setHeightComponents(expandend, true);
     });
 
-    if (window.innerWidth > 450 && localStorage.getItem("outputPos") !== "south") {
+    if (window.innerWidth > breakpointOutputPane && localStorage.getItem("outputPos") !== "south") {
         layout.removePane("south");
     } else {
         layout.removePane("east");
@@ -429,7 +401,9 @@ $(document).ready(function () {
 
     loadFromURL(); // load program from url
 
-    outputPaneEast = window.innerWidth > 450 ? true : false;
+    outputPaneEast = window.innerWidth > breakpointOutputPane ? true : false;
+
+    inizializeAppareaceSettings();
 
     setTimeout( ()=>{
         $('.splashscreen').addClass('display-none');
@@ -437,6 +411,61 @@ $(document).ready(function () {
     },500 )
 
 });
+
+function inizializeAppareaceSettings(){
+
+    $('#font-output').change(function (e) {
+        var size = $(this).val();
+        if (size.length == 0) {
+            $(this).val(defaultFontSize);
+        }
+        $('#output').css('font-size', size + "px");
+        if (!saveOption("fontSizeO", size)) {
+            alert("Sorry, this options will not save in your browser");
+        }
+    });
+
+    $('#font-editor').change(function (e) {
+        var size = $(this).val();
+        if (size.length == 0) {
+            $(this).val(defaultFontSize);
+        }
+        setFontSizeEditors(size);
+        if (!saveOption("fontSizeE", size)) {
+            alert("Sorry, this options will not save in your browser");
+        }
+    });
+
+    $('#theme').change(function (e) {
+        var theme = $(this).val();
+        setTheme(theme);
+        if (!saveOption("theme", theme)) {
+            alert("Sorry, this options will not save in your browser");
+        }
+    });
+
+    var size = $('#font-editor').val();
+    if (size.length == 0) {
+        $('#font-editor').val(defaultFontSize);
+    }
+    setFontSizeEditors(size);
+    size = $('#font-output').val();
+    if (size.length == 0) {
+        $('#font-output').val(defaultFontSize);
+    }
+
+    actualTheme = localStorage.getItem("theme");
+    if(actualTheme.length == 0){
+        if (localStorage.getItem('mode') === 'dark')
+            setThemeEditors(defaultDarkTheme);
+        else {
+            setThemeEditors(defaultTheme);
+        }
+    }
+    else {
+        setThemeEditors(actualTheme);
+    }
+}
 
 function initializeCheckTabToRun() {
     $('.check-run-tab:not(.check-auto-run-tab)').off();
@@ -957,11 +986,18 @@ $(document).on('change', '.form-control-option', function () {
 $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
-    inizializeTabContextmenu();
-    initializeCheckTabToRun();
-    setAceMode();
-    setElementsColorMode();
 
+    actualTheme = localStorage.getItem("theme");
+    if(actualTheme.length == 0){
+        if (localStorage.getItem('mode') === 'dark')
+            setThemeEditors(defaultDarkTheme);
+        else {
+            setThemeEditors(defaultTheme);
+        }
+    }
+    else {
+        setThemeEditors(actualTheme)
+    }
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -1428,11 +1464,19 @@ function setUpAce(ideditor, text) {
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
-    if (localStorage.getItem('mode') === 'dark')
-        editors[ideditor].setTheme(defaultDarkTheme);
-    else {
-        editors[ideditor].setTheme(defaultTheme);
+
+    actualTheme = localStorage.getItem("theme");
+    if(actualTheme.length == 0){
+        if (localStorage.getItem('mode') === 'dark')
+            editors[ideditor].setTheme(defaultDarkTheme);
+        else {
+            editors[ideditor].setTheme(defaultTheme);
+        }
     }
+    else {
+        editors[ideditor].setTheme(actualTheme);
+    }
+
     editors[ideditor].setValue(text);
     editors[ideditor].resize();
     editors[ideditor].setBehavioursEnabled(true);
@@ -1588,6 +1632,18 @@ function setFontSizeEditors(size) {
 }
 
 /**
+ * @param {number} theme - theme
+ * @description Sets the theme to all the editors
+ */
+function setThemeEditors(theme) {
+    var length = $(".nav-tabs").children().length;
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].setTheme(theme);
+    }
+}
+
+/**
  * @returns {boolean}
  * @description Checks if the browser supports the localStorage
  */
@@ -1684,6 +1740,14 @@ function addTab(obj, text, name) {
     initializeCheckTabToRun();
     setAceMode();
     setElementsColorMode();
+    
+    var currentFontSize = $('#font-editor').val();
+    if (currentFontSize.length == 0) {
+        editors[editorId].setFontSize(currentFontSize + "px");
+    }
+    else {
+        editors[editorId].setFontSize(currentFontSize + "px");
+    }
 
     return tabId;
 }
@@ -2497,6 +2561,7 @@ function inizializeButtonLoideMode() {
         localStorage.setItem('mode', (localStorage.getItem('mode') || 'dark') === 'dark' ? 'light' : 'dark');
         localStorage.getItem('mode') === 'dark' ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
         setElementsColorMode();
+        $('#theme').change();
     });
 }
 

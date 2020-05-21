@@ -260,7 +260,7 @@ $(document).ready(function () {
 
     initializeCheckTabToRun();
 
-    $('img[alt=logo]').on('click', function (e) {
+    $('.navbar-logo').on('click', function (e) {
         location.reload();
     });
 
@@ -1776,57 +1776,45 @@ function inizializePopovers() {
             '<div class="mb-2"> Save the project to:\n </div>' +
             '<div class="save-btn text-center">\n' +
             '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
-            '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
+            // '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
             '</div>\n' +
             '</div>');
 
         if (localStorage.getItem('mode') === 'dark') {
             $('#local-download').removeClass('btn-outline-dark');
             $('#local-download').addClass('btn-outline-light');
-            $('#cloud-download').removeClass('btn-outline-dark');
-            $('#cloud-download').addClass('btn-outline-light');
+            // $('#cloud-download').removeClass('btn-outline-dark');
+            // $('#cloud-download').addClass('btn-outline-light');
         }
         else {
             $('#local-download').removeClass('btn-outline-light');
             $('#local-download').addClass('btn-outline-dark');
-            $('#cloud-download').removeClass('btn-outline-light');
-            $('#cloud-download').addClass('btn-outline-dark');
+            // $('#cloud-download').removeClass('btn-outline-light');
+            // $('#cloud-download').addClass('btn-outline-dark');
         }
 
         $("#local-download").on('click', function () {
             downloadLoDIEProject();
 
             // TO MOVE ON OUTPUT DOWNLOAD
-            // if($('#only-output').is(":checked")){
-            //     $('#program').removeAttr('name', 'program[0]');
-            //     $('#output-form').attr('name', 'output');
-            //     var text = $("#output").text();
-            //     $('#output-form').val(text);
-            //     form = $('#input').serializeFormJSON();
-            //     stringify = JSON.stringify(form);
-            //     createFileToDownload(stringify, "local","LoIDE_Output", "json");
-            //     $('#program').attr('name', 'program[0]');
-            //     $('#output-form').removeAttr('name', 'output');
-            // }
+            
+            /* if($('#only-output').is(":checked")){
+                $('#program').removeAttr('name', 'program[0]');
+                $('#output-form').attr('name', 'output');
+                var text = $("#output").text();
+                $('#output-form').val(text);
+                form = $('#input').serializeFormJSON();
+                stringify = JSON.stringify(form);
+                createFileToDownload(stringify, "local","LoIDE_Output", "json");
+                $('#program').attr('name', 'program[0]');
+                $('#output-form').removeAttr('name', 'output');
+             } */
         });
-
-        $("#cloud-download").on('click', function () {
-            console.log('Save on cloud');
-            // if(Dropbox.isBrowserSupported()){
-            //     $('#program').removeAttr('name', 'program[0]');
-            //     $('#output-form').attr('name', 'output');
-            //     var text = $("#output").text();
-            //     $('#output-form').val(text);
-            //     form = $('#input').serializeFormJSON();
-            //     stringify = JSON.stringify(form);
-            //     chose = $('#choice').text();
-            //
-            //     // createFileToDownload(stringify, "dropbox", "json")
-            // }
-            // else{
-            //     operation_alert({result: "Dropbox not supported on your browser!"});
-            // }
-        });
+        
+         /* $("#cloud-download").on('click', function () {
+           console.log('Save on cloud');
+         }); */
+         
     });
 
     $('.popover-download').on('hidden.bs.popover', function () {

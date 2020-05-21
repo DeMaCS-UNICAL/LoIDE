@@ -454,8 +454,8 @@ function inizializeAppareaceSettings(){
         $('#font-output').val(defaultFontSize);
     }
 
-    actualTheme = localStorage.getItem("theme");
-    if(actualTheme.length == 0){
+    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    if( actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             setThemeEditors(defaultDarkTheme);
         else {
@@ -987,7 +987,7 @@ $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
 
-    actualTheme = localStorage.getItem("theme");
+    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if(actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             setThemeEditors(defaultDarkTheme);
@@ -1465,7 +1465,7 @@ function setUpAce(ideditor, text) {
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
 
-    actualTheme = localStorage.getItem("theme");
+    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if(actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             editors[ideditor].setTheme(defaultDarkTheme);

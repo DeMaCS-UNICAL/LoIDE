@@ -397,6 +397,7 @@ label[for="btn-download"] {
   margin-right: 1%;
   border-radius: 10px;
   left: 0px;
+  min-width: 200px;
 }
 
 .left-panel-title {

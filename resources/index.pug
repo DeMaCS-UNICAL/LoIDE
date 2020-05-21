@@ -30,6 +30,19 @@
 </head>
 
 <body>
+    <div class="splashscreen">
+        <div class="splashscreen-container fade-in">
+            <div class="mb-4 d-flex justify-content-center align-items-center">
+                <img class="splash-logo" src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
+                <span id="beta">(Beta)</span>
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="toast-container">
         <div id="notification-project" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
@@ -59,7 +72,7 @@
     <nav class="navbar navbar-expand-sm navbar-light">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-brand">
-            <img src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
+            <img  class="navbar-logo" src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
             <span id="beta">(Beta)</span>
         </div>
 

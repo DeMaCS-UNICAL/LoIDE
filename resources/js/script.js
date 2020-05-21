@@ -430,6 +430,12 @@ $(document).ready(function () {
     loadFromURL(); // load program from url
 
     outputPaneEast = window.innerWidth > 450 ? true : false;
+
+    setTimeout( ()=>{
+        $('.splashscreen').addClass('display-none');
+
+    },500 )
+
 });
 
 function initializeCheckTabToRun() {

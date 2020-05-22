@@ -1277,7 +1277,7 @@ function addInputValue(inputClass) {
  */
 function setJSONInput(config) {
     if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option')
-        || config.hasOwnProperty('program') || config.hasOwnProperty('output') || config.hasOwnProperty('tabname')) {
+        || config.hasOwnProperty('program') || config.hasOwnProperty('output_model') || config.hasOwnProperty('output_error') || config.hasOwnProperty('tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
@@ -1302,7 +1302,9 @@ function setJSONInput(config) {
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
         $('#inputExecutor').val(config.executor).change();
-        $('#output-model').text(config.output);
+        $('#output-model').text(config.output_model);
+        $('#output-error').text(config.output_error);
+
         setOptions(config);
         setTabsName(config);
         initializeCheckTabToRun();
@@ -2798,13 +2800,16 @@ function setTabsName(config) {
 function downloadLoDIEProject() {
     addProgramsToDownload();
     addTabsNameToDownload();
-    $('#output-form').attr('name', 'output');
-    var text = $("#output-model").text();
-    // to-do errors?
-    $('#output-form').val(text);
+
+    var model = $("#output-model").text();
+    var errors = $("#output-error").text();
 
     $("#run-dot").attr("name", "runAuto");
+
     form = $('#input').serializeFormJSON();
+
+    form.output_model = model;
+    form.output_error = errors;
     form.tab = [];
 
     $('.check-run-tab.checked').each(function (index, element) {
@@ -2817,7 +2822,6 @@ function downloadLoDIEProject() {
 
     stringify = JSON.stringify(form);
     createFileToDownload(stringify, "local", "LoIDE_Project", "json");
-    $('#output-form').removeAttr('name');
     destroyPrograms();
     destroyTabsName();
     $("#run-dot").removeAttr("name");

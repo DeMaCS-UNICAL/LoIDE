@@ -156,7 +156,7 @@
 #output {
   display: flex;
   flex-direction: column;
-  
+
   width: 100%;
   flex-grow: 1;
   overflow: auto;
@@ -232,10 +232,6 @@ a[role="button"] {
 
 a[role="button"]:focus {
   outline: none;
-}
-
-[href="#setting-editor"] {
-  padding-left: 5px;
 }
 
 .btn:focus {

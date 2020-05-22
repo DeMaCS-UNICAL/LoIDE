@@ -68,6 +68,22 @@
   }
 }
 
+@media (min-width: 576px) and (max-width: 840px) {
+  .btn-text {
+    display: none;
+  }
+ 
+  .nav-buttons>.btn, .nav-buttons>*>.btn { 
+    width: 60px;
+  }
+ }
+
+@media (min-width: 577px) and (max-width: 1142px){
+  .left-panel-show {
+    min-width: 200px;
+  }
+}
+
 @media (min-width: 1700px) {
   .left-panel {
     width: 0%;
@@ -84,16 +100,6 @@
   body.dark .left-panel-show {
     background-color: rgb(83, 83, 83);
   }
-}
-
-@media (min-width: 576px) and (max-width: 840px) {
- .btn-text {
-   display: none;
- }
-
- .nav-buttons>.btn, .nav-buttons>*>.btn { 
-   width: 60px;
- }
 }
 
 #beta {
@@ -444,7 +450,6 @@ label[for="btn-download"] {
   margin-right: 1%;
   border-radius: 10px;
   left: 0px;
-  min-width: 200px;
 }
 
 .left-panel-title {

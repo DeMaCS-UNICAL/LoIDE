@@ -13,10 +13,6 @@
     margin-left: 1%;
   }
 
-  .navbar-logo {
-    width: 55%;
-  }
-
   .navbar-brand {
     width: 40%;
   }
@@ -32,7 +28,7 @@
   
   .left-panel-show {
     width: 100%;
-    padding: 3%;
+    padding: 0 3% 3% 3%;
     background: rgba(255, 245, 238, 1);
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.4);
     margin-bottom: 0.75rem;
@@ -51,10 +47,6 @@
 @media (min-width: 577px) {
   .container {
     max-width: 100%;
-  }
-
-  .navbar-logo {
-    width: 35%;
   }
 
   .left-panel {
@@ -92,6 +84,16 @@
   body.dark .left-panel-show {
     background-color: rgb(83, 83, 83);
   }
+}
+
+@media (min-width: 576px) and (max-width: 840px) {
+ .btn-text {
+   display: none;
+ }
+
+ .nav-buttons>.btn, .nav-buttons>*>.btn { 
+   width: 60px;
+ }
 }
 
 #beta {
@@ -191,6 +193,7 @@ body {
 
 .navbar-logo {
   cursor: pointer;
+  width: 84px;
 }
 
 .unselectable {

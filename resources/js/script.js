@@ -106,14 +106,6 @@ function operation_alert(result) {
 var layout;
 
 /**
- ** @global
- * @description Status output panel position
- */
-var outputPaneEast = true;
-
-let breakpointOutputPane = 768
-
-/**
  * @global
  * @description place the id of the current shown editor
  */
@@ -123,14 +115,14 @@ var idEditor = "editor1";
  * @global
  * @description default font size editor
  */
-let defaultFontSize = 15;
+const defaultFontSize = 15;
 
 /**
  * @global
  * @description default ace theme
  */
-let defaultTheme = "ace/theme/tomorrow";
-let defaultDarkTheme = "ace/theme/idle_fingers";
+const defaultTheme = "ace/theme/tomorrow";
+const defaultDarkTheme = "ace/theme/idle_fingers";
 
 /**
  * set up ace editors into object
@@ -140,12 +132,15 @@ setUpAce(idEditor, "");
 
 var searchBoxOpened = false;
 
-
 /**
  * @global
- * @description default size of the mobile max window width
+ * @description default screens sizes and activated status
  */
-let mobileMaxWidthScreen = 576;
+var screen = {
+    small: { size: 576, isActive: false},
+    medium: { size: 768, isActive: false},
+    large: { size: 992, isActive: true}
+};
 
 /**
  * @description - Returns the DOM element for the solver's option
@@ -187,12 +182,16 @@ window.onbeforeunload = function () {
 };
 
 $(window).resize(function () {
+    checkScreenType();
     var currentVal;
     var fontSizeO = localStorage.getItem("fontSizeO");
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
-    if (window.innerWidth > breakpointOutputPane) {
-        if (!outputPaneEast) {
-            outputPaneEast = true;
+
+    var outputPos = localStorage.getItem("outputPos");
+    outputPos = outputPos !== null ? outputPos : "east";
+
+    if (window.innerWidth > screen.medium.size) {
+        if (outputPos == "south") {
             layout.removePane("south");
             currentVal = $('#output').text();
             $(".ui-layout-south").empty();
@@ -201,10 +200,11 @@ $(window).resize(function () {
             $("#font-output").val(fontSizeO);
             $('#output').css('font-size', fontSizeO + "px");
             $('#output').text(currentVal);
+            saveOption("outputPos", "east");
+            setSizePanes();
         }
     } else {
-        if (outputPaneEast) {
-            outputPaneEast = false
+        if (outputPos == "east") {
             layout.removePane("east");
             currentVal = $('#output').text();
             $(".ui-layout-east").empty();
@@ -215,6 +215,8 @@ $(window).resize(function () {
             $('#output').text(currentVal);
             $('#split').children().attr('class', 'fa fa-chevron-up');
             $('#split').attr('id', 'split-up');
+            saveOption("outputPos", "south");
+            setSizePanes();
         }
     }
     setHeightComponents();
@@ -224,6 +226,36 @@ $(window).resize(function () {
         editors[idE].resize();
     }
 });
+
+function setSizePanes(){
+    var outputPos = localStorage.getItem("outputPos");
+    outputPos = outputPos !== null ? outputPos : "east";
+    
+    if(screen.small.isActive){
+        if(outputPos == "east"){
+            layout.sizePane("east", 100);
+        }
+        else {
+            layout.sizePane("south", 200);
+        }
+    }
+    else if(screen.medium.isActive){
+        if(outputPos == "east"){
+            layout.sizePane("east", 200);
+        }
+        else {
+            layout.sizePane("south", 200);
+        }
+    } 
+    else {
+        if(outputPos == "east"){
+            layout.sizePane("east", 250);
+        }
+        else {
+            layout.sizePane("south", 200);
+        }
+    }
+}
 
 function saveOptions() {
     $("#run-dot").attr("name", "runAuto");
@@ -246,6 +278,8 @@ function saveOptions() {
 }
 
 $(document).ready(function () {
+    checkScreenType();
+
     setNotifications();
 
     setClipboard();
@@ -318,19 +352,6 @@ $(document).ready(function () {
         setHeightComponents(expandend, true);
     });
 
-    if (window.innerWidth > breakpointOutputPane && localStorage.getItem("outputPos") !== "south") {
-        layout.removePane("south");
-    } else {
-        layout.removePane("east");
-        var currentVal = $('#output').text();
-        $(".ui-layout-east").empty();
-        layout.addPane("south");
-        createTextArea($('.ui-layout-south'));
-        $('#output').text(currentVal);
-        $('#split').children().attr('class', 'fa fa-chevron-up');
-        $('#split').attr('id', 'split-up');
-    }
-
     /**
      * @global
      * @description id of the clicked button 'submit'
@@ -401,16 +422,37 @@ $(document).ready(function () {
 
     loadFromURL(); // load program from url
 
-    outputPaneEast = window.innerWidth > breakpointOutputPane ? true : false;
+    if (screen.small.isActive) {
+        $('.left-panel').css('overflow-y', 'auto');
+    }
 
     inizializeAppareaceSettings();
+
+    setSizePanes();
 
     setTimeout( ()=>{
         $('.splashscreen').addClass('display-none');
 
     },500 )
-
 });
+
+function checkScreenType(){
+    if($(window).width() < screen.medium.size){
+        screen.small.isActive = true;
+        screen.medium.isActive = false;
+        screen.large.isActive = false;
+    }
+    else if($(window).width() < screen.large.size){
+        screen.small.isActive = false;
+        screen.medium.isActive = true;
+        screen.large.isActive = false;
+    }
+    else {
+        screen.small.isActive = false;
+        screen.medium.isActive = false;
+        screen.large.isActive = true;
+    }
+}
 
 function inizializeAppareaceSettings(){
 
@@ -833,10 +875,12 @@ $(document).on('click', '#dwn-output', function () {
 
 $(document).on('click', '#split', function () {
     addSouthLayout(layout);
+    setSizePanes();
 });
 
 $(document).on('click', '#split-up', function () {
     addEastLayout(layout);
+    setSizePanes();
 });
 
 // Sets the solvers and options on language change
@@ -1080,7 +1124,7 @@ function addEastLayout(layout) {
     $("#split-up").parent().empty();
     layout.addPane("east");
     createTextArea($('.ui-layout-east'));
-    var fontSizeO = localStorage.getItem("fontSizeO");
+    var fontSizeO = $('#font-output').val();
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
@@ -1097,7 +1141,7 @@ function addSouthLayout(layout) {
     $("#split").parent().empty();
     layout.addPane("south");
     createTextArea($('.ui-layout-south'));
-    var fontSizeO = localStorage.getItem("fontSizeO");
+    var fontSizeO = $('#font-output').val();
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
@@ -1698,7 +1742,6 @@ function restoreOptions() {
 
     var layoutPos = localStorage.getItem("outputPos");
     layoutPos = layoutPos !== null ? layoutPos : "east";
-
     if (layoutPos === "east") {
         addEastLayout(layout);
     } else {
@@ -2782,7 +2825,7 @@ function renameSelectOptionsAndBadge() {
 }
 
 function openRunOptions() {
-    if ($(window).width() > mobileMaxWidthScreen) {
+    if ($(window).width() > screen.small.size) {
         $('#btn-option').trigger('click');
     }
 }

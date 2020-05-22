@@ -154,6 +154,9 @@
 }
 
 #output {
+  display: flex;
+  flex-direction: column;
+  
   width: 100%;
   flex-grow: 1;
   overflow: auto;
@@ -163,6 +166,14 @@
   margin-top: 10px;
   padding: 5px 5px 5px 5px;
   white-space: pre-wrap;
+}
+
+#output-model{
+  color: black;
+}
+
+#output-error{
+  color: red;
 }
 
 .output-pane {
@@ -839,4 +850,8 @@ body.dark .list-group-item-action:hover {
 
 body.dark .left-panel-title {
   background-color: rgb(83, 83, 83);
+}
+
+body.dark #output-model{
+  color: white;
 }

@@ -193,26 +193,30 @@ $(window).resize(function () {
     if (window.innerWidth > screen.medium.size) {
         if (outputPos == "south") {
             layout.removePane("south");
-            currentVal = $('#output').text();
+            currentValModel = $('#output-model').text();
+            currentValError = $('#output-error').text();
             $(".ui-layout-south").empty();
             layout.addPane("east");
             createTextArea($('.ui-layout-east'));
             $("#font-output").val(fontSizeO);
             $('#output').css('font-size', fontSizeO + "px");
-            $('#output').text(currentVal);
+            $('#output-model').text(currentValModel);
+            $('#output-error').text(currentValError);
             saveOption("outputPos", "east");
             setSizePanes();
         }
     } else {
         if (outputPos == "east") {
             layout.removePane("east");
-            currentVal = $('#output').text();
+            currentValModel = $('#output-model').text();
+            currentValError = $('#output-error').text();
             $(".ui-layout-east").empty();
             layout.addPane("south");
             createTextArea($('.ui-layout-south'));
             $("#font-output").val(fontSizeO);
             $('#output').css('font-size', fontSizeO + "px");
-            $('#output').text(currentVal);
+            $('#output-model').text(currentValModel);
+            $('#output-error').text(currentValError);
             $('#split').children().attr('class', 'fa fa-chevron-up');
             $('#split').attr('id', 'split-up');
             saveOption("outputPos", "south");
@@ -364,18 +368,18 @@ $(document).ready(function () {
 
     $("#btn-run-nav").click(function (e) {
         e.preventDefault();
-        $("#output").empty();
-        $("#output").text("Sending..");
+        $("#output-model").empty();
+        $("#output-error").empty();
+        $("#output-model").text("Sending..");
         callSocketServer();
     });
 
     $('#input').submit(function (e) {
         e.preventDefault();
-        var form;
-        var stringify;
         if (clkBtn === "run") {
-            $("#output").empty();
-            $("#output").text("Sending..");
+            $("#output-model").empty();
+            $("#output-error").empty();
+            $("#output-model").text("Sending..");
             callSocketServer(false);
         }
         else if (clkBtn === 'save-options') {
@@ -571,13 +575,7 @@ function callSocketServer(onlyActiveTab) {
     socket.on('output', function (response) {
         if (response.error == "") {
             console.log(response.model); // debug string
-            $('#output').text(response.model); // append the response in the container
-            if (localStorage.getItem('mode') === 'dark') {
-                $('#output').css('color', 'white');
-            }
-            else {
-                $('#output').css('color', 'black');
-            }
+            $('#output-model').text(response.model); // append the response in the container
 
             var outputPos = localStorage.getItem("outputPos");
             outputPos = outputPos !== null ? outputPos : "east";
@@ -590,8 +588,8 @@ function callSocketServer(onlyActiveTab) {
             }
 
         } else {
-            $('#output').text(response.model + response.error);
-            $('#output').css('color', 'red');
+            $('#output-model').text(response.model);
+            $('#output-error').text(response.error);
         }
     });
 }
@@ -845,11 +843,11 @@ $(document).on('click', '.btn-add', function () {
     setElementsColorMode();
 });
 
-$(document).on('mouseup', '#output', function () {
-    $("#output").unmark();
+$(document).on('mouseup', '#output-model', function () {
+    $("#output-model").unmark();
     var start, end;
-    var text = $("#output").text();
-    var mainDiv = document.getElementById("output");
+    var text = $("#output-model").text();
+    var mainDiv = document.getElementById("output-model");
     var sel = getSelectionCharOffsetsWithin(mainDiv);
     start = sel.start;
     end = sel.end;
@@ -863,8 +861,8 @@ $(document).on('mouseup', '#output', function () {
     if (isPreChartCompliance && isPostChartCompliance && isSelectedWordCompliance) {
         var regex = new RegExp('([\\s\\{\\,])(' + selected + ')([\\(\\,\\s])', 'g');
         text = text.replace(regex, '$1<mark>$2</mark>$3');
-        $("#output").empty();
-        $("#output").html(text);
+        $("#output-model").empty();
+        $("#output-model").html(text);
         var randomColor = Math.floor(Math.random() * 16777215).toString(16);
         $("mark").css("color", "#" + randomColor);
     }
@@ -1131,7 +1129,8 @@ $(document).on('click', '.delete-tab', function () { // delete tab
 function addEastLayout(layout) {
     layout.removePane("south");
     saveOption("outputPos", "east");
-    var currentVal = $('#output').text();
+    currentValModel = $('#output-model').text();
+    currentValError = $('#output-error').text();
     $("#split-up").parent().empty();
     layout.addPane("east");
     createTextArea($('.ui-layout-east'));
@@ -1139,7 +1138,8 @@ function addEastLayout(layout) {
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
-    $('#output').text(currentVal);
+    $('#output-model').text(currentValModel);
+    $('#output-error').text(currentValError);
 }
 
 /**
@@ -1148,7 +1148,8 @@ function addEastLayout(layout) {
 function addSouthLayout(layout) {
     layout.removePane("east");
     saveOption("outputPos", "south");
-    var currentVal = $('#output').text();
+    currentValModel = $('#output-model').text();
+    currentValError = $('#output-error').text();
     $("#split").parent().empty();
     layout.addPane("south");
     createTextArea($('.ui-layout-south'));
@@ -1156,7 +1157,8 @@ function addSouthLayout(layout) {
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
-    $('#output').text(currentVal);
+    $('#output-model').text(currentValModel);
+    $('#output-error').text(currentValError);
     $('#split').children().attr('class', 'fa fa-chevron-up');
     $('#split').attr('id', 'split-up');
 }
@@ -1300,7 +1302,7 @@ function setJSONInput(config) {
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
         $('#inputExecutor').val(config.executor).change();
-        $('#output').text(config.output);
+        $('#output-model').text(config.output);
         setOptions(config);
         setTabsName(config);
         initializeCheckTabToRun();
@@ -1384,7 +1386,7 @@ function isJosn(str) {
 function createTextArea(layout) {
     $("#setting-output").remove();
     $(".output-container").remove();
-    $(layout).append('<div class="output-container">  <div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down"></i> </button></div></div> <div id="output" class="output"></div> </div>');
+    $(layout).append('<div class="output-container">  <div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down"></i> </button></div></div> <div id="output" class="output"> <div id="output-model" class="pb-2"></div><div id="output-error"></div></div> </div>');
     setLoideStyleMode();
     $('#dwn-output').tooltip();
 }
@@ -2082,8 +2084,9 @@ function downloadCurrentTabContent() {
 }
 
 function runCurrentTab() {
-    $("#output").empty();
-    $("#output").text("Sending..");
+    $("#output-model").empty();
+    $("#output-error").empty();
+    $("#output-model").text("Sending..");
     callSocketServer(true);
 }
 
@@ -2676,7 +2679,6 @@ function setLightStyleToUIElements() {
         var idE = "editor" + index;
         editors[idE].setTheme(defaultTheme);
     }
-    $('#output').css('color', 'black');
 }
 
 function setDarkStyleToUIElements() {
@@ -2698,7 +2700,6 @@ function setDarkStyleToUIElements() {
         var idE = "editor" + index;
         editors[idE].setTheme(defaultDarkTheme);
     }
-    $('#output').css('color', 'white');
 }
 
 function saveProjectToLocalStorage() {
@@ -2798,7 +2799,8 @@ function downloadLoDIEProject() {
     addProgramsToDownload();
     addTabsNameToDownload();
     $('#output-form').attr('name', 'output');
-    var text = $("#output").text();
+    var text = $("#output-model").text();
+    // to-do errors?
     $('#output-form').val(text);
 
     $("#run-dot").attr("name", "runAuto");
@@ -2871,6 +2873,6 @@ function setAceMode() {
 }
 
 function downloadOutput() {
-    var outputText = $('#output').text();
+    var outputText = $('#output-model').text() + "\n" + $('#output-error').text();
     createFileToDownload(outputText, 'local', 'LoIDE_output', 'txt');
 }

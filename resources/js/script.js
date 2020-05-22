@@ -578,6 +578,17 @@ function callSocketServer(onlyActiveTab) {
             else {
                 $('#output').css('color', 'black');
             }
+
+            var outputPos = localStorage.getItem("outputPos");
+            outputPos = outputPos !== null ? outputPos : "east";
+            
+            if(outputPos == "east"){
+                layout.open("east");
+            }
+            else{
+                layout.open("south");
+            }
+
         } else {
             $('#output').text(response.model + response.error);
             $('#output').css('color', 'red');

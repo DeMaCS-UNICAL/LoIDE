@@ -126,7 +126,6 @@
   opacity: 0;
   z-index: -10;
   transition: all 0.5s;
-  transition: ;
 }
 
 @keyframes fadeIn{

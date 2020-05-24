@@ -115,14 +115,14 @@ var idEditor = "editor1";
  * @global
  * @description default font size editor
  */
-var defaultFontSize = 15;
+const defaultFontSize = 15;
 
 /**
  * @global
  * @description default ace theme
  */
-var defaultTheme = "ace/theme/tomorrow";
-var defaultDarkTheme = "ace/theme/idle_fingers";
+const defaultTheme = "ace/theme/tomorrow";
+const defaultDarkTheme = "ace/theme/idle_fingers";
 
 /**
  * set up ace editors into object
@@ -132,12 +132,15 @@ setUpAce(idEditor, "");
 
 var searchBoxOpened = false;
 
-
 /**
  * @global
- * @description default size of the mobile max window width
+ * @description default screens sizes and activated status
  */
-var mobileMaxWidthScreen = 576;
+var screen = {
+    small: { size: 576, isActive: false},
+    medium: { size: 768, isActive: false},
+    large: { size: 992, isActive: true}
+};
 
 /**
  * @description - Returns the DOM element for the solver's option
@@ -179,29 +182,46 @@ window.onbeforeunload = function () {
 };
 
 $(window).resize(function () {
+    checkScreenType();
     var currentVal;
     var fontSizeO = localStorage.getItem("fontSizeO");
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
-    if (window.innerWidth > 450) {
-        layout.removePane("south");
-        currentVal = $('#output').text();
-        $(".ui-layout-south").empty();
-        layout.addPane("east");
-        createTextArea($('.ui-layout-east'));
-        $("#font-output").val(fontSizeO);
-        $('#output').css('font-size', fontSizeO + "px");
-        $('#output').text(currentVal);
+
+    var outputPos = localStorage.getItem("outputPos");
+    outputPos = outputPos !== null ? outputPos : "east";
+
+    if (window.innerWidth > screen.medium.size) {
+        if (outputPos == "south") {
+            layout.removePane("south");
+            currentValModel = $('#output-model').text();
+            currentValError = $('#output-error').text();
+            $(".ui-layout-south").empty();
+            layout.addPane("east");
+            createTextArea($('.ui-layout-east'));
+            $("#font-output").val(fontSizeO);
+            $('#output').css('font-size', fontSizeO + "px");
+            $('#output-model').text(currentValModel);
+            $('#output-error').text(currentValError);
+            saveOption("outputPos", "east");
+            setSizePanes();
+        }
     } else {
-        layout.removePane("east");
-        currentVal = $('#output').text();
-        $(".ui-layout-east").empty();
-        layout.addPane("south");
-        createTextArea($('.ui-layout-south'));
-        $("#font-output").val(fontSizeO);
-        $('#output').css('font-size', fontSizeO + "px");
-        $('#output').text(currentVal);
-        $('#split').children().attr('class', 'fa fa-chevron-up');
-        $('#split').attr('id', 'split-up');
+        if (outputPos == "east") {
+            layout.removePane("east");
+            currentValModel = $('#output-model').text();
+            currentValError = $('#output-error').text();
+            $(".ui-layout-east").empty();
+            layout.addPane("south");
+            createTextArea($('.ui-layout-south'));
+            $("#font-output").val(fontSizeO);
+            $('#output').css('font-size', fontSizeO + "px");
+            $('#output-model').text(currentValModel);
+            $('#output-error').text(currentValError);
+            $('#split').children().attr('class', 'fa fa-chevron-up');
+            $('#split').attr('id', 'split-up');
+            saveOption("outputPos", "south");
+            setSizePanes();
+        }
     }
     setHeightComponents();
     var length = $(".nav-tabs").children().length;
@@ -210,6 +230,36 @@ $(window).resize(function () {
         editors[idE].resize();
     }
 });
+
+function setSizePanes(){
+    var outputPos = localStorage.getItem("outputPos");
+    outputPos = outputPos !== null ? outputPos : "east";
+    
+    if(screen.small.isActive){
+        if(outputPos == "east"){
+            layout.sizePane("east", 100);
+        }
+        else {
+            layout.sizePane("south", 200);
+        }
+    }
+    else if(screen.medium.isActive){
+        if(outputPos == "east"){
+            layout.sizePane("east", 200);
+        }
+        else {
+            layout.sizePane("south", 200);
+        }
+    } 
+    else {
+        if(outputPos == "east"){
+            layout.sizePane("east", 250);
+        }
+        else {
+            layout.sizePane("south", 200);
+        }
+    }
+}
 
 function saveOptions() {
     $("#run-dot").attr("name", "runAuto");
@@ -232,6 +282,8 @@ function saveOptions() {
 }
 
 $(document).ready(function () {
+    checkScreenType();
+
     setNotifications();
 
     setClipboard();
@@ -248,7 +300,7 @@ $(document).ready(function () {
 
     initializeCheckTabToRun();
 
-    $('img[alt=logo]').on('click', function (e) {
+    $('.navbar-logo').on('click', function (e) {
         location.reload();
     });
 
@@ -271,36 +323,6 @@ $(document).ready(function () {
     inizializeShortcuts();
 
     restoreOptions();
-
-    $('#font-output').change(function (e) {
-        var size = $(this).val();
-        if (size === "") {
-            $(this).val(defaultFontSize);
-        }
-        $('#output').css('font-size', size + "px");
-        if (!saveOption("fontSizeO", size)) {
-            alert("Sorry, this options will not save in your browser");
-        }
-    });
-
-    $('#font-editor').change(function (e) {
-        var size = $(this).val();
-        if (size === "") {
-            $(this).val(defaultFontSize);
-        }
-        setFontSizeEditors(size);
-        if (!saveOption("fontSizeE", size)) {
-            alert("Sorry, this options will not save in your browser");
-        }
-    });
-
-    $('#theme').change(function (e) {
-        var theme = $(this).val();
-        setTheme(theme);
-        if (!saveOption("theme", theme)) {
-            alert("Sorry, this options will not save in your browser");
-        }
-    });
 
     inizializeDropzone();
 
@@ -334,19 +356,6 @@ $(document).ready(function () {
         setHeightComponents(expandend, true);
     });
 
-    if (window.innerWidth > 450 && localStorage.getItem("outputPos") !== "south") {
-        layout.removePane("south");
-    } else {
-        layout.removePane("east");
-        var currentVal = $('#output').text();
-        $(".ui-layout-east").empty();
-        layout.addPane("south");
-        createTextArea($('.ui-layout-south'));
-        $('#output').text(currentVal);
-        $('#split').children().attr('class', 'fa fa-chevron-up');
-        $('#split').attr('id', 'split-up');
-    }
-
     /**
      * @global
      * @description id of the clicked button 'submit'
@@ -359,18 +368,18 @@ $(document).ready(function () {
 
     $("#btn-run-nav").click(function (e) {
         e.preventDefault();
-        $("#output").empty();
-        $("#output").text("Sending..");
+        $("#output-model").empty();
+        $("#output-error").empty();
+        $("#output-model").text("Sending..");
         callSocketServer();
     });
 
     $('#input').submit(function (e) {
         e.preventDefault();
-        var form;
-        var stringify;
         if (clkBtn === "run") {
-            $("#output").empty();
-            $("#output").text("Sending..");
+            $("#output-model").empty();
+            $("#output-error").empty();
+            $("#output-model").text("Sending..");
             callSocketServer(false);
         }
         else if (clkBtn === 'save-options') {
@@ -417,7 +426,92 @@ $(document).ready(function () {
 
     loadFromURL(); // load program from url
 
+    if (screen.small.isActive) {
+        $('.left-panel').css('overflow-y', 'auto');
+    }
+
+    inizializeAppareaceSettings();
+
+    setSizePanes();
+
+    setTimeout( ()=>{
+        $('.splashscreen').addClass('display-none');
+
+    },500 )
 });
+
+function checkScreenType(){
+    if($(window).width() < screen.medium.size){
+        screen.small.isActive = true;
+        screen.medium.isActive = false;
+        screen.large.isActive = false;
+    }
+    else if($(window).width() < screen.large.size){
+        screen.small.isActive = false;
+        screen.medium.isActive = true;
+        screen.large.isActive = false;
+    }
+    else {
+        screen.small.isActive = false;
+        screen.medium.isActive = false;
+        screen.large.isActive = true;
+    }
+}
+
+function inizializeAppareaceSettings(){
+
+    $('#font-output').change(function (e) {
+        var size = $(this).val();
+        if (size.length == 0) {
+            $(this).val(defaultFontSize);
+        }
+        $('#output').css('font-size', size + "px");
+        if (!saveOption("fontSizeO", size)) {
+            alert("Sorry, this options will not save in your browser");
+        }
+    });
+
+    $('#font-editor').change(function (e) {
+        var size = $(this).val();
+        if (size.length == 0) {
+            $(this).val(defaultFontSize);
+        }
+        setFontSizeEditors(size);
+        if (!saveOption("fontSizeE", size)) {
+            alert("Sorry, this options will not save in your browser");
+        }
+    });
+
+    $('#theme').change(function (e) {
+        var theme = $(this).val();
+        setTheme(theme);
+        if (!saveOption("theme", theme)) {
+            alert("Sorry, this options will not save in your browser");
+        }
+    });
+
+    var size = $('#font-editor').val();
+    if (size.length == 0) {
+        $('#font-editor').val(defaultFontSize);
+    }
+    setFontSizeEditors(size);
+    size = $('#font-output').val();
+    if (size.length == 0) {
+        $('#font-output').val(defaultFontSize);
+    }
+
+    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    if( actualTheme.length == 0){
+        if (localStorage.getItem('mode') === 'dark')
+            setThemeEditors(defaultDarkTheme);
+        else {
+            setThemeEditors(defaultTheme);
+        }
+    }
+    else {
+        setThemeEditors(actualTheme);
+    }
+}
 
 function initializeCheckTabToRun() {
     $('.check-run-tab:not(.check-auto-run-tab)').off();
@@ -445,7 +539,7 @@ function initializeCheckTabToRun() {
 
 function checkEmptyTabSelected() {
     var tot = $('.check-run-tab.checked:not(.check-auto-run-tab)').length;
-    if(tot === 0) {
+    if (tot === 0) {
         $('.check-auto-run-tab').find('.check-icon').removeClass('invisible');
         $('.check-auto-run-tab').addClass('checked');
     }
@@ -481,16 +575,21 @@ function callSocketServer(onlyActiveTab) {
     socket.on('output', function (response) {
         if (response.error == "") {
             console.log(response.model); // debug string
-            $('#output').text(response.model); // append the response in the container
-            if (localStorage.getItem('mode') === 'dark') {
-                $('#output').css('color', 'white');
+            $('#output-model').text(response.model); // append the response in the container
+
+            var outputPos = localStorage.getItem("outputPos");
+            outputPos = outputPos !== null ? outputPos : "east";
+            
+            if(outputPos == "east"){
+                layout.open("east");
             }
-            else {
-                $('#output').css('color', 'black');
+            else{
+                layout.open("south");
             }
+
         } else {
-            $('#output').text(response.model + response.error);
-            $('#output').css('color', 'red');
+            $('#output-model').text(response.model);
+            $('#output-error').text(response.error);
         }
     });
 }
@@ -744,11 +843,11 @@ $(document).on('click', '.btn-add', function () {
     setElementsColorMode();
 });
 
-$(document).on('mouseup', '#output', function () {
-    $("#output").unmark();
+$(document).on('mouseup', '#output-model', function () {
+    $("#output-model").unmark();
     var start, end;
-    var text = $("#output").text();
-    var mainDiv = document.getElementById("output");
+    var text = $("#output-model").text();
+    var mainDiv = document.getElementById("output-model");
     var sel = getSelectionCharOffsetsWithin(mainDiv);
     start = sel.start;
     end = sel.end;
@@ -762,8 +861,8 @@ $(document).on('mouseup', '#output', function () {
     if (isPreChartCompliance && isPostChartCompliance && isSelectedWordCompliance) {
         var regex = new RegExp('([\\s\\{\\,])(' + selected + ')([\\(\\,\\s])', 'g');
         text = text.replace(regex, '$1<mark>$2</mark>$3');
-        $("#output").empty();
-        $("#output").html(text);
+        $("#output-model").empty();
+        $("#output-model").html(text);
         var randomColor = Math.floor(Math.random() * 16777215).toString(16);
         $("mark").css("color", "#" + randomColor);
     }
@@ -785,10 +884,12 @@ $(document).on('click', '#dwn-output', function () {
 
 $(document).on('click', '#split', function () {
     addSouthLayout(layout);
+    setSizePanes();
 });
 
 $(document).on('click', '#split-up', function () {
     addEastLayout(layout);
+    setSizePanes();
 });
 
 // Sets the solvers and options on language change
@@ -938,11 +1039,18 @@ $(document).on('change', '.form-control-option', function () {
 $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
-    inizializeTabContextmenu();
-    initializeCheckTabToRun();
-    setAceMode();
-    setElementsColorMode();
 
+    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    if(actualTheme.length == 0){
+        if (localStorage.getItem('mode') === 'dark')
+            setThemeEditors(defaultDarkTheme);
+        else {
+            setThemeEditors(defaultTheme);
+        }
+    }
+    else {
+        setThemeEditors(actualTheme)
+    }
 });
 
 $(document).on('click', '.delete-tab', function () { // delete tab
@@ -1021,15 +1129,17 @@ $(document).on('click', '.delete-tab', function () { // delete tab
 function addEastLayout(layout) {
     layout.removePane("south");
     saveOption("outputPos", "east");
-    var currentVal = $('#output').text();
+    currentValModel = $('#output-model').text();
+    currentValError = $('#output-error').text();
     $("#split-up").parent().empty();
     layout.addPane("east");
     createTextArea($('.ui-layout-east'));
-    var fontSizeO = localStorage.getItem("fontSizeO");
+    var fontSizeO = $('#font-output').val();
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
-    $('#output').text(currentVal);
+    $('#output-model').text(currentValModel);
+    $('#output-error').text(currentValError);
 }
 
 /**
@@ -1038,15 +1148,17 @@ function addEastLayout(layout) {
 function addSouthLayout(layout) {
     layout.removePane("east");
     saveOption("outputPos", "south");
-    var currentVal = $('#output').text();
+    currentValModel = $('#output-model').text();
+    currentValError = $('#output-error').text();
     $("#split").parent().empty();
     layout.addPane("south");
     createTextArea($('.ui-layout-south'));
-    var fontSizeO = localStorage.getItem("fontSizeO");
+    var fontSizeO = $('#font-output').val();
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
     $("#font-output").val(fontSizeO);
     $('#output').css('font-size', fontSizeO + "px");
-    $('#output').text(currentVal);
+    $('#output-model').text(currentValModel);
+    $('#output-error').text(currentValError);
     $('#split').children().attr('class', 'fa fa-chevron-up');
     $('#split').attr('id', 'split-up');
 }
@@ -1165,7 +1277,7 @@ function addInputValue(inputClass) {
  */
 function setJSONInput(config) {
     if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option')
-        || config.hasOwnProperty('program') || config.hasOwnProperty('output') || config.hasOwnProperty('tabname')) {
+        || config.hasOwnProperty('program') || config.hasOwnProperty('output_model') || config.hasOwnProperty('output_error') || config.hasOwnProperty('tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
@@ -1190,7 +1302,9 @@ function setJSONInput(config) {
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
         $('#inputExecutor').val(config.executor).change();
-        $('#output').text(config.output);
+        $('#output-model').text(config.output_model);
+        $('#output-error').text(config.output_error);
+
         setOptions(config);
         setTabsName(config);
         initializeCheckTabToRun();
@@ -1274,7 +1388,7 @@ function isJosn(str) {
 function createTextArea(layout) {
     $("#setting-output").remove();
     $(".output-container").remove();
-    $(layout).append('<div class="output-container">  <div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down"></i> </button></div></div> <div id="output" class="output"></div> </div>');
+    $(layout).append('<div class="output-container">  <div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down"></i> </button></div></div> <div id="output" class="output"> <div id="output-model" class="pb-2"></div><div id="output-error"></div></div> </div>');
     setLoideStyleMode();
     $('#dwn-output').tooltip();
 }
@@ -1409,11 +1523,19 @@ function setUpAce(ideditor, text) {
     ace.config.set("packaged", true);
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
-    if (localStorage.getItem('mode') === 'dark')
-        editors[ideditor].setTheme(defaultDarkTheme);
-    else {
-        editors[ideditor].setTheme(defaultTheme);
+
+    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    if(actualTheme.length == 0){
+        if (localStorage.getItem('mode') === 'dark')
+            editors[ideditor].setTheme(defaultDarkTheme);
+        else {
+            editors[ideditor].setTheme(defaultTheme);
+        }
     }
+    else {
+        editors[ideditor].setTheme(actualTheme);
+    }
+
     editors[ideditor].setValue(text);
     editors[ideditor].resize();
     editors[ideditor].setBehavioursEnabled(true);
@@ -1569,6 +1691,18 @@ function setFontSizeEditors(size) {
 }
 
 /**
+ * @param {number} theme - theme
+ * @description Sets the theme to all the editors
+ */
+function setThemeEditors(theme) {
+    var length = $(".nav-tabs").children().length;
+    for (var index = 1; index <= length - 1; index++) {
+        var idE = "editor" + index;
+        editors[idE].setTheme(theme);
+    }
+}
+
+/**
  * @returns {boolean}
  * @description Checks if the browser supports the localStorage
  */
@@ -1623,7 +1757,6 @@ function restoreOptions() {
 
     var layoutPos = localStorage.getItem("outputPos");
     layoutPos = layoutPos !== null ? layoutPos : "east";
-
     if (layoutPos === "east") {
         addEastLayout(layout);
     } else {
@@ -1665,6 +1798,14 @@ function addTab(obj, text, name) {
     initializeCheckTabToRun();
     setAceMode();
     setElementsColorMode();
+    
+    var currentFontSize = $('#font-editor').val();
+    if (currentFontSize.length == 0) {
+        editors[editorId].setFontSize(currentFontSize + "px");
+    }
+    else {
+        editors[editorId].setFontSize(currentFontSize + "px");
+    }
 
     return tabId;
 }
@@ -1757,57 +1898,45 @@ function inizializePopovers() {
             '<div class="mb-2"> Save the project to:\n </div>' +
             '<div class="save-btn text-center">\n' +
             '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
-            '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
+            // '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
             '</div>\n' +
             '</div>');
 
         if (localStorage.getItem('mode') === 'dark') {
             $('#local-download').removeClass('btn-outline-dark');
             $('#local-download').addClass('btn-outline-light');
-            $('#cloud-download').removeClass('btn-outline-dark');
-            $('#cloud-download').addClass('btn-outline-light');
+            // $('#cloud-download').removeClass('btn-outline-dark');
+            // $('#cloud-download').addClass('btn-outline-light');
         }
         else {
             $('#local-download').removeClass('btn-outline-light');
             $('#local-download').addClass('btn-outline-dark');
-            $('#cloud-download').removeClass('btn-outline-light');
-            $('#cloud-download').addClass('btn-outline-dark');
+            // $('#cloud-download').removeClass('btn-outline-light');
+            // $('#cloud-download').addClass('btn-outline-dark');
         }
 
         $("#local-download").on('click', function () {
             downloadLoDIEProject();
 
             // TO MOVE ON OUTPUT DOWNLOAD
-            // if($('#only-output').is(":checked")){
-            //     $('#program').removeAttr('name', 'program[0]');
-            //     $('#output-form').attr('name', 'output');
-            //     var text = $("#output").text();
-            //     $('#output-form').val(text);
-            //     form = $('#input').serializeFormJSON();
-            //     stringify = JSON.stringify(form);
-            //     createFileToDownload(stringify, "local","LoIDE_Output", "json");
-            //     $('#program').attr('name', 'program[0]');
-            //     $('#output-form').removeAttr('name', 'output');
-            // }
+            
+            /* if($('#only-output').is(":checked")){
+                $('#program').removeAttr('name', 'program[0]');
+                $('#output-form').attr('name', 'output');
+                var text = $("#output").text();
+                $('#output-form').val(text);
+                form = $('#input').serializeFormJSON();
+                stringify = JSON.stringify(form);
+                createFileToDownload(stringify, "local","LoIDE_Output", "json");
+                $('#program').attr('name', 'program[0]');
+                $('#output-form').removeAttr('name', 'output');
+             } */
         });
-
-        $("#cloud-download").on('click', function () {
-            console.log('Save on cloud');
-            // if(Dropbox.isBrowserSupported()){
-            //     $('#program').removeAttr('name', 'program[0]');
-            //     $('#output-form').attr('name', 'output');
-            //     var text = $("#output").text();
-            //     $('#output-form').val(text);
-            //     form = $('#input').serializeFormJSON();
-            //     stringify = JSON.stringify(form);
-            //     chose = $('#choice').text();
-            //
-            //     // createFileToDownload(stringify, "dropbox", "json")
-            // }
-            // else{
-            //     operation_alert({result: "Dropbox not supported on your browser!"});
-            // }
-        });
+        
+         /* $("#cloud-download").on('click', function () {
+           console.log('Save on cloud');
+         }); */
+         
     });
 
     $('.popover-download').on('hidden.bs.popover', function () {
@@ -1957,8 +2086,9 @@ function downloadCurrentTabContent() {
 }
 
 function runCurrentTab() {
-    $("#output").empty();
-    $("#output").text("Sending..");
+    $("#output-model").empty();
+    $("#output-error").empty();
+    $("#output-model").text("Sending..");
     callSocketServer(true);
 }
 
@@ -1978,6 +2108,7 @@ function inizializeSnippets() {
             switch (solverChosen) {
                 case "dlv":
                     completer = {
+                        identifierRegexps: [/[a-zA-Z_0-9\#\$\-\u00A2-\uFFFF]/],
                         getCompletions: function (editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
@@ -2161,6 +2292,7 @@ function inizializeSnippets() {
 
                 case "dlv2":
                     completer = {
+                        identifierRegexps: [/[a-zA-Z_0-9\#\$\-\u00A2-\uFFFF]/],
                         getCompletions: function (editor, session, pos, prefix, callback) {
                             var completions = [
                                 {
@@ -2488,6 +2620,7 @@ function inizializeButtonLoideMode() {
         localStorage.setItem('mode', (localStorage.getItem('mode') || 'dark') === 'dark' ? 'light' : 'dark');
         localStorage.getItem('mode') === 'dark' ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
         setElementsColorMode();
+        $('#theme').change();
     });
 }
 
@@ -2548,7 +2681,6 @@ function setLightStyleToUIElements() {
         var idE = "editor" + index;
         editors[idE].setTheme(defaultTheme);
     }
-    $('#output').css('color', 'black');
 }
 
 function setDarkStyleToUIElements() {
@@ -2570,7 +2702,6 @@ function setDarkStyleToUIElements() {
         var idE = "editor" + index;
         editors[idE].setTheme(defaultDarkTheme);
     }
-    $('#output').css('color', 'white');
 }
 
 function saveProjectToLocalStorage() {
@@ -2669,12 +2800,16 @@ function setTabsName(config) {
 function downloadLoDIEProject() {
     addProgramsToDownload();
     addTabsNameToDownload();
-    $('#output-form').attr('name', 'output');
-    var text = $("#output").text();
-    $('#output-form').val(text);
+
+    var model = $("#output-model").text();
+    var errors = $("#output-error").text();
 
     $("#run-dot").attr("name", "runAuto");
+
     form = $('#input').serializeFormJSON();
+
+    form.output_model = model;
+    form.output_error = errors;
     form.tab = [];
 
     $('.check-run-tab.checked').each(function (index, element) {
@@ -2687,7 +2822,6 @@ function downloadLoDIEProject() {
 
     stringify = JSON.stringify(form);
     createFileToDownload(stringify, "local", "LoIDE_Project", "json");
-    $('#output-form').removeAttr('name');
     destroyPrograms();
     destroyTabsName();
     $("#run-dot").removeAttr("name");
@@ -2708,7 +2842,7 @@ function renameSelectOptionsAndBadge() {
 }
 
 function openRunOptions() {
-    if ($(window).width() > mobileMaxWidthScreen) {
+    if ($(window).width() > screen.small.size) {
         $('#btn-option').trigger('click');
     }
 }
@@ -2743,6 +2877,6 @@ function setAceMode() {
 }
 
 function downloadOutput() {
-    var outputText = $('#output').text();
+    var outputText = $('#output-model').text() + "\n" + $('#output-error').text();
     createFileToDownload(outputText, 'local', 'LoIDE_output', 'txt');
 }

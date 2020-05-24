@@ -6,6 +6,7 @@ var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
 var pug = require('pug');
+const compression = require('compression');
 
 // System config loading
 var properties  = require('./config/app-config.json');
@@ -48,6 +49,7 @@ app.use(helmet.hsts({
     maxAge: maxAge
 }));
 
+app.use(compression());
 app.use(express.static('resources'));
 app.set('views', './resources');
 app.set('view engine', 'pug');

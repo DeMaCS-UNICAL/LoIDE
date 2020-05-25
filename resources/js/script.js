@@ -183,7 +183,6 @@ window.onbeforeunload = function () {
 
 $(window).resize(function () {
     checkScreenType();
-    var currentVal;
     var fontSizeO = localStorage.getItem("fontSizeO");
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
 
@@ -234,7 +233,7 @@ $(window).resize(function () {
 function setSizePanes(){
     var outputPos = localStorage.getItem("outputPos");
     outputPos = outputPos !== null ? outputPos : "east";
-    
+
     if(screen.small.isActive){
         if(outputPos == "east"){
             layout.sizePane("east", 100);
@@ -392,7 +391,7 @@ $(document).ready(function () {
         $('.option-solver > div').toggleClass(" show"); // add class to show option components
         $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
             function () {
-                $(window).trigger('resize');
+                layout.resizeAll();
             });
     });
 

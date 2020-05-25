@@ -2047,17 +2047,9 @@ function inizializeToolbar() {
         editors[idEditor].focus();
     });
 
-    var ok = false;
-    try {
-        navigator.clipboard.readText();
-        ok = true;
-    }
-    catch (e) {
-        console.error('Clipboard API is not supported in this browser', e);
-        $('#btn-paste').remove();
-    }
+    var clipboardSupport = navigator.clipboard.readText == null ? false : true
 
-    if (ok) {
+    if (clipboardSupport) {
         $('#btn-paste').on('click', function () {
             navigator.clipboard.readText()
                 .then(text => {
@@ -2065,10 +2057,14 @@ function inizializeToolbar() {
                 })
                 .catch(err => {
                     // maybe user didn't grant access to read from clipboard
-                    operation_alert({ reason: 'Clipboard read error' });
+                    operation_alert({ reason: 'Clipboard read error, maybe you didn\'t grant the access to read from the clipboard.' });
                     console.error((err));
                 });
         });
+    }
+    else {
+        console.error('Clipboard API is not supported in this browser', e);
+        $('#btn-paste').remove();
     }
 
     $('#btn-dwn-this-lp').on('click', function () {

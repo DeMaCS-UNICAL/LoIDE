@@ -7,6 +7,7 @@ var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
 var pug = require('pug');
 var jpointer = require('json-pointer');
+const compression = require('compression');
 
 // System config loading
 var properties  = require('./config/app-config.json');
@@ -53,6 +54,7 @@ app.use(helmet.hsts({
     maxAge: maxAge
 }));
 
+app.use(compression());
 app.use(express.static('resources'));
 app.set('views', './resources');
 app.set('view engine', 'pug');
@@ -151,12 +153,6 @@ function getExcecutorURL(data) {
 }
 
 function validateJsonSchemas() {
-    /**
-     * TODO MIGRATE TO NEWER DRAFT SPECIFICATION ( 7 OR 8 )
-     * TODO IMPROVE PROPERTIES DESCRIPTION
-     * TODO the property `value` must be unique (?) 
-     */
-
      // Validate JSON file with the relative scheme
     var servicesValidation  = validateSchema('./config/services.json', './config/services-schema.json');
     var appConfigValidation = validateSchema('./config/app-config.json', './config/app-config-schema.json');

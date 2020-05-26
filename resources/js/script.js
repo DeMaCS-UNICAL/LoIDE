@@ -2063,7 +2063,7 @@ function inizializeToolbar() {
         });
     }
     else {
-        console.error('Clipboard API is not supported in this browser', e);
+        console.error('Clipboard API is not supported in this browser');
         $('#btn-paste').remove();
     }
 

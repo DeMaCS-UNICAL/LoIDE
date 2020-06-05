@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "app-config-schema.json",
+    "self": {
+        "vendor": "unical",
+        "name": "app-config",
+        "format": "jsonschema",
+        "version": "1-0-0"
+    },
+    "type": "object",
+    "properties": {
+        "max_age": {
+            "title": "HSTS max age",
+            "description": "This property specifies HTTP Strict Transport Security max age.",
+            "type": "number",
+            "minimum": 0
+        },
+        "port": {
+            "title": "Ports configuration object",
+            "description": "This object contains information about ports to be used for the various supported protocols.",
+            "type": "object",
+            "properties": {
+                "http": {
+                    "title": "HTTP port",
+                    "description": "This property specifies the port to use for HTTP connections.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "https": {
+                    "title": "HTTPS port",
+                    "description": "This property specifies the port to use for HTTPS connections.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 65535
+                }
+            },
+            "required": [
+                "http"
+            ],
+            "additionalProperties": false
+        },
+        "path": {
+            "title": "Paths configuration object",
+            "description": "This object contains information about paths to be used for the various configurations.",
+            "type": "object",
+            "properties": {
+                "key": {
+                    "title": "HTTPS key",
+                    "description": "This property specifies the path for the HTTPS key.",
+                    "type": "string"
+                },
+                "cert": {
+                    "title": "HTTPS certificate",
+                    "description": "This property specifies the path for the HTTPS certificate.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "key",
+                "cert"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "port",
+        "max_age"
+    ],
+    "additionalProperties": false
+}

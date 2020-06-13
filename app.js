@@ -55,8 +55,8 @@ app.use(helmet.hsts({
 }));
 
 app.use(compression());
-app.use(express.static('resources'));
-app.set('views', './resources');
+app.use(express.static('dist'));
+app.set('views', './dist');
 app.set('view engine', 'pug');
 
 // Load variables in to the .pug file

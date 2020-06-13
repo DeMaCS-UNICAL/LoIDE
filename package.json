@@ -48,8 +48,13 @@
     "websocket": "^1.0.30"
   },
   "devDependencies": {
+    "compression": "^1.7.3",
     "gulp": "^4.0.2",
-    "compression": "^1.7.3"
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-image": "^6.2.0",
+    "gulp-uglify-es": "^2.0.0"
   },
   "analyze": true,
   "homepage": "https://github.com/DeMaCS-UNICAL/LoIDE#readme"

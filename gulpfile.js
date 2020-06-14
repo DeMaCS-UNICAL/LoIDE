@@ -28,13 +28,13 @@ function css() {
 }
 
 function faviconImage() {
-    return src(path.src + 'favicon/*.{png,svg,ico}')
+    return src(path.src + 'favicon/*.{png,svg}')
     .pipe(image())
     .pipe(dest(path.dest + 'favicon/'))
 }
 
 function faviconFiles() {
-    return src(path.src + 'favicon/*.{xml,webmanifest}')
+    return src(path.src + 'favicon/*.{ico,xml,webmanifest}')
     .pipe(dest(path.dest + 'favicon/'))
 }
 

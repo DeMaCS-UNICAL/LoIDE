@@ -1,9 +1,11 @@
 const { series, src, dest, parallel } = require('gulp');
-const cleanCSS = require('gulp-clean-css');
+const csso = require('gulp-csso');
+const shorthand = require('gulp-shorthand');
 const clean = require('gulp-clean');
 const autoprefixer = require('gulp-autoprefixer');
-let uglify = require('gulp-uglify-es').default;
+const uglify = require('gulp-uglify-es').default;
 const image = require('gulp-image');
+const gls = require('gulp-live-server');
 
 const path =  {
     dest: 'dist/',
@@ -20,10 +22,8 @@ function css() {
     .pipe(autoprefixer({
         cascade: false
     }))
-    .pipe(cleanCSS({debug: true}, (details) => {
-        console.log(`${details.name}: ${details.stats.originalSize}`);
-        console.log(`${details.name}: ${details.stats.minifiedSize}`);
-      }))
+    .pipe(shorthand())
+    .pipe(csso())
     .pipe(dest(path.dest + 'css/'))
 }
 
@@ -60,6 +60,13 @@ function copyAll() {
     .pipe(dest(path.dest))
 }
 
-exports.default = series(cleanDir,parallel(css,faviconImage,faviconFiles,img,js,pug))
-exports.dev = series(cleanDir,copyAll)
+function serve() {
+    var server = gls('app.js', undefined, false);
+    server.start();
+}
+
+const build = parallel(css,faviconImage,faviconFiles,img,js,pug);
+
+exports.default = series(cleanDir, build, serve)
+exports.dev = series(cleanDir,copyAll, serve)
 exports.clean = series(cleanDir)

@@ -55,7 +55,7 @@
     "gulp-autoprefixer": "^7.0.1",
     "gulp-clean": "^0.4.0",
     "gulp-csso": "^4.0.1",
-    "gulp-image": "^6.2.0",
+    "gulp-imagemin": "^7.1.0",
     "gulp-uglify-es": "^2.0.0"
   },
   "analyze": true,

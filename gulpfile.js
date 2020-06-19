@@ -4,7 +4,7 @@ const shorthand = require('gulp-shorthand');
 const clean = require('gulp-clean');
 const autoprefixer = require('gulp-autoprefixer');
 const uglify = require('gulp-uglify-es').default;
-const image = require('gulp-image');
+const imagemin = require('gulp-imagemin');
 const gls = require('gulp-live-server');
 
 const path =  {
@@ -29,7 +29,7 @@ function css() {
 
 function faviconImage() {
     return src(path.src + 'favicon/*.{png,svg}')
-    .pipe(image())
+    .pipe(imagemin())
     .pipe(dest(path.dest + 'favicon/'))
 }
 
@@ -40,7 +40,7 @@ function faviconFiles() {
 
 function img() {
     return src(path.src + 'img/*.*')
-    .pipe(image())
+    .pipe(imagemin())
     .pipe(dest(path.dest + 'img/'))
 }
 

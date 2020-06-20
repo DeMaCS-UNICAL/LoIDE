@@ -12,6 +12,11 @@ const path =  {
     src: 'resources/'
 }
 
+const environment =  {
+    dev: 'development',
+    prod: 'production'
+}
+
 function cleanDir(){
     return src( path.dest +  '*', {read: false})
     .pipe(clean());
@@ -55,18 +60,18 @@ function pug() {
     .pipe(dest(path.dest))
 }
 
-function copyAll() {
-    return src(path.src + '**/*.*')
-    .pipe(dest(path.dest))
+function serveProd() {
+    var server = gls('app.js', {env: {NODE_ENV: environment.prod}}, false);
+    server.start();
 }
 
-function serve() {
-    var server = gls('app.js', undefined, false);
+function serveDev() {
+    var server = gls('app.js', {env: {NODE_ENV: environment.dev}}, false);
     server.start();
 }
 
 const build = parallel(css,faviconImage,faviconFiles,img,js,pug);
 
-exports.default = series(cleanDir, build, serve)
-exports.dev = series(cleanDir,copyAll, serve)
+exports.default = series(cleanDir, build, serveProd)
+exports.dev = series(cleanDir, serveDev)
 exports.clean = series(cleanDir)

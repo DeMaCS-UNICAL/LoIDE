@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx gulp"
+    "start": "npx gulp",
+    "start:dev": "npx gulp dev"
   },
   "repository": {
     "type": "git",
@@ -41,8 +42,6 @@
     "ajv": "^6.12.2",
     "express": "^4.17.1",
     "express-force-ssl": "^0.3.2",
-    "gulp-live-server": "0.0.31",
-    "gulp-shorthand": "^1.1.0",
     "helmet": "^3.21.1",
     "json-pointer": "^0.6.0",
     "pug": "^2.0.4",
@@ -56,6 +55,8 @@
     "gulp-clean": "^0.4.0",
     "gulp-csso": "^4.0.1",
     "gulp-imagemin": "^7.1.0",
+    "gulp-live-server": "0.0.31",
+    "gulp-shorthand": "^1.1.0",
     "gulp-uglify-es": "^2.0.0"
   },
   "analyze": true,

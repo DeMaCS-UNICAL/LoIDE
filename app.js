@@ -9,6 +9,19 @@ var pug = require('pug');
 var jpointer = require('json-pointer');
 const compression = require('compression');
 
+const environment =  {
+    dev: 'development',
+    prod: 'production'
+}
+
+const path =  {
+    dist: 'dist',
+    src: 'resources'
+}
+
+const currentEnv = process.env.NODE_ENV || environment.dev
+const resourcesPath = currentEnv == environment.prod ? path.dist : path.src
+
 // System config loading
 var properties  = require('./config/app-config.json');
 var httpPort    = properties.port.http;
@@ -55,8 +68,8 @@ app.use(helmet.hsts({
 }));
 
 app.use(compression());
-app.use(express.static('dist'));
-app.set('views', './dist');
+app.use(express.static(resourcesPath));
+app.set('views', './' + resourcesPath);
 app.set('view engine', 'pug');
 
 // Load variables in to the .pug file

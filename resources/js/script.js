@@ -2050,7 +2050,7 @@ function inizializeToolbar() {
         editors[idEditor].focus();
     });
 
-    var clipboardSupport = navigator.clipboard.readText == null ? false : true
+    var clipboardSupport = typeof(navigator.clipboard)=='undefined' ? false : true
 
     if (clipboardSupport) {
         $('#btn-paste').on('click', function () {

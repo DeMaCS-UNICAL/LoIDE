@@ -87,10 +87,12 @@ function serveDev(done) {
         , ignore: ['node_modules/', 'dist/', 'resources/', 'gulpfile.js']
         , env: { 'NODE_ENV': environment.dev }
     });
-    let starting = false;
+    let starting, restarting = false;
 
     const onReady = () => {
         starting = false;
+        if(restarting) browserSync.reload();
+        restarting = false;
         done();
     };
     
@@ -104,7 +106,11 @@ function serveDev(done) {
         if (starting) {
           onReady();
         }
-    });   
+    });  
+    
+    server.on('restart', () => {
+        restarting = true;
+    });
 }
 
 function startBrowserSync(done){

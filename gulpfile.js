@@ -5,7 +5,7 @@ const clean = require('gulp-clean');
 const autoprefixer = require('gulp-autoprefixer');
 const uglify = require('gulp-uglify-es').default;
 const imagemin = require('gulp-imagemin');
-const gls = require('gulp-live-server');
+const nodemon = require('gulp-nodemon')
 
 const path =  {
     dest: 'dist/',
@@ -61,13 +61,21 @@ function pug() {
 }
 
 function serveProd() {
-    var server = gls('app.js', {env: {NODE_ENV: environment.prod}}, false);
-    server.start();
+    nodemon({
+        script: 'app.js'
+      , ext: 'js json'
+      , ignore: ['node_modules/', 'dist/', 'resources/', 'gulpfile.js']
+      , env: { 'NODE_ENV': environment.prod }
+      });
 }
 
-function serveDev() {
-    var server = gls('app.js', {env: {NODE_ENV: environment.dev}}, false);
-    server.start();
+async function serveDev() {
+    nodemon({
+        script: 'app.js'
+      , ext: 'js json'
+      , ignore: ['node_modules/', 'dist/', 'resources/', 'gulpfile.js']
+      , env: { 'NODE_ENV': environment.dev }
+      });
 }
 
 const build = parallel(css,faviconImage,faviconFiles,img,js,pug);

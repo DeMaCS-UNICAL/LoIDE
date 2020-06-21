@@ -60,7 +60,7 @@ function pug() {
     .pipe(dest(path.dest))
 }
 
-function serveProd() {
+async function serveProd() {
     nodemon({
         script: 'app.js'
       , ext: 'js json'

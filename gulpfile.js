@@ -87,12 +87,13 @@ function serveDev(done) {
         , ignore: ['node_modules/', 'dist/', 'resources/', 'gulpfile.js']
         , env: { 'NODE_ENV': environment.dev }
     });
-    let starting, restarting = false;
+    let starting, restarting, crashed = false;
 
     const onReady = () => {
         starting = false;
-        if(restarting) browserSync.reload();
+        if(restarting && !crashed) browserSync.reload();
         restarting = false;
+        crashed = false;
         done();
     };
     
@@ -103,13 +104,19 @@ function serveDev(done) {
     
     server.on('stdout', (stdout) => {
         process.stdout.write(stdout); // pass the stdout through
-        if (starting) {
+        if (starting || restarting) {
           onReady();
         }
     });  
     
     server.on('restart', () => {
+        browserSync.notify("Reastarting LoIDE, please wait!");
         restarting = true;
+    });
+
+    server.on('crash', () => {
+        browserSync.notify("LoIDE crashed!", 5000);
+        crashed = true;
     });
 }
 

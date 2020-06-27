@@ -528,7 +528,6 @@ function initializeCheckTabToRun() {
         $('.check-run-tab.checked:not(.check-auto-run-tab)').each(function () {
             $(this).removeClass('checked');
             $(this).find('.check-icon').toggleClass('invisible');
-            console.log('unchecked');
         })
         $(this).find('.check-icon').removeClass('invisible');
         $(this).addClass('checked');
@@ -1081,7 +1080,11 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             setUpAce(ideditor, "");
             $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + ideditor + '">  <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> L P 1 </span> </button>');
             $("[data-target='#tab1']").trigger('click');
+
             inizializeTabContextmenu();
+            initializeCheckTabToRun();
+            setAceMode();
+            setElementsColorMode();
         }
         else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
             // $('.nav-tabs').find('li:not(:last)').each(function (index) {
@@ -2047,7 +2050,7 @@ function inizializeToolbar() {
         editors[idEditor].focus();
     });
 
-    var clipboardSupport = navigator.clipboard.readText == null ? false : true
+    var clipboardSupport = typeof(navigator.clipboard)=='undefined' ? false : true;
 
     if (clipboardSupport) {
         $('#btn-paste').on('click', function () {

@@ -1,6 +1,6 @@
 {
   "name": "LoIDE",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Web-based IDE for Logic Programming",
   "main": "app.js",
   "scripts": {
@@ -43,7 +43,7 @@
     "express-force-ssl": "^0.3.2",
     "helmet": "^3.21.1",
     "json-pointer": "^0.6.0",
-    "pug": "^2.0.4",
+    "pug": "^3.0.0",
     "socket.io": "^2.3.0",
     "websocket": "^1.0.30"
   },

@@ -388,12 +388,7 @@ $(document).ready(function () {
     });
 
     $("#btn-option").click(function () {
-        $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
-        $('.option-solver > div').toggleClass(" show"); // add class to show option components
-        $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
-            function () {
-                layout.resizeAll();
-            });
+        openRunOptions();
     });
 
     $("#reset-editor").click(function () {
@@ -419,7 +414,7 @@ $(document).ready(function () {
 
     setAceMode();
 
-    openRunOptions();
+    closeRunOptionOnMobile();
 
     // Set the default options
     resetSolverOptions();
@@ -2840,10 +2835,18 @@ function renameSelectOptionsAndBadge() {
     });
 }
 
-function openRunOptions() {
-    if ($(window).width() > screen.small.size) {
-        $('#btn-option').trigger('click');
+function closeRunOptionOnMobile() {
+    if ($(window).width() <= screen.small.size) {
+        $('.left-panel').removeClass('left-panel-show');
     }
+}
+
+function openRunOptions() {
+    $('.left-panel').toggleClass('left-panel-show'); // add class 'left-panel-show' to increase the width of the left panel
+    $(".left-panel-show, .left-panel").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
+        function () {
+            layout.resizeAll();
+        });
 }
 
 function getHTMLFromJQueryElement(jQueryElement) {

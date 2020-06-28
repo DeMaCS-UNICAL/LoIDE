@@ -312,6 +312,7 @@ $(document).ready(function () {
             }
         },
         south__minSize: 125,
+        east__minSize: 100,
         resizeWhileDragging: true,
         resizable: true,
         slidable: true,

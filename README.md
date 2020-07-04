@@ -115,6 +115,9 @@ If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS
  - [keymaster.js](https://github.com/madrobby/keymaster) - Used to implement keyboard shortcuts outside the editor
  - [Pugjs](https://pugjs.org) - Used to create a dynamic html pages
  - [Socket.io](https://socket.io) - Used for executor server connection
+ - [Gulp](https://gulpjs.com) - Used to automate and enhance the workflow
+ - [Browsersync](https://www.browsersync.io) - Used to enable the live reload on the browser
+ 
 <!-- 
 ## Contributing
 

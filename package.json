@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "npx gulp",
+    "start:dev": "npx gulp dev"
   },
   "repository": {
     "type": "git",
@@ -48,7 +49,17 @@
     "websocket": "^1.0.30"
   },
   "devDependencies": {
-    "compression": "^1.7.3"
+    "browser-sync": "^2.26.7",
+    "compression": "^1.7.3",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-csso": "^4.0.1",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-live-server": "0.0.31",
+    "gulp-nodemon": "^2.5.0",
+    "gulp-shorthand": "^1.1.0",
+    "gulp-uglify-es": "^2.0.0"
   },
   "analyze": true,
   "homepage": "https://github.com/DeMaCS-UNICAL/LoIDE#readme"

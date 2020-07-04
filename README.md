@@ -59,7 +59,7 @@ Further information can be found in the [Wiki](https://github.com/DeMaCS-UNICAL/
 
 
 ## Getting Started (Installation and Usage)
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine.
 
 ### Prerequisites
 It requires only [Node.js&reg;](https://nodejs.org)
@@ -70,7 +70,11 @@ Install dependencies:
  npm install
  ```
 
-### Running
+Now you can run LoIDE in development or in production mode.
+
+### Running in production mode
+In this mode, LoIDE will be optimized for production.
+
 Start the server:
 ```
 npm start
@@ -79,6 +83,19 @@ npm start
 Use _LoIDE_ in a browser at:
 ```
 http://localhost:8084
+```
+
+### Running in development mode
+Run LoIDE in development mode only for development and testing purposes.
+
+Start the server:
+```
+npm run start:dev
+```
+
+The browser will be opened automatically _LoIDE_ in at:
+```
+http://localhost:7000
 ```
 
 ### Note
@@ -98,6 +115,9 @@ If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS
  - [keymaster.js](https://github.com/madrobby/keymaster) - Used to implement keyboard shortcuts outside the editor
  - [Pugjs](https://pugjs.org) - Used to create a dynamic html pages
  - [Socket.io](https://socket.io) - Used for executor server connection
+ - [Gulp](https://gulpjs.com) - Used to automate and enhance the workflow
+ - [Browsersync](https://www.browsersync.io) - Used to enable the live reload on the browser
+ 
 <!-- 
 ## Contributing
 

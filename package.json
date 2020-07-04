@@ -1,6 +1,6 @@
 {
   "name": "LoIDE",
-  "version": "2.7.1",
+  "version": "2.8.0",
   "description": "Web-based IDE for Logic Programming",
   "main": "app.js",
   "scripts": {

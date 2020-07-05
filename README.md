@@ -115,8 +115,15 @@ If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS
  - [keymaster.js](https://github.com/madrobby/keymaster) - Used to implement keyboard shortcuts outside the editor
  - [Pugjs](https://pugjs.org) - Used to create a dynamic html pages
  - [Socket.io](https://socket.io) - Used for executor server connection
- - [Gulp](https://gulpjs.com) - Used to automate and enhance the workflow
  - [Browsersync](https://www.browsersync.io) - Used to enable the live reload on the browser
+ - [Gulp](https://gulpjs.com) - Used to automate and enhance the workflow with its plugins:
+   - [gulp-nodemon](https://github.com/JacksonGariety/gulp-nodemon) - Used to monitor for any changes in the source files and automatically restart the server
+   - [gulp-clean](https://github.com/peter-vilja/gulp-clean) - Used to remove files and folders
+   - [gulp-uglify-es](https://gitlab.com/itayronen/gulp-uglify-es) - Used to minify JS files
+   - [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer#readme) - Used to add CSS prefix
+   - [gulp-csso](https://github.com/ben-eb/gulp-csso) - Used to minify CSS files
+   - [gulp-shorthand](https://github.com/kevva/gulp-shorthand) - Used to make the CSS files lighter and more readable
+   - [gulp-imagemin](https://github.com/sindresorhus/gulp-imagemin#readme) - Used to minify PNG, JPEG, GIF and SVG images
  
 <!-- 
 ## Contributing

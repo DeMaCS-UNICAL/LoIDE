@@ -59,7 +59,7 @@ Further information can be found in the [Wiki](https://github.com/DeMaCS-UNICAL/
 
 
 ## Getting Started (Installation and Usage)
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine.
 
 ### Prerequisites
 It requires only [Node.js&reg;](https://nodejs.org)
@@ -70,7 +70,11 @@ Install dependencies:
  npm install
  ```
 
-### Running
+Now you can run LoIDE in development or in production mode.
+
+### Running in production mode
+In this mode, LoIDE will be optimized for production.
+
 Start the server:
 ```
 npm start
@@ -79,6 +83,19 @@ npm start
 Use _LoIDE_ in a browser at:
 ```
 http://localhost:8084
+```
+
+### Running in development mode
+Run LoIDE in development mode only for development and testing purposes.
+
+Start the server:
+```
+npm run start:dev
+```
+
+The browser will be opened automatically _LoIDE_ in at:
+```
+http://localhost:7000
 ```
 
 ### Note
@@ -98,6 +115,16 @@ If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS
  - [keymaster.js](https://github.com/madrobby/keymaster) - Used to implement keyboard shortcuts outside the editor
  - [Pugjs](https://pugjs.org) - Used to create a dynamic html pages
  - [Socket.io](https://socket.io) - Used for executor server connection
+ - [Browsersync](https://www.browsersync.io) - Used to enable the live reload on the browser
+ - [Gulp](https://gulpjs.com) - Used to automate and enhance the workflow with its plugins:
+   - [gulp-nodemon](https://github.com/JacksonGariety/gulp-nodemon) - Used to monitor for any changes in the source files and automatically restart the server
+   - [gulp-clean](https://github.com/peter-vilja/gulp-clean) - Used to remove files and folders
+   - [gulp-uglify-es](https://gitlab.com/itayronen/gulp-uglify-es) - Used to minify JS files
+   - [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer#readme) - Used to add CSS prefix
+   - [gulp-csso](https://github.com/ben-eb/gulp-csso) - Used to minify CSS files
+   - [gulp-shorthand](https://github.com/kevva/gulp-shorthand) - Used to make the CSS files lighter and more readable
+   - [gulp-imagemin](https://github.com/sindresorhus/gulp-imagemin#readme) - Used to minify PNG, JPEG, GIF and SVG images
+ 
 <!-- 
 ## Contributing
 

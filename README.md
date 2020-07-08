@@ -3,7 +3,8 @@
 [![GitHub release](https://img.shields.io/github/release/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest)
 [![GitHub issues](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/issues)
 [![David](https://img.shields.io/david/DeMaCS-UNICAL/LoIDE)](https://david-dm.org/DeMaCS-UNICAL/LoIDE)
-[![Website](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=my-website)](https://www.mat.unical.it/calimeri/projects/loide)
+[![Online Demo](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=online-demo)](https://loide.demacs.unical.it)
+[![LoIDE website](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=LoIDE-website)](https://demacs-unical.github.io/LoIDE)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/DeMaCS-UNICAL/LoIDE.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 
 

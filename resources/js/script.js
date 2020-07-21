@@ -1572,40 +1572,69 @@ function setUpAce(ideditor, text) {
  */
 function inizializeShortcuts() {
     if (window.navigator.userAgent.indexOf("Mac") !== -1) {
-        key('command + d', function () {
-            downloadLoDIEProject();
-            return false;
-        });
+
         key('command + enter', function () {
             $('#run').trigger('click');
             return false;
         });
-        key('command + u', function () {
+        
+        key('command + s', function () {
+            downloadLoDIEProject();
+            return false;
+        });
+        
+        key('command + o', function () {
             $('#btn-upload').trigger('click');
+            return false;
+        });
+
+        key('command + shift + s', function () {
+            $('#btn-share').trigger('click');
+            return false;
+        });
+
+        key('command + shift + o', function () {
+            $('#btn-option').trigger('click');
             return false;
         });
 
         $('[for="run"]').attr('data-original-title', '{ ⌘ + Enter }');
-        $('#btn-upload').attr('data-original-title', '{ ⌘ + u }');
-        $('[for="btn-download"]').attr('data-original-title', '{ ⌘ + d }');
+        $('#btn-upload').attr('data-original-title', '{ ⌘ + O }');
+        $('[for="btn-download"]').attr('data-original-title', '{ ⌘ + S}');
+        $('#btn-share').attr('data-original-title', '{ ⌘ + ⇧ + S}');
 
     } else {
-        key('control + d', function () {
-            $('#btn-download').trigger('click');
-            return false;
-        });
-        key('control + enter', function () {
+        
+        key('ctrl + enter', function () {
             $('#run').trigger('click');
             return false;
         });
-        key('control + u', function () {
+        
+        key('ctrl + s', function () {
+            downloadLoDIEProject();
+            return false;
+        });
+        
+        key('ctrl + o', function () {
             $('#btn-upload').trigger('click');
             return false;
         });
 
+        key('ctrl + shift + s', function () {
+            $('#btn-share').trigger('click');
+            return false;
+        });
+
+        key('ctrl + shift + o', function () {
+            $('#btn-option').trigger('click');
+            return false;
+        });
+
         $('[for="run"]').attr('data-original-title', '{ ctrl + Enter }');
-        $('#btn-upload').attr('data-original-title', '{ ctrl + u }');
-        $('[for="btn-download"]').attr('data-original-title', '{ ctrl + d }');
+        $('#btn-upload').attr('data-original-title', '{ ctrl + O }');
+        $('[for="btn-download"]').attr('data-original-title', '{ ctrl + S }');
+        $('#btn-share').attr('data-original-title', '{ ctrl + ⇧ + S}');
+
     }
 }
 

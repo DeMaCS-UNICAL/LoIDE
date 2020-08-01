@@ -9,10 +9,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="css/layout-default-latest.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" rel="preload" as="style" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
-    <link rel="stylesheet" rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+    <link rel="stylesheet" as="style" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
+    <link rel="stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap">
+    <link rel="stylesheet" as="style" href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap">
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
@@ -31,7 +31,7 @@
         <div class="splashscreen-container fade-in">
             <div class="mb-4 d-flex justify-content-center align-items-center">
                 <img class="splash-logo" src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
-                <span id="beta">(Beta)</span>
+                <span class="beta">(Beta)</span>
             </div>
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
@@ -70,13 +70,13 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-brand mr-4">
             <img  class="navbar-logo" src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
-            <span id="beta">(Beta)</span>
+            <span class="beta">(Beta)</span>
         </div>
 
         <ul class="navbar-nav">
             <li class="nav-item nav-buttons">
                 <div class="btn-group btn-block" role="group">
-                    <button id="btn-option" class="btn btn-secondary" data-toggle="tooltip" data-html="true" data-html="true" data-placement="top" title="Run options">
+                    <button id="btn-option" class="btn btn-secondary" data-toggle="tooltip" data-html="true" data-placement="top" title="Run options">
                         <i class="fa fa-cogs"></i>
                     </button>
                     <button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip" data-html="true">
@@ -377,12 +377,13 @@
                             <label for="dark-light-mode">Change LoIDE mode</label>
                             <button id="dark-light-mode" type="button" class="btn btn-outline-dark btn-block">Dark</button>
                         </div>
+                    </div>
                 </div>
-            </div>
                 <div class="modal-footer">
                     <button id="reset-editor" type="button" class="btn btn-outline btn-outline-danger"> <i class="fa fa-eraser"></i> Reset options</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
+            </div>
         </div>
     </div>
 

@@ -1547,6 +1547,46 @@ function setUpAce(ideditor, text) {
         scrollPastEnd: 0.5
     });
 
+    editors[ideditor].commands.addCommand(
+        {
+            name: 'save',
+            bindKey: {win: "ctrl-s", "mac": "cmd-s"},
+            exec: function(editor) {
+                downloadLoDIEProject();
+            }
+        }
+    );
+
+    editors[ideditor].commands.addCommand(
+        {
+            name: 'share',
+            bindKey: {win: "ctrl-shift-s", "mac": "cmd-shift-s"},
+            exec: function(editor) {
+                $('#btn-share').trigger('click');
+            }
+        }
+    );
+
+    editors[ideditor].commands.addCommand(
+        {
+            name: 'open',
+            bindKey: {win: "ctrl-o", "mac": "cmd-o"},
+            exec: function(editor) {
+                $('#btn-upload').trigger('click');
+            }
+        }
+    );
+
+    editors[ideditor].commands.addCommand(
+        {
+            name: 'run-options',
+            bindKey: {win: "ctrl-shift-o", "mac": "cmd-shift-o"},
+            exec: function(editor) {
+                $('#btn-option').trigger('click');
+            }
+        }
+    );
+
     inizializeSnippets();
 
     /**
@@ -1578,12 +1618,14 @@ function inizializeShortcuts() {
             return false;
         });
         
-        key('command + s', function () {
+        key('command + s', function (e) {
+            e.preventDefault();
             downloadLoDIEProject();
             return false;
         });
         
-        key('command + o', function () {
+        key('command + o', function (e) {
+            e.preventDefault();
             $('#btn-upload').trigger('click');
             return false;
         });
@@ -1610,12 +1652,14 @@ function inizializeShortcuts() {
             return false;
         });
         
-        key('ctrl + s', function () {
+        key('ctrl + s', function (e) {
+            e.preventDefault();
             downloadLoDIEProject();
             return false;
         });
         
-        key('ctrl + o', function () {
+        key('ctrl + o', function (e) {
+            e.preventDefault();
             $('#btn-upload').trigger('click');
             return false;
         });
@@ -1630,11 +1674,10 @@ function inizializeShortcuts() {
             return false;
         });
 
-        $('[for="run"]').attr('data-original-title', '{ ctrl + Enter }');
-        $('#btn-upload').attr('data-original-title', '{ ctrl + O }');
-        $('[for="btn-download"]').attr('data-original-title', '{ ctrl + S }');
-        $('#btn-share').attr('data-original-title', '{ ctrl + ⇧ + S}');
-
+        $('[for="run"]').attr('data-original-title', '{ CTRL + Enter }');
+        $('#btn-upload').attr('data-original-title', '{ CTRL + O }');
+        $('[for="btn-download"]').attr('data-original-title', '{ CTRL + S }');
+        $('#btn-share').attr('data-original-title', '{ CTRL + ⇧ + S}');
     }
 }
 
@@ -1922,7 +1965,7 @@ function inizializePopovers() {
         $('.popover-header').last().html('');
         $('.popover-body').last().html(
             '<div class="save-content">\n' +
-            '<div class="mb-2"> Save the project to:\n </div>' +
+            '<h6 class="mb-2"> Save the project to:\n </h6>' +
             '<div class="save-btn text-center">\n' +
             '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
             // '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
@@ -1996,9 +2039,10 @@ function inizializePopovers() {
 
     $('.popover-share').on('inserted.bs.popover', function () {
 
+        $('.popover-header').last().html('');
         $('.popover-body').last().html('' +
             '<div class="popover-share-content">\n' +
-            '<div class="mb-2"> Share the project:\n </div>' +
+            '<h6 class="mb-2"> Share the project:\n </h6>' +
             '<div class="input-group">' +
             '<input id="link-to-share" type="text" class="form-control" readonly>' +
             '<div class="input-group-append">' +

@@ -697,6 +697,10 @@ label[for="run-dot"] {
   cursor: pointer;
 }
 
+.keybox, .shortcut-title{
+  font-size: 16px;
+}
+
 /*DARK-MODE SECTION*/
 
 body.dark {

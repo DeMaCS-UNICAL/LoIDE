@@ -1611,34 +1611,38 @@ function setUpAce(ideditor, text) {
  * @description inizialize shortcuts and set title to the tooltips base on the OS
  */
 function inizializeShortcuts() {
+
+    Mousetrap.bind('mod+enter', function () {
+        $('#run').trigger('click');
+        return false;
+    });
+    
+    Mousetrap.bind('mod+s', function () {
+        downloadLoDIEProject();
+        return false;
+    });
+    
+    Mousetrap.bind('mod+o', function () {
+        $('#btn-upload').trigger('click');
+        return false;
+    });
+
+    Mousetrap.bind('mod+shift+s', function () {
+        $('#btn-share').trigger('click');
+        return false;
+    });
+
+    Mousetrap.bind('mod+shift+o', function () {
+        $('#btn-option').trigger('click');
+        return false;
+    });
+
+    Mousetrap.bind('?', function() {
+        console.log('questioooon');
+        $('#shortcut').modal('show');
+    });
+
     if (window.navigator.userAgent.indexOf("Mac") !== -1) {
-
-        key('command + enter', function () {
-            $('#run').trigger('click');
-            return false;
-        });
-        
-        key('command + s', function (e) {
-            e.preventDefault();
-            downloadLoDIEProject();
-            return false;
-        });
-        
-        key('command + o', function (e) {
-            e.preventDefault();
-            $('#btn-upload').trigger('click');
-            return false;
-        });
-
-        key('command + shift + s', function () {
-            $('#btn-share').trigger('click');
-            return false;
-        });
-
-        key('command + shift + o', function () {
-            $('#btn-option').trigger('click');
-            return false;
-        });
 
         $('[for="run"]').attr('data-original-title', '{ ⌘ + Enter }');
         $('#btn-upload').attr('data-original-title', '{ ⌘ + O }');
@@ -1646,33 +1650,6 @@ function inizializeShortcuts() {
         $('#btn-share').attr('data-original-title', '{ ⌘ + ⇧ + S}');
 
     } else {
-        
-        key('ctrl + enter', function () {
-            $('#run').trigger('click');
-            return false;
-        });
-        
-        key('ctrl + s', function (e) {
-            e.preventDefault();
-            downloadLoDIEProject();
-            return false;
-        });
-        
-        key('ctrl + o', function (e) {
-            e.preventDefault();
-            $('#btn-upload').trigger('click');
-            return false;
-        });
-
-        key('ctrl + shift + s', function () {
-            $('#btn-share').trigger('click');
-            return false;
-        });
-
-        key('ctrl + shift + o', function () {
-            $('#btn-option').trigger('click');
-            return false;
-        });
 
         $('[for="run"]').attr('data-original-title', '{ CTRL + Enter }');
         $('#btn-upload').attr('data-original-title', '{ CTRL + O }');

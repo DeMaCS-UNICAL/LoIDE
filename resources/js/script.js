@@ -1297,6 +1297,9 @@ function setJSONInput(config) {
         if (config.hasOwnProperty('runAuto')) {
             $("#run-dot").prop('checked', true);
         }
+        else {
+            $("#run-dot").prop('checked', false);
+        }
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
         $('#inputExecutor').val(config.executor).change();
@@ -1897,7 +1900,7 @@ function resetEditorOptions() {
  */
 function resetSolverOptions() {
     loadLanguages();
-    $("#run-dot").prop('checked', false);
+    $("#run-dot").prop('checked', true);
     $('#solver-options').empty();
 }
 
@@ -2814,6 +2817,9 @@ function loadProjectFromLocalStorage() {
             }
             if (obj.hasOwnProperty('runAuto')) {
                 $("#run-dot").prop('checked', true);
+            }
+            else {
+                $("#run-dot").prop('checked', false);
             }
         }
     }

@@ -1386,7 +1386,7 @@ function isJosn(str) {
 function createTextArea(layout) {
     $("#setting-output").remove();
     $(".output-container").remove();
-    $(layout).append('<div class="output-container">  <div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down"></i> </button></div></div> <div id="output" class="output"> <div id="output-model" class="pb-2"></div><div id="output-error"></div></div> </div>');
+    $(layout).append('<div class="output-container">  <div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Save output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down"></i> </button></div></div> <div id="output" class="output"> <div id="output-model" class="pb-2"></div><div id="output-error"></div></div> </div>');
     setLoideStyleMode();
     $('#dwn-output').tooltip();
 }

@@ -79,7 +79,7 @@
                     <button id="btn-option" class="btn btn-secondary" data-toggle="tooltip" data-html="true" data-placement="top" title="Run options">
                         <i class="fa fa-cogs"></i>
                     </button>
-                    <button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip" data-html="true">
+                    <button id="btn-run-nav" class="btn btn-success" data-html="true" title="Run">
                         <i class="fa fa-play"></i>
                         <span class="btn-text">Run!</span>
                     </button>
@@ -95,13 +95,13 @@
         <div id="loide-collapse" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto ml-auto" >
                 <li class="nav-item nav-buttons mr-sm-2 mr-md-2">
-                    <button class="btn btn-info btn-block" data-toggle="modal" href="#setting-editor">
+                    <button class="btn btn-info btn-block" data-toggle="modal" href="#setting-editor" title="Appearance">
                         <i class="fa fa-paint-brush"></i>
                         <span class="btn-text">Appearance</span>
                     </button>
                 </li>
                 <li class="nav-item nav-buttons ml-sm-2 ml-md-2">
-                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about"> <i class="fa fa-info" aria-hidden="true"></i> <span class="btn-text"> About </span>  </button>
+                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about" title="About"> <i class="fa fa-info" aria-hidden="true"></i> <span class="btn-text"> About </span>  </button>
                 </li>
             </ul>
 
@@ -148,13 +148,13 @@
 
                     <div class="option-container">
                         <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
-                        <select name="language" id="inputLanguage" class="custom-select">
+                        <select name="language" id="inputLanguage" class="custom-select" title="Language">
                         </select>
                         <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
-                        <select name="engine" id="inputengine" class="custom-select">
+                        <select name="engine" id="inputengine" class="custom-select" title="Solver">
                         </select>
                         <label for="inputExecutor" class="col-sm-12 col-xs-12 mt-2 text-center">Executor</label>
-                        <select name="executor" id="inputExecutor" class="custom-select">
+                        <select name="executor" id="inputExecutor" class="custom-select" title="Executor">
                         </select>
                     </div>
                     
@@ -163,7 +163,7 @@
                         <div id="solver-options">
                         </div>
                         <span class="input-group-btn">
-                            <button id="btn-add-option" type="button" class="btn btn-primary btn-block"> <i class="fa fa-plus"></i> Add option</button>
+                            <button id="btn-add-option" type="button" class="btn btn-primary btn-block" title="Add option"> <i class="fa fa-plus"></i> Add option</button>
                         </span>
                     </div>
                     
@@ -173,7 +173,7 @@
                         </div>
                         <div class="run-auto-box">
                             <div class="custom-control custom-switch text-center">
-                                <input checked type="checkbox" class="custom-control-input" id="run-dot" >
+                                <input type="checkbox" class="custom-control-input" id="run-dot" title="Run automatically">
                                 <label class="custom-control-label" for="run-dot">Run automatically</label>
                             </div>
                         </div>
@@ -183,7 +183,7 @@
                                 <strong class="tab-execute-title">Choose tab to execute</strong>
                             </div>
                             <div id="tab-execute-new" class="list-group">
-                                <button type="button" class="list-group-item list-group-item-action check-run-tab check-auto-run-tab"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">Current tab</span> </button>
+                                <button type="button" class="list-group-item list-group-item-action check-run-tab check-auto-run-tab" title="Current tab"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">Current tab</span> </button>
                                 <div class="list-divider list-group-item">
                                     <div class="divider"></div>
                                 </div>
@@ -194,7 +194,7 @@
                             <p class="text-center">
                                 <strong> Reset all options </strong>
                             </p>
-                            <button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>
+                            <button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm" title="Reset">Reset</button>
                         </div>
                     </div>
                 </div>

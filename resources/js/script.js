@@ -1,5 +1,4 @@
 (function ($) {
-
     /** 
      *  @description Serialize form as json object
      */
@@ -127,16 +126,14 @@ const defaultDarkTheme = "ace/theme/idle_fingers";
 /**
  * set up ace editors into object
  */
-editors = {};
+var editors = {};
 setUpAce(idEditor, "");
-
-var searchBoxOpened = false;
 
 /**
  * @global
  * @description default screens sizes and activated status
  */
-var screen = {
+var display = {
     small: { size: 576, isActive: false},
     medium: { size: 768, isActive: false},
     large: { size: 992, isActive: true}
@@ -189,11 +186,11 @@ $(window).resize(function () {
     var outputPos = localStorage.getItem("outputPos");
     outputPos = outputPos !== null ? outputPos : "east";
 
-    if (window.innerWidth > screen.medium.size) {
+    if (window.innerWidth > display.medium.size) {
         if (outputPos == "south") {
             layout.removePane("south");
-            currentValModel = $('#output-model').text();
-            currentValError = $('#output-error').text();
+            let currentValModel = $('#output-model').text();
+            let currentValError = $('#output-error').text();
             $(".ui-layout-south").empty();
             layout.addPane("east");
             createTextArea($('.ui-layout-east'));
@@ -207,8 +204,8 @@ $(window).resize(function () {
     } else {
         if (outputPos == "east") {
             layout.removePane("east");
-            currentValModel = $('#output-model').text();
-            currentValError = $('#output-error').text();
+            let currentValModel = $('#output-model').text();
+            let currentValError = $('#output-error').text();
             $(".ui-layout-east").empty();
             layout.addPane("south");
             createTextArea($('.ui-layout-south'));
@@ -224,8 +221,8 @@ $(window).resize(function () {
     }
     setHeightComponents();
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].resize();
     }
 });
@@ -234,7 +231,7 @@ function setSizePanes(){
     var outputPos = localStorage.getItem("outputPos");
     outputPos = outputPos !== null ? outputPos : "east";
 
-    if(screen.small.isActive){
+    if(display.small.isActive){
         if(outputPos == "east"){
             layout.sizePane("east", 100);
         }
@@ -242,7 +239,7 @@ function setSizePanes(){
             layout.sizePane("south", 200);
         }
     }
-    else if(screen.medium.isActive){
+    else if(display.medium.isActive){
         if(outputPos == "east"){
             layout.sizePane("east", 200);
         }
@@ -262,7 +259,7 @@ function setSizePanes(){
 
 function saveOptions() {
     $("#run-dot").attr("name", "runAuto");
-    form = $('#input').serializeFormJSON();
+    var form = $('#input').serializeFormJSON();
     form.tab = [];
 
     $('.check-run-tab.checked').each(function (index, element) {
@@ -273,7 +270,7 @@ function saveOptions() {
         delete form.tab;
     }
 
-    stringify = JSON.stringify(form);
+    var stringify = JSON.stringify(form);
     if (!saveOption("solverOptions", stringify)) {
         alert("Sorry, this options will not save in your browser");
     }
@@ -306,8 +303,8 @@ $(document).ready(function () {
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
             var length = $(".nav-tabs").children().length;
-            for (var index = 1; index <= length - 1; index++) {
-                var idE = "editor" + index;
+            for (let index = 1; index <= length - 1; index++) {
+                let idE = "editor" + index;
                 editors[idE].resize();
             }
         },
@@ -421,7 +418,7 @@ $(document).ready(function () {
 
     loadFromURL(); // load program from url
 
-    if (screen.small.isActive) {
+    if (display.small.isActive) {
         $('.left-panel').css('overflow-y', 'auto');
     }
 
@@ -436,20 +433,20 @@ $(document).ready(function () {
 });
 
 function checkScreenType(){
-    if($(window).width() < screen.medium.size){
-        screen.small.isActive = true;
-        screen.medium.isActive = false;
-        screen.large.isActive = false;
+    if($(window).width() < display.medium.size){
+        display.small.isActive = true;
+        display.medium.isActive = false;
+        display.large.isActive = false;
     }
-    else if($(window).width() < screen.large.size){
-        screen.small.isActive = false;
-        screen.medium.isActive = true;
-        screen.large.isActive = false;
+    else if($(window).width() < display.large.size){
+        display.small.isActive = false;
+        display.medium.isActive = true;
+        display.large.isActive = false;
     }
     else {
-        screen.small.isActive = false;
-        screen.medium.isActive = false;
-        screen.large.isActive = true;
+        display.small.isActive = false;
+        display.medium.isActive = false;
+        display.large.isActive = true;
     }
 }
 
@@ -495,7 +492,7 @@ function inizializeAppareaceSettings(){
         $('#font-output').val(defaultFontSize);
     }
 
-    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    var actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if( actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             setThemeEditors(defaultDarkTheme);
@@ -548,11 +545,11 @@ function checkEmptyTabSelected() {
  */
 function callSocketServer(onlyActiveTab) {
     $('.tab-pane').each(function (index, element) {
-        var id = $(this).find('.ace').attr("id");
+        let id = $(this).find('.ace').attr("id");
         editors[id].replaceAll("", { "needle": "'" });
     });
     if (onlyActiveTab || !addMorePrograms()) {
-        var text = editors[idEditor].getValue();
+        let text = editors[idEditor].getValue();
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
     var form = $('#input').serializeFormJSON();
@@ -571,7 +568,7 @@ function callSocketServer(onlyActiveTab) {
             console.log(response.model); // debug string
             $('#output-model').text(response.model); // append the response in the container
 
-            var outputPos = localStorage.getItem("outputPos");
+            let outputPos = localStorage.getItem("outputPos");
             outputPos = outputPos !== null ? outputPos : "east";
             
             if(outputPos == "east"){
@@ -781,7 +778,7 @@ function inizializeTabContextmenu() {
         $('#change-name-tab-textbox').focus();
         var thisTab = $(this);
         var idTabEditor = $(this).attr('data-target');
-        idEditorToChangeTabName = $(idTabEditor).children().attr('id');
+        var idEditorToChangeTabName = $(idTabEditor).children().attr('id');
         $('#change-name-tab').prop('disabled', true);
 
         $('#change-name-tab-textbox').on('input', function () {
@@ -853,21 +850,21 @@ $(document).on('mouseup', '#output-model', function () {
     var isPostChartCompliance = postChart.match(/[\(\s\,]/g);
     var isSelectedWordCompliance = !selected.match(/[\s\(\)\,]/g);
     if (isPreChartCompliance && isPostChartCompliance && isSelectedWordCompliance) {
-        var regex = new RegExp('([\\s\\{\\,])(' + selected + ')([\\(\\,\\s])', 'g');
+        let regex = new RegExp('([\\s\\{\\,])(' + selected + ')([\\(\\,\\s])', 'g');
         text = text.replace(regex, '$1<mark>$2</mark>$3');
         $("#output-model").empty();
         $("#output-model").html(text);
-        var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
         $("mark").css("color", "#" + randomColor);
     }
 });
 
 $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
-    currentTab = e.target;
+    var currentTab = e.target;
     if ($(this).hasClass('add-tab')) {
         return;
     }
-    idTab = $(currentTab).attr('data-target');
+    var idTab = $(currentTab).attr('data-target');
     idEditor = $(idTab).find('.ace').attr("id");
     editors[idEditor].focus();
 });
@@ -1034,7 +1031,7 @@ $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
 
-    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    var actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if(actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             setThemeEditors(defaultDarkTheme);
@@ -1067,7 +1064,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
         $('.check-run-tab[value="' + ideditor + '"]').remove();
 
         if ($(".nav-tabs").children().length === 1) { // add a new tab if we delete the last
-            var parent = $('.add-tab').parent();
+            let parent = $('.add-tab').parent();
             idEditor = 'editor1';
             ideditor = 'editor1';
             $('<li class="nav-item"> <a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">L P 1</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
@@ -1089,7 +1086,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
             // });
             $('.tab-content').find("[role='tabpanel']").each(function (index) {
                 ideditor = 'editor' + (index + 1);
-                var currentEditor = $(this).find('.ace').attr('id');
+                let currentEditor = $(this).find('.ace').attr('id');
                 if (ideditor !== currentEditor) {
                     $(this).find('.ace').attr("id", ideditor);
                     editors[ideditor] = editors[currentEditor];
@@ -1109,7 +1106,7 @@ $(document).on('click', '.delete-tab', function () { // delete tab
                 $('.btn-tab').each(function (index) {
                     var thisTab = $(this);
                     var idTabEditor = $(this).attr('data-target');
-                    idEditorToChangeTabName = $(idTabEditor).children().attr('id');
+                    var idEditorToChangeTabName = $(idTabEditor).children().attr('id');
                     var nameValue = thisTab.children('.name-tab').text();
                     $('.check-run-tab[value="' + idEditorToChangeTabName + '"]').find('.check-tab-name').text(nameValue);
                 });
@@ -1127,8 +1124,8 @@ $(document).on('click', '.delete-tab', function () { // delete tab
 function addEastLayout(layout) {
     layout.removePane("south");
     saveOption("outputPos", "east");
-    currentValModel = $('#output-model').text();
-    currentValError = $('#output-error').text();
+    var currentValModel = $('#output-model').text();
+    var currentValError = $('#output-error').text();
     $("#split-up").parent().empty();
     layout.addPane("east");
     createTextArea($('.ui-layout-east'));
@@ -1146,8 +1143,8 @@ function addEastLayout(layout) {
 function addSouthLayout(layout) {
     layout.removePane("east");
     saveOption("outputPos", "south");
-    currentValModel = $('#output-model').text();
-    currentValError = $('#output-error').text();
+    var currentValModel = $('#output-model').text();
+    var currentValError = $('#output-error').text();
     $("#split").parent().empty();
     layout.addPane("south");
     createTextArea($('.ui-layout-south'));
@@ -1159,28 +1156,6 @@ function addSouthLayout(layout) {
     $('#output-error').text(currentValError);
     $('#split').children().attr('class', 'fa fa-chevron-up');
     $('#split').attr('id', 'split-up');
-}
-
-/**
- * @param {string} searchStr - string to search
- * @param {string} str - text where search the string
- * @param {boolean} caseSensitive
- * @returns {array}
- * @description Returns each position of the searched string
- */
-function getIndicesOf(searchStr, str, caseSensitive) {
-    var searchStrLen = searchStr.length;
-    if (searchStrLen === 0) {
-        return [];
-    }
-    var startIndex = 0,
-        index, indices = [];
-
-    while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-        indices.push(index);
-        startIndex = index + searchStrLen;
-    }
-    return indices;
 }
 
 /**
@@ -1274,8 +1249,8 @@ function addInputValue(inputClass) {
  * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor
  */
 function setJSONInput(config) {
-    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option')
-        || config.hasOwnProperty('program') || config.hasOwnProperty('output_model') || config.hasOwnProperty('output_error') || config.hasOwnProperty('tabname')) {
+    if ({}.hasOwnProperty.call(config,'language') || {}.hasOwnProperty.call(config,'engine') || {}.hasOwnProperty.call(config,'executor') || {}.hasOwnProperty.call(config,'option')
+        || {}.hasOwnProperty.call(config,'program') || {}.hasOwnProperty.call(config,'output_model') || {}.hasOwnProperty.call(config,'output_error') || {}.hasOwnProperty.call(config,'tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
@@ -1288,13 +1263,13 @@ function setJSONInput(config) {
             tabID = addTab($(".add-tab"), config.program[index]);
         });
         $("[data-target='#" + tabID + "']").trigger('click'); // active last tab inserted
-        if (config.hasOwnProperty('tab')) {
+        if ({}.hasOwnProperty.call(config,'tab')) {
             $(config.tab).each(function (index, element) {
                 $('.check-run-tab[value="' + element + '"]').find('.check-icon').toggleClass('invisible');
                 $('.check-run-tab[value="' + element + '"]').toggleClass('checked');
             });
         }
-        if (config.hasOwnProperty('runAuto')) {
+        if ({}.hasOwnProperty.call(config,'runAuto')) {
             $("#run-dot").prop('checked', true);
         }
         else {
@@ -1398,14 +1373,14 @@ function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 
-    files = document.getElementById("files").files;
+    var files = document.getElementById("files").files;
 
     if (files.length === 0) {
         files = evt.dataTransfer.files;
     }
 
     if (files.length == 1) {
-        var reader = new FileReader();
+        let reader = new FileReader();
         reader.onload = function (event) {
             var text = event.target.result;
             if (isJosn(text)) {
@@ -1439,7 +1414,7 @@ function getValidFileList(files, callback) {
     };                     // accepted files
 
     // Get the selected files
-    for (var i = 0; i < count; i++) {       // invoke readers
+    for (let i = 0; i < count; i++) {       // invoke readers
         checkFile(files[i]);
     }
 
@@ -1455,13 +1430,13 @@ function getValidFileList(files, callback) {
         };
         reader.readAsText(file);
     }
-};
+}
 
 function onDone(data) {
     var tabOpened = $('.btn-tab').length;
     var tabID;
     var openOnFirst = false;
-    for (var index = 0; index < data.texts.length; index++) {
+    for (let index = 0; index < data.texts.length; index++) {
         if (tabOpened == 1) {
             if (index == 0) {
                 if (editors[idEditor].getValue().trim() === '') {
@@ -1489,17 +1464,16 @@ function onDone(data) {
 
     $('.name-tab').each(function (index) {
         if (openOnFirst) {
-            var id = index + 1;
             $(this).text(data.names[index]);
-            var id = index + 1;
-            var editor = "editor" + id;
+            let id = index + 1;
+            let editor = "editor" + id;
             $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(data.names[index]);
         }
         else {
             if (index > tabOpened - 1) {
                 $(this).text(data.names[index - tabOpened]);
-                var id = index + 1;
-                var editor = "editor" + id;
+                let id = index + 1;
+                let editor = "editor" + id;
                 $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(data.names[index - tabOpened]);
             }
         }
@@ -1525,7 +1499,7 @@ function setUpAce(ideditor, text) {
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
 
-    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    var actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if(actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             editors[ideditor].setTheme(defaultDarkTheme);
@@ -1722,8 +1696,8 @@ function generateIDTab() {
  */
 function setTheme(theme) {
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setTheme(theme);
     }
 }
@@ -1734,8 +1708,8 @@ function setTheme(theme) {
  */
 function setFontSizeEditors(size) {
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setFontSize(size + "px");
     }
 }
@@ -1746,8 +1720,8 @@ function setFontSizeEditors(size) {
  */
 function setThemeEditors(theme) {
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setTheme(theme);
     }
 }
@@ -1836,7 +1810,7 @@ function setOptions(obj) {
 function addTab(obj, text, name) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
-    editorId = "editor" + id;
+    var editorId = "editor" + id;
     var tabName = name == null ? 'L P ' + id : name;
     $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">' + tabName + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($('.add-tab').parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
@@ -2403,17 +2377,17 @@ function inizializeAutoComplete() {
     var langTools = ace.require('ace/ext/language_tools');
     inizializeSnippets();
     switch (languageChosen) {
-        case "asp":
-            var splitRegex = /(([a-zA-Z_]+[0-9]*)*)(\(.+?\))/gi;
-            var words = editors[idEditor].getValue().match(splitRegex);
+        case "asp": {
+            let splitRegex = /(([a-zA-Z_]+[0-9]*)*)(\(.+?\))/gi;
+            let words = editors[idEditor].getValue().match(splitRegex);
             if (words != null) {
-                var map = new Map();
+                let map = new Map();
                 words.forEach(function (word) {
-                    var name = word.match(/[^_](([a-zA-Z_]+[0-9]*)*)/)[0];
-                    var arities = word.match(/\(.+?\)/)[0].split(",").length;
+                    let name = word.match(/[^_](([a-zA-Z_]+[0-9]*)*)/)[0];
+                    let arities = word.match(/\(.+?\)/)[0].split(",").length;
                     map.set(name, arities);
                 });
-                var completions = [];
+                let completions = [];
                 map.forEach(function (key, value) {
                     completions.push({
                         caption: value,
@@ -2422,7 +2396,7 @@ function inizializeAutoComplete() {
                     });
                 });
 
-                var completer = {
+                let completer = {
                     getCompletions: function (editor, session, pos, prefix, callback) {
                         callback(null, completions);
                     }
@@ -2431,7 +2405,7 @@ function inizializeAutoComplete() {
                 langTools.addCompleter(completer);
             }
             break;
-
+        }
         default:
             break;
     }
@@ -2445,8 +2419,8 @@ function giveBrackets(value) {
         limit = value;
     else
         limit = 26;
-    for (var i = 0; i < limit; i++) {
-        var num = i + 1;
+    for (let i = 0; i < limit; i++) {
+        let num = i + 1;
         par += "${" + num + ":" + LETTER + "}";
         if (i !== limit - 1) {
             par += ","
@@ -2462,8 +2436,8 @@ function createURL() {
     var length = $(".nav-tabs").children().length;
     var empty = true;
 
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
 
         URL += encodeURIComponent(editors[idE].getValue().trim());
         if (index < length - 1) {
@@ -2480,7 +2454,7 @@ function createURL() {
     else {
         // put the name of the tabs
         URL += '&tabnames=';
-        var idx = 1
+        let idx = 1
         $('.name-tab').each(function () {
             URL += encodeURIComponent($(this).text());
             if (idx < length - 1) {
@@ -2497,9 +2471,9 @@ function createURL() {
 
         saveOptions();
 
-        var opt = localStorage.getItem("solverOptions");
+        let opt = localStorage.getItem("solverOptions");
         if (opt !== null) {
-            var obj = JSON.parse(opt);
+            let obj = JSON.parse(opt);
             if (obj.option != null) {
                 // put the options
                 URL += '&options=' + encodeURIComponent(JSON.stringify(obj.option));
@@ -2567,12 +2541,12 @@ function loadFromURL() {
         // console.log('options:', options);
 
         // decode params
-        for (var i = 0; i < logicPr.length; i++) {
+        for (let i = 0; i < logicPr.length; i++) {
             logicPr[i] = decodeURIComponent(logicPr[i]);
         }
         // console.log('LogicPrograms decoded:', logicPr);
 
-        for (var i = 0; i < tabNames.length; i++) {
+        for (let i = 0; i < tabNames.length; i++) {
             tabNames[i] = decodeURIComponent(tabNames[i]);
         }
         // console.log('TabNames decoded:', tabNames);
@@ -2581,17 +2555,17 @@ function loadFromURL() {
         // console.log('Options decoded:', options);
 
         // set params
-        for (var index = 1; index <= tabNames.length; index++) {
+        for (let index = 1; index <= tabNames.length; index++) {
             if (index > 1)
                 $('.add-tab').trigger('click');
-            var idE = "editor" + index;
+            let idE = "editor" + index;
             editors[idE].setValue(logicPr[index - 1]);
         }
 
         $('.name-tab').each(function (index) {
             $(this).text(tabNames[index]);
-            var id = index + 1;
-            var editor = "editor" + id;
+            let id = index + 1;
+            let editor = "editor" + id;
             $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabNames[index]);
         });
 
@@ -2724,8 +2698,8 @@ function setLightStyleToUIElements() {
     });
     $('#dark-light-mode').addClass('btn-outline-dark');
     $('#dark-light-mode').removeClass('btn-outline-light');
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setTheme(defaultTheme);
     }
 }
@@ -2745,8 +2719,8 @@ function setDarkStyleToUIElements() {
     $('#dark-light-mode').removeClass('btn-outline-dark');
     $('#dark-light-mode').addClass('btn-outline-light');
 
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setTheme(defaultDarkTheme);
     }
 }
@@ -2759,8 +2733,8 @@ function saveProjectToLocalStorage() {
         tabsName.push($(this).text());
     });
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         logicProgEditors.push(editors[idE].getValue());
     }
 
@@ -2790,17 +2764,17 @@ function loadProjectFromLocalStorage() {
         tabsName = JSON.parse(localStorage.getItem("tabsName"));
         logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-        for (var index = 1; index <= tabsName.length; index++) {
+        for (let index = 1; index <= tabsName.length; index++) {
             if (index > 1)
                 $('.add-tab').trigger('click');
-            var idE = "editor" + index;
+            let idE = "editor" + index;
             editors[idE].setValue(logicProgEditors[index - 1]);
         }
 
         $('.name-tab').each(function (index) {
             $(this).text(tabsName[index]);
-            var id = index + 1;
-            var editor = "editor" + id;
+            let id = index + 1;
+            let editor = "editor" + id;
             $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabsName[index]);
         });
 
@@ -2815,7 +2789,7 @@ function loadProjectFromLocalStorage() {
             if (obj.option != null) {
                 setOptions(obj);
             }
-            if (obj.hasOwnProperty('runAuto')) {
+            if ({}.hasOwnProperty.call(obj,'runAuto')) {
                 $("#run-dot").prop('checked', true);
             }
             else {
@@ -2841,8 +2815,8 @@ function setTabsName(config) {
     var tabsName = config.tabname;
     $('.name-tab').each(function (index) {
         $(this).text(tabsName[index]);
-        var id = index + 1;
-        var editor = "editor" + id;
+        let id = index + 1;
+        let editor = "editor" + id;
         $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabsName[index]);
     });
 }
@@ -2856,7 +2830,7 @@ function downloadLoDIEProject() {
 
     $("#run-dot").attr("name", "runAuto");
 
-    form = $('#input').serializeFormJSON();
+    var form = $('#input').serializeFormJSON();
 
     form.output_model = model;
     form.output_error = errors;
@@ -2870,7 +2844,7 @@ function downloadLoDIEProject() {
         delete form.tab;
     }
 
-    stringify = JSON.stringify(form);
+    var stringify = JSON.stringify(form);
     createFileToDownload(stringify, "local", "LoIDE_Project", "json");
     destroyPrograms();
     destroyTabsName();
@@ -2892,7 +2866,7 @@ function renameSelectOptionsAndBadge() {
 }
 
 function closeRunOptionOnMobile() {
-    if ($(window).width() <= screen.small.size) {
+    if ($(window).width() <= display.small.size) {
         $('.left-panel').removeClass('left-panel-show');
     }
 }
@@ -2907,8 +2881,7 @@ function openRunOptions() {
 
 function getHTMLFromJQueryElement(jQueryElement) {
     var DOMElement = '';
-
-    for (var i = 0; i < jQueryElement.length; i++)
+    for (let i = 0; i < jQueryElement.length; i++)
         DOMElement += jQueryElement.get(i).outerHTML;
 
     return DOMElement;
@@ -2916,21 +2889,22 @@ function getHTMLFromJQueryElement(jQueryElement) {
 
 function setAceMode() {
     switch ($('#inputLanguage').val()) {
-        case 'asp':
-            var length = $(".nav-tabs").children().length;
-            for (var index = 1; index <= length - 1; index++) {
-                var idE = "editor" + index;
+        case 'asp': {
+            let length = $(".nav-tabs").children().length;
+            for (let index = 1; index <= length - 1; index++) {
+                let idE = "editor" + index;
                 editors[idE].session.setMode("ace/mode/asp");
             }
             break;
+        }
 
-        default:
-            var length = $(".nav-tabs").children().length;
-            for (var index = 1; index <= length - 1; index++) {
-                var idE = "editor" + index;
+        default: {
+            let length = $(".nav-tabs").children().length;
+            for (let index = 1; index <= length - 1; index++) {
+                let idE = "editor" + index;
                 editors[idE].session.setMode("ace/mode/text");
             }
-            break;
+        }
     }
 }
 

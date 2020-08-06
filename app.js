@@ -5,7 +5,6 @@ var http = require('http');
 var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
-var pug = require('pug');
 var jpointer = require('json-pointer');
 const compression = require('compression');
 

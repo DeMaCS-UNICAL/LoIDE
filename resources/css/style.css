@@ -778,7 +778,7 @@ body.dark .toast-header {
   background-color: rgba(144, 144, 144, 0.85);
 }
 
-body.dark .navbar-brand {
+body.dark .navbar-brand, body.dark .about-logo {
   filter: invert(100%);
 }
 

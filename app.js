@@ -113,9 +113,6 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
         client.onerror = function (error) {
             print_log('WebSocket problem:\n' + JSON.stringify(error, null, '\t'));
             socket.emit('problem', {
-                reason: error
-            });
-            socket.emit('problem', {
                 reason: 'Execution error, please try again later!'
             });
         };

@@ -696,6 +696,19 @@ function inizializeTabContextmenu() {
                     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
                 }
             },
+            Clear: {
+                name: "Clear content",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    $itemElement.html('<i class="fa fa-eraser context-menu-item-icon" aria-hidden="true"></i>' + item.name);
+
+                    // Add the context-menu-icon-updated class to the item
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (itemKey, opt, e) {
+                    editors[idEditor].setValue("");
+                }
+            },
             SaveTabContent: {
                 name: "Save content",
                 icon: function (opt, $itemElement, itemKey, item) {

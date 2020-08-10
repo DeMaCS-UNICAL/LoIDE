@@ -1,6 +1,5 @@
 const { series, src, dest, parallel } = require('gulp');
 const csso = require('gulp-csso');
-const shorthand = require('gulp-shorthand');
 const clean = require('gulp-clean');
 const autoprefixer = require('gulp-autoprefixer');
 const uglify = require('gulp-uglify-es').default;
@@ -32,7 +31,6 @@ function css() {
     .pipe(autoprefixer({
         cascade: false
     }))
-    .pipe(shorthand())
     .pipe(csso())
     .pipe(dest(path.dist + 'css/'))
 }

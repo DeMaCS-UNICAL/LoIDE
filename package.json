@@ -1,5 +1,5 @@
 {
-  "name": "LoIDE",
+  "name": "loide",
   "version": "2.8.0",
   "description": "Web-based IDE for Logic Programming",
   "main": "app.js",
@@ -58,7 +58,6 @@
     "gulp-csso": "^4.0.1",
     "gulp-imagemin": "^7.1.0",
     "gulp-nodemon": "^2.5.0",
-    "gulp-shorthand": "^1.1.0",
     "gulp-uglify-es": "^2.0.0"
   },
   "analyze": true,

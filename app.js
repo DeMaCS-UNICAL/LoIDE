@@ -62,8 +62,10 @@ if (key.length !== 0 && cert.length !== 0) {
 }
 
 // Sets "Strict-Transport-Security, by default maxAge is set 1 year in seconds
-app.use(helmet.hsts({
-    maxAge: maxAge
+app.use(helmet({
+    hsts: {
+        maxAge: maxAge
+    }
 }));
 
 app.use(compression());

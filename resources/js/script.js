@@ -180,6 +180,10 @@ window.onbeforeunload = function () {
 
 $(window).resize(function () {
     checkScreenType();
+    resizeWindow();
+});
+
+function resizeWindow() {
     var fontSizeO = localStorage.getItem("fontSizeO");
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
 
@@ -225,7 +229,7 @@ $(window).resize(function () {
         let idE = "editor" + index;
         editors[idE].resize();
     }
-});
+}
 
 function setSizePanes(){
     var outputPos = localStorage.getItem("outputPos");
@@ -425,6 +429,10 @@ $(document).ready(function () {
     inizializeAppareaceSettings();
 
     setSizePanes();
+
+    if (display.small.isActive) {
+        $('#split').trigger('click');
+    }
 
     setTimeout( ()=>{
         $('.splashscreen').addClass('display-none');

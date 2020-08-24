@@ -23,6 +23,7 @@ const resourcesPath = currentEnv == environment.prod ? path.dist : path.src
 
 // System config loading
 var properties  = require('./config/app-config.json');
+var loideUrl = properties.loide_url;
 var httpPort    = properties.port.http;
 var httpsPortP  = properties.port.https;
 var key         = properties.path.key;
@@ -75,7 +76,7 @@ app.set('view engine', 'pug');
 
 // Load variables in to the .pug file
 app.get('/', function (req, res) {
-    res.render('index', {"languages": servicesConfig.languages});
+    res.render('index', {"languages": servicesConfig.languages, "loideUrl": loideUrl});
 });
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
@@ -141,6 +142,10 @@ server.listen(httpPort, function () {
 
 function print_log(statement) {
     console.log('%s: %s', (new Date()).toLocaleString(), statement); // debug string
+}
+
+function getUrl(){
+    return url;
 }
 
 function getExcecutorURL(data) {

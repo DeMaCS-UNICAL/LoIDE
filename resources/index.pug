@@ -13,6 +13,18 @@
     <meta property="og:description" content="LoIDE is a web-based IDE for Logic Programming" />
     <meta property="og:site_name" content="LoIDE" />
     <meta property="og:image" content="img/logo_LoIDE.png" />
+    <link rel="canonical" href="#{loideUrl}" />
+    <meta property="og:url" content="#{loideUrl}" />
+    script(type="application/ld+json").
+        {
+            "@type":"WebSite",
+            "url": "#{loideUrl}",
+            "headline":"LoIDE",
+            "name":"LoIDE",
+            "description": "LoIDE is a web-based IDE for Logic Programming",
+            "@context":"https://schema.org"
+        }
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="css/layout-default-latest.css" rel="stylesheet" type="text/css">

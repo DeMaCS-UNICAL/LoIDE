@@ -9,5 +9,6 @@
         "key"		: "",
         "cert"		: ""
     },
-    "max_age"	: 31536000
+    "max_age"	: 31536000,
+    "loide_url" : "url"
 }

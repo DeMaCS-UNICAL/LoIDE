@@ -9,6 +9,12 @@
     },
     "type": "object",
     "properties": {
+        "loide_url": {
+            "title": "LoIDE URL",
+            "description": "This is the URL where the application can be reached",
+            "type": "string",
+            "minimum": 0
+        },
         "max_age": {
             "title": "HSTS max age",
             "description": "This property specifies HTTP Strict Transport Security max age.",

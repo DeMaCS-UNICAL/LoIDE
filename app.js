@@ -144,10 +144,6 @@ function print_log(statement) {
     console.log('%s: %s', (new Date()).toLocaleString(), statement); // debug string
 }
 
-function getUrl(){
-    return url;
-}
-
 function getExcecutorURL(data) {
     data = JSON.parse(data);
     for(var i in servicesConfig.languages) {

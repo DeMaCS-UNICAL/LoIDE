@@ -1564,6 +1564,8 @@ function inizializeShortcuts() {
 
     Mousetrap.bind('?', function() {
         console.log('questioooon');
+        $('#modal-about').modal('hide');
+        $('#setting-editor').modal('hide');
         $('#shortcut').modal('show');
     });
 

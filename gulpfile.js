@@ -6,6 +6,7 @@ const uglify = require('gulp-uglify-es').default;
 const imagemin = require('gulp-imagemin');
 const nodemon = require('gulp-nodemon')
 var browserSync = require('browser-sync').create();
+var babel = require("gulp-babel");
 
 const path =  {
     dist: 'dist/',
@@ -54,6 +55,7 @@ function img() {
 
 function js() {
     return src(path.src + 'js/**/*.js')
+    .pipe(babel())
     .pipe(uglify())
     .pipe(dest(path.dist + 'js/'))
 }

@@ -40,20 +40,23 @@
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE/issues"
   },
   "dependencies": {
-    "ajv": "^6.12.2",
+    "ajv": "^6.12.4",
     "express": "^4.17.1",
     "express-force-ssl": "^0.3.2",
     "helmet": "^3.21.1",
     "json-pointer": "^0.6.0",
     "pug": "^3.0.0",
     "socket.io": "^2.3.0",
-    "websocket": "^1.0.30"
+    "websocket": "^1.0.32"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
     "browser-sync": "^2.26.7",
     "compression": "^1.7.3",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
+    "gulp-babel": "^8.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-csso": "^4.0.1",
     "gulp-imagemin": "^7.1.0",

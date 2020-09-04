@@ -2031,7 +2031,7 @@ function inizializeToolbar() {
         editors[idEditor].focus();
     });
 
-    var clipboardSupport = typeof(navigator.clipboard)=='undefined' ? false : true;
+    var clipboardSupport = typeof(navigator.clipboard.readText)=='undefined' ? false : true;
 
     if (clipboardSupport) {
         $('#btn-paste').on('click', function () {

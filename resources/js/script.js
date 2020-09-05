@@ -1,5 +1,4 @@
 (function ($) {
-
     /** 
      *  @description Serialize form as json object
      */
@@ -127,16 +126,14 @@ const defaultDarkTheme = "ace/theme/idle_fingers";
 /**
  * set up ace editors into object
  */
-editors = {};
+var editors = {};
 setUpAce(idEditor, "");
-
-var searchBoxOpened = false;
 
 /**
  * @global
  * @description default screens sizes and activated status
  */
-var screen = {
+var display = {
     small: { size: 576, isActive: false},
     medium: { size: 768, isActive: false},
     large: { size: 992, isActive: true}
@@ -183,17 +180,21 @@ window.onbeforeunload = function () {
 
 $(window).resize(function () {
     checkScreenType();
+    resizeWindow();
+});
+
+function resizeWindow() {
     var fontSizeO = localStorage.getItem("fontSizeO");
     fontSizeO = fontSizeO !== "" ? fontSizeO : defaultFontSize;
 
     var outputPos = localStorage.getItem("outputPos");
     outputPos = outputPos !== null ? outputPos : "east";
 
-    if (window.innerWidth > screen.medium.size) {
+    if (window.innerWidth > display.medium.size) {
         if (outputPos == "south") {
             layout.removePane("south");
-            currentValModel = $('#output-model').text();
-            currentValError = $('#output-error').text();
+            let currentValModel = $('#output-model').text();
+            let currentValError = $('#output-error').text();
             $(".ui-layout-south").empty();
             layout.addPane("east");
             createTextArea($('.ui-layout-east'));
@@ -207,8 +208,8 @@ $(window).resize(function () {
     } else {
         if (outputPos == "east") {
             layout.removePane("east");
-            currentValModel = $('#output-model').text();
-            currentValError = $('#output-error').text();
+            let currentValModel = $('#output-model').text();
+            let currentValError = $('#output-error').text();
             $(".ui-layout-east").empty();
             layout.addPane("south");
             createTextArea($('.ui-layout-south'));
@@ -224,17 +225,17 @@ $(window).resize(function () {
     }
     setHeightComponents();
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].resize();
     }
-});
+}
 
 function setSizePanes(){
     var outputPos = localStorage.getItem("outputPos");
     outputPos = outputPos !== null ? outputPos : "east";
 
-    if(screen.small.isActive){
+    if(display.small.isActive){
         if(outputPos == "east"){
             layout.sizePane("east", 100);
         }
@@ -242,7 +243,7 @@ function setSizePanes(){
             layout.sizePane("south", 200);
         }
     }
-    else if(screen.medium.isActive){
+    else if(display.medium.isActive){
         if(outputPos == "east"){
             layout.sizePane("east", 200);
         }
@@ -262,7 +263,7 @@ function setSizePanes(){
 
 function saveOptions() {
     $("#run-dot").attr("name", "runAuto");
-    form = $('#input').serializeFormJSON();
+    var form = $('#input').serializeFormJSON();
     form.tab = [];
 
     $('.check-run-tab.checked').each(function (index, element) {
@@ -273,7 +274,7 @@ function saveOptions() {
         delete form.tab;
     }
 
-    stringify = JSON.stringify(form);
+    var stringify = JSON.stringify(form);
     if (!saveOption("solverOptions", stringify)) {
         alert("Sorry, this options will not save in your browser");
     }
@@ -306,8 +307,8 @@ $(document).ready(function () {
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
             var length = $(".nav-tabs").children().length;
-            for (var index = 1; index <= length - 1; index++) {
-                var idE = "editor" + index;
+            for (let index = 1; index <= length - 1; index++) {
+                let idE = "editor" + index;
                 editors[idE].resize();
             }
         },
@@ -421,13 +422,17 @@ $(document).ready(function () {
 
     loadFromURL(); // load program from url
 
-    if (screen.small.isActive) {
+    if (display.small.isActive) {
         $('.left-panel').css('overflow-y', 'auto');
     }
 
     inizializeAppareaceSettings();
 
     setSizePanes();
+
+    if (display.small.isActive) {
+        $('#split').trigger('click');
+    }
 
     setTimeout( ()=>{
         $('.splashscreen').addClass('display-none');
@@ -436,20 +441,20 @@ $(document).ready(function () {
 });
 
 function checkScreenType(){
-    if($(window).width() < screen.medium.size){
-        screen.small.isActive = true;
-        screen.medium.isActive = false;
-        screen.large.isActive = false;
+    if($(window).width() < display.medium.size){
+        display.small.isActive = true;
+        display.medium.isActive = false;
+        display.large.isActive = false;
     }
-    else if($(window).width() < screen.large.size){
-        screen.small.isActive = false;
-        screen.medium.isActive = true;
-        screen.large.isActive = false;
+    else if($(window).width() < display.large.size){
+        display.small.isActive = false;
+        display.medium.isActive = true;
+        display.large.isActive = false;
     }
     else {
-        screen.small.isActive = false;
-        screen.medium.isActive = false;
-        screen.large.isActive = true;
+        display.small.isActive = false;
+        display.medium.isActive = false;
+        display.large.isActive = true;
     }
 }
 
@@ -495,7 +500,7 @@ function inizializeAppareaceSettings(){
         $('#font-output').val(defaultFontSize);
     }
 
-    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    var actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if( actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             setThemeEditors(defaultDarkTheme);
@@ -548,11 +553,11 @@ function checkEmptyTabSelected() {
  */
 function callSocketServer(onlyActiveTab) {
     $('.tab-pane').each(function (index, element) {
-        var id = $(this).find('.ace').attr("id");
+        let id = $(this).find('.ace').attr("id");
         editors[id].replaceAll("", { "needle": "'" });
     });
     if (onlyActiveTab || !addMorePrograms()) {
-        var text = editors[idEditor].getValue();
+        let text = editors[idEditor].getValue();
         $('#program').val(text); // insert the content of text editor in a hidden input text to serailize
     }
     var form = $('#input').serializeFormJSON();
@@ -571,7 +576,7 @@ function callSocketServer(onlyActiveTab) {
             console.log(response.model); // debug string
             $('#output-model').text(response.model); // append the response in the container
 
-            var outputPos = localStorage.getItem("outputPos");
+            let outputPos = localStorage.getItem("outputPos");
             outputPos = outputPos !== null ? outputPos : "east";
             
             if(outputPos == "east"){
@@ -699,6 +704,19 @@ function inizializeTabContextmenu() {
                     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
                 }
             },
+            Clear: {
+                name: "Clear content",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    $itemElement.html('<i class="fa fa-eraser context-menu-item-icon" aria-hidden="true"></i>' + item.name);
+
+                    // Add the context-menu-icon-updated class to the item
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (itemKey, opt, e) {
+                    editors[idEditor].setValue("");
+                }
+            },
             SaveTabContent: {
                 name: "Save content",
                 icon: function (opt, $itemElement, itemKey, item) {
@@ -781,7 +799,7 @@ function inizializeTabContextmenu() {
         $('#change-name-tab-textbox').focus();
         var thisTab = $(this);
         var idTabEditor = $(this).attr('data-target');
-        idEditorToChangeTabName = $(idTabEditor).children().attr('id');
+        var idEditorToChangeTabName = $(idTabEditor).children().attr('id');
         $('#change-name-tab').prop('disabled', true);
 
         $('#change-name-tab-textbox').on('input', function () {
@@ -853,27 +871,32 @@ $(document).on('mouseup', '#output-model', function () {
     var isPostChartCompliance = postChart.match(/[\(\s\,]/g);
     var isSelectedWordCompliance = !selected.match(/[\s\(\)\,]/g);
     if (isPreChartCompliance && isPostChartCompliance && isSelectedWordCompliance) {
-        var regex = new RegExp('([\\s\\{\\,])(' + selected + ')([\\(\\,\\s])', 'g');
+        let regex = new RegExp('([\\s\\{\\,])(' + selected + ')([\\(\\,\\s])', 'g');
         text = text.replace(regex, '$1<mark>$2</mark>$3');
         $("#output-model").empty();
         $("#output-model").html(text);
-        var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
         $("mark").css("color", "#" + randomColor);
     }
 });
 
 $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
-    currentTab = e.target;
+    var currentTab = e.target;
     if ($(this).hasClass('add-tab')) {
         return;
     }
-    idTab = $(currentTab).attr('data-target');
+    var idTab = $(currentTab).attr('data-target');
     idEditor = $(idTab).find('.ace').attr("id");
     editors[idEditor].focus();
 });
 
 $(document).on('click', '#dwn-output', function () {
-    downloadOutput()
+    downloadOutput();
+});
+
+$(document).on('click', '#clear-output', function () {
+    $('#output-model').empty();
+    $('#output-error').empty();
 });
 
 $(document).on('click', '#split', function () {
@@ -1034,7 +1057,7 @@ $(document).on('click', '.add-tab', function () { // add new tab
     var tabID = addTab($(this), "");
     $("[data-target='#" + tabID + "']").trigger('click'); //active last tab inserted
 
-    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    var actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if(actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             setThemeEditors(defaultDarkTheme);
@@ -1047,78 +1070,8 @@ $(document).on('click', '.add-tab', function () { // add new tab
     }
 });
 
-$(document).on('click', '.delete-tab', function () { // delete tab
-    var r = confirm("Are you sure you want to delete this file? This cannot be undone.");
-    var ids = $(".nav-tabs").children().length - 1;
-    var t = $(this).parent().attr('data-target');
-    var currentids = $(t).find(".ace").attr("id").substr(6);
-    var parse = parseInt(currentids);
-    if (r) {
-        var prevEditor = $(this).parent().parent().prev();
-        if (prevEditor.length === 0) {
-            prevEditor = $(this).parent().parent().next();
-        }
-        var currentID = $(this).closest('a').attr('data-target');
-        $(this).parent().parent().remove();
-        var ideditor = $(currentID).find('.ace').attr("id");
-        $(currentID).remove();
-        delete editors[ideditor];
-        $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
-        $('.check-run-tab[value="' + ideditor + '"]').remove();
-
-        if ($(".nav-tabs").children().length === 1) { // add a new tab if we delete the last
-            var parent = $('.add-tab').parent();
-            idEditor = 'editor1';
-            ideditor = 'editor1';
-            $('<li class="nav-item"> <a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">L P 1</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
-            $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
-            editors[ideditor] = new ace.edit(ideditor);
-            setUpAce(ideditor, "");
-            $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + ideditor + '">  <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> L P 1 </span> </button>');
-            $("[data-target='#tab1']").trigger('click');
-
-            inizializeTabContextmenu();
-            initializeCheckTabToRun();
-            setAceMode();
-            setElementsColorMode();
-        }
-        else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
-            // $('.nav-tabs').find('li:not(:last)').each(function (index) {
-            //     $(this).find('a').text('L P ' + (index + 1));
-            //     $(this).find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
-            // });
-            $('.tab-content').find("[role='tabpanel']").each(function (index) {
-                ideditor = 'editor' + (index + 1);
-                var currentEditor = $(this).find('.ace').attr('id');
-                if (ideditor !== currentEditor) {
-                    $(this).find('.ace').attr("id", ideditor);
-                    editors[ideditor] = editors[currentEditor];
-                    delete editors[currentEditor];
-                    var currentCheck = $('.check-run-tab[value="' + currentEditor + '"]');
-                    var wasInvisible = false;
-                    if (currentCheck.find('check-icon').hasClass('invisible')) {
-                        wasInvisible = true;
-                    }
-                    currentCheck.empty();
-                    currentCheck.attr('value', ideditor);
-                    currentCheck.append('<div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P ' + (index + 1) + '</span>');
-                    if (!wasInvisible) {
-                        currentCheck.find('check-icon').removeClass('invisible');
-                    }
-                }
-                $('.btn-tab').each(function (index) {
-                    var thisTab = $(this);
-                    var idTabEditor = $(this).attr('data-target');
-                    idEditorToChangeTabName = $(idTabEditor).children().attr('id');
-                    var nameValue = thisTab.children('.name-tab').text();
-                    $('.check-run-tab[value="' + idEditorToChangeTabName + '"]').find('.check-tab-name').text(nameValue);
-                });
-            });
-        }
-        if ($(".nav-tabs").children().length === 2) {
-            idEditor = "editor1";
-        }
-    }
+$(document).on('click', '.delete-tab', function (e) { // delete tab
+    deleteTab($(this), false);
 });
 
 /**
@@ -1127,8 +1080,8 @@ $(document).on('click', '.delete-tab', function () { // delete tab
 function addEastLayout(layout) {
     layout.removePane("south");
     saveOption("outputPos", "east");
-    currentValModel = $('#output-model').text();
-    currentValError = $('#output-error').text();
+    var currentValModel = $('#output-model').text();
+    var currentValError = $('#output-error').text();
     $("#split-up").parent().empty();
     layout.addPane("east");
     createTextArea($('.ui-layout-east'));
@@ -1146,8 +1099,8 @@ function addEastLayout(layout) {
 function addSouthLayout(layout) {
     layout.removePane("east");
     saveOption("outputPos", "south");
-    currentValModel = $('#output-model').text();
-    currentValError = $('#output-error').text();
+    var currentValModel = $('#output-model').text();
+    var currentValError = $('#output-error').text();
     $("#split").parent().empty();
     layout.addPane("south");
     createTextArea($('.ui-layout-south'));
@@ -1159,28 +1112,6 @@ function addSouthLayout(layout) {
     $('#output-error').text(currentValError);
     $('#split').children().attr('class', 'fa fa-chevron-up');
     $('#split').attr('id', 'split-up');
-}
-
-/**
- * @param {string} searchStr - string to search
- * @param {string} str - text where search the string
- * @param {boolean} caseSensitive
- * @returns {array}
- * @description Returns each position of the searched string
- */
-function getIndicesOf(searchStr, str, caseSensitive) {
-    var searchStrLen = searchStr.length;
-    if (searchStrLen === 0) {
-        return [];
-    }
-    var startIndex = 0,
-        index, indices = [];
-
-    while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-        indices.push(index);
-        startIndex = index + searchStrLen;
-    }
-    return indices;
 }
 
 /**
@@ -1274,8 +1205,8 @@ function addInputValue(inputClass) {
  * @description check if the configration file has the correct property to set. If not, return false and display the content of the file in the text editor
  */
 function setJSONInput(config) {
-    if (config.hasOwnProperty('language') || config.hasOwnProperty('engine') || config.hasOwnProperty('executor') || config.hasOwnProperty('option')
-        || config.hasOwnProperty('program') || config.hasOwnProperty('output_model') || config.hasOwnProperty('output_error') || config.hasOwnProperty('tabname')) {
+    if ({}.hasOwnProperty.call(config,'language') || {}.hasOwnProperty.call(config,'engine') || {}.hasOwnProperty.call(config,'executor') || {}.hasOwnProperty.call(config,'option')
+        || {}.hasOwnProperty.call(config,'program') || {}.hasOwnProperty.call(config,'output_model') || {}.hasOwnProperty.call(config,'output_error') || {}.hasOwnProperty.call(config,'tabname')) {
         $('.nav-tabs li:not(:last)').each(function (index, element) {
             var id = $(this).find("a").attr("data-target");
             $(this).remove();
@@ -1288,14 +1219,17 @@ function setJSONInput(config) {
             tabID = addTab($(".add-tab"), config.program[index]);
         });
         $("[data-target='#" + tabID + "']").trigger('click'); // active last tab inserted
-        if (config.hasOwnProperty('tab')) {
+        if ({}.hasOwnProperty.call(config,'tab')) {
             $(config.tab).each(function (index, element) {
                 $('.check-run-tab[value="' + element + '"]').find('.check-icon').toggleClass('invisible');
                 $('.check-run-tab[value="' + element + '"]').toggleClass('checked');
             });
         }
-        if (config.hasOwnProperty('runAuto')) {
+        if ({}.hasOwnProperty.call(config,'runAuto')) {
             $("#run-dot").prop('checked', true);
+        }
+        else {
+            $("#run-dot").prop('checked', false);
         }
         $('#inputLanguage').val(config.language).change();
         $('#inputengine').val(config.engine).change();
@@ -1386,7 +1320,7 @@ function isJosn(str) {
 function createTextArea(layout) {
     $("#setting-output").remove();
     $(".output-container").remove();
-    $(layout).append('<div class="output-container">  <div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down"></i> </button></div></div> <div id="output" class="output"> <div id="output-model" class="pb-2"></div><div id="output-error"></div></div> </div>');
+    $(layout).append('<div class="output-container"><div id="setting-output"> Output <div role="group" class="float-right"> <button type="button" id="dwn-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Save output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-download" aria-hidden="true"></i></button> <button type="button" id="clear-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Clear output" data-delay=\'{"show":"700", "hide":"0"}\'><i class="fa fa-eraser" aria-hidden="true"></i></button> <button type="button" id="split" class="btn btn-light btn-sm" title="Split"> <i class="fa fa-chevron-down" aria-hidden="true"></i> </button></div></div> <div id="output" class="output"> <div id="output-model" class="pb-2"></div><div id="output-error"></div></div> </div>');
     setLoideStyleMode();
     $('#dwn-output').tooltip();
 }
@@ -1395,14 +1329,14 @@ function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 
-    files = document.getElementById("files").files;
+    var files = document.getElementById("files").files;
 
     if (files.length === 0) {
         files = evt.dataTransfer.files;
     }
 
     if (files.length == 1) {
-        var reader = new FileReader();
+        let reader = new FileReader();
         reader.onload = function (event) {
             var text = event.target.result;
             if (isJosn(text)) {
@@ -1436,7 +1370,7 @@ function getValidFileList(files, callback) {
     };                     // accepted files
 
     // Get the selected files
-    for (var i = 0; i < count; i++) {       // invoke readers
+    for (let i = 0; i < count; i++) {       // invoke readers
         checkFile(files[i]);
     }
 
@@ -1452,13 +1386,13 @@ function getValidFileList(files, callback) {
         };
         reader.readAsText(file);
     }
-};
+}
 
 function onDone(data) {
     var tabOpened = $('.btn-tab').length;
     var tabID;
     var openOnFirst = false;
-    for (var index = 0; index < data.texts.length; index++) {
+    for (let index = 0; index < data.texts.length; index++) {
         if (tabOpened == 1) {
             if (index == 0) {
                 if (editors[idEditor].getValue().trim() === '') {
@@ -1486,17 +1420,16 @@ function onDone(data) {
 
     $('.name-tab').each(function (index) {
         if (openOnFirst) {
-            var id = index + 1;
             $(this).text(data.names[index]);
-            var id = index + 1;
-            var editor = "editor" + id;
+            let id = index + 1;
+            let editor = "editor" + id;
             $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(data.names[index]);
         }
         else {
             if (index > tabOpened - 1) {
                 $(this).text(data.names[index - tabOpened]);
-                var id = index + 1;
-                var editor = "editor" + id;
+                let id = index + 1;
+                let editor = "editor" + id;
                 $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(data.names[index - tabOpened]);
             }
         }
@@ -1522,7 +1455,7 @@ function setUpAce(ideditor, text) {
     ace.config.set("modePath", "js/ace/mode");
     editors[ideditor].jumpToMatching();
 
-    actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
+    var actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if(actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
             editors[ideditor].setTheme(defaultDarkTheme);
@@ -1546,6 +1479,46 @@ function setUpAce(ideditor, text) {
         copyWithEmptySelection: true,
         scrollPastEnd: 0.5
     });
+
+    editors[ideditor].commands.addCommand(
+        {
+            name: 'save',
+            bindKey: {win: "ctrl-s", "mac": "cmd-s"},
+            exec: function(editor) {
+                downloadLoDIEProject();
+            }
+        }
+    );
+
+    editors[ideditor].commands.addCommand(
+        {
+            name: 'share',
+            bindKey: {win: "ctrl-shift-s", "mac": "cmd-shift-s"},
+            exec: function(editor) {
+                $('#btn-share').trigger('click');
+            }
+        }
+    );
+
+    editors[ideditor].commands.addCommand(
+        {
+            name: 'open',
+            bindKey: {win: "ctrl-o", "mac": "cmd-o"},
+            exec: function(editor) {
+                $('#btn-upload').trigger('click');
+            }
+        }
+    );
+
+    editors[ideditor].commands.addCommand(
+        {
+            name: 'run-options',
+            bindKey: {win: "ctrl-shift-o", "mac": "cmd-shift-o"},
+            exec: function(editor) {
+                $('#btn-option').trigger('click');
+            }
+        }
+    );
 
     inizializeSnippets();
 
@@ -1571,41 +1544,52 @@ function setUpAce(ideditor, text) {
  * @description inizialize shortcuts and set title to the tooltips base on the OS
  */
 function inizializeShortcuts() {
+
+    Mousetrap.bind('mod+enter', function () {
+        $('#run').trigger('click');
+        return false;
+    });
+    
+    Mousetrap.bind('mod+s', function () {
+        downloadLoDIEProject();
+        return false;
+    });
+    
+    Mousetrap.bind('mod+o', function () {
+        $('#btn-upload').trigger('click');
+        return false;
+    });
+
+    Mousetrap.bind('mod+shift+s', function () {
+        $('#btn-share').trigger('click');
+        return false;
+    });
+
+    Mousetrap.bind('mod+shift+o', function () {
+        $('#btn-option').trigger('click');
+        return false;
+    });
+
+    Mousetrap.bind('?', function() {
+        console.log('questioooon');
+        $('#modal-about').modal('hide');
+        $('#setting-editor').modal('hide');
+        $('#shortcut').modal('show');
+    });
+
     if (window.navigator.userAgent.indexOf("Mac") !== -1) {
-        key('command + d', function () {
-            downloadLoDIEProject();
-            return false;
-        });
-        key('command + enter', function () {
-            $('#run').trigger('click');
-            return false;
-        });
-        key('command + u', function () {
-            $('#btn-upload').trigger('click');
-            return false;
-        });
 
         $('[for="run"]').attr('data-original-title', '{ ⌘ + Enter }');
-        $('#btn-upload').attr('data-original-title', '{ ⌘ + u }');
-        $('[for="btn-download"]').attr('data-original-title', '{ ⌘ + d }');
+        $('#btn-upload').attr('data-original-title', '{ ⌘ + O }');
+        $('[for="btn-download"]').attr('data-original-title', '{ ⌘ + S}');
+        $('#btn-share').attr('data-original-title', '{ ⌘ + ⇧ + S}');
 
     } else {
-        key('control + d', function () {
-            $('#btn-download').trigger('click');
-            return false;
-        });
-        key('control + enter', function () {
-            $('#run').trigger('click');
-            return false;
-        });
-        key('control + u', function () {
-            $('#btn-upload').trigger('click');
-            return false;
-        });
 
-        $('[for="run"]').attr('data-original-title', '{ ctrl + Enter }');
-        $('#btn-upload').attr('data-original-title', '{ ctrl + u }');
-        $('[for="btn-download"]').attr('data-original-title', '{ ctrl + d }');
+        $('[for="run"]').attr('data-original-title', '{ CTRL + Enter }');
+        $('#btn-upload').attr('data-original-title', '{ CTRL + O }');
+        $('[for="btn-download"]').attr('data-original-title', '{ CTRL + S }');
+        $('#btn-share').attr('data-original-title', '{ CTRL + ⇧ + S}');
     }
 }
 
@@ -1670,8 +1654,8 @@ function generateIDTab() {
  */
 function setTheme(theme) {
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setTheme(theme);
     }
 }
@@ -1682,8 +1666,8 @@ function setTheme(theme) {
  */
 function setFontSizeEditors(size) {
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setFontSize(size + "px");
     }
 }
@@ -1694,8 +1678,8 @@ function setFontSizeEditors(size) {
  */
 function setThemeEditors(theme) {
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setTheme(theme);
     }
 }
@@ -1784,7 +1768,7 @@ function setOptions(obj) {
 function addTab(obj, text, name) {
     var id = $(".nav-tabs").children().length;
     var tabId = generateIDTab();
-    editorId = "editor" + id;
+    var editorId = "editor" + id;
     var tabName = name == null ? 'L P ' + id : name;
     $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">' + tabName + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($('.add-tab').parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
@@ -1848,7 +1832,7 @@ function resetEditorOptions() {
  */
 function resetSolverOptions() {
     loadLanguages();
-    $("#run-dot").prop('checked', false);
+    $("#run-dot").prop('checked', true);
     $('#solver-options').empty();
 }
 
@@ -1893,7 +1877,7 @@ function inizializePopovers() {
         $('.popover-header').last().html('');
         $('.popover-body').last().html(
             '<div class="save-content">\n' +
-            '<div class="mb-2"> Save the project to:\n </div>' +
+            '<h6 class="mb-2"> Save the project to:\n </h6>' +
             '<div class="save-btn text-center">\n' +
             '<button id="local-download" class="btn btn-outline-dark btn-saver btn-block">Local</button>\n' +
             // '<button id="cloud-download" class="btn btn-outline-dark btn-saver btn-block" disabled>Cloud</button>\n' +
@@ -1967,9 +1951,10 @@ function inizializePopovers() {
 
     $('.popover-share').on('inserted.bs.popover', function () {
 
+        $('.popover-header').last().html('');
         $('.popover-body').last().html('' +
             '<div class="popover-share-content">\n' +
-            '<div class="mb-2"> Share the project:\n </div>' +
+            '<h6 class="mb-2"> Share the project:\n </h6>' +
             '<div class="input-group">' +
             '<input id="link-to-share" type="text" class="form-control" readonly>' +
             '<div class="input-group-append">' +
@@ -2046,7 +2031,7 @@ function inizializeToolbar() {
         editors[idEditor].focus();
     });
 
-    var clipboardSupport = typeof(navigator.clipboard)=='undefined' ? false : true;
+    var clipboardSupport = typeof(navigator.clipboard.readText)=='undefined' ? false : true;
 
     if (clipboardSupport) {
         $('#btn-paste').on('click', function () {
@@ -2069,6 +2054,93 @@ function inizializeToolbar() {
     $('#btn-dwn-this-lp').on('click', function () {
         downloadCurrentTabContent();
     });
+
+    $('#delete-all-tabs').on('click', function () {
+        deleteAllTabs();
+    });
+}
+
+function deleteAllTabs() {
+    var r = confirm("Are you sure you want to delete all tabs? This cannot be undone.");
+    if(r) {
+        $('.delete-tab').each(function(){
+            deleteTab($(this), true);
+        });
+    }
+}
+
+function deleteTab(tab, all) {
+    if (!all) { var r = confirm("Are you sure you want to delete this file? This cannot be undone."); }
+    var ids = $(".nav-tabs").children().length - 1;
+    var t = tab.parent().attr('data-target');
+    var currentids = $(t).find(".ace").attr("id").substr(6);
+    var parse = parseInt(currentids);
+    if (r || all) {
+        var prevEditor = tab.parent().parent().prev();
+        if (prevEditor.length === 0) {
+            prevEditor = tab.parent().parent().next();
+        }
+        var currentID = tab.closest('a').attr('data-target');
+        tab.parent().parent().remove();
+        var ideditor = $(currentID).find('.ace').attr("id");
+        $(currentID).remove();
+        delete editors[ideditor];
+        $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
+        $('.check-run-tab[value="' + ideditor + '"]').remove();
+
+        if ($(".nav-tabs").children().length === 1) { // add a new tab if we delete the last
+            let parent = $('.add-tab').parent();
+            idEditor = 'editor1';
+            ideditor = 'editor1';
+            $('<li class="nav-item"> <a data-target="#tab1" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">L P 1</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore(parent);
+            $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="tab1"><div id="editor1" class="ace"></div></div>');
+            editors[ideditor] = new ace.edit(ideditor);
+            setUpAce(ideditor, "");
+            $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + ideditor + '">  <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> L P 1 </span> </button>');
+            $("[data-target='#tab1']").trigger('click');
+
+            inizializeTabContextmenu();
+            initializeCheckTabToRun();
+            setAceMode();
+            setElementsColorMode();
+        }
+        else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
+            // $('.nav-tabs').find('li:not(:last)').each(function (index) {
+            //     tab.find('a').text('L P ' + (index + 1));
+            //     tab.find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
+            // });
+            $('.tab-content').find("[role='tabpanel']").each(function (index) {
+                ideditor = 'editor' + (index + 1);
+                let currentEditor = tab.find('.ace').attr('id');
+                if (ideditor !== currentEditor) {
+                    tab.find('.ace').attr("id", ideditor);
+                    editors[ideditor] = editors[currentEditor];
+                    delete editors[currentEditor];
+                    var currentCheck = $('.check-run-tab[value="' + currentEditor + '"]');
+                    var wasInvisible = false;
+                    if (currentCheck.find('check-icon').hasClass('invisible')) {
+                        wasInvisible = true;
+                    }
+                    currentCheck.empty();
+                    currentCheck.attr('value', ideditor);
+                    currentCheck.append('<div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P ' + (index + 1) + '</span>');
+                    if (!wasInvisible) {
+                        currentCheck.find('check-icon').removeClass('invisible');
+                    }
+                }
+                $('.btn-tab').each(function (index) {
+                    var thisTab = tab;
+                    var idTabEditor = tab.attr('data-target');
+                    var idEditorToChangeTabName = $(idTabEditor).children().attr('id');
+                    var nameValue = thisTab.children('.name-tab').text();
+                    $('.check-run-tab[value="' + idEditorToChangeTabName + '"]').find('.check-tab-name').text(nameValue);
+                });
+            });
+        }
+        if ($(".nav-tabs").children().length === 2) {
+            idEditor = "editor1";
+        }
+    }
 }
 
 function downloadCurrentTabContent() {
@@ -2350,17 +2422,17 @@ function inizializeAutoComplete() {
     var langTools = ace.require('ace/ext/language_tools');
     inizializeSnippets();
     switch (languageChosen) {
-        case "asp":
-            var splitRegex = /(([a-zA-Z_]+[0-9]*)*)(\(.+?\))/gi;
-            var words = editors[idEditor].getValue().match(splitRegex);
+        case "asp": {
+            let splitRegex = /(([a-zA-Z_]+[0-9]*)*)(\(.+?\))/gi;
+            let words = editors[idEditor].getValue().match(splitRegex);
             if (words != null) {
-                var map = new Map();
+                let map = new Map();
                 words.forEach(function (word) {
-                    var name = word.match(/[^_](([a-zA-Z_]+[0-9]*)*)/)[0];
-                    var arities = word.match(/\(.+?\)/)[0].split(",").length;
+                    let name = word.match(/[^_](([a-zA-Z_]+[0-9]*)*)/)[0];
+                    let arities = word.match(/\(.+?\)/)[0].split(",").length;
                     map.set(name, arities);
                 });
-                var completions = [];
+                let completions = [];
                 map.forEach(function (key, value) {
                     completions.push({
                         caption: value,
@@ -2369,7 +2441,7 @@ function inizializeAutoComplete() {
                     });
                 });
 
-                var completer = {
+                let completer = {
                     getCompletions: function (editor, session, pos, prefix, callback) {
                         callback(null, completions);
                     }
@@ -2378,7 +2450,7 @@ function inizializeAutoComplete() {
                 langTools.addCompleter(completer);
             }
             break;
-
+        }
         default:
             break;
     }
@@ -2392,8 +2464,8 @@ function giveBrackets(value) {
         limit = value;
     else
         limit = 26;
-    for (var i = 0; i < limit; i++) {
-        var num = i + 1;
+    for (let i = 0; i < limit; i++) {
+        let num = i + 1;
         par += "${" + num + ":" + LETTER + "}";
         if (i !== limit - 1) {
             par += ","
@@ -2409,8 +2481,8 @@ function createURL() {
     var length = $(".nav-tabs").children().length;
     var empty = true;
 
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
 
         URL += encodeURIComponent(editors[idE].getValue().trim());
         if (index < length - 1) {
@@ -2427,7 +2499,7 @@ function createURL() {
     else {
         // put the name of the tabs
         URL += '&tabnames=';
-        var idx = 1
+        let idx = 1
         $('.name-tab').each(function () {
             URL += encodeURIComponent($(this).text());
             if (idx < length - 1) {
@@ -2444,9 +2516,9 @@ function createURL() {
 
         saveOptions();
 
-        var opt = localStorage.getItem("solverOptions");
+        let opt = localStorage.getItem("solverOptions");
         if (opt !== null) {
-            var obj = JSON.parse(opt);
+            let obj = JSON.parse(opt);
             if (obj.option != null) {
                 // put the options
                 URL += '&options=' + encodeURIComponent(JSON.stringify(obj.option));
@@ -2514,12 +2586,12 @@ function loadFromURL() {
         // console.log('options:', options);
 
         // decode params
-        for (var i = 0; i < logicPr.length; i++) {
+        for (let i = 0; i < logicPr.length; i++) {
             logicPr[i] = decodeURIComponent(logicPr[i]);
         }
         // console.log('LogicPrograms decoded:', logicPr);
 
-        for (var i = 0; i < tabNames.length; i++) {
+        for (let i = 0; i < tabNames.length; i++) {
             tabNames[i] = decodeURIComponent(tabNames[i]);
         }
         // console.log('TabNames decoded:', tabNames);
@@ -2528,17 +2600,17 @@ function loadFromURL() {
         // console.log('Options decoded:', options);
 
         // set params
-        for (var index = 1; index <= tabNames.length; index++) {
+        for (let index = 1; index <= tabNames.length; index++) {
             if (index > 1)
                 $('.add-tab').trigger('click');
-            var idE = "editor" + index;
+            let idE = "editor" + index;
             editors[idE].setValue(logicPr[index - 1]);
         }
 
         $('.name-tab').each(function (index) {
             $(this).text(tabNames[index]);
-            var id = index + 1;
-            var editor = "editor" + id;
+            let id = index + 1;
+            let editor = "editor" + id;
             $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabNames[index]);
         });
 
@@ -2671,8 +2743,8 @@ function setLightStyleToUIElements() {
     });
     $('#dark-light-mode').addClass('btn-outline-dark');
     $('#dark-light-mode').removeClass('btn-outline-light');
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setTheme(defaultTheme);
     }
 }
@@ -2692,8 +2764,8 @@ function setDarkStyleToUIElements() {
     $('#dark-light-mode').removeClass('btn-outline-dark');
     $('#dark-light-mode').addClass('btn-outline-light');
 
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         editors[idE].setTheme(defaultDarkTheme);
     }
 }
@@ -2706,8 +2778,8 @@ function saveProjectToLocalStorage() {
         tabsName.push($(this).text());
     });
     var length = $(".nav-tabs").children().length;
-    for (var index = 1; index <= length - 1; index++) {
-        var idE = "editor" + index;
+    for (let index = 1; index <= length - 1; index++) {
+        let idE = "editor" + index;
         logicProgEditors.push(editors[idE].getValue());
     }
 
@@ -2737,17 +2809,17 @@ function loadProjectFromLocalStorage() {
         tabsName = JSON.parse(localStorage.getItem("tabsName"));
         logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
 
-        for (var index = 1; index <= tabsName.length; index++) {
+        for (let index = 1; index <= tabsName.length; index++) {
             if (index > 1)
                 $('.add-tab').trigger('click');
-            var idE = "editor" + index;
+            let idE = "editor" + index;
             editors[idE].setValue(logicProgEditors[index - 1]);
         }
 
         $('.name-tab').each(function (index) {
             $(this).text(tabsName[index]);
-            var id = index + 1;
-            var editor = "editor" + id;
+            let id = index + 1;
+            let editor = "editor" + id;
             $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabsName[index]);
         });
 
@@ -2762,8 +2834,11 @@ function loadProjectFromLocalStorage() {
             if (obj.option != null) {
                 setOptions(obj);
             }
-            if (obj.hasOwnProperty('runAuto')) {
+            if ({}.hasOwnProperty.call(obj,'runAuto')) {
                 $("#run-dot").prop('checked', true);
+            }
+            else {
+                $("#run-dot").prop('checked', false);
             }
         }
     }
@@ -2785,8 +2860,8 @@ function setTabsName(config) {
     var tabsName = config.tabname;
     $('.name-tab').each(function (index) {
         $(this).text(tabsName[index]);
-        var id = index + 1;
-        var editor = "editor" + id;
+        let id = index + 1;
+        let editor = "editor" + id;
         $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabsName[index]);
     });
 }
@@ -2800,7 +2875,7 @@ function downloadLoDIEProject() {
 
     $("#run-dot").attr("name", "runAuto");
 
-    form = $('#input').serializeFormJSON();
+    var form = $('#input').serializeFormJSON();
 
     form.output_model = model;
     form.output_error = errors;
@@ -2814,7 +2889,7 @@ function downloadLoDIEProject() {
         delete form.tab;
     }
 
-    stringify = JSON.stringify(form);
+    var stringify = JSON.stringify(form);
     createFileToDownload(stringify, "local", "LoIDE_Project", "json");
     destroyPrograms();
     destroyTabsName();
@@ -2836,7 +2911,7 @@ function renameSelectOptionsAndBadge() {
 }
 
 function closeRunOptionOnMobile() {
-    if ($(window).width() <= screen.small.size) {
+    if ($(window).width() <= display.small.size) {
         $('.left-panel').removeClass('left-panel-show');
     }
 }
@@ -2851,8 +2926,7 @@ function openRunOptions() {
 
 function getHTMLFromJQueryElement(jQueryElement) {
     var DOMElement = '';
-
-    for (var i = 0; i < jQueryElement.length; i++)
+    for (let i = 0; i < jQueryElement.length; i++)
         DOMElement += jQueryElement.get(i).outerHTML;
 
     return DOMElement;
@@ -2860,21 +2934,22 @@ function getHTMLFromJQueryElement(jQueryElement) {
 
 function setAceMode() {
     switch ($('#inputLanguage').val()) {
-        case 'asp':
-            var length = $(".nav-tabs").children().length;
-            for (var index = 1; index <= length - 1; index++) {
-                var idE = "editor" + index;
+        case 'asp': {
+            let length = $(".nav-tabs").children().length;
+            for (let index = 1; index <= length - 1; index++) {
+                let idE = "editor" + index;
                 editors[idE].session.setMode("ace/mode/asp");
             }
             break;
+        }
 
-        default:
-            var length = $(".nav-tabs").children().length;
-            for (var index = 1; index <= length - 1; index++) {
-                var idE = "editor" + index;
+        default: {
+            let length = $(".nav-tabs").children().length;
+            for (let index = 1; index <= length - 1; index++) {
+                let idE = "editor" + index;
                 editors[idE].session.setMode("ace/mode/text");
             }
-            break;
+        }
     }
 }
 

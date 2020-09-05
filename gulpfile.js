@@ -1,12 +1,12 @@
 const { series, src, dest, parallel } = require('gulp');
 const csso = require('gulp-csso');
-const shorthand = require('gulp-shorthand');
 const clean = require('gulp-clean');
 const autoprefixer = require('gulp-autoprefixer');
 const uglify = require('gulp-uglify-es').default;
 const imagemin = require('gulp-imagemin');
 const nodemon = require('gulp-nodemon')
 var browserSync = require('browser-sync').create();
+var babel = require("gulp-babel");
 
 const path =  {
     dist: 'dist/',
@@ -32,7 +32,6 @@ function css() {
     .pipe(autoprefixer({
         cascade: false
     }))
-    .pipe(shorthand())
     .pipe(csso())
     .pipe(dest(path.dist + 'css/'))
 }
@@ -56,6 +55,7 @@ function img() {
 
 function js() {
     return src(path.src + 'js/**/*.js')
+    .pipe(babel())
     .pipe(uglify())
     .pipe(dest(path.dist + 'js/'))
 }

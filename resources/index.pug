@@ -4,15 +4,33 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoIDE</title>
+    <!-- SEO info -->
+    <meta property="og:title" content="LoIDE" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="description" content="LoIDE is a web-based IDE for Logic Programming" />
+    <meta property="og:description" content="LoIDE is a web-based IDE for Logic Programming" />
+    <meta property="og:site_name" content="LoIDE" />
+    <meta property="og:image" content="img/logo_LoIDE.png" />
+    <link rel="canonical" href="#{loideUrl}" />
+    <meta property="og:url" content="#{loideUrl}" />
+    script(type="application/ld+json").
+        {
+            "@type":"WebSite",
+            "url": "#{loideUrl}",
+            "headline":"LoIDE",
+            "name":"LoIDE",
+            "description": "LoIDE is a web-based IDE for Logic Programming",
+            "@context":"https://schema.org"
+        }
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="css/layout-default-latest.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" rel="preload" as="style" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
-    <link rel="stylesheet" rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+    <link rel="stylesheet" as="style" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
+    <link rel="stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap">
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
@@ -31,7 +49,6 @@
         <div class="splashscreen-container fade-in">
             <div class="mb-4 d-flex justify-content-center align-items-center">
                 <img class="splash-logo" src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
-                <span id="beta">(Beta)</span>
             </div>
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
@@ -70,16 +87,15 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-brand mr-4">
             <img  class="navbar-logo" src="img/logo_LoIDE.svg" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
-            <span id="beta">(Beta)</span>
         </div>
 
         <ul class="navbar-nav">
             <li class="nav-item nav-buttons">
                 <div class="btn-group btn-block" role="group">
-                    <button id="btn-option" class="btn btn-secondary" data-toggle="tooltip" data-html="true" data-html="true" data-placement="top" title="Run options">
+                    <button id="btn-option" class="btn btn-secondary" data-toggle="tooltip" data-html="true" data-placement="top" title="Run options">
                         <i class="fa fa-cogs"></i>
                     </button>
-                    <button id="btn-run-nav" class="btn btn-success" data-toggle="tooltip" data-html="true">
+                    <button id="btn-run-nav" class="btn btn-success" data-html="true" title="Run">
                         <i class="fa fa-play"></i>
                         <span class="btn-text">Run!</span>
                     </button>
@@ -95,13 +111,13 @@
         <div id="loide-collapse" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto ml-auto" >
                 <li class="nav-item nav-buttons mr-sm-2 mr-md-2">
-                    <button class="btn btn-info btn-block" data-toggle="modal" href="#setting-editor">
+                    <button class="btn btn-info btn-block" data-toggle="modal" href="#setting-editor" title="Appearance">
                         <i class="fa fa-paint-brush"></i>
                         <span class="btn-text">Appearance</span>
                     </button>
                 </li>
                 <li class="nav-item nav-buttons ml-sm-2 ml-md-2">
-                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about"> <i class="fa fa-info" aria-hidden="true"></i> <span class="btn-text"> About </span>  </button>
+                    <button id="a" type="button" class="btn btn-outline-info btn-block" data-toggle="modal" data-target="#modal-about" title="About"> <i class="fa fa-info" aria-hidden="true"></i> <span class="btn-text"> About </span>  </button>
                 </li>
             </ul>
 
@@ -148,13 +164,13 @@
 
                     <div class="option-container">
                         <label for="inputLanguage" class="col-sm-12 col-xs-12 text-center">Language</label>
-                        <select name="language" id="inputLanguage" class="custom-select">
+                        <select name="language" id="inputLanguage" class="custom-select" title="Language">
                         </select>
                         <label for="inputEngine" class="col-sm-12 col-xs-12 mt-2 text-center">Solver</label>
-                        <select name="engine" id="inputengine" class="custom-select">
+                        <select name="engine" id="inputengine" class="custom-select" title="Solver">
                         </select>
                         <label for="inputExecutor" class="col-sm-12 col-xs-12 mt-2 text-center">Executor</label>
-                        <select name="executor" id="inputExecutor" class="custom-select">
+                        <select name="executor" id="inputExecutor" class="custom-select" title="Executor">
                         </select>
                     </div>
                     
@@ -163,7 +179,7 @@
                         <div id="solver-options">
                         </div>
                         <span class="input-group-btn">
-                            <button id="btn-add-option" type="button" class="btn btn-primary btn-block"> <i class="fa fa-plus"></i> Add option</button>
+                            <button id="btn-add-option" type="button" class="btn btn-primary btn-block" title="Add option"> <i class="fa fa-plus"></i> Add option</button>
                         </span>
                     </div>
                     
@@ -173,7 +189,7 @@
                         </div>
                         <div class="run-auto-box">
                             <div class="custom-control custom-switch text-center">
-                                <input type="checkbox" class="custom-control-input" id="run-dot">
+                                <input type="checkbox" class="custom-control-input" id="run-dot" title="Run automatically">
                                 <label class="custom-control-label" for="run-dot">Run automatically</label>
                             </div>
                         </div>
@@ -183,7 +199,7 @@
                                 <strong class="tab-execute-title">Choose tab to execute</strong>
                             </div>
                             <div id="tab-execute-new" class="list-group">
-                                <button type="button" class="list-group-item list-group-item-action check-run-tab check-auto-run-tab"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">Current tab</span> </button>
+                                <button type="button" class="list-group-item list-group-item-action check-run-tab check-auto-run-tab" title="Current tab"> <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">Current tab</span> </button>
                                 <div class="list-divider list-group-item">
                                     <div class="divider"></div>
                                 </div>
@@ -194,7 +210,7 @@
                             <p class="text-center">
                                 <strong> Reset all options </strong>
                             </p>
-                            <button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm">Reset</button>
+                            <button id="reset-options" type="button" class="btn btn-outline btn-outline-danger btn-sm" title="Reset">Reset</button>
                         </div>
                     </div>
                 </div>
@@ -224,7 +240,8 @@
                             </ul>
                             <!-- Toolbar  -->
                             <div class="col-xs-12 ml-auto text-center toolbar">
-                                <button id="btn-dwn-this-lp" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Download this logic program" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-download" aria-hidden="true"></i></button>
+                                <button id="delete-all-tabs" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Delete all the tabs" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-window-close-o" aria-hidden="true"></i></button>
+                                <button id="btn-dwn-this-lp" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Save content" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-download" aria-hidden="true"></i></button>
                                 <div class="undo-redo btn-group" role="group">
                                     <button id="btn-cut" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Cut" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-scissors" aria-hidden="true"></i></button>
                                     <button id="btn-copy" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="Copy" data-delay='{"show":"700", "hide":"0"}'><i class="fa fa-files-o" aria-hidden="true"></i></button>
@@ -250,10 +267,13 @@
                         <div id="setting-output"> Output
                             <div role="group">
                                 <button type="button" id="dwn-output" class="btn btn-light btn-sm">
-                                    <i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Download output content" data-delay='{"show":"700", "hide":"0"}'></i>
+                                    <i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Save output" data-delay='{"show":"700", "hide":"0"}'></i>
+                                </button>
+                                <button type="button" id="clear-output" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="bottom" title="Clear output" data-delay='{"show":"700", "hide":"0"}'>
+                                    <i class="fa fa-eraser" aria-hidden="true"></i>
                                 </button>
                                 <button type="button" id="split" class="btn btn-light btn-sm">
-                                    <i class="fa fa-chevron-down"></i>
+                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
@@ -270,39 +290,36 @@
         </form>
     </div>
     <div class="modal fade" id="modal-about" role="dialog" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">About LoIDE</h4>
+                    <h4 class="modal-title"> <i class="fa fa-info" aria-hidden="true"></i> About LoIDE</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p><em>LoIDE is a web-based IDE for Logic Programming.</em>
+                    <div class="text-center">
+                        <img src="img/logo_LoIDE.svg" class="about-logo" width="150" alt="logo" onerror="this.onerror=null; this.src='img/logo_LoIDE.png'">
+                        <p class="mt-2">
+                            <em>Version:
+                                <span id="version"></span>
+                            </em>
+                        </p>
+                    </div>
+                    <p class="text-center">
+                        <em>LoIDE is a web-based IDE for Logic Programming</em>
                         <br>
                     </p>
-                    <p>
-                        <strong>It is part of an undergraduate student's work of thesis, and is still at the early stages of development.</strong>
-                    </p>
-                    <p>
-                        <strong>It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet.</strong>
-                    </p>
-                    <p>
-                        <strong>Use of all solvers and systems is provided under the respective licenses; we refrain from taking any responsibility for any use that goes out of the scopes of such licenses.</strong>
-                    </p>
-                    <p>LoIDE is an Open Source project available on
-                        <a href="https://github.com/DeMaCS-UNICAL/LoIDE" rel="noopener" target="_blank">Github
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </p>
-                    <p>It's released under
-                        <a href="https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/LICENSE">MIT License</a>
-                    </p>
-                    <p>
-                        <em>Version:
-                            <span id="version"></span>
-                        </em>
-                    </p>
+
+                    <p class="text-justify"> Checkout the LoIDE project website: <br> <a href="https://demacs-unical.github.io/LoIDE/" rel="noopener" target="_blank"> demacs-unical.github.io/LoIDE</a></p>
+                    <p>LoIDE is an Open Source project available on <a href="https://github.com/DeMaCS-UNICAL/LoIDE" rel="noopener" target="_blank">Github <i class="fa fa-github"></i></a></p>
+                    <p class="text-justify">It's released under <a href="https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/LICENSE" rel="noopener" target="_blank">MIT License</a></p>
+
+                    <p class="text-justify">If you have any questions or suggestions, please write an e-mail to <em>loide<span style="display: none;">ABC</span>@mat.unical.it </em></p>
+
+                    <p class="text-justify"><strong>Use of all solvers and systems is provided under the respective licenses; we refrain from taking any responsibility for any use that goes out of the scopes of such licenses.</strong></p>
+
+                    <p class="text-justify">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -310,11 +327,12 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="setting-editor" role="dialog" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Appearance</h4>
+                    <h4 class="modal-title"> <i class="fa fa-paint-brush"></i> Appearance</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -377,12 +395,87 @@
                             <label for="dark-light-mode">Change LoIDE mode</label>
                             <button id="dark-light-mode" type="button" class="btn btn-outline-dark btn-block">Dark</button>
                         </div>
+                    </div>
                 </div>
-            </div>
                 <div class="modal-footer">
                     <button id="reset-editor" type="button" class="btn btn-outline btn-outline-danger"> <i class="fa fa-eraser"></i> Reset options</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="shortcut" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"> <i class="fa fa-keyboard-o" aria-hidden="true"></i> Keyboard Shortcuts</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="loide-shortcut">
+                    <div class="shortcut-container mb-2 d-flex justify-content-between">
+                        <div class="shortcut-title">
+                            <span> Open Project/Files </span> 
+                        </div>
+                        <div>
+                            <div class="keybox d-inline badge badge-secondary">Ctrl/⌘</div>
+                            <div class="keybox d-inline badge badge-secondary">O</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="shortcut-container mt-2 mb-2 d-flex justify-content-between">
+                        <div class="shortcut-title">
+                            <span> Save Project </span> 
+                        </div>
+                        <div>
+                            <div class="keybox d-inline badge badge-secondary">Ctrl/⌘</div>
+                            <div class="keybox d-inline badge badge-secondary">S</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="shortcut-container mt-2 mb-2 d-flex justify-content-between">
+                        <div class="shortcut-title">
+                            <span> Share </span> 
+                        </div>
+                        <div>
+                            <div class="keybox d-inline badge badge-secondary">Ctrl/⌘</div>
+                            <div class="keybox d-inline badge badge-secondary">Shift</div>
+                            <div class="keybox d-inline badge badge-secondary">S</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="shortcut-container mt-2 mb-2 d-flex justify-content-between">
+                        <div class="shortcut-title">
+                            <span> Open/Close Run Options </span> 
+                        </div>
+                        <div>
+                            <div class="keybox d-inline badge badge-secondary">Ctrl/⌘</div>
+                            <div class="keybox d-inline badge badge-secondary">Shift</div>
+                            <div class="keybox d-inline badge badge-secondary">O</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="shortcut-container mt-2 mb-2 d-flex justify-content-between">
+                        <div class="shortcut-title">
+                            <span> Run Project </span> 
+                        </div>
+                        <div>
+                            <div class="keybox d-inline badge badge-secondary">Ctrl/⌘</div>
+                            <div class="keybox d-inline badge badge-secondary">Enter</div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="editor-shortcut">
+                    <div>
+                        <p> For editor shortcuts see the <a href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts" rel="noopener" target="_blank"> official page </a> </p>
+                    </div>
+                </div>
+            </div>
+          </div>
         </div>
     </div>
 
@@ -416,18 +509,18 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     
     <!-- Ace editor-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ext-language_tools.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha512-GZ1RIgZaSc8rnco/8CXfRdCpDxRCphenIiZ2ztLy3XQfCbQUSCuk8IudvNHxkRA3oUg6q0qejgN/qqyG1duv5Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js" integrity="sha512-8qx1DL/2Wsrrij2TWX5UzvEaYOFVndR7BogdpOyF4ocMfnfkw28qt8ULkXD9Tef0bLvh3TpnSAljDC7uyniEuQ==" crossorigin="anonymous"></script>
+
     <!-- mark JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.6.1/jquery.mark.min.js"></script>
 
     <!-- socket.io -->
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
 
-    <!-- keymaster JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/keymaster/1.6.1/keymaster.min.js"></script>
-
+    <!-- Mousetrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.5/mousetrap.min.js" integrity="sha512-+Jg3Ynmj9hse704K48H6rBBI3jdNBjReRGBCxUWFfOz3yVurnJFWtAWssDAsGtzWYw89xFWPxShuj2T6E9EOpg==" crossorigin="anonymous"></script>
+    
     <!-- context menu -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.min.js"></script>

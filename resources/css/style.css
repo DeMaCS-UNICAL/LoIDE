@@ -102,12 +102,6 @@
   }
 }
 
-#beta {
-  font-family: "Dancing Script", cursive;
-  font-size: 22px;
-  vertical-align: top;
-}
-
 .splashscreen {
   position: fixed;
   top:0;
@@ -697,6 +691,10 @@ label[for="run-dot"] {
   cursor: pointer;
 }
 
+.keybox, .shortcut-title{
+  font-size: 16px;
+}
+
 /*DARK-MODE SECTION*/
 
 body.dark {
@@ -774,7 +772,7 @@ body.dark .toast-header {
   background-color: rgba(144, 144, 144, 0.85);
 }
 
-body.dark .navbar-brand {
+body.dark .navbar-brand, body.dark .about-logo {
   filter: invert(100%);
 }
 

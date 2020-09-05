@@ -5,7 +5,6 @@ var http = require('http');
 var forceSSL = require('express-force-ssl');
 var webSocket = require('websocket').w3cwebsocket;
 var fs = require('fs');
-var pug = require('pug');
 var jpointer = require('json-pointer');
 const compression = require('compression');
 
@@ -24,6 +23,7 @@ const resourcesPath = currentEnv == environment.prod ? path.dist : path.src
 
 // System config loading
 var properties  = require('./config/app-config.json');
+var loideUrl = properties.loide_url;
 var httpPort    = properties.port.http;
 var httpsPortP  = properties.port.https;
 var key         = properties.path.key;
@@ -63,8 +63,10 @@ if (key.length !== 0 && cert.length !== 0) {
 }
 
 // Sets "Strict-Transport-Security, by default maxAge is set 1 year in seconds
-app.use(helmet.hsts({
-    maxAge: maxAge
+app.use(helmet({
+    hsts: {
+        maxAge: maxAge
+    }
 }));
 
 app.use(compression());
@@ -74,7 +76,7 @@ app.set('view engine', 'pug');
 
 // Load variables in to the .pug file
 app.get('/', function (req, res) {
-    res.render('index', {"languages": servicesConfig.languages});
+    res.render('index', {"languages": servicesConfig.languages, "loideUrl": loideUrl});
 });
 
 app.post('/version', function (req, res) { // send the version (and take it in package.json) of the application
@@ -113,9 +115,6 @@ io.sockets.on('connection', function (socket) { // Wait for the incoming connect
         
         client.onerror = function (error) {
             print_log('WebSocket problem:\n' + JSON.stringify(error, null, '\t'));
-            socket.emit('problem', {
-                reason: error
-            });
             socket.emit('problem', {
                 reason: 'Execution error, please try again later!'
             });

@@ -28,17 +28,17 @@ General info are available in our [README](https://github.com/DeMaCS-UNICAL/LoID
 
 See the guides in our Wiki:
 
-- [Description](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Web-IDE-description)
-- [Features](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Features)
-- [Shortcuts](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Shortcuts)
+- [Description](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Layout-Overview)
+- [Features](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Main-Features)
+- [Shortcuts](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Keyboard-Shortcuts)
 
 ### Developers
 
 See our documentation:
 
-- [Getting started](https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/README.md#getting-started-installation-and-usage)
+- [Getting started](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Getting-Started)
 - [Execution flow](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Execution-flow)
-- [APIs](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/APIs)
+- [APIs](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/API)
 - [Built with](https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/README.md#built-with)
 - [Versioning](https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/README.md#versioning)
 

@@ -29,17 +29,17 @@ Tell your friends! | [![Twitter](https://img.shields.io/twitter/url/https/github
 ___ -->
 
 
-## IMPORTANT NOTE
+<!-- ## IMPORTANT NOTE
 
-__*LoIDE started as an undergraduate student's work of thesis, and is still at the early stages of development.*__
+<!-- __*LoIDE started as an undergraduate student's work of thesis, and is still at the early stages of development.*__ -->
 
-__*It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet.*__
+<!-- __*It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet.*__ -->
 
 
-## Online Beta
-Find a live beta version at www.mat.unical.it/calimeri/projects/loide
+## Online Demo
+Find a live demo at www.mat.unical.it/calimeri/projects/loide
 
-This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor) to run the solvers
+<!-- This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor) to run the solvers -->
 
 
 ## Purpose
@@ -137,11 +137,11 @@ We use [Semantic Versioning](http://semver.org) for versioning. For the versions
 
 
 ## Credits
- - Stefano Germano
+ - Stefano Germano (_Founder/Maintainer_)
  - Eliana Palermiti
  - Rocco Palermiti
  - Alexander Karaulshchikov
- - Francesco Calimeri
+ - Francesco Calimeri (_Scientific Supervisor_)
 
 From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it)
 

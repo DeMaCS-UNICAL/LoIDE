@@ -66,9 +66,16 @@ Further information can be found in the [Wiki](https://github.com/DeMaCS-UNICAL/
 These instructions will get you a copy of the project up and running on your local machine.
 
 ### Prerequisites
-It requires only [Node.js&reg;](https://nodejs.org)
+It only requires [Node.js&reg;](https://nodejs.org)
 
-### Installing
+### Download
+You can find the latest version of LoIDE [here](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest).
+
+Otherwise you can clone this repository.
+
+Remember that you can always see all the releases of LoIDE [here](https://github.com/DeMaCS-UNICAL/LoIDE/releases). 
+
+### Install
 Install dependencies:
  ```
  npm install
@@ -76,7 +83,7 @@ Install dependencies:
 
 Now you can run LoIDE in development or in production mode.
 
-### Running in production mode
+### Run in production mode
 In this mode, LoIDE will be optimized for production.
 
 Start the server:
@@ -89,7 +96,7 @@ Use _LoIDE_ in a browser at:
 http://localhost:8084
 ```
 
-### Running in development mode
+### Run in development mode
 Run LoIDE in development mode only for development and testing purposes.
 
 Start the server:

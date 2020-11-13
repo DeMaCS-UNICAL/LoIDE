@@ -88,5 +88,31 @@
                 "description"   : "Missing description"
             }]
         }]
+    },
+    {
+        "name"      : "Datalog",
+        "value"     : "datalog",
+        "solvers"   : 
+        [{
+            "name"      : "IDLV",
+            "value"     : "idlv",
+            "executors" :
+            [
+            {
+                "protocol"      : "ws",
+                "url"           : "localhost",
+                "name"          : "PythonESE",
+                "value"         : "pythonEse",
+                "path"          : "/",
+                "port"          : 8765
+            }],
+            "options"   : 
+            [{
+                "name"          : "Free choice",
+                "value"         : "free choice",
+                "word_argument" : true,
+                "description"   : "Missing description"
+            }]
+        }]
     }]
 }

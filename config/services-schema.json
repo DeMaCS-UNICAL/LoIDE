@@ -155,7 +155,7 @@
                 "protocol": {
                     "title": "Protocol name.",
                     "description": "This property indicates the protocol name to use for a connection with this Executor.",
-                    "enum": [ "ws", "http" ]
+                    "enum": [ "ws", "http", "wss" ]
                 },
                 "url": {
                     "title": "Executor URL.",

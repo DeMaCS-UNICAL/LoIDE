@@ -8,6 +8,10 @@ var fs = require('fs');
 var jpointer = require('json-pointer');
 const compression = require('compression');
 
+// Uncomment to make the LoIDE run with self signed certificates
+// For debugging purposes only!
+//process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+
 const environment =  {
     dev: 'development',
     prod: 'production'

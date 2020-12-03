@@ -96,6 +96,12 @@ Use _LoIDE_ in a browser at:
 http://localhost:8084
 ```
 
+If you wish to run _LoIDE_ over HTTPS, you must provide paths to certificate files in the ```app-config.json``` file.
+Then, you can start _LoIDE_ in a browser at: 
+```
+http://localhost:8085
+```
+
 ### Run in development mode
 Run LoIDE in development mode only for development and testing purposes.
 

@@ -9,12 +9,12 @@
             "value"     : "dlv2",
             "executors" :
             [{
-                "protocol"      : "ws",
+                "protocol"      : "wss",
                 "url"           : "localhost",
-                "name"          : "EmbASPServerExecutor",
-                "value"         : "embAspServerExecutor",
-                "path"          : "/EmbASPServerExecutor/home",
-                "port"          : 8080
+                "name"          : "PythonESE",
+                "value"         : "pythonEse",
+                "path"          : "/",
+                "port"          : 443
             }],
             "options"   : 
             [{
@@ -29,12 +29,12 @@
             "value"     : "clingo",
             "executors" : 
             [{
-                "protocol"  	: "ws",
+                "protocol"  	: "wss",
                 "url"       	: "localhost",
-                "name"          : "EmbASPServerExecutor",
-                "value"         : "embAspServerExecutor",
-                "path"      	: "/EmbASPServerExecutor/home",
-                "port"      	: 8080
+                "name"          : "PythonESE",
+                "value"         : "pythonEse",
+                "path"      	: "/",
+                "port"      	: 443
             }],
             "options"   : 
             [{
@@ -49,12 +49,12 @@
             "value"     : "dlv",
             "executors" :
             [{
-                "protocol"      : "ws",
+                "protocol"      : "wss",
                 "url"           : "localhost",
-                "name"          : "EmbASPServerExecutor",
-                "value"         : "embAspServerExecutor",
-                "path"          : "/EmbASPServerExecutor/home",
-                "port"          : 8080
+                "name"          : "PythonESE",
+                "value"         : "pythonEse",
+                "path"          : "/",
+                "port"          : 443
             }],
             "options"   : 
             [{
@@ -85,6 +85,32 @@
                 "name"          : "Query",
                 "value"         : "-FC",
                 "word_argument" : false,
+                "description"   : "Missing description"
+            }]
+        }]
+    },
+    {
+        "name"      : "Datalog",
+        "value"     : "datalog",
+        "solvers"   : 
+        [{
+            "name"      : "IDLV",
+            "value"     : "idlv",
+            "executors" :
+            [
+            {
+                "protocol"      : "wss",
+                "url"           : "localhost",
+                "name"          : "PythonESE",
+                "value"         : "pythonEse",
+                "path"          : "/",
+                "port"          : 443
+            }],
+            "options"   : 
+            [{
+                "name"          : "Free choice",
+                "value"         : "free choice",
+                "word_argument" : true,
                 "description"   : "Missing description"
             }]
         }]

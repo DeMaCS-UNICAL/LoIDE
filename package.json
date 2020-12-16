@@ -40,7 +40,7 @@
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE/issues"
   },
   "dependencies": {
-    "ajv": "^6.12.4",
+    "ajv": "^7.0.0",
     "express": "^4.17.1",
     "express-force-ssl": "^0.3.2",
     "helmet": "^3.21.1",

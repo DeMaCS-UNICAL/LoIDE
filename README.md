@@ -157,6 +157,7 @@ We use [Semantic Versioning](http://semver.org) for versioning. For the versions
  - Eliana Palermiti
  - Rocco Palermiti
  - Alexander Karaulshchikov
+ - Giorgio Andronico
  - Francesco Calimeri (_Scientific Supervisor_)
 
 From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it)

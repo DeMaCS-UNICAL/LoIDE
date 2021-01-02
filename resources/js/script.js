@@ -224,10 +224,19 @@ function resizeWindow() {
         }
     }
     setHeightComponents();
-    var length = $(".nav-tabs").children().length;
-    for (let index = 1; index <= length - 1; index++) {
-        let idE = "editor" + index;
-        editors[idE].resize();
+
+    setTimeout(function () {
+        resizeAllEditorsAndLayout();
+    }, 900);
+}
+
+/**
+ * Resize editors dimensions of all Ace editor istances
+ */
+function resizeAllEditorsAndLayout() {
+    layout.resizeAll();
+    for (const editor in editors) {
+        editors[editor].resize();
     }
 }
 
@@ -306,10 +315,8 @@ $(document).ready(function () {
 
     layout = $('body > .container > form > .layout').layout({
         onresize_end: function () {
-            var length = $(".nav-tabs").children().length;
-            for (let index = 1; index <= length - 1; index++) {
-                let idE = "editor" + index;
-                editors[idE].resize();
+            for (const editor in editors) {
+                editors[editor].resize();
             }
         },
         south__minSize: 125,
@@ -420,8 +427,6 @@ $(document).ready(function () {
     // Set the default options
     resetSolverOptions();
 
-    loadFromURL(); // load program from url
-
     if (display.small.isActive) {
         $('.left-panel').css('overflow-y', 'auto');
     }
@@ -435,8 +440,8 @@ $(document).ready(function () {
     }
 
     setTimeout( ()=>{
+        loadFromURL(); // load program from url
         $('.splashscreen').addClass('display-none');
-
     },500 )
 });
 
@@ -484,7 +489,7 @@ function inizializeAppareaceSettings(){
 
     $('#theme').change(function (e) {
         var theme = $(this).val();
-        setTheme(theme);
+        setEditorTheme(theme);
         if (!saveOption("theme", theme)) {
             alert("Sorry, this options will not save in your browser");
         }
@@ -503,13 +508,13 @@ function inizializeAppareaceSettings(){
     var actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if( actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
-            setThemeEditors(defaultDarkTheme);
+            setEditorTheme(defaultDarkTheme);
         else {
-            setThemeEditors(defaultTheme);
+            setEditorTheme(defaultTheme);
         }
     }
     else {
-        setThemeEditors(actualTheme);
+        setEditorTheme(actualTheme);
     }
 }
 
@@ -1060,13 +1065,13 @@ $(document).on('click', '.add-tab', function () { // add new tab
     var actualTheme = localStorage.getItem("theme") == null ? "" : localStorage.getItem("theme");
     if(actualTheme.length == 0){
         if (localStorage.getItem('mode') === 'dark')
-            setThemeEditors(defaultDarkTheme);
+            setEditorTheme(defaultDarkTheme);
         else {
-            setThemeEditors(defaultTheme);
+            setEditorTheme(defaultTheme);
         }
     }
     else {
-        setThemeEditors(actualTheme)
+        setEditorTheme(actualTheme)
     }
 });
 
@@ -1301,11 +1306,11 @@ function setHeightComponents(expanded, open) {
 }
 
 /**
+ * Check if a string is a JSON
  * @param {string} str - string to check
  * @returns {boolean}
- * @description check if a string is JSON
  */
-function isJosn(str) {
+function isJSON(str) {
     try {
         JSON.parse(str);
     } catch (e) {
@@ -1339,7 +1344,7 @@ function handleFileSelect(evt) {
         let reader = new FileReader();
         reader.onload = function (event) {
             var text = event.target.result;
-            if (isJosn(text)) {
+            if (isJSON(text)) {
                 var jsontext = JSON.parse(text); // takes content of the file in the response
                 if (!setJSONInput(jsontext)) {
                     editors[idEditor].setValue(JSON.stringify(text)); // set value of the file in text editor
@@ -1485,7 +1490,7 @@ function setUpAce(ideditor, text) {
             name: 'save',
             bindKey: {win: "ctrl-s", "mac": "cmd-s"},
             exec: function(editor) {
-                downloadLoDIEProject();
+                downloadLoIDEProject();
             }
         }
     );
@@ -1551,7 +1556,7 @@ function inizializeShortcuts() {
     });
     
     Mousetrap.bind('mod+s', function () {
-        downloadLoDIEProject();
+        downloadLoIDEProject();
         return false;
     });
     
@@ -1634,29 +1639,25 @@ function destroyPrograms() {
 }
 
 /**
- * @returns {string}
- *@description generate unique id for the tabs
+ * Generate unique id for the new tab and for the editor
+ * @returns {number}
  */
-function generateIDTab() {
-    var id = $(".nav-tabs").children().length;
-    var tabid = "tab" + id;
+function generateID() {
+    let id = $(".nav-tabs").children().length;
 
-    while ($("#" + tabid).length !== 0) {
+    while ($(`#tab${id}`).length !== 0 && $(`#editor${id}`).length !== 0) {
         id += 1;
-        tabid = "tab" + id;
     }
-    return tabid;
+    return id;
 }
 
 /**
  * @param {string} theme - value of the theme choosed
  * @description Sets the theme to all the editors
  */
-function setTheme(theme) {
-    var length = $(".nav-tabs").children().length;
-    for (let index = 1; index <= length - 1; index++) {
-        let idE = "editor" + index;
-        editors[idE].setTheme(theme);
+function setEditorTheme(theme) {
+    for (const editor in editors) {
+        editors[editor].setTheme(theme);
     }
 }
 
@@ -1665,22 +1666,8 @@ function setTheme(theme) {
  * @description Sets the font's size to all the editors
  */
 function setFontSizeEditors(size) {
-    var length = $(".nav-tabs").children().length;
-    for (let index = 1; index <= length - 1; index++) {
-        let idE = "editor" + index;
-        editors[idE].setFontSize(size + "px");
-    }
-}
-
-/**
- * @param {number} theme - theme
- * @description Sets the theme to all the editors
- */
-function setThemeEditors(theme) {
-    var length = $(".nav-tabs").children().length;
-    for (let index = 1; index <= length - 1; index++) {
-        let idE = "editor" + index;
-        editors[idE].setTheme(theme);
+    for (const editor in editors) {
+        editors[editor].setFontSize(size + "px");
     }
 }
 
@@ -1720,7 +1707,7 @@ function restoreOptions() {
     var theme = localStorage.getItem("theme");
     theme = theme !== null ? theme : defaultTheme;
     $('#theme').val(theme);
-    setTheme(theme);
+    setEditorTheme(theme);
 
     var fontSizeE = localStorage.getItem("fontSizeE");
     fontSizeE = fontSizeE !== "" ? fontSizeE : defaultFontSize;
@@ -1766,10 +1753,11 @@ function setOptions(obj) {
  * @description Adds tab to the DOM
  */
 function addTab(obj, text, name) {
-    var id = $(".nav-tabs").children().length;
-    var tabId = generateIDTab();
-    var editorId = "editor" + id;
-    var tabName = name == null ? 'L P ' + id : name;
+    let newID = generateID();
+    let tabId = "tab" + newID;
+    let editorId = "editor" + newID;
+    let tabName = name == null ? "L P " + newID : name;
+    
     $('<li class="nav-item"><a data-target="#' + tabId + '" role="tab" data-toggle="tab" class="btn-tab nav-link"> <button type="button" class="btn btn-light btn-sm btn-context-tab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button> <span class="name-tab unselectable">' + tabName + '</span> <span class="delete-tab"> <i class="fa fa-times"></i> </span> </a> </li>').insertBefore($('.add-tab').parent());
     $('.tab-content').append('<div role="tabpanel" class="tab-pane fade" id="' + tabId + '"><div id="' + editorId + '" class="ace"></div></div>');
     setUpAce(editorId, text);
@@ -1814,7 +1802,7 @@ function addCommand(ideditor) {
 function resetEditorOptions() {
     $('#theme').val(defaultTheme);
     saveOption("theme", defaultTheme);
-    setTheme(defaultTheme);
+    setEditorTheme(defaultTheme);
 
     $('#font-editor').val(defaultFontSize);
     saveOption("fontSizeE", defaultFontSize);
@@ -1898,7 +1886,7 @@ function inizializePopovers() {
         }
 
         $("#local-download").on('click', function () {
-            downloadLoDIEProject();
+            downloadLoIDEProject();
 
             // TO MOVE ON OUTPUT DOWNLOAD
             
@@ -2069,22 +2057,23 @@ function deleteAllTabs() {
     }
 }
 
-function deleteTab(tab, all) {
-    if (!all) { var r = confirm("Are you sure you want to delete this file? This cannot be undone."); }
-    var ids = $(".nav-tabs").children().length - 1;
-    var t = tab.parent().attr('data-target');
-    var currentids = $(t).find(".ace").attr("id").substr(6);
-    var parse = parseInt(currentids);
-    if (r || all) {
-        var prevEditor = tab.parent().parent().prev();
+function deleteTab(deleteTabButton, skipConfirm) {
+    let deleteAlertConfirm;
+    if (!skipConfirm) {
+        deleteAlertConfirm = confirm(
+            "Are you sure you want to delete this file? This cannot be undone."
+        );
+    }
+    if (deleteAlertConfirm || skipConfirm) {
+        var prevEditor = deleteTabButton.parent().parent().prev();
         if (prevEditor.length === 0) {
-            prevEditor = tab.parent().parent().next();
+            prevEditor = deleteTabButton.parent().parent().next();
         }
-        var currentID = tab.closest('a').attr('data-target');
-        tab.parent().parent().remove();
-        var ideditor = $(currentID).find('.ace').attr("id");
-        $(currentID).remove();
-        delete editors[ideditor];
+        var currentID = deleteTabButton.closest('a').attr('data-target');
+        deleteTabButton.parent().parent().remove(); // delete the li element
+        let ideditor = $(currentID).find(".ace").attr("id");
+        $(currentID).remove(); // remove the tabpanel containing the editor
+        delete editors[ideditor]; // remove the editor from the array
         $("[data-target='" + prevEditor.find("a").attr("data-target") + "']").trigger('click');
         $('.check-run-tab[value="' + ideditor + '"]').remove();
 
@@ -2098,48 +2087,11 @@ function deleteTab(tab, all) {
             setUpAce(ideditor, "");
             $('#tab-execute-new').append('<button type="button" class="list-group-item list-group-item-action check-run-tab" value="' + ideditor + '">  <div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name"> L P 1 </span> </button>');
             $("[data-target='#tab1']").trigger('click');
-
-            inizializeTabContextmenu();
-            initializeCheckTabToRun();
-            setAceMode();
-            setElementsColorMode();
         }
-        else if (ids !== parse) { // renumber tabs if you delete the previous tab instead of the current one
-            // $('.nav-tabs').find('li:not(:last)').each(function (index) {
-            //     tab.find('a').text('L P ' + (index + 1));
-            //     tab.find('a').append('<span class="delete-tab"> <i class="fa fa-times"></i> </span>');
-            // });
-            $('.tab-content').find("[role='tabpanel']").each(function (index) {
-                ideditor = 'editor' + (index + 1);
-                let currentEditor = tab.find('.ace').attr('id');
-                if (ideditor !== currentEditor) {
-                    tab.find('.ace').attr("id", ideditor);
-                    editors[ideditor] = editors[currentEditor];
-                    delete editors[currentEditor];
-                    var currentCheck = $('.check-run-tab[value="' + currentEditor + '"]');
-                    var wasInvisible = false;
-                    if (currentCheck.find('check-icon').hasClass('invisible')) {
-                        wasInvisible = true;
-                    }
-                    currentCheck.empty();
-                    currentCheck.attr('value', ideditor);
-                    currentCheck.append('<div class="check-box"><i class="fa fa-check check-icon invisible" aria-hidden="true"></i></div>  <span class="check-tab-name">L P ' + (index + 1) + '</span>');
-                    if (!wasInvisible) {
-                        currentCheck.find('check-icon').removeClass('invisible');
-                    }
-                }
-                $('.btn-tab').each(function (index) {
-                    var thisTab = tab;
-                    var idTabEditor = tab.attr('data-target');
-                    var idEditorToChangeTabName = $(idTabEditor).children().attr('id');
-                    var nameValue = thisTab.children('.name-tab').text();
-                    $('.check-run-tab[value="' + idEditorToChangeTabName + '"]').find('.check-tab-name').text(nameValue);
-                });
-            });
-        }
-        if ($(".nav-tabs").children().length === 2) {
-            idEditor = "editor1";
-        }
+        inizializeTabContextmenu();
+        initializeCheckTabToRun();
+        setAceMode();
+        setElementsColorMode();
     }
 }
 
@@ -2497,80 +2449,54 @@ function giveBrackets(value) {
 }
 
 function createURL() {
-    var URL = window.location.host + "/?programs=";
-    var length = $(".nav-tabs").children().length;
-    var empty = true;
+    let URL = window.location.host + "/?project=";
+    let project = createLoideProjectConfig();
+    let empty = true;
 
-    for (let index = 1; index <= length - 1; index++) {
-        let idE = "editor" + index;
-
-        URL += encodeURIComponent(editors[idE].getValue().trim());
-        if (index < length - 1) {
-            URL += ','
-        }
-
-        if (editors[idE].getValue().length > 0)
+    for (let i = 0; i < project.program.length; i++) {
+        if (project.program[i].trim().length > 0) {
             empty = false;
+            break;
+        }
     }
 
     if (empty) {
         $('#link-to-share').val(window.location.href);
     }
     else {
-        // put the name of the tabs
-        URL += '&tabnames=';
-        let idx = 1
-        $('.name-tab').each(function () {
-            URL += encodeURIComponent($(this).text());
-            if (idx < length - 1) {
-                URL += ','
-            }
-            idx++;
-        });
-
-        // put the language
-        URL += '&lang=' + $('#inputLanguage').val();
-
-        // put the solver
-        URL += '&solver=' + $('#inputengine').val();
-
-        saveOptions();
-
-        let opt = localStorage.getItem("solverOptions");
-        if (opt !== null) {
-            let obj = JSON.parse(opt);
-            if (obj.option != null) {
-                // put the options
-                URL += '&options=' + encodeURIComponent(JSON.stringify(obj.option));
-            }
-        }
+        let param = encodeURIComponent(JSON.stringify(project));
+        URL += param;
 
         try {
             $.ajax({
                 method: "POST",
-                url: "https://is.gd/create.php?format=json&url=" + encodeURIComponent(URL),
-                dataType: 'json',
+                url:
+                    "https://is.gd/create.php?format=json&url=" +
+                    encodeURIComponent(URL),
+                dataType: "json",
                 crossDomain: true,
                 success: function (data) {
-                    console.log(data);
                     if (data.shorturl == undefined) {
-                        $('#link-to-share').val("Ops. Something went wrong");
+                        console.error(data);
+                        $("#link-to-share").val("Ops. Something went wrong");
                         if (URL.length >= 5000) {
-                            operation_alert({ reason: "The logic program is too long to be shared." })
+                            operation_alert({
+                                reason:
+                                    "The logic program is too long to be shared.",
+                            });
                         }
                     } else {
-                        $('#link-to-share').val(data.shorturl);
-                        $('#btn-copy-link').prop('disabled', false);
+                        $("#link-to-share").val(data.shorturl);
+                        $("#btn-copy-link").prop("disabled", false);
                     }
                 },
                 error: function (err) {
-                    console.log(err);
-                    $('#link-to-share').val("Ops. Something went wrong");
-                }
+                    console.error(err);
+                    $("#link-to-share").val("Ops. Something went wrong");
+                },
             });
-        }
-        catch (e) {
-            $('#link-to-share').val("Ops. Something went wrong");
+        } catch (e) {
+            $("#link-to-share").val("Ops. Something went wrong");
         }
     }
 }
@@ -2585,67 +2511,33 @@ function getParameterByName(name, url) {
     return results[2];
 }
 
+/**
+ * Check if there is a project on the current URL and load it
+ */
 function loadFromURL() {
-    var thisURL = window.location.href;
-
-    if (getParameterByName('programs', thisURL) != null) {
-        // get params from url
-        var logicPr = getParameterByName('programs', thisURL).split(',');
-        // console.log('LogicPrograms:', logicPr);
-
-        var tabNames = getParameterByName('tabnames', thisURL).split(',');
-        // console.log('TabNames:', tabNames);
-
-        var language = getParameterByName('lang', thisURL);
-        // console.log('lang:', language);
-
-        var solver = getParameterByName('solver', thisURL);
-        // console.log('solver:', solver);
-
-        var options = getParameterByName('options', thisURL);
-        // console.log('options:', options);
-
-        // decode params
-        for (let i = 0; i < logicPr.length; i++) {
-            logicPr[i] = decodeURIComponent(logicPr[i]);
-        }
-        // console.log('LogicPrograms decoded:', logicPr);
-
-        for (let i = 0; i < tabNames.length; i++) {
-            tabNames[i] = decodeURIComponent(tabNames[i]);
-        }
-        // console.log('TabNames decoded:', tabNames);
-
-        options = JSON.parse(decodeURIComponent(options));
-        // console.log('Options decoded:', options);
-
-        // set params
-        for (let index = 1; index <= tabNames.length; index++) {
-            if (index > 1)
-                $('.add-tab').trigger('click');
-            let idE = "editor" + index;
-            editors[idE].setValue(logicPr[index - 1]);
-        }
-
-        $('.name-tab').each(function (index) {
-            $(this).text(tabNames[index]);
-            let id = index + 1;
-            let editor = "editor" + id;
-            $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabNames[index]);
-        });
-
-        $('#inputLanguage').val(language).change();
-        $('#inputengine').val(solver).change();
-
-        if (options != null) {
-            $(options).each(function (index, item) {
-                if (item !== null) {
-                    addOption(item);
-                }
-            });
+    let thisURL = window.location.href;
+    let projectParam = null;
+    try {
+        projectParam = getParameterByName("project", thisURL);
+    } catch (error) {
+        operation_alert({ reason: "Cannot load the project from the URL." });
+    }
+    if (projectParam != null) {
+        let projectjson = decodeURIComponent(projectParam);
+        if (projectjson != undefined && isJSON(projectjson)) {
+            let project = JSON.parse(projectjson);
+            if (!setJSONInput(project)) {
+                operation_alert({
+                    reason: "Error load the project from the URL",
+                });
+            } else {
+                inizializeTabContextmenu();
+                operation_alert({
+                    reason: "Project loaded successfully from the URL",
+                });
+            }
         }
     }
-
 }
 
 function setTooltip(btn, message) {
@@ -2687,8 +2579,8 @@ function setNotifications() {
         delay: 10000,
     });
     $('#load-project').on('click', function () {
-        loadProjectFromLocalStorage();
         $('#notification-project').toast('hide');
+        loadProjectFromLocalStorage();
     });
 }
 
@@ -2749,8 +2641,6 @@ function setElementsColorMode() {
 }
 
 function setLightStyleToUIElements() {
-    var length = $(".nav-tabs").children().length;
-
     $('#dark-light-mode').text("Dark");
     $('#theme').val(defaultTheme);
     $(".btn-dark").each(function () {
@@ -2763,10 +2653,9 @@ function setLightStyleToUIElements() {
     });
     $('#dark-light-mode').addClass('btn-outline-dark');
     $('#dark-light-mode').removeClass('btn-outline-light');
-    for (let index = 1; index <= length - 1; index++) {
-        let idE = "editor" + index;
-        editors[idE].setTheme(defaultTheme);
-    }
+
+    let actualTheme = $("#theme").val();
+    if (actualTheme == defaultDarkTheme) $("#theme").val(defaultTheme).change();
 }
 
 function setDarkStyleToUIElements() {
@@ -2784,82 +2673,85 @@ function setDarkStyleToUIElements() {
     $('#dark-light-mode').removeClass('btn-outline-dark');
     $('#dark-light-mode').addClass('btn-outline-light');
 
-    for (let index = 1; index <= length - 1; index++) {
-        let idE = "editor" + index;
-        editors[idE].setTheme(defaultDarkTheme);
-    }
+    let actualTheme = $("#theme").val();
+    if (actualTheme == defaultTheme) $("#theme").val(defaultDarkTheme).change();
 }
 
+/**
+ * Create the project object and save it in the localStorage
+ */
 function saveProjectToLocalStorage() {
-    var tabsName = [];
-    var logicProgEditors = [];
-
-    $('.name-tab').each(function () {
-        tabsName.push($(this).text());
-    });
-    var length = $(".nav-tabs").children().length;
-    for (let index = 1; index <= length - 1; index++) {
-        let idE = "editor" + index;
-        logicProgEditors.push(editors[idE].getValue());
-    }
-
-    saveOption("tabsName", JSON.stringify(tabsName));
-    saveOption("logicProgEditors", JSON.stringify(logicProgEditors));
+    let project = createLoideProjectConfig();
+    saveOption("loideProject", JSON.stringify(project));
 }
 
+/**
+ * Create the project configuration
+ * @returns {Object} - project configuration
+ */
+function createLoideProjectConfig() {
+    addProgramsToDownload();
+    addTabsNameToDownload();
+
+    let model = $("#output-model").text();
+    let errors = $("#output-error").text();
+
+    $("#run-dot").attr("name", "runAuto");
+
+    let form = $("#input").serializeFormJSON();
+
+    form.output_model = model;
+    form.output_error = errors;
+    form.tab = [];
+
+    $(".check-run-tab.checked").each(function (index, element) {
+        form.tab.push($(this).val());
+    });
+
+    if (form.tab.length == 0) {
+        delete form.tab;
+    }
+
+    destroyPrograms();
+    destroyTabsName();
+    $("#run-dot").removeAttr("name");
+
+    return form;
+}
+
+/**
+ * Check if there is a project object saved in the localStorage,
+ * if there is LoIDE will show a toast notification if the user want to restore it
+ */
 function checkProjectOnLocalStorage() {
     if (supportLocalStorage()) {
-        var tabsName = [];
-        var logicProgEditors = [];
-        if (localStorage.getItem("tabsName") != undefined && localStorage.getItem("logicProgEditors") != undefined) {
-            tabsName = JSON.parse(localStorage.getItem("tabsName"));
-            logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
-
-            if (tabsName.length > 1 || logicProgEditors[0].trim().length > 0) {
-                $('#notification-project').toast('show');
+        let projectjson = localStorage.getItem("loideProject");
+        if (projectjson != undefined && isJSON(projectjson)) {
+            let project = JSON.parse(projectjson);
+            if ({}.hasOwnProperty.call(project, "program")) {
+                if (
+                    project.program.length > 1 ||
+                    project.program[0].trim().length > 0
+                ) {
+                    $("#notification-project").toast("show");
+                }
             }
         }
     }
 }
 
+/**
+ * Take the project object from the localStorage and restore it
+ */
 function loadProjectFromLocalStorage() {
     if (supportLocalStorage()) {
-        var tabsName = [];
-        var logicProgEditors = [];
-        tabsName = JSON.parse(localStorage.getItem("tabsName"));
-        logicProgEditors = JSON.parse(localStorage.getItem("logicProgEditors"));
-
-        for (let index = 1; index <= tabsName.length; index++) {
-            if (index > 1)
-                $('.add-tab').trigger('click');
-            let idE = "editor" + index;
-            editors[idE].setValue(logicProgEditors[index - 1]);
-        }
-
-        $('.name-tab').each(function (index) {
-            $(this).text(tabsName[index]);
-            let id = index + 1;
-            let editor = "editor" + id;
-            $('.check-run-tab[value="' + editor + '"]').find('.check-tab-name').text(tabsName[index]);
-        });
-
-        $("a[data-target='#tab1']").trigger('click');
-
-        var opt = localStorage.getItem("solverOptions");
-        if (opt !== null) {
-            var obj = JSON.parse(opt);
-            $('#inputLanguage').val(obj.language).change();
-            $('#inputengine').val(obj.engine).change();
-            $('#inputExecutor').val(obj.executor).change();
-            if (obj.option != null) {
-                setOptions(obj);
+        let projectjson = localStorage.getItem("loideProject");
+        if (isJSON(projectjson)) {
+            let project = JSON.parse(projectjson);
+            if (!setJSONInput(project)) {
+                operation_alert({ reason: "Error load the project" });
             }
-            if ({}.hasOwnProperty.call(obj,'runAuto')) {
-                $("#run-dot").prop('checked', true);
-            }
-            else {
-                $("#run-dot").prop('checked', false);
-            }
+            inizializeTabContextmenu();
         }
     }
 }
@@ -2886,34 +2778,14 @@ function setTabsName(config) {
     });
 }
 
-function downloadLoDIEProject() {
-    addProgramsToDownload();
-    addTabsNameToDownload();
-
-    var model = $("#output-model").text();
-    var errors = $("#output-error").text();
-
-    $("#run-dot").attr("name", "runAuto");
-
-    var form = $('#input').serializeFormJSON();
-
-    form.output_model = model;
-    form.output_error = errors;
-    form.tab = [];
-
-    $('.check-run-tab.checked').each(function (index, element) {
-        form.tab.push($(this).val());
-    });
-
-    if (form.tab.length == 0) {
-        delete form.tab;
-    }
-
-    var stringify = JSON.stringify(form);
+/**
+ * Create and download in a text file of the project configuration converted in JSON format
+ * @param name - name of the project file
+ */
+function downloadLoIDEProject(name) {
+    let project = createLoideProjectConfig();
+    let stringify = JSON.stringify(project);
     createFileToDownload(stringify, "local", "LoIDE_Project", "json");
-    destroyPrograms();
-    destroyTabsName();
-    $("#run-dot").removeAttr("name");
 }
 
 function renameSelectOptionsAndBadge() {
@@ -2952,29 +2824,26 @@ function getHTMLFromJQueryElement(jQueryElement) {
     return DOMElement;
 }
 
+/**
+ * Set the mode of the ACE editor from the input language select
+ */
 function setAceMode() {
-    switch ($('#inputLanguage').val()) {
-        case 'asp': {
-            let length = $(".nav-tabs").children().length;
-            for (let index = 1; index <= length - 1; index++) {
-                let idE = "editor" + index;
-                editors[idE].session.setMode("ace/mode/asp");
+    switch ($("#inputLanguage").val()) {
+        case "asp": {
+            for (const editor in editors) {
+                editors[editor].session.setMode("ace/mode/asp");
             }
             break;
         }
-        case 'datalog': {
-            let length = $(".nav-tabs").children().length;
-            for (let index = 1; index <= length - 1; index++) {
-                let idE = "editor" + index;
-                editors[idE].session.setMode("ace/mode/datalog");
+        case "datalog": {
+            for (const editor in editors) {
+                editors[editor].session.setMode("ace/mode/datalog");
             }
             break;
         }
         default: {
-            let length = $(".nav-tabs").children().length;
-            for (let index = 1; index <= length - 1; index++) {
-                let idE = "editor" + index;
-                editors[idE].session.setMode("ace/mode/text");
+            for (const editor in editors) {
+                editors[editor].session.setMode("ace/mode/text");
             }
         }
     }

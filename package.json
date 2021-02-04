@@ -50,7 +50,7 @@
     "helmet": "^3.21.1",
     "json-pointer": "^0.6.0",
     "pug": "^3.0.0",
-    "socket.io": "^2.3.0",
+    "socket.io": "^3.1.1",
     "websocket": "^1.0.32"
   },
   "devDependencies": {

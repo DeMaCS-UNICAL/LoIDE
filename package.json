@@ -1,6 +1,6 @@
 {
   "name": "loide",
-  "version": "2.10.1",
+  "version": "2.11.0",
   "description": "Web-based IDE for Logic Programming",
   "main": "app.js",
   "scripts": {
@@ -44,12 +44,13 @@
     "url": "https://github.com/DeMaCS-UNICAL/LoIDE/issues"
   },
   "dependencies": {
-    "ajv": "^6.12.4",
+    "ajv": "^8.0.5",
+    "ajv-formats": "^2.0.2",
     "express": "^4.17.1",
     "express-force-ssl": "^0.3.2",
     "helmet": "^3.21.1",
     "json-pointer": "^0.6.0",
-    "pug": "^3.0.0",
+    "pug": "^3.0.1",
     "socket.io": "^2.3.0",
     "websocket": "^1.0.32"
   },

@@ -1,19 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "app-config-schema.json",
-    "self": {
-        "vendor": "unical",
-        "name": "app-config",
-        "format": "jsonschema",
-        "version": "1-0-0"
-    },
+    "title": "Configurations",
+    "description": "LoIDE configurations",
     "type": "object",
     "properties": {
         "loide_url": {
             "title": "LoIDE URL",
             "description": "This is the URL where the application can be reached",
-            "type": "string",
-            "minimum": 0
+            "type": "string"
         },
         "max_age": {
             "title": "HSTS max age",

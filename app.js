@@ -27,7 +27,7 @@ const resourcesPath = currentEnv == environment.prod ? path.dist : path.src
 
 // System config loading
 var properties  = require('./config/app-config.json');
-var loideUrl = properties.loide_url;
+var loideUrl    = properties.loide_url;
 var httpPort    = properties.port.http;
 var httpsPortP  = properties.port.https;
 var key         = properties.path.key;
@@ -38,7 +38,8 @@ var maxAge      = properties.max_age;
 var servicesConfig = require('./config/services.json');
 
 // This function validates the JSON schemas
-var Ajv = require('ajv');
+var Ajv     = require('ajv');
+var formats = require('ajv-formats');
 validateJsonSchemas();
 
 var pckg = require('./package.json');
@@ -185,10 +186,12 @@ function validateSchema(jsonPath, schemaPath) {
     var schema      = require(schemaPath);
     
     // Config
-    var ajv = new Ajv({
-        allErrors: true, 
-        jsonPointers: true
+    var ajv = new Ajv.default({
+        allErrors: true 
     });
+
+    // Adding format support
+    formats(ajv);
 
     // Compiling the schema
     var compiledSchema  = ajv.compile(schema);

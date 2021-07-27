@@ -65,7 +65,7 @@
     "gulp-csso": "^4.0.1",
     "gulp-imagemin": "^7.1.0",
     "gulp-nodemon": "^2.5.0",
-    "gulp-uglify-es": "^2.0.0"
+    "gulp-uglify-es": "^3.0.0"
   },
   "analyze": true,
   "homepage": "https://github.com/DeMaCS-UNICAL/LoIDE#readme"

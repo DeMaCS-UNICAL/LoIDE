@@ -42,6 +42,8 @@ ___ -->
 ## Online Demo
 Find a live demo at www.mat.unical.it/calimeri/projects/loide
 
+Check the status of our services at https://loide.freshstatus.io
+
 <!-- This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor) to run the solvers -->
 
 

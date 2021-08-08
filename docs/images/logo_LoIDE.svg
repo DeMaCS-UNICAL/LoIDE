@@ -6,10 +6,14 @@
         stroke: black;
     }
     @media (prefers-color-scheme: dark) {
-        g {
+        html[data-color-mode="auto"] g {
             fill: white;
             stroke: white;
         }
+    }
+    html[data-color-mode="dark"] g {
+            fill: white;
+            stroke: white;
     }
     </style>
  <g transform="translate(-178.37 -192.36)">

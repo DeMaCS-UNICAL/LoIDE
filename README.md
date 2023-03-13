@@ -4,7 +4,6 @@
 [![GitHub issues](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/issues)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DeMaCS-UNICAL/LoIDE)
 ![Lines of code](https://img.shields.io/tokei/lines/github/DeMaCS-UNICAL/LoIDE)
-[![David](https://img.shields.io/david/DeMaCS-UNICAL/LoIDE)](https://david-dm.org/DeMaCS-UNICAL/LoIDE)
 
 [![Online Demo](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=online-demo)](https://loide.demacs.unical.it)
 [![LoIDE website](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=LoIDE-website)](https://demacs-unical.github.io/LoIDE)
@@ -13,7 +12,11 @@
 
 <!-- # LoIDE -->
 
-![LoIDE](docs/images/logo_LoIDE.svg)
+<picture>
+ <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo_LoIDE_dark.svg">
+ <source media="(prefers-color-scheme: light)" srcset="docs/images/logo_LoIDE.svg">
+ <img alt="LoIDE" src="docs/images/logo_LoIDE.svg">
+</picture>
 
 **A web-based IDE for Logic Programming.**
 

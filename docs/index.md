@@ -8,10 +8,11 @@ Find a live demo at [www.mat.unical.it/calimeri/projects/loide](https://www.mat.
 
 ## Team
 
-- Stefano Germano (_Founder/Maintainer_)
+- Stefano Germano (_Coordinator_)
 - Eliana Palermiti
 - Rocco Palermiti
 - Alexander Karaulshchikov
+- Giorgio Andronico
 - Francesco Calimeri (_Scientific Supervisor_)
 
 From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it)

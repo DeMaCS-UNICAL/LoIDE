@@ -158,7 +158,7 @@ We use [Semantic Versioning](http://semver.org) for versioning. For the versions
 
 
 ## Credits
- - Stefano Germano (_Founder/Maintainer_)
+ - Stefano Germano (_Coordinator_)
  - Eliana Palermiti
  - Rocco Palermiti
  - Alexander Karaulshchikov

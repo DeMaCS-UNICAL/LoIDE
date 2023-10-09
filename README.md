@@ -3,10 +3,10 @@
 [![GitHub release](https://img.shields.io/github/release/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest)
 [![GitHub issues](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/issues)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DeMaCS-UNICAL/LoIDE)
-![Lines of code](https://img.shields.io/tokei/lines/github/DeMaCS-UNICAL/LoIDE)
+<!--![Lines of code](https://img.shields.io/tokei/lines/github/DeMaCS-UNICAL/LoIDE)-->
 
-[![Online Demo](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=online-demo)](https://loide.demacs.unical.it)
-[![LoIDE website](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=LoIDE-website)](https://demacs-unical.github.io/LoIDE)
+<!--[![Online Demo](https://img.shields.io/website-up-down-green-red/https/loide.demacs.unical.it/8433.svg?label=online-demo)](https://loide.demacs.unical.it:8433)-->
+[![LoIDE website](https://img.shields.io/website-up-down-green-red/https/demacs-unical.github.io/LoIDE.svg?label=LoIDE-website)](https://demacs-unical.github.io/LoIDE)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/DeMaCS-UNICAL/LoIDE.svg?style=social)](https://twitter.com/intent/tweet?text=LoIDE%20-%20A%20web-based%20IDE%20for%20Logic%20Programming%0A&url=https%3A%2F%2Fdemacs-unical.github.io%2FLoIDE)
 
 
@@ -43,7 +43,7 @@ ___ -->
 
 
 ## Online Demo
-Find a live demo at www.mat.unical.it/calimeri/projects/loide
+Find a live demo at [loide.demacs.unical.it](https://loide.demacs.unical.it:8433)
 
 Check the status of our services at https://loide.freshstatus.io
 

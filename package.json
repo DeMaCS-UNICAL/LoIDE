@@ -48,7 +48,7 @@
     "ajv-formats": "^2.0.2",
     "express": "^4.17.1",
     "express-force-ssl": "^0.3.2",
-    "helmet": "^3.21.1",
+    "helmet": "^6.0.1",
     "json-pointer": "^0.6.0",
     "pug": "^3.0.1",
     "socket.io": "^2.3.0",

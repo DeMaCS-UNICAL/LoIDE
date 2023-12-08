@@ -20,7 +20,8 @@
 
 **A web-based IDE for Logic Programming.**
 
-[![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)](https://www.mat.unical.it/calimeri/projects/loide)
+<!-- [![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)](https://www.mat.unical.it/calimeri/projects/loide) -->
+![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)
 
 <!-- ___
 
@@ -41,11 +42,12 @@ ___ -->
 
 <!-- __*It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet.*__ -->
 
-
+<!--
 ## Online Demo
 Find a live demo at [loide.demacs.unical.it](https://loide.demacs.unical.it:8433)
 
 Check the status of our services at https://loide.freshstatus.io
+-->
 
 <!-- This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor) to run the solvers -->
 

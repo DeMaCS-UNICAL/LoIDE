@@ -17,25 +17,6 @@
 <!-- [![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)](https://www.mat.unical.it/calimeri/projects/loide) -->
 ![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)
 
-<!-- ___
-
-Badge | Status
----               | ---
-License            | [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/DeMaCS-UNICAL/LoIDE/master/LICENSE)
-Current Version    | [![GitHub release](https://img.shields.io/github/release/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest)
-GitHub Issues      | [![GitHub issues](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/issues)
-Our Online Beta    | [![Website](https://img.shields.io/website-up-down-green-red/https/www.mat.unical.it/calimeri/projects/loide.svg?label=my-website)](https://www.mat.unical.it/calimeri/projects/loide)
-Tell your friends! | [![Twitter](https://img.shields.io/twitter/url/https/github.com/DeMaCS-UNICAL/LoIDE.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
-
-___ -->
-
-
-<!-- ## IMPORTANT NOTE
-
-<!-- __*LoIDE started as an undergraduate student's work of thesis, and is still at the early stages of development.*__ -->
-
-<!-- __*It currently supports only Answer Set Programming; we encourage any feedback, but we do NOT recommend it for production yet.*__ -->
-
 <!--
 ## Online Demo
 Find a live demo at [loide.demacs.unical.it](https://loide.demacs.unical.it:8433)
@@ -47,7 +28,8 @@ Check the status of our services at https://loide.freshstatus.io
 
 
 ## Purpose
-The LoIDE project aims to create a modular and extensible web-based Integrated Development Environment (IDE) for Logic Programming, utilizing modern technologies and languages.  
+
+The LoIDE project aims to create a modular and extensible web-based Integrated Development Environment (IDE) for Logic Programming, utilizing modern technologies and languages.
 
 The project also aims to develop a web-service offering a standardized set of APIs for various logic-based languages.  
 For more details on the API, please refer to the [Wiki](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/API).
@@ -99,26 +81,30 @@ You can find these repositories here:
  - [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor)
    - A Java application to run logic programs with different solvers, using the [EmbASP](https://github.com/DeMaCS-UNICAL/EmbASP) framework
 
-<!-- 
+<!--
 ## Contributing
 
 Please read [CONTRIBUTING.md]() for details on our code of conduct, and the process for submitting pull requests to us.
  -->
 
 ## Versioning
-We use [Semantic Versioning](http://semver.org) for versioning. For the versions available, see the [releases on this repository](https://github.com/DeMaCS-UNICAL/LoIDE/releases). 
 
+We use [Semantic Versioning](http://semver.org) for versioning.  
+Please refer to the [Releases](https://github.com/DeMaCS-UNICAL/LoIDE/releases) for a list of available versions.
 
 ## Credits
+
  - Stefano Germano (_Scientific Coordinator_)
  - Eliana Palermiti
  - Rocco Palermiti
  - Alexander Karaulshchikov
  - Giorgio Andronico
+ - Marco Duca
  - Francesco Calimeri (_Scientific Supervisor_)
 
-From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it)
+From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it).
 
 
 ## License
-  This project is licensed under the [MIT License](LICENSE)
+
+This project is licensed under the [MIT License](LICENSE).

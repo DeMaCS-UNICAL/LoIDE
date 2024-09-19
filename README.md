@@ -1,11 +1,5 @@
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/DeMaCS-UNICAL/LoIDE/master/LICENSE)
-[![GitHub release](https://img.shields.io/github/release/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest)
-[![GitHub issues](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/issues)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DeMaCS-UNICAL/LoIDE)
-<!--![Lines of code](https://img.shields.io/tokei/lines/github/DeMaCS-UNICAL/LoIDE)-->
-
-<!--[![Online Demo](https://img.shields.io/website-up-down-green-red/https/loide.demacs.unical.it/8433.svg?label=online-demo)](https://loide.demacs.unical.it:8433)-->
+[![Online Demo](https://img.shields.io/website-up-down-green-red/https/loide.demacs.unical.it.svg?label=online-demo)](https://loide.demacs.unical.it)
 [![LoIDE website](https://img.shields.io/website-up-down-green-red/https/demacs-unical.github.io/LoIDE.svg?label=LoIDE-website)](https://demacs-unical.github.io/LoIDE)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/DeMaCS-UNICAL/LoIDE.svg?style=social)](https://twitter.com/intent/tweet?text=LoIDE%20-%20A%20web-based%20IDE%20for%20Logic%20Programming%0A&url=https%3A%2F%2Fdemacs-unical.github.io%2FLoIDE)
 
@@ -26,7 +20,7 @@
 <!-- ___
 
 Badge | Status
----                | ---
+---               | ---
 License            | [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/DeMaCS-UNICAL/LoIDE/master/LICENSE)
 Current Version    | [![GitHub release](https://img.shields.io/github/release/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest)
 GitHub Issues      | [![GitHub issues](https://img.shields.io/github/issues/DeMaCS-UNICAL/LoIDE.svg)](https://github.com/DeMaCS-UNICAL/LoIDE/issues)
@@ -53,102 +47,58 @@ Check the status of our services at https://loide.freshstatus.io
 
 
 ## Purpose
-The main goal of the LoIDE project is the release of a modular and extensible web-IDE for Logic Programming using modern technologies and languages.
+The LoIDE project aims to create a modular and extensible web-based Integrated Development Environment (IDE) for Logic Programming, utilizing modern technologies and languages.  
 
-A further goal of the project is to provide a web-service with a common set of APIs for different logic-based languages.  
-Further information can be found in the [Wiki](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/APIs)
+The project also aims to develop a web-service offering a standardized set of APIs for various logic-based languages.  
+For more details on the API, please refer to the [Wiki](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/API).
 
 ## Key Features
 
- - Syntax highlighting
- - Output highlighting
- - Layout and appearance customization
- - Keyboard shortcuts
- - Multiple file support
- - Execution and Solvers options definition
- - Import and Export files
+ - **Open-source Server/Client**
+   - Reference implementations available as Free and Open-Source Software (FOSS).
+ - **Interoperable API**
+   - Open API based on the _JSON Schema_ standard.
+ - **Prototype Executor implementations**
+   - Reference implementations of solver executors in various programming languages.
+ - **Executor protocol**
+   - Standard protocol for executors discovery and invocation.
+ - **Responsive design**
+   - Works seamlessly across various devices.
+ - **Multi-language/solver**
+   - Supports multiple logic programming languages and solvers.
+ - **Executor instance selection**
+   - Pick among different execution environments.
+ - **Syntax highlighting**
+   - Improved code readability with color-coded syntax.
+ - **Multiple files support**
+   - Work with and manage multiple files simultaneously.
+ - **Output highlighting**
+   -  Easily identify important information in output results.
+ - **Layout/Appearance customization**
+   - Tailor the IDE's look to your preference.
+ - **Keyboard shortcuts**
+   - Boost efficiency with keyboard shortcuts.
+ - **Execution/Solver options configuration**
+   - Fine-tune settings for specific tasks.
+ - **Import/Export functionality**
+   -  Save and share files and project settings easily.
 
+## Components
 
-## Getting Started (Installation and Usage)
-These instructions will get you a copy of the project up and running on your local machine.
+As the LoIDE project has expanded significantly in recent years, we have established separate repositories for each component.
+You can find these repositories here:
 
-### Prerequisites
-It only requires [Node.js&reg;](https://nodejs.org)
+ - [LoIDE-PWA](https://github.com/DeMaCS-UNICAL/LoIDE-PWA)
+   - Integrated Development Environment (IDE) for Logic Programming developed as a Progressive Web App (PWA)
+ - [LoIDE-API-Server](https://github.com/DeMaCS-UNICAL/LoIDE-API-Server)
+   - API server that acts as an intermediary between LoIDE clients and server-side executors
+ - [LoIDE-Classic](https://github.com/DeMaCS-UNICAL/LoIDE-Classic)
+   - Former version of LoIDE: a web-based IDE for Logic Programming
+ - [PythonESE](https://github.com/DeMaCS-UNICAL/PythonESE)
+   - Python web app to execute logic programs with different solvers, using the [EmbASP](https://github.com/DeMaCS-UNICAL/EmbASP) framework
+ - [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor)
+   - A Java application to run logic programs with different solvers, using the [EmbASP](https://github.com/DeMaCS-UNICAL/EmbASP) framework
 
-### Download
-You can find the latest version of LoIDE [here](https://github.com/DeMaCS-UNICAL/LoIDE/releases/latest).
-
-Otherwise you can clone this repository.
-
-Remember that you can always see all the releases of LoIDE [here](https://github.com/DeMaCS-UNICAL/LoIDE/releases). 
-
-### Install
-Install dependencies:
- ```
- npm install
- ```
-
-Now you can run LoIDE in development or in production mode.
-
-### Run in production mode
-In this mode, LoIDE will be optimized for production.
-
-Start the server:
-```
-npm start
-```
-
-Use _LoIDE_ in a browser at:
-```
-http://localhost:8084
-```
-
-If you wish to run _LoIDE_ over HTTPS, you must provide paths to certificate files in the ```app-config.json``` file.
-Then, you can start _LoIDE_ in a browser at: 
-```
-http://localhost:8085
-```
-
-### Run in development mode
-Run LoIDE in development mode only for development and testing purposes.
-
-Start the server:
-```
-npm run start:dev
-```
-
-The browser will be opened automatically _LoIDE_ in at:
-```
-http://localhost:7000
-```
-
-### Note
-You need an "executor" in order to run the solvers.
-
-If you like it, you can use our [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor).
-
-
-## Built With
- 
- - [Ace](https://ace.c9.io) - The "base" of our editor
- - [Bootstrap](https://getbootstrap.com) - The front-end web framework used
- - [Clipboard.js](https://clipboardjs.com) - Used to create text boxes with copyable text
- - [Font Awesome Icons 4.7](https://fontawesome.com/v4.7.0/icons/) - Icon set used
- - [jQuery](https://jquery.com) and [its UI Layout plugin](http://plugins.jquery.com/layout) - Used to improve the UI
- - [jQuery contextMenu 2](https://swisnl.github.io/jQuery-contextMenu/) - Used for to create the context menus
- - [Mousetrap](https://craig.is/killing/mice) - Used to implement keyboard shortcuts outside the editor
- - [Pugjs](https://pugjs.org) - Used to create a dynamic html pages
- - [Socket.io](https://socket.io) - Used for executor server connection
- - [Browsersync](https://www.browsersync.io) - Used to enable the live reload on the browser
- - [Gulp](https://gulpjs.com) - Used to automate and enhance the workflow with its plugins:
-   - [gulp-nodemon](https://github.com/JacksonGariety/gulp-nodemon) - Used to monitor for any changes in the source files and automatically restart the server
-   - [gulp-babel](https://github.com/babel/gulp-babel#readme) - Used to used to convert ECMAScript 2015+ code into a backwards compatible version of JavaScript
-   - [gulp-clean](https://github.com/peter-vilja/gulp-clean) - Used to remove files and folders
-   - [gulp-uglify-es](https://gitlab.com/itayronen/gulp-uglify-es) - Used to minify JS files
-   - [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer#readme) - Used to add CSS prefix
-   - [gulp-csso](https://github.com/ben-eb/gulp-csso) - Used to minify CSS files
-   - [gulp-imagemin](https://github.com/sindresorhus/gulp-imagemin#readme) - Used to minify PNG, JPEG, GIF and SVG images
- 
 <!-- 
 ## Contributing
 
@@ -160,7 +110,7 @@ We use [Semantic Versioning](http://semver.org) for versioning. For the versions
 
 
 ## Credits
- - Stefano Germano (_Coordinator_)
+ - Stefano Germano (_Scientific Coordinator_)
  - Eliana Palermiti
  - Rocco Palermiti
  - Alexander Karaulshchikov

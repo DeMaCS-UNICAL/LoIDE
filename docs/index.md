@@ -12,14 +12,15 @@ Find a live demo at [loide.demacs.unical.it](https://loide.demacs.unical.it:8433
 
 ## Team
 
-- Stefano Germano (_Coordinator_)
+- Stefano Germano (_Scientific Coordinator_)
 - Eliana Palermiti
 - Rocco Palermiti
 - Alexander Karaulshchikov
 - Giorgio Andronico
+- Marco Duca
 - Francesco Calimeri (_Scientific Supervisor_)
 
-From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it)
+From the [Department of Mathematics and Computer Science](https://www.mat.unical.it) of the [University of Calabria](http://unical.it).
 
 ### Contacts
 
@@ -27,7 +28,7 @@ loide "AT" mat.unical.it
 
 ## Guidelines
 
-General info are available in our [README](https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/README.md)
+General info are available in our [README](https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/README.md).
 
 ### Users
 
@@ -42,14 +43,15 @@ See the guides in our Wiki:
 See our documentation:
 
 - [Getting started](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Getting-Started)
+- [HTTP settings](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/HTTP-ports-and-TSL-support)
 - [Execution flow](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/Execution-flow)
-- [APIs](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/API)
+- [API](https://github.com/DeMaCS-UNICAL/LoIDE/wiki/API)
 - [Built with](https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/README.md#built-with)
 - [Versioning](https://github.com/DeMaCS-UNICAL/LoIDE/blob/master/README.md#versioning)
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE)
+This project is licensed under the [MIT License](LICENSE).
 
 ## Publications
 

@@ -14,8 +14,18 @@
 
 **A web-based IDE for Logic Programming.**
 
+<figure>
+ <figcaption>LoIDE-PWA</figcaption>
+ 
+ ![LoIDE-PWA web GUI](docs/screenshots/LoIDE-PWA.png)
+<figure>
+
+<figure>
+ <figcaption>LoIDE-Classic</figcaption>
+ 
 <!-- [![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)](https://www.mat.unical.it/calimeri/projects/loide) -->
-![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)
+ ![LoIDE-Classic web GUI](docs/screenshots/screenshot_3-col.png)
+<figure>
 
 <!--
 ## Online Demo

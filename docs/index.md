@@ -1,17 +1,17 @@
-# LoIDE
+# _Lo_**IDE**
 
-LoIDE is a web-based IDE for Logic Programming.
+_Lo_**IDE** is a web-based IDE for Logic Programming.
 
 <figure>
- <figcaption>LoIDE-PWA</figcaption>
+ <figcaption>LoIDE PWA</figcaption>
  
- ![LoIDE-PWA web GUI](screenshots/LoIDE-PWA.png)
+ <img src="screenshots/LoIDE-PWA.png" alt="LoIDE-PWA web GUI">
 </figure>
 
 <figure>
- <figcaption>LoIDE-Classic</figcaption>
+ <figcaption>LoIDE Classic</figcaption>
  
- ![LoIDE-Classic web GUI](screenshots/screenshot_3-col.png)
+ <img src="screenshots/screenshot_3-col.png" alt="LoIDE-Classic web GUI">
 </figure>
 
 <!--
@@ -68,12 +68,12 @@ This project is licensed under the [MIT License](LICENSE).
 - Francesco Calimeri, Stefano Germano, Eliana Palermiti, Kristian Reale, Francesco Ricca  
 _Developing ASP Programs with ASPIDE and LoIDE_  
 Künstliche Intelligenz (KI 2018)  
-[{% octicon book %} link](https://link.springer.com/article/10.1007%2Fs13218-018-0534-z)
+[{% octicon book %} paper](https://link.springer.com/article/10.1007%2Fs13218-018-0534-z)
 - Stefano Germano, Francesco Calimeri, Eliana Palermiti  
 _LoIDE: A Web-Based IDE for Logic Programming Preliminary Report_  
 International Symposium on Practical Aspects of Declarative Languages (PADL 2018)  
-[{% octicon book %} link](https://link.springer.com/chapter/10.1007%2F978-3-319-73305-0_10)
+[{% octicon book %} paper](https://link.springer.com/chapter/10.1007%2F978-3-319-73305-0_10)
 - Stefano Germano, Francesco Calimeri, Eliana Palermiti  
 _LoIDE: a web-based IDE for Logic Programming - Preliminary Technical Report_  
 ArXiv Preprint (ArXiv, 2017)  
-[{% octicon book %} link](https://arxiv.org/abs/1709.05341)
+[{% octicon book %} paper](https://arxiv.org/abs/1709.05341)

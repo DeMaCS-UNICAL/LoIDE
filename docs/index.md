@@ -6,13 +6,13 @@ LoIDE is a web-based IDE for Logic Programming.
  <figcaption>LoIDE-PWA</figcaption>
  
  ![LoIDE-PWA web GUI](screenshots/LoIDE-PWA.png)
-<figure>
+</figure>
 
 <figure>
  <figcaption>LoIDE-Classic</figcaption>
  
  ![LoIDE-Classic web GUI](screenshots/screenshot_3-col.png)
-<figure>
+</figure>
 
 <!--
 [![LoIDE web GUI](screenshots/screenshot_3-col.png)](https://loide.demacs.unical.it:8433)

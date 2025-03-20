@@ -4,21 +4,25 @@ _Lo_**IDE** is a web-based IDE for Logic Programming.
 
 <figure>
  <figcaption>LoIDE PWA</figcaption>
- 
- <img src="screenshots/LoIDE-PWA.png" alt="LoIDE-PWA web GUI">
+
+ <a href="https://www.mat.unical.it/calimeri/projects/loide">
+  <img src="screenshots/LoIDE-PWA.png" alt="LoIDE-PWA web GUI"/>
+ </a>
 </figure>
 
 <figure>
  <figcaption>LoIDE Classic</figcaption>
  
- <img src="screenshots/screenshot_3-col.png" alt="LoIDE-Classic web GUI">
+ <img src="screenshots/screenshot_3-col.png" alt="LoIDE-Classic web GUI"/>
 </figure>
 
-<!--
-[![LoIDE web GUI](screenshots/screenshot_3-col.png)](https://loide.demacs.unical.it:8433)
+## Online Demo
 
-Find a live demo at [loide.demacs.unical.it](https://loide.demacs.unical.it:8433)
--->
+A live demo (featuring [LoIDE-PWA](https://github.com/DeMaCS-UNICAL/LoIDE-PWA)) can be found at [loide.demacs.unical.it](https://loide.demacs.unical.it).
+
+This online demo uses the [PythonESE](https://github.com/DeMaCS-UNICAL/PythonESE) project to run the solvers.
+
+To check the status of our services, visit our [Status page](https://loide.freshstatus.io).
 
 ## Team
 

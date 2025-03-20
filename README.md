@@ -17,22 +17,22 @@
 <figure>
  <figcaption>LoIDE-PWA</figcaption>
  
- ![LoIDE-PWA web GUI](docs/screenshots/LoIDE-PWA.png)
+ [![LoIDE-PWA web GUI](docs/screenshots/LoIDE-PWA.png)](https://www.mat.unical.it/calimeri/projects/loide)
 <figure>
 
 <figure>
  <figcaption>LoIDE-Classic</figcaption>
  
-<!-- [![LoIDE web GUI](docs/screenshots/screenshot_3-col.png)](https://www.mat.unical.it/calimeri/projects/loide) -->
  ![LoIDE-Classic web GUI](docs/screenshots/screenshot_3-col.png)
 <figure>
 
-<!--
 ## Online Demo
-Find a live demo at [loide.demacs.unical.it](https://loide.demacs.unical.it:8433)
 
-Check the status of our services at https://loide.freshstatus.io
--->
+A live demo (featuring LoIDE-PWA) can be found at [loide.demacs.unical.it](https://loide.demacs.unical.it).
+
+To check the status of our services, visit our [Status page](https://loide.freshstatus.io).
+
+This online demo uses the [PythonESE](https://github.com/DeMaCS-UNICAL/PythonESE) project to run the solvers.
 
 <!-- This online version uses the [EmbASPServerExecutor](https://github.com/DeMaCS-UNICAL/EmbASPServerExecutor) to run the solvers -->
 

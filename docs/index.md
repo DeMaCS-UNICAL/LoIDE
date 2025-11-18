@@ -1,4 +1,4 @@
-# _Lo_**IDE**
+# ![Logo LoIDE](images/logo_LoIDE.svg)
 
 _Lo_**IDE** is a web-based IDE for Logic Programming.
 

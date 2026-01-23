@@ -10,8 +10,8 @@ Inspired by:
 - [Contributing to _Lo_**IDE**](#contributing-to-loide)
   - [Types of contributions](#types-of-contributions)
   - [How to](#how-to)
-    - [File a bug report](#file-a-bug-report)
-    - [Suggest a new feature](#suggest-a-new-feature)
+    - [Submit effective bug reports](#submit-effective-bug-reports)
+    - [Propose a new feature](#propose-a-new-feature)
     - [Contribute to a repository](#contribute-to-a-repository)
     - [Submit a pull request](#submit-a-pull-request)
   - [Appendix](#appendix)
@@ -51,27 +51,34 @@ Furthermore, contributions to the documentation held within this repository, and
 
 ## How to
 
-### File a bug report
+### Submit effective bug reports
 
-When submitting a bug report, please include a clear and concise description of the issue, the steps to reproduce it, the expected behaviour, and the actual behaviour.
-Providing detailed information like the operating system, browser version (if applicable), and any relevant error messages significantly increases the likelihood of a quick resolution.
-Ideally, use the provided issue templates to structure your report, as they prompt for essential details.
-Screenshots or even short screen recordings can be incredibly helpful in visualizing the problem.
-Please remember to search existing issues before creating a new one to avoid duplicates.
-A well-written bug report not only assists the developers in understanding and fixing the issue but also benefits the wider community by providing a documented history of known issues and their solutions.
+Here's how to best report bugs, ensuring a faster resolution for everyone:
 
-### Suggest a new feature
+- **Clear Description:** Provide a concise explanation of the problem.
+- **Steps to Reproduce:** Detail the exact steps needed to trigger the bug.
+- **Expected vs. Actual Behaviour:** Clearly state what _should_ happen and what _actually_ happens.
+- **Detailed Information:** Include your operating system, browser version (if relevant), and any error messages.
+- **Use Issue Templates:** Leverage provided templates for structured reporting.
+- **Visual Aids:** Screenshots or screen recordings are highly valuable.
+- **Search First:** Check for existing reports to avoid duplicates.
 
-When proposing a new feature, prioritize clarity and context.
-Begin by outlining the problem the feature aims to solve and why it's important to address it.
-Describe the desired functionality in detail, including any specific use cases or scenarios.
-Consider providing mockups or sketches to visually represent the proposed changes.
-It's also valuable to discuss potential alternative solutions or existing implementations and explain why your approach is preferred.
-This collaborative approach reduces the likelihood of wasted effort and encourages the development of features that truly benefit the _Lo_**IDE** ecosystem.
+A thorough bug report helps developers and the community efficiently address and track issues, leading to a better user experience.
+
+### Propose a new feature
+
+Here's how to effectively propose a new feature:
+
+- **Problem Statement:** Clearly define the problem your feature addresses and explain its importance.
+- **Detailed Functionality:** Describe the desired functionality thoroughly, including specific use cases and scenarios.
+- **Visual Aids (Optional):** Consider mockups or sketches to illustrate the proposed changes.
+- **Alternative Solutions:** Discuss potential alternatives and justify your preferred approach.
+
+Following these steps fosters collaboration and maximizes the impact of new features.
 
 ### Contribute to a repository
 
-We use a Gitflow workflow to manage development.
+Gitflow workflow is used to manage development.
 You can learn more about Gitflow at:
 [Gitflow Workflow | Atlassian Git Tutorial](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).
 
@@ -80,10 +87,10 @@ Here's a brief summary on how to contribute:
 1. **Identify an open issue:**  
    Before beginning work on a bug fix or new feature, please check the issue tracker to see if it's already been reported or discussed.
    Duplicate reports create unnecessary noise and can slow down progress.
-   If you don't find an existing issue, [file a bug report](#file-a-bug-report) or [suggest a new feature](#suggest-a-new-feature) following the guidelines provided.
+   If you don't find an existing issue, [file a bug report](#submit-effective-bug-reports) or [suggest a new feature](#propose-a-new-feature) following the guidelines provided.
 2. **Create a Feature/Bugfix Branch:**  
    Create a new branch, from the `develop` branch, for your feature or bug fix.
-   The easiest way is to use the functionality already provided by GitHub: [Creating a branch to work on an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/creating-a-branch-for-an-issue).  
+   The easiest way is to use the functionality already provided by GitHub: [Creating a branch to work on an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/creating-a-branch-for-an-issue)
    Otherwise, please use a descriptive naming convention:
    - `feature/<feature-name>` for new features
    - `fix/<bug-description>` for bug fixes
@@ -100,24 +107,21 @@ See [Syncing Your Fork with Upstream `develop`](#syncing-your-fork-with-upstream
 
 ### Submit a pull request
 
-Pull requests (PRs) are the primary mechanism for contributing code changes to _Lo_**IDE**.
-To ensure a smooth and efficient review process, it's essential to follow established best practices.
-Keep pull requests concise and focused on a single logical change (feature or bug), making them easier to understand and review.
-Ensure your code adheres to the project's coding style and includes comprehensive unit tests to verify functionality and prevent regressions.
-A well-written pull request should include a clear and informative description of the changes, the rationale behind them, and any relevant context or dependencies.
-Furthermore, it should address any open issues or feedback provided during the review process.
-Prior to submission, rebase your branch against the latest `develop` branch to avoid merge conflicts and maintain a clean commit history.
-Whenever you create a new pull request, please add a team member for review.
+Here's a breakdown of key guidelines:
 
-If a PR introduces significant structural changes or new functionalities requiring documentation in the Wiki, the PR should include proposed descriptions and/or figures (as correctly done in this PR) that will be incorporated into the Wiki once merged.
+- **Concise & Focused PRs:** Each pull request should address a single logical change (feature or bug).
+- **Code Quality:** Ensure code adheres to project style and standards.
+- **Commit Messages:** Write concise and informative commit messages.
+- **Informative Descriptions:** Provide a clear description of changes, rationale, and context. Address feedback during review.
+- **Unit Tests:** Include unit tests for each new feature to verify correctness.
+  - not only a best-practice, but the (only) viable way to maintain a small project with limited effort; we won't have time for tests or refactoring later.
+- **Library Rationale:** Briefly comment on the purpose of any new library introduced.
+  - maintaining up-to-date and cohesive libraries is a significant undertaking, which we must therefore minimise.
+- **Rebasing:** Rebase your branch against `develop` before submission to avoid conflicts and maintain a clean history.
+- **Reviewers:** Add a team member for review upon creation.
+- **Wiki Updates:** For significant changes, include proposed Wiki descriptions/figures in the PR.
 
-Each new feature should include (at least) some unit tests that allow us to verify its correctness.
-This is not only a best-practice, but also the (only) viable way to maintain a small project like ours with the limited effort we can dedicate to it. We will have no time to write tests later or undertake significant refactoring.
-
-Whenever new libraries are introduce, include a brief comment explaining their purpose and rationale.
-Maintaining up-to-date and cohesive libraries is a significant undertaking, which we must therefore minimise.
-**Write Clear Commit Messages:**  Use concise and informative commit messages.
-**Follow Code Style:**  Adhere to the project's code style.
+These best practices ensure a smooth and efficient code review process.
 
 -----
 

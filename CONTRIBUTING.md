@@ -27,7 +27,7 @@ Use your best judgment, and feel free to propose changes to this document in a p
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project.
 In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
 
-All contributors are expected to follow the _Lo_**IDE** **Code of Conduct**.
+All contributors are expected to follow the [_Lo_**IDE** **Code of Conduct**](./CODE_OF_CONDUCT.md).
 
 ## Types of contributions
 
@@ -127,7 +127,7 @@ These best practices ensure a smooth and efficient code review process.
 
 ## Appendix
 
-Useful notes and guidelines to perform some actions mentioned in this document.
+Notes and guidance for carrying out the actions described in this document.
 
 ### Syncing Your Fork with Upstream `develop`
 

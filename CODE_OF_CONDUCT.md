@@ -1,4 +1,4 @@
-# Contributor Covenant Code of Conduct
+# _Lo_**IDE** Code of Conduct
 
 ## Our Pledge
 

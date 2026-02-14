@@ -5,7 +5,8 @@ _Lo_**IDE** is a web-based IDE for Logic Programming.
 <figure>
  <figcaption>LoIDE PWA</figcaption>
 
- <a href="https://www.mat.unical.it/calimeri/projects/loide">
+ <!-- <a href="https://www.mat.unical.it/calimeri/projects/loide"> the certificate for www.mat.unical.it is no longer valid -->
+ <a href="https://loide.demacs.unical.it">
   <img src="screenshots/LoIDE-PWA.png" alt="LoIDE-PWA web GUI"/>
  </a>
 </figure>

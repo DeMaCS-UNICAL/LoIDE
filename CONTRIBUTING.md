@@ -14,8 +14,12 @@ Inspired by:
     - [Propose a new feature](#propose-a-new-feature)
     - [Contribute to a repository](#contribute-to-a-repository)
     - [Submit a pull request](#submit-a-pull-request)
+    - [Merge a Pull Request](#merge-a-pull-request)
   - [Appendix](#appendix)
     - [Syncing Your Fork with Upstream `develop`](#syncing-your-fork-with-upstream-develop)
+    - [Merging and Syncing branches](#merging-and-syncing-branches)
+      - [Feature branch → `develop`](#feature-branch--develop)
+      - [`develop`/Hotfix branch → `main`](#develophotfix-branch--main)
 
 First off, thanks for taking the time to contribute to _Lo_**IDE**! :+1:  
 It's people like you that make _Lo_**IDE** such a great tool.
@@ -123,6 +127,21 @@ Here's a breakdown of key guidelines:
 
 These best practices ensure a smooth and efficient code review process.
 
+### Merge a Pull Request
+
+To keep the branching model clean and the release history reproducible, the appropriate merge strategy should be applied according to Git‑Flow conventions when a PR is ready, based on its type:
+
+| Type        | Target    | Merge strategy       | Rationale                                                         |
+|-------------|-----------|----------------------|-------------------------------------------------------------------|
+| **Feature** | `develop` | **Squash and Merge** | Collapse all feature commits into one clean commit on `develop`.  |
+| **Release** | `main`    | **3‑way merge**      | Transfer changes to `main` while keeping the full commit history. |
+| **Hotfix**  | `main`    | **3‑way merge**      | Preserve the hotfix history on `main`.\*                          |
+
+\* After a hotfix, always sync `develop` with `main` to avoid diverging histories.
+To guarantee that the same commit appears in both `main` and `develop`, merge `main` into `develop`.
+
+See [Merging and Syncing branches](#merging-and-syncing-branches) for further information on this step.
+
 -----
 
 ## Appendix
@@ -187,3 +206,28 @@ Here are the step-by-step instructions using the **Git command line**:
     ```
 
 Your fork's `develop` branch is now synchronized with the upstream repository's `develop` branch.
+
+### Merging and Syncing branches
+
+#### Feature branch → `develop`
+
+Use the GitHub **Squash and Merge** button or, if you prefer the CLI, run:
+
+```bash
+git checkout develop
+git merge --no-ff --squash feature-branch
+git commit -m "Squash merge feature‑branch"
+```
+
+#### `develop`/Hotfix branch → `main`
+
+Use the GitHub **Merge** button or, if you prefer the CLI, run:
+
+```bash
+   git checkout main
+   git merge --no-ff hotfix-branch
+
+   # Sync develop after hotfix
+   git checkout develop
+   git merge --no-ff main
+```

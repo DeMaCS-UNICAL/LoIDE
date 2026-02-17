@@ -130,15 +130,10 @@ These best practices ensure a smooth and efficient code review process.
 
 ### Merge a Pull Request
 
-To keep the branching model clean and the release history reproducible, the appropriate merge strategy should be applied according to Git‑Flow conventions when a PR is ready, based on its type:
+To maintain a clean branching model and a reproducible release history, and in accordance with Gitflow conventions, all commits from a feature or hotfix pull request should be consolidated into a single, clean commit on the target branch – `develop` for features and `main` for hotfixes – using the **Squash and Merge** strategy.
 
-| Type        | Target    | Merge strategy       | Rationale                                                         |
-|-------------|-----------|----------------------|-------------------------------------------------------------------|
-| **Feature** | `develop` | **Squash and Merge** | Collapse all feature commits into one clean commit on `develop`.  |
-| **Hotfix**  | `main`    | **3‑way merge**      | Preserve the hotfix history on `main`.\*                          |
-
-\* After a hotfix, always sync `develop` with `main` to avoid diverging histories.
-To guarantee that the same commit appears in both `main` and `develop`, merge `main` into `develop`.
+Following a hotfix, always synchronise `develop` with `main` to prevent divergent histories.
+To ensure commit consistency between `main` and `develop`, merge `main` into `develop`.
 
 See [Merging and Syncing branches](#merging-and-syncing-branches) for further information on this step.
 

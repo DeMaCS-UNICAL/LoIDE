@@ -15,11 +15,12 @@ Inspired by:
     - [Contribute to a repository](#contribute-to-a-repository)
     - [Submit a pull request](#submit-a-pull-request)
     - [Merge a Pull Request](#merge-a-pull-request)
+    - [Create a release](#create-a-release)
   - [Appendix](#appendix)
     - [Syncing Your Fork with Upstream `develop`](#syncing-your-fork-with-upstream-develop)
     - [Merging and Syncing branches](#merging-and-syncing-branches)
       - [Feature branch → `develop`](#feature-branch--develop)
-      - [`develop`/Hotfix branch → `main`](#develophotfix-branch--main)
+      - [Hotfix branch → `main`](#hotfix-branch--main)
 
 First off, thanks for taking the time to contribute to _Lo_**IDE**! :+1:  
 It's people like you that make _Lo_**IDE** such a great tool.
@@ -134,13 +135,24 @@ To keep the branching model clean and the release history reproducible, the appr
 | Type        | Target    | Merge strategy       | Rationale                                                         |
 |-------------|-----------|----------------------|-------------------------------------------------------------------|
 | **Feature** | `develop` | **Squash and Merge** | Collapse all feature commits into one clean commit on `develop`.  |
-| **Release** | `main`    | **3‑way merge**      | Transfer changes to `main` while keeping the full commit history. |
 | **Hotfix**  | `main`    | **3‑way merge**      | Preserve the hotfix history on `main`.\*                          |
 
 \* After a hotfix, always sync `develop` with `main` to avoid diverging histories.
 To guarantee that the same commit appears in both `main` and `develop`, merge `main` into `develop`.
 
 See [Merging and Syncing branches](#merging-and-syncing-branches) for further information on this step.
+
+### Create a release
+
+A release can now be generated following the Git Flow methodology, by transferring changes from `develop` to `main` while preserving the full commit history, using a GitHub Action:
+
+1. Navigate to **Actions** → **Create Release**
+2. Click **Run workflow**
+3. Enter the version number (e.g., `1.5.0`)
+4. Optionally, check "Mark as pre-release" for beta/RC versions
+5. Click **Run workflow**
+
+No further steps are required.
 
 -----
 
@@ -219,7 +231,7 @@ git merge --no-ff --squash feature-branch
 git commit -m "Squash merge feature‑branch"
 ```
 
-#### `develop`/Hotfix branch → `main`
+#### Hotfix branch → `main`
 
 Use the GitHub **Merge** button or, if you prefer the CLI, run:
 

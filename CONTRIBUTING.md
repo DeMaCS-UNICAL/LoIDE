@@ -6,22 +6,6 @@ Inspired by:
  - http://mozillascience.github.io/working-open-workshop/contributing
 -->
 
-<!-- Table of Contents -->
-- [Contributing to _Lo_**IDE**](#contributing-to-loide)
-  - [Types of contributions](#types-of-contributions)
-  - [How to](#how-to)
-    - [Submit effective bug reports](#submit-effective-bug-reports)
-    - [Propose a new feature](#propose-a-new-feature)
-    - [Contribute to a repository](#contribute-to-a-repository)
-    - [Submit a pull request](#submit-a-pull-request)
-    - [Merge a Pull Request](#merge-a-pull-request)
-    - [Create a release](#create-a-release)
-  - [Appendix](#appendix)
-    - [Syncing Your Fork with Upstream `develop`](#syncing-your-fork-with-upstream-develop)
-    - [Merging and Syncing branches](#merging-and-syncing-branches)
-      - [Feature branch → `develop`](#feature-branch--develop)
-      - [Hotfix branch → `main`](#hotfix-branch--main)
-
 First off, thanks for taking the time to contribute to _Lo_**IDE**! :+1:  
 It's people like you that make _Lo_**IDE** such a great tool.
 

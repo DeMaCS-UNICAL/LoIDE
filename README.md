@@ -17,7 +17,9 @@
 <figure>
  <figcaption>LoIDE-PWA</figcaption>
  
- [![LoIDE-PWA web GUI](docs/screenshots/LoIDE-PWA.png)](https://www.mat.unical.it/calimeri/projects/loide)
+<!--  [![LoIDE-PWA web GUI](docs/screenshots/LoIDE-PWA.png)](https://www.mat.unical.it/calimeri/projects/loide) -->
+
+ [![LoIDE-PWA web GUI](docs/screenshots/LoIDE-PWA.png)](https://loide.demacs.unical.it)
 <figure>
 
 <figure>
